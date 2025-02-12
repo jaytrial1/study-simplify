@@ -1,3 +1,16 @@
+function showError(message) {
+    const errorDiv = document.getElementById('error-message');
+    const errorText = errorDiv.querySelector('.error-text');
+    errorText.textContent = message;
+    errorDiv.classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function hideError() {
+    const errorDiv = document.getElementById('error-message');
+    errorDiv.classList.remove('show');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     
@@ -30,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
+                throw new Error(data.error || 'Login failed');
             }
 
             // Store the token in localStorage
@@ -42,12 +55,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Error:', error);
-            alert(error.message || 'An error occurred. Please try again.');
+            showError(error.message || 'An error occurred. Please try again.');
         } finally {
             const submitButton = loginForm.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = false;
             }
         }
+    });
+
+    // Add this to hide error when form inputs change
+    document.querySelectorAll('#loginForm input').forEach(input => {
+        input.addEventListener('input', hideError);
     });
 }); 
