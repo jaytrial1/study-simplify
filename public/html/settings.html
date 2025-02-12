@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot - Settings</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar (same as main page) -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                
+                <nav class="sidebar-nav">
+                    <a href="chatbot.html" class="nav-button">\
+                        <i class="fas fa-robot"></i>
+                        <span>Chat Bot</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <a href="saved_answers.html" class="nav-button">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Saved Answers</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </nav>
+                
+                <div class="chat-history">
+                    <div class="history-header">
+                        <h3>Chat History</h3>
+                        <button class="search-toggle">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div class="history-search-panel">
+                        <div class="search-container">
+                            <input type="text" placeholder="Search chats..." class="history-search">
+                            <button class="filter-toggle">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="history-filters">
+                            <select class="subject-filter">
+                                <option value="">All Subjects</option>
+                            </select>
+                            <select class="chapter-filter">
+                                <option value="">All Chapters</option>
+                            </select>
+                            <button class="clear-filters-btn" title="Clear all filters"></button>
+                                <a>Clear All Filter</a>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="history-items">
+                        <!-- Chat history items will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-bottom">
+                    <button class="settings-btn active">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Settings Area -->
+        <div class="settings-container">
+            <div class="chat-header">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2>Settings</h2>
+                <a href="chatbot.html" class="back-to-chat">
+                    <i class="fas fa-arrow-left"></i> Back to Chat
+                </a>
+            </div>
+            
+            <div class="settings-content">
+                <!-- Profile Section -->
+                <section class="settings-section">
+                    <h3><i class="fas fa-user"></i> Profile Settings</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="grade-level">
+                                
+                                Grade Level
+                            </label>
+                            <select class="form-input" id="grade-level" name="grade-level">
+                                <option value="freshman">Freshman</option>
+                                <option value="sophomore">Sophomore</option>
+                                <option value="junior">Junior</option>
+                                <option value="senior">Senior</option>
+                                <option value="graduate">Graduate</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Appearance Section -->
+                <section class="settings-section">
+                    <h3><i class="fas fa-palette"></i> Appearance</h3>
+                    <div class="settings-form">
+                        <div class="form-group toggle">
+                            <label>Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Section -->
+                <section class="settings-section">
+                    <h3><i class="fas fa-lock"></i> Security</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" placeholder="Enter new password">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account Section -->
+                <section class="settings-section">
+                    <h3><i class="fas fa-sign-out-alt"></i> Account</h3>
+                    <div class="settings-form">
+                        <button class="logout-button" onclick="window.location.href='login.html'">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Save Button -->
+                <button class="save-button">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/history-search.js"></script>
+</body>
+
+</html>

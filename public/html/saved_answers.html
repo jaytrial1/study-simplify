@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Answers</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/saved_answers.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
+</head>
+<body>
+    <div class="app-container">
+        
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                
+                <nav class="sidebar-nav">
+                    <a href="chatbot.html" class="nav-button">
+                        <i class="fas fa-robot"></i>
+                        <span>Chat Bot</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <a href="saved_answers.html" class="nav-button active">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Saved Answers</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </nav>
+                
+                <div class="chat-history">
+                    <div class="history-header">
+                        <h3>Chat History</h3>
+                        <button class="search-toggle">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div class="history-search-panel">
+                        <div class="search-container">
+                            <input type="text" placeholder="Search chats..." class="history-search">
+                            <button class="filter-toggle">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="history-filters">
+                            <select class="subject-filter">
+                                <option value="">All Subjects</option>
+                            </select>
+                            <select class="chapter-filter">
+                                <option value="">All Chapters</option>
+                            </select>
+                            <button class="clear-filters-btn" title="Clear all filters">
+                                <a>Clear All Filter</a>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="history-items">
+                        <!-- Chat history items will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-bottom">
+                    <a href="settings.html" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="settings-container">
+            <div class="chat-header">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2><i class="fas fa-bookmark"></i> Saved Answers</h2>
+            </div>
+
+            <div class="settings-content">
+                <!-- Mobile Search -->
+                <div class="mobile-search">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search saved answers...">
+                        <button class="icon-btn clear-filters" title="Clear all filters">
+                            <i class="fas fa-filter-circle-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="filter-container">
+                        <select class="filter-select">
+                            <option value="">All Subjects</option>
+                            <option value="eco">Economics</option>
+                            <option value="ba">Business</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Chapters</option>
+                        </select>
+                        <button class="toggle-all-btn">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Panel -->
+                <div class="filter-panel">
+                    <select class="subject-filter">
+                        <option value="">All Subjects</option>
+                        <option value="eco">Economics</option>
+                        <option value="ba">Business Administration</option>
+                    </select>
+                    <select class="chapter-filter">
+                        <option value="">All Chapters</option>
+                        <!-- Options can be populated dynamically -->
+                    </select>
+                </div>
+
+                <!-- Accordion Tree: Grouped Saved Answers -->
+                <div class="answers-tree">
+                    <!-- Subject Accordion Item -->
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <div class="header-content">
+                                <div class="header-title">
+                                    <span>Economics</span>
+                                </div>
+                                <div class="header-actions">
+                                    <button class="toggle-section-btn" title="Expand/Collapse this section">
+                                        <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <i class="fas fa-chevron-right arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-content">
+                            <!-- Chapter Accordion Item -->
+                            <div class="chapter-item">
+                                <div class="chapter-header">
+                                    <div class="header-content">
+                                        <div class="header-title">
+                                            <span>Macroeconomics</span>
+                                        </div>
+                                        <div class="header-actions">
+                                            <button class="toggle-section-btn" title="Expand/Collapse this chapter">
+                                                <i class="fas fa-expand-alt"></i>
+                                            </button>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chapter-content">
+                                    <!-- Question Accordion Item -->
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <span>What is GDP?</span>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                        <div class="question-content">
+                                            <!-- Multiple Answer Items for this question -->
+                                            <div class="answer-item">
+                                                <div class="answer-body">
+                                                    GDP stands for Gross Domestic Product, capturing the total economic output.
+                                                </div>
+                                                <button class="view-full-answer">View Full Answer</button>
+                                            </div>
+                                            <div class="answer-item">
+                                                <div class="answer-body">
+                                                    An alternative explanation emphasizes GDP as an indicator of economic health.
+                                                </div>
+                                                <button class="view-full-answer">View Full Answer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Another Question Accordion Item -->
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <span>Fiscal Policy Overview</span>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                        <div class="question-content">
+                                            <div class="answer-item">
+                                                <div class="answer-body">
+                                                    Fiscal policy uses government spending and taxation to influence the economy.
+                                                </div>
+                                                <button class="view-full-answer">View Full Answer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Another Chapter Accordion Item -->
+                            <div class="chapter-item">
+                                <div class="chapter-header">
+                                    <div class="header-content">
+                                        <div class="header-title">
+                                            <span>Microeconomics</span>
+                                        </div>
+                                        <div class="header-actions">
+                                            <button class="toggle-section-btn" title="Expand/Collapse this chapter">
+                                                <i class="fas fa-expand-alt"></i>
+                                            </button>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chapter-content">
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <span>Elasticity of Demand</span>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                        <div class="question-content">
+                                            <div class="answer-item">
+                                                <div class="answer-body">
+                                                    Elasticity measures how quantity demanded reacts to changes in price.
+                                                </div>
+                                                <button class="view-full-answer">View Full Answer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Another Subject Accordion Item -->
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <div class="header-content">
+                                <div class="header-title">
+                                    <span>Business Administration</span>
+                                </div>
+                                <div class="header-actions">
+                                    <button class="toggle-section-btn" title="Expand/Collapse this section">
+                                        <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <i class="fas fa-chevron-right arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="chapter-item">
+                                <div class="chapter-header">
+                                    <div class="header-content">
+                                        <div class="header-title">
+                                            <span>Management Principles</span>
+                                        </div>
+                                        <div class="header-actions">
+                                            <button class="toggle-section-btn" title="Expand/Collapse this chapter">
+                                                <i class="fas fa-expand-alt"></i>
+                                            </button>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chapter-content">
+                                    <div class="question-item">
+                                        <div class="question-header">
+                                            <span>Leadership Styles</span>
+                                            <i class="fas fa-chevron-right arrow"></i>
+                                        </div>
+                                        <div class="question-content">
+                                            <div class="answer-item">
+                                                <div class="answer-body">
+                                                    This explains various leadership styles such as transformational, autocratic, and democratic.
+                                                </div>
+                                                <button class="view-full-answer">View Full Answer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div> <!-- End of answers-tree -->
+            </div>
+        </div>
+    </div>
+    <div class="answer-modal" id="answerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Saved Answer</h3>
+                    <span class="answer-meta">Economics > Macroeconomics</span>
+                </div>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="question-section">
+                    <h4>What is GDP?</h4>
+                </div>
+                
+                <div class="answer-section">
+                    <div class="answer-text">
+                        <!-- This will contain the full 145-mark answer -->
+                        <p>GDP (Gross Domestic Product) is a comprehensive measure of a nation's economic activity...</p>
+                        <!-- More answer content -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <div class="answer-actions">
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn">
+                            Next
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn history-btn">
+                            <i class="fas fa-history"></i>
+                            Chat History
+                        </button>
+                        <div class="save-type-dropdown">
+                            <button class="action-btn save-btn">
+                                <i class="fas fa-bookmark"></i>
+                                Question Related
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="#">Best Response</a>
+                                <a href="#" class="active">Question Related</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/saved_answers.js"></script>
+    <script src="../js/history-search.js"></script>
+</body>
+</html>

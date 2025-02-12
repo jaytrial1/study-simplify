@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot UI</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-button active">
+                        <i class="fas fa-robot"></i>
+                        <span>Chat Bot</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <a href="saved_answers.html" class="nav-button">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Saved Answers</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+
+                </nav>
+                
+                <div class="chat-history">
+                    <div class="history-header">
+                        <h3>Chat History</h3>
+                        <button class="search-toggle">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div class="history-search-panel">
+                        <div class="search-container">
+                            <input type="text" placeholder="Search chats..." class="history-search">
+                            <button class="filter-toggle">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="history-filters">
+                            <select class="subject-filter">
+                                <option value="">All Subjects</option>
+                            </select>
+                            <select class="chapter-filter">
+                                <option value="">All Chapters</option>
+                            </select>
+                            <button class="clear-filters-btn" title="Clear all filters">
+                                
+                                <a>Clear All Filter</a>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="history-items">
+                        <div class="history-item" data-subject="Mathematics" data-chapter="Calculus">
+                            <i class="fas fa-message"></i>
+                            <div class="history-item-content">
+                                <span class="history-text">Derivatives and Integration</span>
+                                <div class="history-tags">
+                                    <span class="subject-tag">Mathematics</span>
+                                    <span class="chapter-tag">Calculus</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item" data-subject="Physics" data-chapter="Mechanics">
+                            <i class="fas fa-message"></i>
+                            <div class="history-item-content">
+                                <span class="history-text">Newton's Laws of Motion</span>
+                                <div class="history-tags">
+                                    <span class="subject-tag">Physics</span>
+                                    <span class="chapter-tag">Mechanics</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item" data-subject="Chemistry" data-chapter="Organic">
+                            <i class="fas fa-message"></i>
+                            <div class="history-item-content">
+                                <span class="history-text">Alkanes and Alkenes</span>
+                                <div class="history-tags">
+                                    <span class="subject-tag">Chemistry</span>
+                                    <span class="chapter-tag">Organic</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-bottom">
+                    <a href="settings.html" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2><i class="fas fa-graduation-cap"></i> Study Assistant</h2>
+            </div>
+            <div class="mobile-header">
+                <div class="dropdown-trigger" id="dropdownTrigger">
+                    <i class="fas fa-book-open"></i>
+                    <div class="selected-values">
+                        <span id="selectedSubject">Select Subject</span>
+                        <span id="selectedChapter">Select Chapter</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-panel" id="dropdownPanel">
+                    <div class="dropdown-search">
+                        <input type="text" placeholder="Search..." class="search-input">
+                    </div>
+                    <div class="dropdown-section">
+                        <div class="dropdown-header">
+                            <h4>Subjects</h4>
+                            <span class="item-count">3</span>
+                        </div>
+                        <div class="dropdown-items subject-list">
+                            <!-- Sorted subjects will be added here dynamically -->
+                        </div>
+                    </div>
+                    <div class="dropdown-section">
+                        <div class="dropdown-header">
+                            <h4>Chapters</h4>
+                            <span class="item-count">5</span>
+                        </div>
+                        <div class="dropdown-items chapter-list">
+                            <!-- Sorted chapters will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div class="chat-input">
+                <div class="input-wrapper">
+                    <textarea id="userInput" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="command-panel" id="commandPanel">
+            <div class="command-list">
+                <div class="command-item" data-command="/help">Help Center</div>
+                <div class="command-item" data-command="/save">Save Conversation</div>
+                <div class="command-item" data-command="/history">Chat History</div>
+                <div class="command-item" data-command="/clear">Clear Chat</div>
+                <div class="command-item" data-command="/theme">Change Theme</div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+    <script src="../js/history-search.js"></script>
+    <script src="../js/transitions.js"></script>
+</body>
+</html> 

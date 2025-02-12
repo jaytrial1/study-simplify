@@ -1,0 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #17181c;
+    color: #ececec;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 1rem;
+}
+
+.auth-box {
+    background-color: #1e1f24;
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid #2a2b30;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header i {
+    font-size: 3rem;
+    color: #4166d5;
+    margin-bottom: 1rem;
+}
+
+.auth-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: #8e8e8e;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #b8b8b8;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #17181c;
+    border: 1px solid #2a2b30;
+    border-radius: 8px;
+    color: #ececec;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4166d5;
+    background-color: #1a1b20;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #8e8e8e;
+}
+
+.forgot-password {
+    color: #4166d5;
+    text-decoration: none;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #4166d5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #3555b8;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #8e8e8e;
+}
+
+.auth-footer a {
+    color: #4166d5;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Add these styles for the grade level dropdown */
+#grade-level {
+    background-color: #17181c;
+    border: 1px solid #2a2b30;
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: #8e8e8e;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%236b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+}
+
+#grade-level:hover {
+    border-color: #4166d5;
+    background-color: #1a1b20;
+}
+
+#grade-level:focus {
+    outline: none;
+    border-color: #4166d5;
+    background-color: #1a1b20;
+}
+
+#grade-level option {
+    background-color: #17181c;
+    color: #ececec;
+    padding: 0.8rem;
+} 
