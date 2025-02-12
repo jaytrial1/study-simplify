@@ -16,6 +16,11 @@
                 <p>Sign up to start using ChatBot</p>
             </div>
             
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="error-text"></span>
+            </div>
+            
             <form class="auth-form" id="signupForm">
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> Full Name</label>
@@ -32,11 +37,8 @@
                         <i class="fas fa-graduation-cap"></i>
                         Grade Level
                     </label>
-                    <select class="form-input" id="grade" name="grade" required>
-                        <option value="bcom">B.Com</option>
-                        <option value="11th">11th</option>
-                        <option value="12th">12th</option>
-                        <option value="cbse">CBSE</option>
+                    <select class="form-input" id="grade-level" name="grade" required>
+                        <!-- Dynamic options will be inserted here -->
                     </select>
                 </div>
                 
