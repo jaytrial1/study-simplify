@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (!response.ok) {
-                throw new Error(data.message || 'Registration failed');
+                throw new Error(data.error || 'Registration failed');
             }
 
             // Success
