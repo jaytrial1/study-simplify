@@ -401,13 +401,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.search-input').addEventListener('input', function(e) {
         const term = e.target.value.toLowerCase().trim();
         
-        // Clear subject selection when search starts
+        // Show all chapters for searching without clearing selections
         if (term) {
-            document.getElementById('selectedSubject').textContent = 'Select Subject';
-            document.getElementById('selectedChapter').textContent = 'Select Chapter';
-            renderChapters(allChapters); // Show all chapters again
+            renderChapters(allChapters); // Show all chapters for searching
         } else {
-            // When search is cleared, re-render with current filtered chapters
+            // When search is cleared, show chapters based on current selection
             const selectedSubject = document.getElementById('selectedSubject').textContent;
             if (selectedSubject !== 'Select Subject') {
                 const filteredChapters = allChapters.filter(chapter => chapter.subject === selectedSubject);
@@ -417,6 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
+        // Filter visible items based on search term
         document.querySelectorAll('.dropdown-item').forEach(item => {
             const isSubject = item.dataset.type === 'subject';
             const itemText = item.textContent.toLowerCase();
