@@ -92,6 +92,98 @@ document.addEventListener('DOMContentLoaded', function() {
     inputs.forEach(input => {
         input.addEventListener('input', hideError);
     });
+
+    // Add after the existing event listeners
+    const passwordForm = document.getElementById('passwordForm');
+    const newPasswordGroup = document.getElementById('newPasswordGroup');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+
+    passwordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+        
+        try {
+            // If new password fields are hidden, verify current password first
+            if (newPasswordGroup.style.display === 'none') {
+                const response = await verifyCurrentPassword(currentPassword);
+                if (response.ok) {
+                    newPasswordGroup.style.display = 'block';
+                    confirmPasswordGroup.style.display = 'block';
+                    document.getElementById('currentPassword').disabled = true;
+                    return;
+                }
+            }
+            
+            // Validate new password
+            if (newPassword !== confirmNewPassword) {
+                throw new Error('New passwords do not match');
+            }
+            
+            const userId = localStorage.getItem('user_id');
+            const response = await fetch(`/main/api/auth/change-password.php?id=${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+
+            showPasswordMessage('Password updated successfully!', true);
+            resetPasswordForm();
+            
+        } catch (error) {
+            showPasswordMessage(error.message);
+        }
+    });
+
+    // Add logout functionality
+    const logoutButton = document.getElementById('logoutButton');
+    logoutButton.addEventListener('click', async function() {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/main/api/auth/logout.php', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Logout failed');
+            }
+
+            localStorage.removeItem('token');
+            localStorage.removeItem('user_id');
+            window.location.href = 'login.html';
+        } catch (error) {
+            console.error('Error:', error);
+            // Still redirect to login even if server logout fails
+            localStorage.removeItem('token');
+            localStorage.removeItem('user_id');
+            window.location.href = 'login.html';
+        }
+    });
+
+    // Add input event listener to clear error message when user types
+    document.getElementById('currentPassword').addEventListener('input', function() {
+        const errorDiv = document.getElementById('password-error');
+        if (errorDiv.classList.contains('error-message')) {
+            errorDiv.classList.remove('show');
+        }
+    });
 });
 
 async function loadUserData() {
@@ -104,6 +196,15 @@ async function loadUserData() {
             return;
         }
 
+        // First load the grades
+        const gradesResponse = await fetch('/main/api/navigation/grades.php');
+        const gradesData = await gradesResponse.json();
+        const gradeSelect = document.getElementById('grade-level');
+        gradeSelect.innerHTML = gradesData.grades.map(grade => 
+            `<option value="${grade}">${grade}</option>`
+        ).join('');
+
+        // Then load user data
         const response = await fetch(`/main/api/user/profile.php?id=${userId}`, {
             headers: {
                 'Accept': 'application/json',
@@ -158,4 +259,51 @@ function disableEditMode() {
     inputs.forEach(input => input.disabled = true);
     document.getElementById('editButton').style.display = 'block';
     document.getElementById('saveButton').style.display = 'none';
+}
+
+function showPasswordMessage(message, isSuccess = false) {
+    const errorDiv = document.getElementById('password-error');
+    const errorText = errorDiv.querySelector('.error-text');
+    errorText.textContent = message;
+    
+    if (isSuccess) {
+        errorDiv.classList.add('success-message');
+        errorDiv.classList.remove('error-message');
+        errorDiv.querySelector('i').classList.remove('fa-exclamation-circle');
+        errorDiv.querySelector('i').classList.add('fa-check-circle');
+        
+        // For success messages, auto-hide after 3 seconds
+        setTimeout(() => {
+            errorDiv.classList.remove('show');
+        }, 3000);
+    } else {
+        errorDiv.classList.remove('success-message');
+        errorDiv.classList.add('error-message');
+        errorDiv.querySelector('i').classList.add('fa-exclamation-circle');
+        errorDiv.querySelector('i').classList.remove('fa-check-circle');
+        // Error messages persist until user changes input
+    }
+    
+    errorDiv.classList.add('show');
+}
+
+function resetPasswordForm() {
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('currentPassword').disabled = false;
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmNewPassword').value = '';
+    newPasswordGroup.style.display = 'none';
+    confirmPasswordGroup.style.display = 'none';
+}
+
+async function verifyCurrentPassword(password) {
+    const userId = localStorage.getItem('user_id');
+    return fetch(`/main/api/auth/verify-password.php?id=${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ password })
+    });
 } 
