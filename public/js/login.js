@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Store the token in localStorage
             localStorage.setItem('token', data.token);
             localStorage.setItem('user_id', data.user_id);
+            localStorage.setItem('userGrade', data.grade);
 
             // Success - redirect to chatbot.html
             window.location.href = 'chatbot.html';

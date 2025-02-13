@@ -10,6 +10,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownPanel = document.getElementById('dropdownPanel');
     let isDragging = false;
     let startY = 0;
+    let chapters = []; // Declare a global variable to store chapters
+
+    // Make userGrade accessible throughout the file
+    const userGrade = localStorage.getItem('userGrade');
+    console.log('Current user grade:', userGrade);
+
+    // Add a function to check for grade changes
+    function checkGradeChange() {
+        const currentGrade = localStorage.getItem('userGrade');
+        if (currentGrade && currentGrade !== userGrade) {
+            userGrade = currentGrade;
+            loadSubjects(userGrade);
+            // Reset selections
+            document.getElementById('selectedSubject').textContent = 'Select Subject';
+            document.getElementById('selectedChapter').textContent = 'Select Chapter';
+            document.querySelector('.chapter-list').innerHTML = '';
+        }
+    }
+
+    // Check for grade changes every second
+    setInterval(checkGradeChange, 1000);
 
     // Add introductory message
     const introMessage = document.createElement('div');
@@ -249,21 +270,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add after DOMContentLoaded
-    // Initialize subjects and chapters
-    const subjects = [
-        { name: "Economics", value: "eco" },
-        { name: "Business Administration", value: "ba" },
-        { name: "Accounting", value: "accounting" }
-    ];
+    // Add these functions after DOMContentLoaded
+    function loadSubjects(grade) {
+        console.log('Loading subjects for grade:', grade);
+        fetch(`/main/api/navigation/subjects.php?grade=${grade}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Received subjects:', data);
+                const subjectList = document.querySelector('.subject-list');
+                const itemCount = document.querySelector('.dropdown-section .item-count');
+                
+                if (data.subjects && data.subjects.length > 0) {
+                    subjectList.innerHTML = data.subjects
+                        .map(subject => `<div class="dropdown-item" data-type="subject" data-value="${subject}">${subject}</div>`)
+                        .join('');
+                    itemCount.textContent = data.subjects.length;
+                } else {
+                    subjectList.innerHTML = '<div class="no-data">No subjects found</div>';
+                    itemCount.textContent = '0';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading subjects:', error);
+                const subjectList = document.querySelector('.subject-list');
+                subjectList.innerHTML = '<div class="error">Error loading subjects</div>';
+            });
+    }
 
-    const chapters = {
-        eco: ["Introduction to Economics", "Microeconomics", "Macroeconomics", "International Trade", "Economic Policy"],
-        ba: ["Management Principles", "Marketing Fundamentals", "Financial Accounting", "Business Ethics", "Operations Management"],
-        accounting: ["Financial Statements", "Taxation", "Auditing", "Cost Accounting", "Forensic Accounting"]
-    };
+    function loadChapters(grade, subject) {
+        fetch(`/main/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
+            .then(response => response.json())
+            .then(data => {
+                chapters = data.chapters; // Store chapters in the global variable
+                renderChapters(chapters); // Render initial list of chapters
+            })
+            .catch(error => console.error('Error loading chapters:', error));
+    }
 
-    // Simplified dropdown handler
+    function renderChapters(chapters) {
+        const chapterList = document.querySelector('.chapter-list');
+        chapterList.innerHTML = chapters
+            .map(chapter => `<div class="dropdown-item" data-type="chapter" data-value="${chapter}">${chapter}</div>`)
+            .join('');
+    }
+
+    // After DOMContentLoaded, add this:
+    if (userGrade) {
+        loadSubjects(userGrade);
+    } else {
+        console.error('No grade found in localStorage');
+    }
+
+    // Modify the existing dropdown handler
     function initDropdown() {
         // Subject selection
         document.querySelector('.subject-list').addEventListener('click', e => {
@@ -274,10 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('selectedSubject').textContent = subjectItem.textContent;
             document.getElementById('selectedChapter').textContent = 'Select Chapter';
             
-            // Filter chapters for selected subject
-            document.querySelectorAll('.chapter-list .dropdown-item').forEach(item => {
-                item.style.display = item.dataset.subject === subjectValue ? 'flex' : 'none';
-            });
+            // Load chapters for selected subject
+            loadChapters(userGrade, subjectValue);
         });
 
         // Chapter selection
@@ -285,31 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
             if (!chapterItem) return;
             
-            const parentSubject = subjects.find(s => s.value === chapterItem.dataset.subject);
-            document.getElementById('selectedSubject').textContent = parentSubject.name;
-            
-            document.getElementById('selectedChapter').textContent = chapterItem.dataset.chapter;
-            dropdownPanel.classList.remove('active'); // Close dropdown
+            document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
+            dropdownPanel.classList.remove('active');
         });
-
-        // Initial setup - load ALL chapters
-        document.querySelector('.subject-list').innerHTML = subjects
-            .map(sub => `<div class="dropdown-item" data-type="subject" data-value="${sub.value}">${sub.name}</div>`)
-            .join('');
-
-        // Preload all chapters from all subjects
-        const allChapters = subjects.flatMap(sub => 
-            chapters[sub.value].map(ch => `
-                <div class="dropdown-item" 
-                     data-type="chapter" 
-                     data-subject="${sub.value}"
-                     data-chapter="${ch}">
-                    ${ch}
-                </div>
-            `)
-        ).join('');
-        document.querySelector('.chapter-list').innerHTML = allChapters;
     }
+
+    // Call initialization
+    initDropdown();
 
     // Update search to handle simplified structure
     document.querySelector('.search-input').addEventListener('input', function(e) {
@@ -336,6 +374,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Call initialization
-    initDropdown();
+    // Listen for grade changes from settings window
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'gradeChanged') {
+            const newGrade = event.data.grade;
+            if (newGrade) {
+                // Update local reference
+                userGrade = newGrade;
+                // Reload subjects
+                loadSubjects(newGrade);
+                // Reset selections
+                document.getElementById('selectedSubject').textContent = 'Select Subject';
+                document.getElementById('selectedChapter').textContent = 'Select Chapter';
+                document.querySelector('.chapter-list').innerHTML = '';
+            }
+        }
+    });
 }); 

@@ -82,6 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('Profile updated successfully!', true);
             disableEditMode();
 
+            // Update localStorage and reload chatbot page
+            if (formData.grade) {
+                localStorage.setItem('userGrade', formData.grade);
+                if (window.opener) {
+                    window.opener.location.reload();
+                }
+            }
+
         } catch (error) {
             console.error('Error:', error);
             showError(error.message || 'An error occurred. Please try again.');
@@ -306,4 +314,36 @@ async function verifyCurrentPassword(password) {
         },
         body: JSON.stringify({ password })
     });
+}
+
+// Add this function to handle form submission
+async function updateProfile(formData) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/main/api/user/profile.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to update profile');
+        }
+
+        // Just update localStorage - script.js will detect the change
+        if (formData.grade) {
+            localStorage.setItem('userGrade', formData.grade);
+        }
+
+        showSuccess('Profile updated successfully');
+        return true;
+    } catch (error) {
+        console.error('Error:', error);
+        showError(error.message || 'Failed to update profile');
+        return false;
+    }
 } 
