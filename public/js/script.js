@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
     let startY = 0;
     let chapters = []; // Declare a global variable to store chapters
+    let allChapters = [];
 
     // Make userGrade accessible throughout the file
     const userGrade = localStorage.getItem('userGrade');
@@ -221,6 +222,26 @@ document.addEventListener('DOMContentLoaded', () => {
         .message-content {
             white-space: pre-wrap;  /* This preserves line breaks */
         }
+        
+        .dropdown-item {
+            white-space: normal;
+            word-wrap: break-word;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .subject-list, .chapter-list {
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 300px;
+        }
+
+        .chapter-subject {
+            font-size: 0.75rem;
+            color: #4166d5;
+            margin-top: 0.2rem;
+            display: block;
+        }
     `;
     document.head.appendChild(style);
 
@@ -298,25 +319,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadChapters(grade, subject) {
-        fetch(`/main/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
+        return fetch(`/main/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
             .then(response => response.json())
-            .then(data => {
-                chapters = data.chapters; // Store chapters in the global variable
-                renderChapters(chapters); // Render initial list of chapters
-            })
+            .then(data => data.chapters)
             .catch(error => console.error('Error loading chapters:', error));
     }
 
     function renderChapters(chapters) {
         const chapterList = document.querySelector('.chapter-list');
+        const searchTerm = document.querySelector('.search-input').value.trim();
+        
         chapterList.innerHTML = chapters
-            .map(chapter => `<div class="dropdown-item" data-type="chapter" data-value="${chapter}">${chapter}</div>`)
-            .join('');
+            .map(chapter => `
+                <div class="dropdown-item" 
+                     data-type="chapter" 
+                     data-value="${chapter.name}"
+                     data-subject="${chapter.subject}"
+                     style="padding: 10px 15px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.95em; white-space: normal; word-wrap: break-word; line-height: 1.2;">${chapter.name}</div>
+                    ${searchTerm ? `
+                        <div style="
+                            font-size: 0.75em;
+                            color: #4166d5;
+                            margin-top: 4px;
+                            white-space: normal;
+                            word-wrap: break-word;
+                            line-height: 1.2;
+                        ">${chapter.subject}</div>
+                    ` : ''}
+                </div>
+            `).join('');
     }
 
     // After DOMContentLoaded, add this:
     if (userGrade) {
         loadSubjects(userGrade);
+        loadAllChapters(userGrade);
     } else {
         console.error('No grade found in localStorage');
     }
@@ -332,16 +370,26 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('selectedSubject').textContent = subjectItem.textContent;
             document.getElementById('selectedChapter').textContent = 'Select Chapter';
             
-            // Load chapters for selected subject
-            loadChapters(userGrade, subjectValue);
+            const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
+            renderChapters(filteredChapters);
         });
 
-        // Chapter selection
+        // Updated Chapter selection
         document.querySelector('.chapter-list').addEventListener('click', e => {
             const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
             if (!chapterItem) return;
             
+            // Set chapter
             document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
+            
+            // Auto-select corresponding subject
+            const subjectValue = chapterItem.dataset.subject;
+            document.getElementById('selectedSubject').textContent = subjectValue;
+            
+            // Filter chapters for the selected subject
+            const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
+            renderChapters(filteredChapters);
+            
             dropdownPanel.classList.remove('active');
         });
     }
@@ -351,26 +399,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update search to handle simplified structure
     document.querySelector('.search-input').addEventListener('input', function(e) {
-        const term = e.target.value.toLowerCase();
+        const term = e.target.value.toLowerCase().trim();
+        
+        // Clear subject selection when search starts
+        if (term) {
+            document.getElementById('selectedSubject').textContent = 'Select Subject';
+            document.getElementById('selectedChapter').textContent = 'Select Chapter';
+            renderChapters(allChapters); // Show all chapters again
+        } else {
+            // When search is cleared, re-render with current filtered chapters
+            const selectedSubject = document.getElementById('selectedSubject').textContent;
+            if (selectedSubject !== 'Select Subject') {
+                const filteredChapters = allChapters.filter(chapter => chapter.subject === selectedSubject);
+                renderChapters(filteredChapters);
+            } else {
+                renderChapters(allChapters);
+            }
+        }
         
         document.querySelectorAll('.dropdown-item').forEach(item => {
             const isSubject = item.dataset.type === 'subject';
-            let match = false;
-
-            if (isSubject) {
-                match = item.textContent.toLowerCase().includes(term);
-            } else {
-                const subjectValue = item.dataset.subject;
-                const chapterText = item.dataset.chapter.toLowerCase();
-                const parentSubject = subjects.find(s => s.value === subjectValue);
-                match = chapterText.includes(term) || parentSubject.name.toLowerCase().includes(term);
-            }
-
+            const itemText = item.textContent.toLowerCase();
+            const chapterSubject = item.dataset.subject?.toLowerCase() || '';
+            
+            const match = itemText.includes(term) || chapterSubject.includes(term);
             item.style.display = match ? 'flex' : 'none';
-            if (!isSubject && match) {
-                const subjectName = subjects.find(s => s.value === item.dataset.subject).name;
-                item.innerHTML = `${item.dataset.chapter} <span class="chapter-subject">${subjectName}</span>`;
-            }
         });
     });
 
@@ -390,4 +443,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    async function loadAllChapters(grade) {
+        const subjects = await fetch(`/main/api/navigation/subjects.php?grade=${grade}`)
+            .then(response => response.json())
+            .then(data => data.subjects);
+        
+        for (const subject of subjects) {
+            const chapters = await loadChapters(grade, subject);
+            allChapters.push(...chapters.map(chapter => ({
+                name: chapter,
+                subject: subject
+            })));
+        }
+        
+        renderChapters(allChapters);
+    }
 }); 
