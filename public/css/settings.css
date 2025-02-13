@@ -212,4 +212,26 @@ input:checked + .slider:before {
     background-color: #17181c;
     color: #ececec;
     padding: 0.8rem;
+}
+
+.success-message {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid #28a745;
+    color: #28a745;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.success-message i {
+    color: #28a745;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 } 
