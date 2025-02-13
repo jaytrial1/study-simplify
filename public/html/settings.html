@@ -86,6 +86,7 @@
             <!-- Settings Form -->
             <div class="settings-content">
                 <div class="auth-container">
+                    <!-- Profile Settings Box -->
                     <div class="auth-box">
                         <div class="auth-header">
                             <i class="fas fa-user-cog"></i>
@@ -127,6 +128,52 @@
                                 <i class="fas fa-save"></i> Save Changes
                             </button>
                         </form>
+                    </div>
+
+                    <!-- Password Change Box -->
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <i class="fas fa-lock"></i>
+                            <h1>Change Password</h1>
+                            <p>Update your account password</p>
+                        </div>
+                        
+                        <div id="password-error" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="error-text"></span>
+                        </div>
+                        
+                        <form class="auth-form" id="passwordForm">
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Current Password</label>
+                                <input type="password" id="currentPassword" required>
+                            </div>
+                            
+                            <div class="form-group" id="newPasswordGroup" style="display: none;">
+                                <label><i class="fas fa-key"></i> New Password</label>
+                                <input type="password" id="newPassword">
+                            </div>
+                            
+                            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                                <label><i class="fas fa-key"></i> Confirm New Password</label>
+                                <input type="password" id="confirmNewPassword">
+                            </div>
+
+                            <button type="submit" class="auth-button">
+                                <i class="fas fa-sync-alt"></i> Change Password
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Logout Box -->
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <h1>Account Actions</h1>
+                        </div>
+                        <button class="auth-button logout-button" id="logoutButton">
+                            <i class="fas fa-power-off"></i> Logout
+                        </button>
                     </div>
                 </div>
             </div>

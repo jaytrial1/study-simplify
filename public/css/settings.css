@@ -12,6 +12,9 @@
     padding-top: 5rem;
     overflow-y: auto;
     color: #ececec;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .settings-section {
@@ -234,4 +237,15 @@ input:checked + .slider:before {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Add this after the existing .auth-box styles */
+.auth-container .auth-box + .auth-box {
+    margin-top: 2rem;
+}
+
+/* Optional: Add a subtle divider between boxes */
+.auth-container .auth-box:not(:last-child) {
+    border-bottom: 1px solid #2a2b30;
+    padding-bottom: 2rem;
 } 
