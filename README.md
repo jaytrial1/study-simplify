@@ -1,400 +1,79 @@
-Below is the **final comprehensive specification document** for your backend. It combines all details from your original text and the "cotext.md" file, along with the additional clarifications and coding-ready instructions from my version. This version is designed to be sent directly to Cursor AI so it can generate the backend code (using PHP/MySQL) for your mobile-first web app without missing any features.
-
----
-
-# Final Comprehensive Backend Specification for the Exam Revision Chat App
-
-> **Overview:**  
-> This backend powers a mobile-first web app for students (initially B.Com, with plans to expand to Class 11/12 and CBSE) that offers a chat-based interface. Users navigate through subjects, chapters, and questions (stored as PDFs) to interact with an AI (DeepSeek AI API) for exam revision. They can save AI responses (in “normal” and “question-related” modes), view chat histories, and navigate saved answers. The UI is pre-built; this document covers all backend logic, API endpoints, file-handling, database schema, security, performance, and scalability.
-
----
-
-## 1. User Management & Authentication
-
-### 1.1 Registration / Sign Up
-
-- **Input Fields:**  
-  - **Name**  
-  - **Email ID**  
-  - **Password**  
-  - **Confirm Password**  
-  - **Grade Level** (e.g., B.Com, then later 11/12/CBSE)
-  
-- **Backend Tasks:**  
-  - Validate inputs (ensure password matches, proper email format, etc.).  
-  - Hash passwords securely (using bcrypt or similar).  
-  - Insert user record into the `users` table.  
-  - On account creation, assign the corresponding “grade folder” (this informs file system navigation later).
-
-- **API Endpoint:**  
-  `POST /api/register`  
-  *Request Body Example:*  
-  ```json
-  {
-      "name": "John Doe",
-      "email": "john@example.com",
-      "password": "securePassword",
-      "confirm_password": "securePassword",
-      "grade": "bcom"
-  }
-  ```
-
-### 1.2 Login & Session Management
-
-- **Backend Tasks:**  
-  - Validate credentials and generate a session or JWT token.  
-  - Ensure mobile-friendly session handling.
-
-- **API Endpoints:**  
-  - `POST /api/auth/login`  
-  - `POST /api/auth/logout`  
-
-### 1.3 User Settings / Profile Update
-
-- **Editable Fields:**  
-  - Name  
-  - Email  
-  - Grade Level (if needed)  
-  - Password (with verification and re-hashing)
-
-- **API Endpoint:**  
-  `PUT /api/user/profile`  
-  *Request Body Example:*  
-  ```json
-  {
-      "name": "John Doe",
-      "email": "john_new@example.com",
-      "grade": "bcom",
-      "current_password": "oldPass",
-      "new_password": "newSecurePass"
-  }
-  ```
-
----
-
-## 2. Navigation: Subject, Chapter & Question (PDF) Handling
-
-### 2.1 File/Folder Structure (PDF Organization)
-
-- **Structure on the Server:**  
-  ```
-  /pdf_repository/
-      ├── bcom/
-      │    ├── Subject1/
-      │    │     ├── Chapter1/
-      │    │     │     ├── "Question1.pdf"
-      │    │     │     ├── "Question2.pdf"
-      │    │     └── Chapter2/ ...
-      ├── 11th/
-      ├── 12th/
-      └── cbse/
-  ```
-- **Logic:**  
-  - The user's selected grade determines the base folder.  
-  - Within the grade folder, subjects and chapters are navigated to locate PDF files whose names represent the question titles.
-
-### 2.2 API Endpoints for Navigation
-
-- **List Subjects (Based on Grade):**  
-  `GET /api/navigation/subjects?grade=<grade>`  
-
-- **List Chapters (Based on Subject):**  
-  `GET /api/navigation/chapters?grade=<grade>&subject=<subject>`  
-
-- **List Questions (PDF Files) in a Chapter:**  
-  - When a user selects a subject and chapter, the backend reads the corresponding folder and returns available PDF names (stripping the ".pdf" extension).  
-  `GET /api/navigation/questions?grade=<grade>&subject=<subject>&chapter=<chapter>`
-
-### 2.3 Handling the “/” Command in Chat
-
-- **Functionality:**  
-  - When a user types `/` in the chat input, the frontend triggers an API call that returns a filtered list of question suggestions from the current chapter folder.
-  
-- **Backend Tasks:**  
-  - Perform a search/filter on PDF file names based on user input and selected context.
-  
-- **API Endpoint:**  
-  This can be combined with the questions listing endpoint, with additional query parameters for filtering (e.g., `/api/navigation/questions?grade=bcom&subject=Subject1&chapter=Chapter1&search=partOfName`).
-
----
-
-## 3. PDF Retrieval & Text Extraction
-
-### 3.1 Retrieving PDF Content
-
-- **Flow:**  
-  - Upon question selection (single or multiple), the backend locates the PDF file(s) using the file structure (`/pdf_repository/<grade>/<subject>/<chapter>/`).
-  
-- **Tasks:**  
-  - Use a PDF parsing library (like TCPDF, FPDI, or a suitable PHP PDF parser) to extract text from the PDF(s).
-
-### 3.2 Combining Multiple PDFs
-
-- **Scenario:**  
-  - If the user selects more than one question during a session, extract text from each PDF, then combine (concatenate) the texts in the appropriate order.
-  - Insert clear markers or separations if needed to help the AI understand the structure.
-
-- **API Endpoint:**  
-  `POST /api/pdf/extract`  
-  *Request Body Example:*  
-  ```json
-  {
-      "grade": "bcom",
-      "subject": "Subject1",
-      "chapter": "Chapter1",
-      "questions": ["Question1", "Question2"]
-  }
-  ```
-  *Response:*  
-  ```json
-  {
-      "combined_text": "Extracted text from Question1...<separator>...Extracted text from Question2..."
-  }
-  ```
-
----
-
-## 4. DeepSeek AI Integration & Chat Functionality
-
-### 4.1 Chat Initiation & AI Request
-
-- **Workflow:**  
-  1. **User Action:**  
-     - User selects one or multiple questions via the “/” command.
-     - Optionally adds additional context in the chat input.
-  2. **Backend Processing:**  
-     - Locate and extract text from the selected PDF(s) using the above endpoints.
-     - Combine the extracted text with a pre-built prompt template.
-     - Append any user-provided message.
-  3. **AI Call:**  
-     - Send the full prompt to the DeepSeek AI API.
-     - Receive the AI-generated answer.
-  4. **Response:**  
-     - Return the AI response to the frontend for display.
-
-- **API Endpoint:**  
-  `POST /api/ai/query`  
-  *Request Body Example:*  
-  ```json
-  {
-      "grade": "bcom",
-      "subject": "Subject1",
-      "chapter": "Chapter1",
-      "selectedQuestions": ["Question1", "Question2"],
-      "userMessage": "Explain this in simple terms."
-  }
-  ```
-  *Response Example:*  
-  ```json
-  {
-      "ai_response": "Here is the explanation based on your selected content..."
-  }
-  ```
-
-### 4.2 Handling Multiple Question Selections
-
-- **Logic:**  
-  - When multiple PDFs are selected, ensure their texts are merged properly, keeping track of each question’s boundaries if needed.
-  - Maintain consistent chat session records that indicate which questions are being discussed.
-
----
-
-## 5. Chat Session Management & History
-
-### 5.1 Chat Session Creation and Storage
-
-- **Definition:**  
-  - A “chat session” is the conversation between two “/” commands. Each session is linked to one or more questions and contains the entire dialogue.
-
-- **Data Model (Suggested Table: `chat_history`):**
-  ```sql
-  CREATE TABLE chat_history (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT,
-      question_identifier VARCHAR(255),  -- can store one or multiple question names (e.g., comma-separated or JSON array)
-      subject VARCHAR(100),
-      chapter VARCHAR(100),
-      conversation TEXT,  -- JSON or concatenated text of the conversation
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-  );
-  ```
-
-- **API Endpoints:**  
-  - **Create/Update Chat Session:**  
-    `POST /api/chat/session`  
-    *Request Body Example:*  
-    ```json
-    {
-        "user_id": 1,
-        "question_identifier": "Question1,Question2",
-        "subject": "Subject1",
-        "chapter": "Chapter1",
-        "conversation": "[{\"sender\": \"user\", \"message\": \"/\"}, {\"sender\": \"ai\", \"message\": \"Answer text...\"}]"
-    }
-    ```
-  - **Retrieve Chat History:**  
-    `GET /api/chat/history?user_id=1&subject=Subject1&chapter=Chapter1`  
-    - Supports search and filtering by question name.
-
-### 5.2 Combining Chats for Multiple Questions
-
-- **Logic:**  
-  - If a chat session already exists for a particular question (or set of questions), append new messages.  
-  - Maintain markers or timestamps to indicate when a new “/” command starts a new conversation segment.
-
----
-
-## 6. Saved Answers Functionality
-
-### 6.1 Saving AI Responses
-
-- **Options:**  
-  - **Normal Save:** When the AI response is optimal for exam revision.  
-  - **Question-Related Save:** For responses that include study methods, mnemonics, or additional notes.
-
-- **Data Model (Suggested Table: `saved_answers`):**
-  ```sql
-  CREATE TABLE saved_answers (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT,
-      question_identifier VARCHAR(255),
-      subject VARCHAR(100),
-      chapter VARCHAR(100),
-      answer_text TEXT,
-      save_type ENUM('normal', 'question_related'),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-  );
-  ```
-
-- **API Endpoints:**  
-  - **Save Answer:**  
-    `POST /api/saved-answers`  
-    *Request Body Example:*  
-    ```json
-    {
-        "user_id": 1,
-        "question_identifier": "Question1",
-        "subject": "Subject1",
-        "chapter": "Chapter1",
-        "answer_text": "Full AI response text...",
-        "save_type": "normal"
-    }
-    ```
-  - **Update Saved Answer:**  
-    `PUT /api/saved-answers/:id`
-  - **Retrieve Saved Answers:**  
-    `GET /api/saved-answers?user_id=1&subject=Subject1&chapter=Chapter1`  
-    - Supports tree-view organization, search by question name, and filtering.
-
-### 6.2 Navigation and Linking to Chat History
-
-- **Features:**  
-  - “View Full Answer” button in the UI that fetches the full text.
-  - Navigation (previous/next) among saved answers under the same question.
-  - Link to the corresponding chat session (with highlight on the saved response).
-
-- **Additional Endpoint (for navigation):**  
-  `GET /api/saved-answers/:id/navigation`
-
----
-
-## 7. Additional UI/UX Support (Backend Data)
-
-### 7.1 Collapsible Example Data
-
-- **Usage:**  
-  - Provide data for subject/chapter-specific collapsible examples as well as a global example button.
-  
-- **API Endpoint (if dynamic):**  
-  `GET /api/ui/examples?scope=subject` or `GET /api/ui/examples?scope=global`
-
-### 7.2 Mobile Optimization
-
-- **API Considerations:**  
-  - All endpoints should return lightweight JSON.  
-  - Implement pagination (e.g., for chat history and saved answers).  
-  - Use caching for frequently accessed data like file listings.
-
----
-
-## 8. Database Schema Summary
-
-### 8.1 Users Table
-```sql
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
-    password VARCHAR(255),
-    grade_level VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-### 8.2 Chat History Table
-*(See section 5.1 for full details.)*
-
-### 8.3 Saved Answers Table
-*(See section 6.1 for full details.)*
-
-*Additional tables can be created if needed for subjects/chapters metadata, though the file system is the primary source.*
-
----
-
-## 9. Security, Performance & Scalability
-
-- **Security:**  
-  - Use HTTPS, secure token-based authentication (e.g., JWT), and proper input sanitization.  
-  - Protect file system access (prevent directory traversal).  
-  - Validate and sanitize all inputs, including data from PDF extraction.
-
-- **Performance & Scalability:**  
-  - Apply rate limiting on heavy endpoints (e.g., AI API calls, PDF extraction).  
-  - Implement caching for frequently requested data (e.g., PDF listings).  
-  - Consider pagination for large result sets (chat history, saved answers).  
-  - Plan for scalability (e.g., microservices or serverless functions) if usage grows.
-
-- **Testing & Logging:**  
-  - Include robust error handling and logging for debugging.  
-  - Thoroughly test each endpoint with unit and integration tests.
-
----
-
-## 10. Workflow Summary
-
-1. **User Registration & Login:**  
-   - User signs up, selecting a grade level (which determines the base folder).  
-   - User logs in and receives a secure session token.
-
-2. **Navigating the Chat Interface:**  
-   - User selects a subject and chapter via the UI.  
-   - Frontend calls navigation endpoints to fetch subjects, chapters, and available questions (PDF names).
-
-3. **Using the “/” Command:**  
-   - User types `/` in the chat input to trigger the question suggestion list (retrieved from `/api/navigation/questions` with filtering).
-
-4. **Starting a Chat Session:**  
-   - Upon question selection, the backend extracts text from the corresponding PDF(s).  
-   - The extracted text is merged with a pre-built prompt and any user-provided query, then sent to the DeepSeek AI API.  
-   - The AI response is returned and displayed in the chat UI; the conversation is stored in the `chat_history` table.
-
-5. **Saving AI Responses:**  
-   - Users may save an AI response as “normal” or “question-related” by calling `/api/saved-answers`.  
-   - Saved answers are organized in a tree-view by grade, subject, chapter, and question, with navigation options and links to chat history.
-
-6. **User Settings & Logout:**  
-   - Users update their profile/settings via `/api/user/profile`.  
-   - Logout via `/api/auth/logout`.
-
----
-
-## Final Remarks
-
-- **This final specification includes every detail from your original text and the "cotext.md" file.**  
-- **It is structured to be complete, coding-ready, and clear for Cursor AI to generate the backend in PHP/MySQL.**  
-- **Please review once more to confirm that all your use cases, flows, and integration points are covered.**
+# Web App Backend Development Instructions
+
+## Overview
+This document provides a structured set of instructions for developing the backend of a web app designed for B.Com students. The app will later expand to include 11th, 12th, and CBSE students. The frontend UI is already built and designed for mobile users. The backend will be developed using PHP and MySQL.
+
+## Core Features & Functionality
+
+### 1. **User Signup**
+- Users will register with the following details:
+  - Name
+  - Email ID
+  - Password & Confirm Password
+  - Grade Level (Standard selection)
+
+### 2. **Main Chat Interface**
+- After logging in, users reach the chat interface where they can:
+  - Select a **Subject** and **Chapter** from a dropdown at the top.
+  - Use **"/"** to open a **suggestion box** (similar to a Telegram bot command panel) to search and select a question.
+  - Start chatting with AI based on the selected question.
+  - After selecting a **question**, the user can choose the **answer length** (Short or Long).
+  - Each length has a **different predefined prompt**:
+    - If "Long" is selected, the extracted PDF text is inserted into a **predefined prompt template for long responses** before generating the answer.
+    - If "Short" is selected, the extracted PDF text is inserted into a **predefined prompt template for short responses** before generating the answer.
+
+### 3. **Saving Responses**
+- Users can save AI responses in two ways:
+  - **Normal Save**: For exam revision purposes.
+  - **Question-Related Save**: For responses related to curiosity, methods, or extra information.
+
+### 4. **Backend Logic**
+- The AI model used for backend processing is **Gemini 2 Flash Lite API**.
+- All subjects and chapters displayed in the selection panel of the chatbot are fetched dynamically based on the **grade level** stored in the database.
+- All questions shown in the **suggestion box** (from typing "/") are fetched from a **PDF repository folder**, not stored in the database directly.
+- The folder structure is as follows:
+  - **Grade Level Folder** → **Subject Folder** → **Chapter Folder** → **PDFs named after questions**
+  - When the user selects a **grade**, the corresponding **subjects and chapters** update dynamically in the selection panel.
+  - When the user selects a **chapter**, the chatbot suggestion box updates to show only the relevant **questions** (PDF names) belonging to that chapter.
+  - When the user selects a **question**, the corresponding PDF text is extracted and passed into the **prebuilt Gemini 2 Flash Lite prompt**.
+  - If multiple questions are selected, texts from all selected PDFs are extracted and merged into the prompt before generating a response.
+  - After selecting a question, the system prompts the user to **choose an answer length (Short or Long)**.
+  - Based on the selection, the extracted PDF text is inserted into the **corresponding prompt template** before generating a response.
+
+### 5. **Chat History**
+- The chat system saves interactions between two **"/"** commands as a single chat history entry.
+- If the user starts another chat with a new question, a new chat history entry is created.
+- If the user selects multiple questions in the same interaction, the response is stored under both questions' histories.
+- Users can search chat history by:
+  - **Typing a question name**.
+  - **Filtering by subject and chapter**.
+
+### 6. **Saved Answers Page**
+- Users can navigate to saved answers via the **menu bar**.
+- Features include:
+  - A **search bar** to find saved answers.
+  - **Filters for subject and chapter**.
+  - A **tree-view structure** to browse saved answers (Subject → Chapter → Question → Answers).
+  - **View Full Answer**: Opens the complete saved response.
+  - **Navigation Buttons**: Move between saved answers for the same question (Previous/Next).
+  - **Open Chat History**: Redirects to the chatbot and highlights the original conversation.
+  - **Change Save Type**: Users can modify the save type (Normal Save or Question-Related Save).
+  - **Collapse/Expand Buttons** for structured browsing.
+
+### 7. **Settings Page**
+- Allows users to update:
+  - Name
+  - Email
+  - Grade Level (which dynamically updates the subject & chapter selection panel accordingly)
+  - Password
+  - Logout
+
+## Summary
+- The AI backend is powered by **Gemini 2 Flash Lite API**.
+- All selection options (Grade, Subject, Chapter) dynamically affect the chatbot’s question suggestion box.
+- All questions are **fetched from the PDF repository** based on selection, rather than being stored in a database.
+- Users can select the **answer length** (Short or Long), with each having a **predefined prompt template**.
+- The backend should handle chat history, saved responses, and dynamic updates efficiently.
+
+This document serves as a complete backend instruction guide to be sent to Cursor AI for backend implementation in PHP and MySQL.
 
