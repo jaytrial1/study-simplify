@@ -1,3 +1,36 @@
+// Add these functions outside of DOMContentLoaded (at the very top of the file)
+function clearInput() {
+    const userInput = document.getElementById('userInput');
+    userInput.value = '';
+    document.getElementById('toastNotification').classList.remove('active');
+    document.getElementById('commandPanel').classList.remove('active');
+}
+
+function showToastWithAction(message) {
+    const toast = document.getElementById('toastNotification');
+    toast.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <span id="toastMessage">${message}</span>
+            <span style="font-size: 0.9em; color: #842029;">Do you want to remove it?</span>
+            <div class="toast-buttons">
+                <button class="ok-btn" onclick="clearInput()">OK</button>
+                <button class="cancel-btn" onclick="hideToast()">Cancel</button>
+            </div>
+        </div>
+    `;
+    toast.classList.add('active');
+    
+    setTimeout(() => {
+        if (toast.classList.contains('active')) {
+            toast.classList.remove('active');
+        }
+    }, 5000);
+}
+
+function hideToast() {
+    document.getElementById('toastNotification').classList.remove('active');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
@@ -12,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startY = 0;
     let chapters = []; // Declare a global variable to store chapters
     let allChapters = [];
+    let cachedQuestions = [];
 
     // Make userGrade accessible throughout the file
     const userGrade = localStorage.getItem('userGrade');
@@ -91,71 +125,158 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Command panel functionality
-    userInput.addEventListener('input', (e) => {
+    // Add this function to load questions
+    async function loadQuestions(grade, subject, chapter, searchTerm = '') {
+        try {
+            const response = await fetch(`/main/api/navigation/questions.php?grade=${grade}&subject=${subject}&chapter=${chapter}&search=${searchTerm}`);
+            const data = await response.json();
+            return data.questions || [];
+        } catch (error) {
+            console.error('Error loading questions:', error);
+            return [];
+        }
+    }
+
+    // Update this function (around line 108)
+    function hasQuestionsFromDifferentChapter(inputValue, currentChapter) {
+        // If input is empty or no chapter selected, return false
+        if (!inputValue || currentChapter === 'Select Chapter') return false;
+        
+        // Get the currently selected subject and chapter
+        const selectedSubject = document.getElementById('selectedSubject').textContent;
+        const selectedChapter = document.getElementById('selectedChapter').textContent;
+        
+        // If we're still in the same chapter, return false
+        if (selectedChapter === currentChapter) return false;
+        
+        // Check if input contains any question (indicated by presence of text)
+        return inputValue.trim().length > 0;
+    }
+
+    // Update command panel event listener
+    userInput.addEventListener('input', async (e) => {
         const value = e.target.value;
         const cursorPosition = e.target.selectionStart;
         
         // Find the last slash before cursor position
         const lastSlashIndex = value.lastIndexOf('/', cursorPosition);
         
-        // If there's no slash or if the slash is after cursor, hide panel
         if (lastSlashIndex === -1 || lastSlashIndex >= cursorPosition) {
             commandPanel.classList.remove('active');
             return;
         }
         
-        // Check if there's any whitespace between the slash and cursor
-        const textBetweenSlashAndCursor = value.slice(lastSlashIndex, cursorPosition);
-        if (textBetweenSlashAndCursor.includes(' ')) {
-            commandPanel.classList.remove('active');
+        // Get current selections
+        const selectedSubject = document.getElementById('selectedSubject').textContent;
+        const selectedChapter = document.getElementById('selectedChapter').textContent;
+        
+        // Check if subject is selected
+        if (selectedSubject === 'Select Subject' || selectedChapter === 'Select Chapter') {
+            commandPanel.innerHTML = `
+                <div class="command-list">
+                    <div class="command-item">
+                        <i class="fas fa-info-circle"></i>
+                        ${selectedSubject === 'Select Subject' ? 'Please select a subject first' : 'Please select a chapter first'}
+                    </div>
+                </div>`;
+            commandPanel.classList.add('active');
+            
+            // Remove the slash after 1.5 seconds
+            setTimeout(() => {
+                if (userInput.value.endsWith('/')) {
+                    userInput.value = userInput.value.slice(0, -1);
+                    commandPanel.classList.remove('active');
+                }
+            }, 1500);
             return;
         }
         
-        // Get the command text after slash
-        const searchText = textBetweenSlashAndCursor.slice(1).toLowerCase();
-        
-        // Filter and show/hide commands
-        let hasVisibleCommands = false;
-        commandItems.forEach(item => {
-            const commandText = item.textContent.toLowerCase();
-            if (commandText.includes(searchText)) {
-                item.classList.remove('hidden');
-                hasVisibleCommands = true;
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-        
-        // Show/hide panel based on matching commands
-        if (hasVisibleCommands) {
+        // Check if there are questions from a different chapter
+        if (hasQuestionsFromDifferentChapter(value.slice(0, lastSlashIndex), selectedChapter)) {
+            commandPanel.innerHTML = `
+                <div class="command-list">
+                    <div class="command-item" style="
+                        background: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        padding: 12px;
+                        border-radius: 4px;
+                        text-align: center;
+                    ">
+                        Please send your current message or clear the input to select questions from a different chapter
+                    </div>
+                </div>`;
             commandPanel.classList.add('active');
-        } else {
-            commandPanel.classList.remove('active');
+            return;
         }
+        
+        // Get the search text after slash
+        const searchText = value.slice(lastSlashIndex, cursorPosition).slice(1).toLowerCase();
+        
+        // Load questions only if we don't have them cached
+        if (cachedQuestions.length === 0) {
+            cachedQuestions = await loadQuestions(userGrade, selectedSubject, selectedChapter);
+        }
+        
+        // Real-time filtering based on what user types
+        const filteredQuestions = searchText 
+            ? cachedQuestions.filter(question => {
+                // Don't show questions that are already in the input
+                const currentInput = value.toLowerCase();
+                return !currentInput.includes(question.toLowerCase()) && 
+                       question.toLowerCase().startsWith(searchText);
+            })
+            : cachedQuestions.filter(question => 
+                !value.toLowerCase().includes(question.toLowerCase())
+            );
+        
+        if (filteredQuestions.length === 0) {
+            commandPanel.innerHTML = `
+                <div class="command-list">
+                    <div class="command-item">No matching questions found</div>
+                </div>`;
+        } else {
+            commandPanel.innerHTML = `
+                <div class="command-list">
+                    ${filteredQuestions
+                        .map(question => `<div class="command-item" data-command="${question}">${question}</div>`)
+                        .join('')}
+                </div>`;
+        }
+        
+        commandPanel.classList.add('active');
     });
 
-    // Handle command execution
-    function handleCommand(command) {
-        const baseCommand = command.split(' ')[0];
-        switch(baseCommand) {
-            case '/clear':
-                chatMessages.innerHTML = '';
-                break;
-            case '/help':
-                addMessage("Available commands: /help, /save, /history, /clear, /theme", false);
-                break;
-            case '/save':
-                addMessage("Conversation saved successfully!", false);
-                break;
-            case '/theme':
-                addMessage("Theme changed to dark mode", false);
-                break;
-            case '/history':
-                addMessage("Showing chat history...", false);
-                break;
-        }
-    }
+    // Update the click handler for command items
+    commandPanel.addEventListener('click', (e) => {
+        const commandItem = e.target.closest('.command-item');
+        if (!commandItem) return;
+        
+        const command = commandItem.dataset.command;
+        if (!command) return;
+        
+        // Get current input value and cursor position
+        const cursorPosition = userInput.selectionStart;
+        const value = userInput.value;
+        
+        // Find the last slash before cursor
+        const lastSlashIndex = value.lastIndexOf('/', cursorPosition);
+        
+        // Get text before the slash command and after the cursor
+        const textBeforeSlash = value.slice(0, lastSlashIndex);
+        const textAfterCursor = value.slice(cursorPosition);
+        
+        // Add the selected question with a comma if there's already text
+        const separator = textBeforeSlash.trim() ? ', ' : '';
+        userInput.value = textBeforeSlash + separator + command + textAfterCursor;
+        
+        // Move cursor to end of inserted command
+        const newPosition = lastSlashIndex + command.length + separator.length;
+        userInput.setSelectionRange(newPosition, newPosition);
+        
+        commandPanel.classList.remove('active');
+        userInput.focus();
+    });
 
     // Function to handle user message
     function handleUserMessage() {
@@ -191,29 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             handleUserMessage();
         }
-    });
-
-    // Handle command selection
-    commandItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const command = item.dataset.command;
-            const cursorPosition = userInput.selectionStart;
-            
-            // Find the last slash before cursor
-            const lastSlashIndex = userInput.value.lastIndexOf('/', cursorPosition);
-            
-            // Get the text before the slash and after the cursor
-            const textBeforeSlash = userInput.value.slice(0, lastSlashIndex);
-            const textAfterCursor = userInput.value.slice(cursorPosition);
-            
-            userInput.value = textBeforeSlash + command + ' ' + textAfterCursor;
-            userInput.focus();
-            commandPanel.classList.remove('active');
-            
-            // Place cursor after the inserted command
-            const newPosition = lastSlashIndex + command.length + 1;
-            userInput.setSelectionRange(newPosition, newPosition);
-        });
     });
 
     // Add white-space style to message content CSS
@@ -366,10 +464,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const subjectItem = e.target.closest('.dropdown-item[data-type="subject"]');
             if (!subjectItem) return;
             
+            if (userInput.value.trim()) {
+                showToastWithAction('Please send your current message or clear the input to select a different subject');
+                return;
+            }
+            
             const subjectValue = subjectItem.dataset.value;
             document.getElementById('selectedSubject').textContent = subjectItem.textContent;
             document.getElementById('selectedChapter').textContent = 'Select Chapter';
-            
+            cachedQuestions = [];
             const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
             renderChapters(filteredChapters);
         });
@@ -379,17 +482,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
             if (!chapterItem) return;
             
-            // Set chapter
-            document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
+            if (userInput.value.trim()) {
+                showToastWithAction('Please send your current message or clear the input to select a different chapter');
+                return;
+            }
             
-            // Auto-select corresponding subject
+            document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
             const subjectValue = chapterItem.dataset.subject;
             document.getElementById('selectedSubject').textContent = subjectValue;
-            
-            // Filter chapters for the selected subject
+            cachedQuestions = [];
             const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
             renderChapters(filteredChapters);
-            
             dropdownPanel.classList.remove('active');
         });
     }
@@ -457,5 +560,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         renderChapters(allChapters);
+    }
+
+    // Handle command execution
+    function handleCommand(command) {
+        const baseCommand = command.split(' ')[0];
+        switch(baseCommand) {
+            case '/clear':
+                chatMessages.innerHTML = '';
+                break;
+            case '/help':
+                addMessage("Available commands: /help, /save, /history, /clear, /theme", false);
+                break;
+            case '/save':
+                addMessage("Conversation saved successfully!", false);
+                break;
+            case '/theme':
+                addMessage("Theme changed to dark mode", false);
+                break;
+            case '/history':
+                addMessage("Showing chat history...", false);
+                break;
+        }
+    }
+
+    // Add this function at the top with other functions
+    function showToast(message) {
+        const toast = document.getElementById('toastNotification');
+        const toastMessage = document.getElementById('toastMessage');
+        toastMessage.textContent = message;
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
     }
 }); 
