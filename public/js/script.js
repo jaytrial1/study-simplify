@@ -31,6 +31,31 @@ function hideToast() {
     document.getElementById('toastNotification').classList.remove('active');
 }
 
+function showChangeConfirmation() {
+    const toast = document.getElementById('toastNotification');
+    toast.innerHTML = `
+        <div class="confirmation-dialog">
+            <p>You have unsaved selected questions. Changing chapters will clear them. Continue?</p>
+            <div class="dialog-buttons">
+                <button class="confirm-btn">Continue</button>
+                <button class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    `;
+    toast.classList.add('active');
+
+    return new Promise((resolve) => {
+        const handleClick = (result) => {
+            toast.classList.remove('active');
+            resolve(result);
+            toast.removeEventListener('click', handleClick);
+        };
+
+        toast.querySelector('.confirm-btn').addEventListener('click', () => handleClick(true));
+        toast.querySelector('.cancel-btn').addEventListener('click', () => handleClick(false));
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
@@ -46,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let chapters = []; // Declare a global variable to store chapters
     let allChapters = [];
     let cachedQuestions = [];
+    let selectedQuestions = new Set();
 
     // Make userGrade accessible throughout the file
     const userGrade = localStorage.getItem('userGrade');
@@ -230,16 +256,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 !value.toLowerCase().includes(question.toLowerCase())
             );
         
-        if (filteredQuestions.length === 0) {
+        // Filter out already selected questions
+        const availableQuestions = filteredQuestions.filter(q => 
+            !selectedQuestions.has(q)
+        );
+
+        if (availableQuestions.length === 0) {
             commandPanel.innerHTML = `
                 <div class="command-list">
-                    <div class="command-item">No matching questions found</div>
+                    <div class="command-item">No new questions available</div>
                 </div>`;
         } else {
             commandPanel.innerHTML = `
                 <div class="command-list">
-                    ${filteredQuestions
-                        .map(question => `<div class="command-item" data-command="${question}">${question}</div>`)
+                    ${availableQuestions
+                        .map(question => `
+                            <div class="command-item" data-command="${question}">
+                                ${question}
+                            </div>`)
                         .join('')}
                 </div>`;
         }
@@ -255,27 +289,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const command = commandItem.dataset.command;
         if (!command) return;
         
-        // Get current input value and cursor position
-        const cursorPosition = userInput.selectionStart;
-        const value = userInput.value;
+        // Clear the input including the '/' character
+        userInput.value = '';
         
-        // Find the last slash before cursor
-        const lastSlashIndex = value.lastIndexOf('/', cursorPosition);
-        
-        // Get text before the slash command and after the cursor
-        const textBeforeSlash = value.slice(0, lastSlashIndex);
-        const textAfterCursor = value.slice(cursorPosition);
-        
-        // Add the selected question with a comma if there's already text
-        const separator = textBeforeSlash.trim() ? ', ' : '';
-        userInput.value = textBeforeSlash + separator + command + textAfterCursor;
-        
-        // Move cursor to end of inserted command
-        const newPosition = lastSlashIndex + command.length + separator.length;
-        userInput.setSelectionRange(newPosition, newPosition);
-        
+        selectedQuestions.add(command);
+        updateSelectedQuestionsUI();
         commandPanel.classList.remove('active');
         userInput.focus();
+    });
+
+    // Add click handler for removing questions
+    document.getElementById('selectedQuestionsContainer').addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-question')) {
+            const questionText = e.target.previousElementSibling.textContent;
+            selectedQuestions.delete(questionText);
+            updateSelectedQuestionsUI();
+        }
     });
 
     // Function to handle user message
@@ -457,48 +486,55 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('No grade found in localStorage');
     }
 
-    // Modify the existing dropdown handler
-    function initDropdown() {
-        // Subject selection
-        document.querySelector('.subject-list').addEventListener('click', e => {
-            const subjectItem = e.target.closest('.dropdown-item[data-type="subject"]');
-            if (!subjectItem) return;
-            
-            if (userInput.value.trim()) {
-                showToastWithAction('Please send your current message or clear the input to select a different subject');
-                return;
-            }
-            
-            const subjectValue = subjectItem.dataset.value;
-            document.getElementById('selectedSubject').textContent = subjectItem.textContent;
-            document.getElementById('selectedChapter').textContent = 'Select Chapter';
-            cachedQuestions = [];
-            const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
-            renderChapters(filteredChapters);
-        });
-
-        // Updated Chapter selection
-        document.querySelector('.chapter-list').addEventListener('click', e => {
-            const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
-            if (!chapterItem) return;
-            
-            if (userInput.value.trim()) {
-                showToastWithAction('Please send your current message or clear the input to select a different chapter');
-                return;
-            }
-            
-            document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
-            const subjectValue = chapterItem.dataset.subject;
-            document.getElementById('selectedSubject').textContent = subjectValue;
-            cachedQuestions = [];
-            const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
-            renderChapters(filteredChapters);
-            dropdownPanel.classList.remove('active');
-        });
+    // Modify the confirmChangeIfNeeded function
+    async function confirmChangeIfNeeded() {
+        // Clear command panel if active
+        if (commandPanel.classList.contains('active')) {
+            userInput.value = '';
+            commandPanel.classList.remove('active');
+        }
+        
+        if (selectedQuestions.size > 0) {
+            const confirmed = await showChangeConfirmation();
+            if (!confirmed) return false;
+            selectedQuestions.clear();
+            updateSelectedQuestionsUI();
+        }
+        return true;
     }
 
-    // Call initialization
-    initDropdown();
+    // Modify subject selection handler
+    document.querySelector('.subject-list').addEventListener('click', async e => {
+        const subjectItem = e.target.closest('.dropdown-item[data-type="subject"]');
+        if (!subjectItem) return;
+        
+        if (!await confirmChangeIfNeeded()) return;
+        
+        // Original subject change logic
+        const subjectValue = subjectItem.dataset.value;
+        document.getElementById('selectedSubject').textContent = subjectValue;
+        document.getElementById('selectedChapter').textContent = 'Select Chapter';
+        cachedQuestions = [];
+        const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
+        renderChapters(filteredChapters);
+    });
+
+    // Modify chapter selection handler
+    document.querySelector('.chapter-list').addEventListener('click', async e => {
+        const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
+        if (!chapterItem) return;
+        
+        if (!await confirmChangeIfNeeded()) return;
+        
+        // Original chapter change logic
+        document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
+        const subjectValue = chapterItem.dataset.subject;
+        document.getElementById('selectedSubject').textContent = subjectValue;
+        cachedQuestions = [];
+        const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
+        renderChapters(filteredChapters);
+        dropdownPanel.classList.remove('active');
+    });
 
     // Update search to handle simplified structure
     document.querySelector('.search-input').addEventListener('input', function(e) {
@@ -594,5 +630,21 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             toast.style.display = 'none';
         }, 3000);
+    }
+
+    // Add this function
+    function updateSelectedQuestionsUI() {
+        const container = document.getElementById('selectedQuestionsContainer');
+        container.innerHTML = '';
+        
+        selectedQuestions.forEach(question => {
+            const tag = document.createElement('div');
+            tag.className = 'question-tag';
+            tag.innerHTML = `
+                <span>${question}</span>
+                <div class="remove-question">×</div>
+            `;
+            container.appendChild(tag);
+        });
     }
 }); 

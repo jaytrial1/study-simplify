@@ -1584,3 +1584,83 @@ select option:hover {
     }
 }
 
+#selectedQuestionsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.question-tag {
+    background: #314da2;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.remove-question {
+    cursor: pointer;
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding-left: 4px;
+}
+
+.remove-question:hover {
+    color: var(--primary-color);
+}
+
+.confirmation-dialog {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-width: 300px;
+    text-align: center;
+}
+
+.confirmation-dialog p {
+    margin: 0 0 1.5rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.confirm-btn, .cancel-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.confirm-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #3558b5;
+}
+
+.cancel-btn {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+.cancel-btn:hover {
+    background: #3a3c42;
+}
+
