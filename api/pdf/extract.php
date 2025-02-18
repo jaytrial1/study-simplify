@@ -20,33 +20,32 @@ try {
     
     $parser = new PDFParser();
     
-    // Handle single or multiple questions
-    if (is_array($data['questions'])) {
-        $text = $parser->extractMultipleTexts(
-            $data['grade'],
-            $data['subject'],
-            $data['chapter'],
-            $data['questions']
-        );
-    } else {
-        $text = $parser->extractText(
-            $data['grade'],
-            $data['subject'],
-            $data['chapter'],
-            $data['questions']
-        );
-    }
+    // Extract text using Python script
+    $result = $parser->extractText(
+        $data['grade'],
+        $data['subject'],
+        $data['chapter'],
+        $data['questions']
+    );
+    
+    // Debug info
+    error_log("Extraction result: " . json_encode($result));
     
     echo json_encode([
         'success' => true,
-        'text' => $text
-    ]);
+        'text' => $result['text'],
+        'pages' => $result['pages'],
+        'size' => $result['size'],
+        'count' => $result['count'] ?? 1,
+        'length' => strlen($result['text'])
+    ], JSON_PRETTY_PRINT);
 
 } catch (Exception $e) {
+    error_log("Error in PDF extraction: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage()
-    ]);
+    ], JSON_PRETTY_PRINT);
 }
 ?>
