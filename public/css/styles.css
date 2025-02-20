@@ -313,14 +313,18 @@ body {
 .user-message {
     display: flex;
     justify-content: flex-end;
-    padding-left: 20%;
+    padding-left: 10%;
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
 }
 
 .user-message .message-content {
-    background-color: #2a2a30;
+    background-color: #414158;
     padding: 0.8rem;
     border-radius: 15px;
     max-width: 70%;
+    min-width: 100px;
     word-wrap: break-word;
     border: 1px solid #3a3a42;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -335,16 +339,15 @@ body {
 
 .bot-message {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding-right: 20%;
+    gap: 12px;
+    padding: 12px 16px;
 }
 
 .bot-icon {
     flex-shrink: 0;
     width: 35px;
     height: 35px;
-    background-color: #414158;
+    background-color: #4166d5;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -354,27 +357,89 @@ body {
 
 .bot-message .message-content {
     flex: 1;
-    background-color: #414158;
-    color: #ececec;
-    padding: 0.8rem;
-    border-radius: 15px;
-    max-width: 70%;
-    word-wrap: break-word;
-    font-family: "Söhne", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
+    background: #1E1E2D;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #E6E6E6;
 }
 
-/* Optional: Add different border radius for better visual distinction */
-.bot-message .message-content {
-    border-top-left-radius: 5px;
+/* Main heading */
+.topic-title {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
 }
 
-.user-message .message-content {
-    border-top-right-radius: 5px;
-    color: #ececec;
-    font-weight: 400;
+/* Lists */
+.markdown-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.markdown-content li {
+    position: relative;
+    padding-left: 16px;
+    margin: 8px 0;
+    color: #E6E6E6;
+}
+
+.markdown-content li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #4166D5;
+}
+
+/* Nested lists */
+.markdown-content li li {
+    margin-left: 16px;
+    color: #CCCCCC;
+}
+
+/* Highlighted terms */
+.highlight {
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+/* Section titles (like "1. Company") */
+.section-heading {
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 24px 0 12px 0;
+}
+
+/* First section heading shouldn't have top margin */
+.section-heading:first-child {
+    margin-top: 0;
+}
+
+/* Memory tips */
+.memory-tip {
+    background: rgba(65, 102, 213, 0.08);
+    border-left: 3px solid #4166D5;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+}
+
+.memory-tip-label {
+    color: #FFFFFF;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* Dividers */
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 16px 0;
 }
 
 .chat-input {
@@ -550,6 +615,17 @@ body {
 
     .answer-card {
         margin: 0 0.5rem 0.5rem;
+        padding: 1rem;
+    }
+
+    .bot-message,
+    .user-message {
+        padding-right: 5%;
+        
+       
+    }
+
+    .bot-message .message-content {
         padding: 1rem;
     }
 }
@@ -1662,5 +1738,311 @@ select option:hover {
 
 .cancel-btn:hover {
     background: #3a3c42;
+}
+
+.answer-type-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.answer-type-popup.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.answer-type-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+}
+
+.answer-type-button:hover {
+    background: #357abd;
+}
+
+.markdown-content {
+    line-height: 1.6;
+}
+
+.markdown-content h1 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.01em;
+}
+
+.markdown-content h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin: 20px 0 12px 0;
+}
+
+.markdown-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin: 20px 0 12px 0;
+}
+
+.markdown-content ul {
+    margin: 8px 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.markdown-content li {
+    position: relative;
+    padding-left: 20px;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.markdown-content li::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: #4166d5;
+}
+
+.markdown-content p {
+    margin: 12px 0;
+    color: #d1d1d1;
+}
+
+.markdown-content .memory-tip {
+    background: rgba(65, 102, 213, 0.1);
+    border-left: 3px solid #4166d5;
+    padding: 12px;
+    margin: 16px 0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.markdown-content > * + * {
+    margin-top: 12px;
+}
+
+.markdown-content dt {
+    color: #fff;
+    font-weight: 500;
+    margin-top: 12px;
+}
+
+.markdown-content dd {
+    color: #d1d1d1;
+    margin-left: 16px;
+    margin-top: 4px;
+}
+
+.keyword {
+    color: #4166d5;
+    font-weight: 500;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .bot-message .message-content {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    .markdown-content h1 {
+        font-size: 16px;
+    }
+
+    .markdown-content h2 {
+        font-size: 15px;
+    }
+
+    .markdown-content li {
+        padding-left: 14px;
+    }
+}
+
+/* Title styling */
+.title {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* Section styling */
+.section {
+    margin: 12px 0;
+}
+
+/* Key terms in blue */
+.key-term {
+    color: #4166d5;
+    font-weight: 500;
+}
+
+/* List styling */
+.markdown-content ul {
+    margin: 8px 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.markdown-content li {
+    position: relative;
+    padding-left: 20px;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.markdown-content li::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: #4166d5;
+}
+
+/* Definition styling */
+.definition {
+    margin: 12px 0;
+}
+
+.definition-title {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+/* Bold text */
+.bold {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Quotes and special sections */
+blockquote {
+    border-left: 3px solid #4166d5;
+    margin: 12px 0;
+    padding: 8px 12px;
+    background: rgba(65, 102, 213, 0.1);
+    border-radius: 4px;
+}
+
+/* Main title */
+.main-title {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Section title (like "1. Company") */
+.section-title {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+/* Description text */
+.description {
+    color: #e1e1e1;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+/* List styling */
+.markdown-content ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+/* Main list items */
+.markdown-content li {
+    position: relative;
+    padding-left: 16px;
+    margin: 8px 0;
+    color: #e1e1e1;
+}
+
+.markdown-content li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #4166d5;
+}
+
+/* Nested list items */
+.markdown-content li li {
+    padding-left: 20px;
+    margin: 6px 0;
+    color: #d1d1d1;
+}
+
+/* Highlight important terms */
+.highlight {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Blue highlight for key terms */
+.key-term {
+    color: #4166d5;
+    font-weight: 500;
+}
+
+/* Memory tip box */
+.memory-tip {
+    background: rgba(65, 102, 213, 0.08);
+    border-left: 3px solid #4166d5;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+    color: #e1e1e1;
+}
+
+.memory-tip strong {
+    color: #ffffff;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+/* Divider line */
+.divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 16px 0;
+}
+
+/* Bold text styling */
+.markdown-content strong {
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+/* Example text */
+.example {
+    color: #CCCCCC;
+    margin-top: 4px;
 }
 

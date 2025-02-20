@@ -57,27 +57,26 @@ function showChangeConfirmation() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendButton = document.getElementById('sendButton');
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const commandPanel = document.getElementById('commandPanel');
-    const commandItems = document.querySelectorAll('.command-item');
-    const dropdownTrigger = document.getElementById('dropdownTrigger');
-    const dropdownPanel = document.getElementById('dropdownPanel');
-    let isDragging = false;
-    let startY = 0;
-    let chapters = []; // Declare a global variable to store chapters
-    let allChapters = [];
-    let cachedQuestions = [];
-    let selectedQuestions = new Set();
+    // Change const to let for variables that will be reassigned
+    let userGrade = localStorage.getItem('userGrade');
+    let currentSubject = '';
+    let currentChapter = '';
+    const selectedQuestions = new Set();
 
-    // Make userGrade accessible throughout the file
-    const userGrade = localStorage.getItem('userGrade');
-    console.log('Current user grade:', userGrade);
+    // Initialize userGrade immediately
+    if (!userGrade) {
+        console.error('User grade not found in localStorage');
+        showToast('Please select your grade level first');
+        return;
+    }
 
-    // Add a function to check for grade changes
+    // Add grade initialization check
+    if (!userGrade) {
+        showToast('Please select your grade level first');
+        return;
+    }
+
+    // Add grade change check function
     function checkGradeChange() {
         const currentGrade = localStorage.getItem('userGrade');
         if (currentGrade && currentGrade !== userGrade) {
@@ -93,18 +92,145 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for grade changes every second
     setInterval(checkGradeChange, 1000);
 
-    // Add introductory message
-    const introMessage = document.createElement('div');
-    introMessage.classList.add('intro-message');
-    introMessage.innerHTML = `
-        <div class="intro-icon">
-            <i class="fas fa-book-reader"></i>
-        </div>
-        <div class="intro-text">
-            Welcome to Study Assistant! Use <strong>'/'</strong> to type your question or select from the suggestion box.
+    // Add subject selection handler
+    const subjectSelect = document.querySelector('.subject-list');
+    if (subjectSelect) {
+        subjectSelect.addEventListener('click', (e) => {
+            const subject = e.target.textContent;
+            currentSubject = subject;
+            console.log('Subject selected:', currentSubject); // Debug log
+        });
+    }
+
+    // Add chapter selection handler
+    const chapterSelect = document.querySelector('.chapter-list');
+    if (chapterSelect) {
+        chapterSelect.addEventListener('click', (e) => {
+            const chapter = e.target.textContent;
+            currentChapter = chapter;
+            console.log('Chapter selected:', currentChapter); // Debug log
+        });
+    }
+
+    // First, insert the popup HTML
+    const popupHTML = `
+        <div class="answer-type-popup" id="answerTypePopup">
+            <h3>Which kind of answer do you want?</h3>
+            <div class="answer-type-buttons">
+                <button class="answer-type-button short" data-type="short">Short</button>
+                <button class="answer-type-button long" data-type="long">Long</button>
+            </div>
         </div>
     `;
-    chatMessages.appendChild(introMessage);
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+    // Get the send button and add click handler
+    const sendButton = document.getElementById('sendButton');
+    if (sendButton) {
+        sendButton.addEventListener('click', handleSend);
+    }
+
+    // Add at the beginning of your existing code
+    const removeIntroMessage = () => {
+        const introMessage = document.querySelector('.intro-message');
+        if (introMessage) {
+            introMessage.remove();
+        }
+    };
+
+    // Modify the handleSend function
+    async function handleSend(e) {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        
+        // Get the current selections from the UI
+        const selectedSubject = document.getElementById('selectedSubject').textContent;
+        const selectedChapter = document.getElementById('selectedChapter').textContent;
+        
+        // Validate required selections
+        if (selectedSubject === 'Select Subject' || selectedChapter === 'Select Chapter') {
+            showError('Please select a subject and chapter first');
+            return;
+        }
+
+        if (!message && selectedQuestions.size === 0) {
+            showError('Please type a message or select questions using "/"');
+            return;
+        }
+
+        // Show answer type selection popup
+        const popup = document.querySelector('.answer-type-popup');
+        popup.classList.add('active');
+        
+        popup.querySelectorAll('.answer-type-button').forEach(button => {
+            button.onclick = async () => {
+                const answerType = button.dataset.type;
+                popup.classList.remove('active');
+                
+                try {
+                    console.log('Sending request with data:', {
+                        grade: userGrade,
+                        subject: selectedSubject,
+                        chapter: selectedChapter,
+                        questions: Array.from(selectedQuestions),
+                        answerType: answerType,
+                        userPrompt: message
+                    });
+
+                    // Send to query.php
+                    const queryResponse = await fetch('/main/api/ai/query.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            grade: userGrade,
+                            subject: selectedSubject,
+                            chapter: selectedChapter,
+                            questions: Array.from(selectedQuestions),
+                            answerType: answerType,
+                            userPrompt: message
+                        })
+                    });
+                    
+                    const queryData = await queryResponse.json();
+                    if (!queryData.success) {
+                        throw new Error(queryData.error || 'Failed to get AI response');
+                    }
+                    
+                    // Display responses
+                    queryData.responses.forEach(response => {
+                        addMessage('user', message);
+                        addMessage('bot', response.text);
+                    });
+                    
+                    // Clear input and selections
+                    userInput.value = '';
+                    selectedQuestions.clear();
+                    updateSelectedQuestionsUI();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError(error.message);
+                }
+            };
+        });
+    }
+
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const commandPanel = document.getElementById('commandPanel');
+    const commandItems = document.querySelectorAll('.command-item');
+    const dropdownTrigger = document.getElementById('dropdownTrigger');
+    const dropdownPanel = document.getElementById('dropdownPanel');
+    let isDragging = false;
+    let startY = 0;
+    let chapters = []; // Declare a global variable to store chapters
+    let allChapters = [];
+    let cachedQuestions = [];
+
+    // Make userGrade accessible throughout the file
+    console.log('Current user grade:', userGrade);
 
     // Toggle sidebar on menu button click
     menuToggle.addEventListener('click', (e) => {
@@ -126,29 +252,55 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
     });
 
-    function addMessage(message, isUser) {
+    function addMessage(type, content) {
+        const messagesContainer = document.querySelector('.chat-messages');
         const messageDiv = document.createElement('div');
-        messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
+        messageDiv.className = `message ${type}-message`;
         
-        if (!isUser) {
-            const iconDiv = document.createElement('div');
-            iconDiv.className = 'bot-icon';
-            iconDiv.innerHTML = `<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
-                <path d="M12 3C7.58172 3 4 6.58172 4 11C4 13.5264 5.15456 15.7793 6.97441 17.2454C7.11086 17.3602 7.19531 17.5251 7.19531 17.7012V20.4844C7.19531 20.769 7.42633 21 7.71094 21H9.25781C9.54242 21 9.77344 20.769 9.77344 20.4844V19.7812H14.2266V20.4844C14.2266 20.769 14.4576 21 14.7422 21H16.2891C16.5737 21 16.8047 20.769 16.8047 20.4844V17.7012C16.8047 17.5251 16.8891 17.3602 17.0256 17.2454C18.8454 15.7793 20 13.5264 20 11C20 6.58172 16.4183 3 12 3ZM9 14C8.44772 14 8 13.5523 8 13C8 12.4477 8.44772 12 9 12C9.55228 12 10 12.4477 10 13C10 13.5523 9.55228 14 9 14ZM15 14C14.4477 14 14 13.5523 14 13C14 12.4477 14.4477 12 15 12C15.5523 12 16 12.4477 16 13C16 13.5523 15.5523 14 15 14ZM8.85938 10.5C8.57477 10.5 8.34375 10.269 8.34375 9.98438V8.51562C8.34375 8.23102 8.57477 8 8.85938 8H15.1406C15.4252 8 15.6562 8.23102 15.6562 8.51562V9.98438C15.6562 10.269 15.4252 10.5 15.1406 10.5H8.85938Z" 
-                fill="#4166d5"/>
-            </svg>`;
-            messageDiv.appendChild(iconDiv);
+        if (type === 'bot') {
+            // Format the content
+            const formattedContent = content
+                // Bold text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                
+                // Numbered sections
+                .replace(/^(\d+\.\s+[^\n]+)/gm, '<div class="section-heading">$1</div>')
+                
+                // Key terms in blue
+                .replace(/\b(understand customer behavior|target the right audience|various platforms)\b/g, 
+                    '<span class="key-term">$1</span>')
+                
+                // Main bullet points
+                .replace(/^•\s*([^\n]+)/gm, '<li>$1</li>')
+                
+                // Example lines
+                .replace(/^Example:\s*([^\n]+)/gm, '<div class="example">Example: $1</div>')
+                
+                // Wrap lists
+                .replace(/((?:<li[^>]*>.*?<\/li>\n*)+)/g, '<ul>$1</ul>')
+                
+                // Memory tips
+                .replace(/Memory Tip:\s*([^\n]+)/g, 
+                    '<div class="memory-tip"><div class="memory-tip-label">💡 Memory Tip</div>$1</div>')
+                
+                // Clean up extra whitespace
+                .replace(/\n\n+/g, '\n')
+                .replace(/\n(?![<])/g, '<br>');
+
+            messageDiv.innerHTML = `
+                <div class="bot-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content markdown-content">${formattedContent}</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="message-content">${content}</div>
+            `;
         }
         
-        const messageContent = document.createElement('div');
-        messageContent.className = 'message-content';
-        messageContent.textContent = message;
-        
-        messageDiv.appendChild(messageContent);
-        chatMessages.appendChild(messageDiv);
-        
-        // Auto scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     // Add this function to load questions
@@ -319,11 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
             userInput.value = '';
             autoResizeTextarea(); // Reset the textarea height
             commandPanel.classList.remove('active');
-
-            // Remove introductory message after first interaction
-            if (introMessage) {
-                introMessage.remove();
-            }
         }
     }
 
@@ -510,8 +657,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!await confirmChangeIfNeeded()) return;
         
-        // Original subject change logic
         const subjectValue = subjectItem.dataset.value;
+        currentSubject = subjectValue;
         document.getElementById('selectedSubject').textContent = subjectValue;
         document.getElementById('selectedChapter').textContent = 'Select Chapter';
         cachedQuestions = [];
@@ -526,9 +673,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!await confirmChangeIfNeeded()) return;
         
-        // Original chapter change logic
-        document.getElementById('selectedChapter').textContent = chapterItem.dataset.value;
+        const chapterValue = chapterItem.dataset.value;
+        currentChapter = chapterValue;
+        document.getElementById('selectedChapter').textContent = chapterValue;
         const subjectValue = chapterItem.dataset.subject;
+        currentSubject = subjectValue;
         document.getElementById('selectedSubject').textContent = subjectValue;
         cachedQuestions = [];
         const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
@@ -570,14 +719,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.data.type === 'gradeChanged') {
             const newGrade = event.data.grade;
             if (newGrade) {
-                // Update local reference
                 userGrade = newGrade;
-                // Reload subjects
+                console.log('Grade updated:', userGrade);
                 loadSubjects(newGrade);
-                // Reset selections
-                document.getElementById('selectedSubject').textContent = 'Select Subject';
-                document.getElementById('selectedChapter').textContent = 'Select Chapter';
-                document.querySelector('.chapter-list').innerHTML = '';
             }
         }
     });
@@ -646,5 +790,36 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             container.appendChild(tag);
         });
+    }
+
+    // Add this function with other utility functions
+    function updateSelectedQuestionsDisplay() {
+        const container = document.getElementById('selectedQuestionsContainer');
+        container.innerHTML = '';
+        
+        selectedQuestions.forEach(question => {
+            const questionTag = document.createElement('div');
+            questionTag.className = 'selected-question';
+            questionTag.innerHTML = `
+                ${question}
+                <span class="remove-question" data-question="${question}">&times;</span>
+            `;
+            container.appendChild(questionTag);
+        });
+
+        // Add click handlers for remove buttons
+        container.querySelectorAll('.remove-question').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const questionToRemove = e.target.dataset.question;
+                selectedQuestions.delete(questionToRemove);
+                updateSelectedQuestionsDisplay();
+            });
+        });
+    }
+
+    // Add this function to show errors to the user
+    function showError(message) {
+        // You can implement this based on your UI, for now using alert
+        alert(message);
     }
 }); 

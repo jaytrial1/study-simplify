@@ -1,56 +1,127 @@
 <?php
-// Use full path to PHP executable
-$php_path = 'E:/jay/Xampp/php/php.exe';
-$script_path = __DIR__ . '/test_ai_integration.php';
+require_once 'lib/pdf_parser.php';
+require_once 'lib/ai_handler.php';
+require_once 'lib/config.php';
 
-// Create POST data
-$postData = [
-    'grade' => $_POST['grade'] ?? '',
-    'subject' => $_POST['subject'] ?? '',
-    'chapter' => $_POST['chapter'] ?? '',
-    'questions' => $_POST['questions'] ?? '',
-    'answerType' => $_POST['answerType'] ?? 'long', // default to long
-    'userPrompt' => $_POST['userPrompt'] ?? ''
-];
-
-// Execute the script with POST data
-$descriptorspec = array(
-    0 => array("pipe", "r"),  // stdin
-    1 => array("pipe", "w"),  // stdout
-    2 => array("pipe", "w")   // stderr
-);
-
-$process = proc_open('"' . $php_path . '" "' . $script_path . '"', $descriptorspec, $pipes);
-
-if (is_resource($process)) {
-    // Write POST data to the script
-    fwrite($pipes[0], json_encode($postData));
-    fclose($pipes[0]);
-
-    // Get the output
-    $output = stream_get_contents($pipes[1]);
-    $stderr = stream_get_contents($pipes[2]);
-    
-    // Close pipes
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    
-    // Close process
-    proc_close($process);
-
-    // Debug logging
-    error_log("Raw output from script: " . $output);
-    if ($stderr) {
-        error_log("stderr: " . $stderr);
-    }
-
-    // Try to decode JSON response
-    $response = json_decode($output, true);
-    if ($response === null) {
-        error_log("JSON decode error: " . json_last_error_msg());
-    }
+// For testing: If no POST data, use sample data
+if (empty($_POST)) {
+    $_POST = [
+        'grade' => 'b.com',
+        'subject' => 'Accountancy',
+        'chapter' => 'Chapter1',
+        'questions' => 'Question1',
+        'answerType' => 'long',
+        'userPrompt' => 'Please explain this in detail'
+    ];
 }
+
+// Create POST data with validation
+$postData = [];
+$required = ['grade', 'subject', 'chapter', 'questions', 'answerType', 'userPrompt'];
+
+// Validate and sanitize each field
+foreach ($required as $field) {
+    if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+        throw new Exception("Missing or empty field: $field");
+    }
+    $postData[$field] = trim($_POST[$field]);
+}
+
+try {
+    // Initialize handlers
+    $parser = new PDFParser();
+    $aiHandler = new AIHandler();
+    
+    // Log the path being accessed
+    error_log("Attempting to access PDF for: " . 
+              "Grade: {$postData['grade']}, " .
+              "Subject: {$postData['subject']}, " .
+              "Chapter: {$postData['chapter']}, " .
+              "Question: {$postData['questions']}");
+    
+    // Extract text from PDF
+    $result = $parser->extractText(
+        $postData['grade'],
+        $postData['subject'],
+        $postData['chapter'],
+        $postData['questions']
+    );
+    
+    // Get appropriate template
+    $template = $aiHandler->getPromptTemplate($postData['answerType']);
+    
+    // Create prompt
+    $prompt = $aiHandler->createPrompt($template, [
+        'extracted_text' => $result['text'],
+        'user_prompt' => $postData['userPrompt'],
+        'question_name' => $postData['questions']
+    ]);
+    
+    // Get AI response
+    $aiResponse = $aiHandler->callGeminiAPI($prompt);
+    
+    // Create response object
+    $response = [
+        'success' => true,
+        'text' => $aiResponse,
+        'answerType' => $postData['answerType'],
+        'questionName' => $postData['questions'],
+        'extractionInfo' => [
+            'pages' => $result['pages'],
+            'size' => $result['size'],
+            'length' => strlen($result['text'])
+        ]
+    ];
+
+} catch (Exception $e) {
+    error_log("Error in processing: " . $e->getMessage());
+    $response = [
+        'success' => false,
+        'error' => $e->getMessage()
+    ];
+}
+
+// Keep the existing HTML template
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AI Response</title>
+</head>
+<body>
+    <form method="POST" action="">
+        <div>
+            <label>Grade:</label>
+            <input type="text" name="grade" value="b.com">
+        </div>
+        <div>
+            <label>Subject:</label>
+            <input type="text" name="subject" value="Accountancy">
+        </div>
+        <div>
+            <label>Chapter:</label>
+            <input type="text" name="chapter" value="Chapter1">
+        </div>
+        <div>
+            <label>Question:</label>
+            <input type="text" name="questions" value="Question1">
+        </div>
+        <div>
+            <label>Answer Type:</label>
+            <select name="answerType">
+                <option value="long">Long</option>
+                <option value="short">Short</option>
+            </select>
+        </div>
+        <div>
+            <label>Additional Instructions:</label>
+            <textarea name="userPrompt">Please explain this in detail</textarea>
+        </div>
+        <button type="submit">Get Answer</button>
+    </form>
+</body>
+</html>
 
 <!DOCTYPE html>
 <html>
@@ -188,23 +259,17 @@ if (is_resource($process)) {
 </head>
 <body>
     <div class="container">
-        <?php if (!isset($output) || $output === false): ?>
+        <?php if (!isset($response)): ?>
             <div class="error">
-                <h3>Error: Failed to Execute Script</h3>
-                <p>The script could not be executed. Please check the PHP path and permissions.</p>
+                <h3>Error: Failed to Process Request</h3>
+                <p>The request could not be processed. Please check your input data.</p>
             </div>
-        <?php elseif ($response === null): ?>
+        <?php elseif (!$response['success']): ?>
             <div class="error">
-                <h3>Error: Invalid JSON Response</h3>
-                <p>The script output could not be parsed as JSON.</p>
-                <?php if (isset($output)): ?>
-                    <div class="debug-info">
-                        <strong>Raw Output:</strong>
-                        <?php echo htmlspecialchars($output); ?>
-                    </div>
-                <?php endif; ?>
+                <h3>Error in Processing</h3>
+                <p><?php echo htmlspecialchars($response['error'] ?? 'Unknown error'); ?></p>
             </div>
-        <?php elseif (isset($response['success']) && $response['success']): ?>
+        <?php else: ?>
             <div class="question-info">
                 <h1>Question: <?php echo htmlspecialchars($response['questionName'] ?? 'Unknown'); ?></h1>
                 <p class="answer-type">Answer Type: <?php echo ucfirst(htmlspecialchars($response['answerType'] ?? 'Unknown')); ?> Answer Format</p>
@@ -262,11 +327,6 @@ if (is_resource($process)) {
                     
                     echo $text;
                 ?>
-            </div>
-        <?php else: ?>
-            <div class="error">
-                <h3>Error in Processing</h3>
-                <p><?php echo htmlspecialchars($response['error'] ?? 'Unknown error'); ?></p>
             </div>
         <?php endif; ?>
     </div>
