@@ -129,131 +129,121 @@ try {
     <title>AI Study Material</title>
     <meta charset="UTF-8">
     <style>
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            line-height: 1.8;
-            padding: 30px;
-            background: #f5f7fa;
-            color: #2c3e50;
-        }
-        
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-        }
-
-        h1, h2, h3 { 
-            color: #2c3e50;
-            margin-top: 2em;
-            font-weight: 600;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        h1 { font-size: 2.2em; }
-        h2 { font-size: 1.8em; }
-        h3 { font-size: 1.4em; }
-
-        .memory-tip { 
-            background: #f8f9ff;
-            padding: 20px;
-            border-left: 4px solid #4a90e2;
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(74,144,226,0.1);
-        }
-
-        .memory-tip strong {
-            color: #4a90e2;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .keyword {
-            color: #2980b9;
-            font-weight: 600;
-        }
-
-        ul { 
-            padding-left: 25px;
-            margin: 15px 0;
-        }
-
-        ul ul {
-            margin: 10px 0 10px 20px;
-        }
-
-        li {
-            margin: 12px 0;
+        /* Updated Base Styles */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
+            color: #374151;
         }
 
-        .extraction-info {
-            background: #e9ecef;
-            padding: 20px;
-            margin: 20px 0;
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem auto;
+        }
+
+        /* Chat-style Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .message-block {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .message-block:before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 12px;
+            width: 24px;
+            height: 24px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234b5563"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>');
+        }
+
+        /* Enhanced Content Elements */
+        .step-by-step {
+            background: #fff;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             border-radius: 8px;
-            font-size: 0.9em;
         }
 
-        .error {
-            background: #ffe8e8;
-            color: #d63031;
-            padding: 20px;
-            margin: 20px 0;
+        .key-point {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             border-radius: 8px;
-            border-left: 4px solid #d63031;
+            position: relative;
         }
 
-        .sub-section {
-            margin-left: 20px;
-            padding-left: 15px;
-            border-left: 2px solid #eee;
+        .key-point:before {
+            content: '🔑';
+            position: absolute;
+            left: -1.5rem;
+            top: -0.5rem;
+            font-size: 1.5rem;
         }
 
-        .explanation {
-            color: #34495e;
-            margin: 10px 0;
-        }
-
-        .example {
-            color: #16a085;
-            font-style: italic;
-            margin: 8px 0;
-        }
-
-        .question-info {
-            background: #f1f8ff;
-            padding: 20px;
-            margin: 20px 0;
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
             border-radius: 8px;
-            border-left: 4px solid #2980b9;
-        }
-        
-        .question-info h1 {
-            margin-top: 0;
-            color: #2980b9;
-            font-size: 1.8em;
-        }
-        
-        .answer-type {
-            color: #666;
-            font-style: italic;
-            margin: 5px 0 0 0;
-        }
-
-        .debug-info {
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-            font-family: monospace;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.9em;
             white-space: pre-wrap;
+        }
+
+        .quote {
+            border-left: 4px solid #94a3b8;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* Improved Typography */
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 2rem 0 1rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #1e293b;
+            margin: 1.5rem 0 1rem;
+        }
+
+        /* Interactive Elements */
+        .copy-button {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: #e2e8f0;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #cbd5e1;
         }
     </style>
 </head>
@@ -290,40 +280,45 @@ try {
                 <?php 
                     $text = $response['text'];
                     
-                    // Headers with better hierarchy
-                    $text = preg_replace('/^### (.*?)$/m', '<h3>$1</h3>', $text);
-                    $text = preg_replace('/^## (.*?)$/m', '<h2>$1</h2>', $text);
-                    
-                    // Memory Tips with improved styling
-                    $text = preg_replace(
-                        '/\*\*Memory Tip:\*\*(.*?)(?=\*\*|$)/s',
-                        '<div class="memory-tip"><strong>💡 Memory Tip:</strong>$1</div>',
-                        $text
-                    );
-                    
-                    // Improved bullet lists
-                    $text = preg_replace('/^\s*[-•]\s*(.*?)$/m', '<li>$1</li>', $text);
-                    $text = preg_replace('/((?:<li>.*?<\/li>\s*)+)/', '<ul>$1</ul>', $text);
-                    
-                    // Keywords with special styling
-                    $text = preg_replace('/\*\*(.*?)\*\*/', '<span class="keyword">$1</span>', $text);
-                    
-                    // Sub-sections
-                    $text = preg_replace(
-                        '/(\*\*Sub-Factors:\*\*.*?)(?=\*\*|$)/s',
-                        '<div class="sub-section">$1</div>',
-                        $text
-                    );
-                    
-                    // Examples with special styling
-                    $text = preg_replace(
-                        '/\*\*Example:\*\*(.*?)(?=\*\*|$)/s',
-                        '<div class="example">📝 Example:$1</div>',
-                        $text
-                    );
-                    
-                    // Line Breaks
+                    // Convert markdown-style elements to HTML
+                    $replacements = [
+                        // Code blocks
+                        '/```([a-z]*)\n(.*?)```/s' => '<div class="code-block">$2</div>',
+                        
+                        // Headers
+                        '/^#### (.*?)$/m' => '<h4>$1</h4>',
+                        '/^### (.*?)$/m' => '<h3>$1</h3>',
+                        '/^## (.*?)$/m' => '<h2>$1</h2>',
+                        
+                        // Step-by-step
+                        '/\*\*Step-by-Step Explanation:\*\*(.*?)(?=\*\*|$)/s' => 
+                        '<div class="step-by-step"><h3>Step-by-Step Explanation</h3>$1</div>',
+                        
+                        // Key points
+                        '/\*\*Key Points:\*\*(.*?)(?=\*\*|$)/s' => 
+                        '<div class="key-point"><h3>Key Points</h3>$1</div>',
+                        
+                        // Quotes
+                        '/^> (.*?)$/m' => '<div class="quote">$1</div>',
+                        
+                        // Lists
+                        '/^\s*[-•]\s*(.*?)$/m' => '<li>$1</li>',
+                        '/((?:<li>.*?<\/li>\s*)+)/' => '<ul>$1</ul>',
+                        
+                        // Bold text
+                        '/\*\*(.*?)\*\*/' => '<strong>$1</strong>',
+                        
+                        // Links
+                        '/\[(.*?)\]\((.*?)\)/' => '<a href="$2" class="text-blue-600 hover:underline">$1</a>'
+                    ];
+
+                    foreach ($replacements as $pattern => $replacement) {
+                        $text = preg_replace($pattern, $replacement, $text);
+                    }
+
+                    // Final cleanup
                     $text = nl2br($text);
+                    $text = '<div class="message-block">' . $text . '</div>';
                     
                     echo $text;
                 ?>
