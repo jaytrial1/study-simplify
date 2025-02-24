@@ -276,78 +276,90 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const message = userInput.value.trim();
         
-        // Get the current selections from the UI
-        const selectedSubject = document.getElementById('selectedSubject').textContent;
-        const selectedChapter = document.getElementById('selectedChapter').textContent;
-        
-        // Checks if the subject and chapter is selected or not and if it does then showError!
-        if (selectedSubject === 'Select Subject' || selectedChapter === 'Select Chapter') {
-            showError('Please select a subject and chapter first');
-            return;
-        }
+        try {
+            // If it's a new chat command, clear everything
+            if (message === '/') {
+                chatHistory.currentSessionId = null;
+                selectedQuestions.clear();
+                const chatMessages = document.querySelector('.chat-messages');
+                if (chatMessages) chatMessages.innerHTML = '';
+                const questionDisplay = document.querySelector('.selected-questions');
+                if (questionDisplay) questionDisplay.innerHTML = '';
+                userInput.value = '';
+                return;
+            }
 
-        // if user tries to send a null message without typing or selecting question then throw this showError 
-        if (!message && selectedQuestions.size === 0) {
-            showError('Please type a message or select questions using "/"');
-            return;
-        }
+            // Add alert if no question is selected
+            if (selectedQuestions.size === 0) {
+                showError('Please select a question before sending a message.');
+                return;
+            }
 
-        // Show answer type selection popup
-        const popup = document.querySelector('.answer-type-popup');
-        popup.classList.add('active');
-        
-
-        popup.querySelectorAll('.answer-type-button').forEach(button => {
-            button.onclick = async () => {
-                const answerType = button.dataset.type;
-                popup.classList.remove('active');
+            // Get the current question
+            const currentQuestion = Array.from(selectedQuestions)[0];
+            let answerType = chatHistory.getAnswerType(currentQuestion);
+            let isNewSession = false; // Add this flag
+            
+            if (selectedQuestions.size > 0) {
+                const sessionResponse = await chatHistory.startNewChat(  // Store the response
+                    selectedSubject.textContent,
+                    selectedChapter.textContent,
+                    currentQuestion
+                );
                 
-                try {
-                    console.log('Sending request with data:', {
-                        grade: userGrade,
-                        subject: selectedSubject,
-                        chapter: selectedChapter,
-                        questions: Array.from(selectedQuestions),
-                        answerType: answerType,
-                        userPrompt: message
-                    });
-
-                    // Send to query.php
-                    const queryResponse = await fetch('/main/api/ai/query.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            grade: userGrade,
-                            subject: selectedSubject,
-                            chapter: selectedChapter,
-                            questions: Array.from(selectedQuestions),
-                            answerType: answerType,
-                            userPrompt: message
-                        })
-                    });
-                    
-                    const queryData = await queryResponse.json();
-                    if (!queryData.success) {
-                        throw new Error(queryData.error || 'Failed to get AI response');
-                    }
-                    
-                    // Display responses
-                    queryData.responses.forEach(response => {
-                        addMessage('user', message); // Add the user's selected question name if alongside the user's additional query
-                        addMessage('bot', response.text);
-                    });
-                    
-                    // Clear input and selections
-                    userInput.value = '';
-                    selectedQuestions.clear();
-                    updateSelectedQuestionsUI(); // Each selected question are added into container as a tag with cross to remove them
-                    
-                } catch (error) {
-                    console.error('Error:', error);
-                    showError(error.message);
+                // Show popup only for new sessions
+                if (!sessionResponse.existing) {
+                    isNewSession = true;  // Set flag for new session
+                    const selectedType = await showAnswerTypePopup();
+                    chatHistory.setAnswerType(currentQuestion, selectedType);
+                    answerType = selectedType;
+                } else if (!answerType) {
+                    answerType = 'short';
+                    chatHistory.setAnswerType(currentQuestion, answerType);
                 }
-            };
-        });
+            }
+
+            // Make sure we have an answerType before making the API call
+            if (!answerType) {
+                answerType = 'short'; // Default fallback
+            }
+
+            // Send to query.php
+            const queryResponse = await fetch('/main/api/ai/query.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    grade: userGrade,
+                    subject: selectedSubject.textContent,
+                    chapter: selectedChapter.textContent,
+                    questions: [currentQuestion],
+                    answerType: answerType,
+                    userPrompt: message,
+                    session_id: chatHistory.currentSessionId,
+                    isFirstMessage: isNewSession  // Use the flag here
+                })
+            });
+            
+            const queryData = await queryResponse.json();
+            if (!queryData.success) {
+                throw new Error(queryData.error || 'Failed to get AI response');
+            }
+            
+            // Display responses
+            queryData.responses.forEach(async response => {
+                addMessage('user', message);
+                addMessage('bot', response.text);
+                // Save AI response to chat history
+                await chatHistory.addMessage(response.text, 'bot');
+            });
+            
+            // Clear input but keep the question selected
+            userInput.value = '';
+            
+        } catch (error) {
+            console.error('Error in handleSend:', error);
+            addMessage('error', 'Failed to get response. Please try again.');
+        }
     }
     //--------------------------------------------------------------------------------------------------------------
 
@@ -858,4 +870,36 @@ document.addEventListener('DOMContentLoaded', () => {
     //     commandPanel.classList.add('active');
     //     return;
     // }
+
+    // Add to your question removal handler
+    function removeQuestion(question) {
+        selectedQuestions.delete(question);
+        chatHistory.removeQuestion(question);
+        updateSelectedQuestionsDisplay();
+    }
+
+    // Helper function to show answer type popup
+    function showAnswerTypePopup() {
+        return new Promise((resolve) => {
+            const answerTypePopup = document.createElement('div');
+            answerTypePopup.className = 'answer-type-popup active';
+            answerTypePopup.innerHTML = `
+                <div class="popup-content">
+                    <h3>Choose Answer Type</h3>
+                    <button class="answer-type-button" data-type="short">Short Answer</button>
+                    <button class="answer-type-button" data-type="long">Detailed Answer</button>
+                </div>
+            `;
+            document.body.appendChild(answerTypePopup);
+
+            const buttons = answerTypePopup.querySelectorAll('.answer-type-button');
+            buttons.forEach(button => {
+                button.onclick = () => {
+                    const type = button.dataset.type;
+                    answerTypePopup.remove();
+                    resolve(type);
+                };
+            });
+        });
+    }
 });

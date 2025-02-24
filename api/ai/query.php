@@ -2,80 +2,106 @@
 require_once '../../lib/pdf_parser.php';
 require_once '../../lib/ai_handler.php';
 require_once '../../lib/config.php';
+require_once '../../models/ChatHistory.php';
 
 header('Content-Type: application/json');
 
 try {
-    // Get POST data
-    $rawData = file_get_contents('php://input');
-    $data = json_decode($rawData, true);
+    $data = json_decode(file_get_contents('php://input'), true);
     
     if (!$data) {
         throw new Exception('Invalid request data');
     }
     
-    // Validate required fields
-    $required = ['grade', 'subject', 'chapter', 'questions', 'answerType', 'userPrompt'];
-    foreach ($required as $field) {
-        if (!isset($data[$field])) {
-            throw new Exception("Missing required field: $field");
-        }
-    }
-    
     // Initialize handlers
     $parser = new PDFParser();
     $aiHandler = new AIHandler();
+    $chatHistory = new ChatHistory();
     
-    // Handle multiple questions if needed
-    $questions = is_array($data['questions']) ? $data['questions'] : [$data['questions']];
+    // Get previous messages if session exists
+    $previousMessages = [];
+    if (isset($data['session_id'])) {
+        $previousMessages = $chatHistory->getSessionMessages($data['session_id']);
+        error_log("Retrieved messages for session " . $data['session_id'] . ": " . json_encode($previousMessages));
+    }
+    
+    // Determine if this is a new session
+    $isNewSession = $data['isFirstMessage'];
     $responses = [];
     
-    foreach ($questions as $question) {
-        // Extract text from PDF
-        $result = $parser->extractText(
-            $data['grade'],
-            $data['subject'],
-            $data['chapter'],
-            $question
+    foreach ($data['questions'] as $question) {
+        $prompt = null;
+        
+        if ($isNewSession) {
+            // Extract PDF text and use template
+            $result = $parser->extractText(
+                $data['grade'],
+                $data['subject'],
+                $data['chapter'],
+                $question
+            );
+            
+            // Get template and create initial prompt
+            $template = $aiHandler->getPromptTemplate($data['answerType']);
+            $initialPrompt = $aiHandler->createPrompt($template, [
+                'extracted_text' => $result['text'],
+                'user_prompt' => $data['userPrompt'],
+                'question_name' => $question
+            ]);
+            
+            if (isset($data['session_id'])) {
+                // Simply store the exact prompt we're sending to AI
+                $chatHistory->addMessage(
+                    $data['session_id'],
+                    'system',
+                    $initialPrompt
+                );
+            }
+            
+            $prompt = $initialPrompt;
+        }
+        
+        // Get AI response with chat history context
+        $aiResponse = $aiHandler->callGeminiAPI(
+            $isNewSession ? $prompt : [
+                'messages' => array_merge(
+                    array_map(function($msg) {
+                        return [
+                            'role' => ($msg['sender'] === 'user' ? 'user' : 'model'),
+                            'parts' => [['text' => $msg['message']]]
+                        ];
+                    }, $previousMessages),
+                    [
+                        [
+                            'role' => 'user',
+                            'parts' => [['text' => $data['userPrompt']]]
+                        ]
+                    ]
+                )
+            ]
         );
         
-        // Get appropriate template
-        $template = $aiHandler->getPromptTemplate($data['answerType']);
-        
-        // Create prompt
-        $prompt = $aiHandler->createPrompt($template, [
-            'extracted_text' => $result['text'],
-            'user_prompt' => $data['userPrompt'],
-            'question_name' => $question
-        ]);
-        
-        // Get AI response
-        $aiResponse = $aiHandler->callGeminiAPI($prompt);
+        // Save messages to chat history
+        if (isset($data['session_id'])) {
+            $chatHistory->addMessage($data['session_id'], 'user', $data['userPrompt']);
+            $chatHistory->addMessage($data['session_id'], 'ai', $aiResponse);
+        }
         
         $responses[] = [
             'questionName' => $question,
-            'text' => $aiResponse,
-            'extractionInfo' => [
-                'pages' => $result['pages'],
-                'size' => $result['size'],
-                'length' => strlen($result['text'])
-            ]
+            'text' => $aiResponse
         ];
     }
     
-    // Return response
-    http_response_code(API_SUCCESS);
     echo json_encode([
         'success' => true,
-        'answerType' => $data['answerType'],
         'responses' => $responses
-    ], JSON_PRETTY_PRINT);
+    ]);
 
 } catch (Exception $e) {
-    error_log("Error in AI query: " . $e->getMessage());
-    http_response_code(API_ERROR);
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage()
-    ], JSON_PRETTY_PRINT);
+    ]);
 }

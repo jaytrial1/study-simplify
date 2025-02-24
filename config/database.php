@@ -1,8 +1,8 @@
 <?php
 function getConnection() {
     $servername = "localhost";
-    $username = "root"; // XAMPP default
-    $password = "";     // XAMPP default
+    $username = "root";
+    $password = "";
     $dbname = "studysimplify_new";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
