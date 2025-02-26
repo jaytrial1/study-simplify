@@ -204,4 +204,82 @@ class ChatHistory {
             return false;
         }
     }
+    
+    public function getHistoryWithFilters($userId) {
+        try {
+            // Get distinct subjects and chapters
+            $filtersSql = "SELECT DISTINCT 
+                subject,
+                chapter 
+                FROM chat_history 
+                WHERE user_id = ?
+                ORDER BY subject, chapter";
+                
+            $stmt = $this->conn->prepare($filtersSql);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $filtersResult = $stmt->get_result();
+            
+            $filters = [
+                'subjects' => [],
+                'chapters' => []
+            ];
+            
+            while ($row = $filtersResult->fetch_assoc()) {
+                if (!in_array($row['subject'], $filters['subjects'])) {
+                    $filters['subjects'][] = $row['subject'];
+                }
+                if (!in_array($row['chapter'], $filters['chapters'])) {
+                    $filters['chapters'][] = $row['chapter'];
+                }
+            }
+            
+            // Get filtered chat history
+            $historySql = "SELECT * FROM chat_history WHERE user_id = ?";
+            $params = [$userId];
+            $types = "i";
+            
+            // Add subject filter if provided
+            if (!empty($_GET['subject'])) {
+                $historySql .= " AND subject = ?";
+                $params[] = $_GET['subject'];
+                $types .= "s";
+            }
+            
+            // Add chapter filter if provided
+            if (!empty($_GET['chapter'])) {
+                $historySql .= " AND chapter = ?";
+                $params[] = $_GET['chapter'];
+                $types .= "s";
+            }
+            
+            $historySql .= " ORDER BY created_at DESC";
+            
+            $stmt = $this->conn->prepare($historySql);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            $historyResult = $stmt->get_result();
+            
+            $history = [];
+            while ($row = $historyResult->fetch_assoc()) {
+                $history[] = [
+                    'id' => $row['id'],
+                    'subject' => $row['subject'],
+                    'chapter' => $row['chapter'],
+                    'question_identifier' => $row['question_identifier'],
+                    'conversation' => json_decode($row['conversation'], true),
+                    'created_at' => $row['created_at']
+                ];
+            }
+            
+            return [
+                'filters' => $filters,
+                'history' => $history
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Error in getHistoryWithFilters: " . $e->getMessage());
+            return false;
+        }
+    }
 }

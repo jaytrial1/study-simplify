@@ -14,29 +14,30 @@ try {
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
             if (isset($_GET['user_id'])) {
-                // Get user's chat history with error handling
                 try {
+                    // Pass all filter parameters to the method
                     $filters = [
                         'subject' => $_GET['subject'] ?? null,
                         'chapter' => $_GET['chapter'] ?? null,
-                        'question' => $_GET['question'] ?? null
+                        'search' => $_GET['search'] ?? null
                     ];
                     
-                    $history = $chatHistory->getHistory($_GET['user_id'], $filters);
-                    if ($history === false) {
+                    $result = $chatHistory->getHistoryWithFilters($_GET['user_id'], $filters);
+                    if ($result === false) {
                         throw new Exception('Failed to retrieve chat history');
                     }
                     
                     echo json_encode([
                         'success' => true,
-                        'history' => $history
+                        'filters' => $result['filters'],
+                        'history' => $result['history']
                     ]);
                 } catch (Exception $e) {
                     error_log("Error getting user history: " . $e->getMessage());
                     http_response_code(500);
                     echo json_encode([
                         'success' => false,
-                        'error' => 'Failed to retrieve chat history: ' . $e->getMessage()
+                        'error' => 'Failed to retrieve chat history'
                     ]);
                 }
             } else if (isset($_GET['session_id'])) {
