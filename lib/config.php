@@ -1,7 +1,7 @@
 <?php
 // AI Configuration
 define('GEMINI_API_KEY', 'AIzaSyDdKHmIzLbGBKIX_j2DWm8Lg4Jqy4CihYo');
-define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent');
+define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent');
 
 // PDF Configuration
 define('PDF_ROOT', 'E:/jay/Xampp/htdocs/Main/public/pdf_repository/');
