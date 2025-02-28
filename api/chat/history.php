@@ -42,10 +42,35 @@ try {
                 }
             } else if (isset($_GET['session_id'])) {
                 // Get specific chat session
+                if (!is_numeric($_GET['session_id'])) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'Invalid session ID'
+                    ]);
+                    break;
+                }
+
                 $session = $chatHistory->getSession($_GET['session_id']);
+                if (!$session) {
+                    http_response_code(404);
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'Chat session not found'
+                    ]);
+                    break;
+                }
+
+                $conversation = json_decode($session['conversation'], true);
+                
+                // Filter out system messages
+                $filteredConversation = array_filter($conversation, function($msg) {
+                    return $msg['sender'] !== 'system';
+                });
+                
                 echo json_encode([
                     'success' => true,
-                    'conversation' => json_decode($session['conversation'])
+                    'conversation' => array_values($filteredConversation)
                 ]);
             } else {
                 throw new Exception('Missing user_id or session_id parameter');

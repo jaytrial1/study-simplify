@@ -62,25 +62,41 @@ class ChatHistory {
             
             // Add new message
             $conversation = json_decode($row['conversation'], true);
-            $conversation[] = [
-                'sender' => $sender,
-                'message' => $message,
-                'timestamp' => date('Y-m-d H:i:s')
-            ];
             
-            // Update conversation
-            $conversationJson = json_encode($conversation);
-            $sql = "UPDATE chat_history SET conversation = ? WHERE id = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("si", $conversationJson, $sessionId);
-            
-            $success = $stmt->execute();
-            if (!$success) {
-                error_log("Failed to update conversation: " . $stmt->error);
-                return false;
+            // Check for duplicate message
+            $isDuplicate = false;
+            foreach ($conversation as $existingMsg) {
+                if ($existingMsg['sender'] === $sender && $existingMsg['message'] === $message) {
+                    $isDuplicate = true;
+                    break;
+                }
             }
             
-            error_log("Added message to chat session " . $sessionId);
+            // Only add if not a duplicate
+            if (!$isDuplicate) {
+                $conversation[] = [
+                    'sender' => $sender,
+                    'message' => $message,
+                    'timestamp' => date('Y-m-d H:i:s')
+                ];
+                
+                // Update conversation
+                $conversationJson = json_encode($conversation);
+                $sql = "UPDATE chat_history SET conversation = ? WHERE id = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("si", $conversationJson, $sessionId);
+                
+                $success = $stmt->execute();
+                if (!$success) {
+                    error_log("Failed to update conversation: " . $stmt->error);
+                    return false;
+                }
+                
+                error_log("Added message to chat session " . $sessionId);
+                return true;
+            }
+            
+            // If duplicate, still return true as the message effectively exists
             return true;
             
         } catch (Exception $e) {

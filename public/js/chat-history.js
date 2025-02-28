@@ -238,6 +238,15 @@ class ChatHistoryManager {
 
     async loadChatSession(sessionId) {
         try {
+            // Close the menu/sidebar using the same implementation as script.js
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            if (sidebar && menuToggle) {
+                sidebar.classList.remove('active');
+                // Dispatch a click event on the document to ensure proper cleanup
+                document.dispatchEvent(new MouseEvent('click'));
+            }
+
             const response = await fetch(`${this.apiBasePath}/api/chat/history.php?session_id=${sessionId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -249,21 +258,157 @@ class ChatHistoryManager {
             }
 
             const data = await response.json();
-            if (data.success) {
+            if (data.success && Array.isArray(data.conversation)) {
                 this.currentSessionId = sessionId;
+                
+                // Auto-select the subject and chapter from history item
+                const historyItem = document.querySelector(`.history-item[data-session-id="${sessionId}"]`);
+                if (historyItem) {
+                    const subject = historyItem.dataset.subject;
+                    const chapter = historyItem.dataset.chapter;
+                    const questionText = historyItem.querySelector('.history-text').textContent;
+                    
+                    // Get the grade from localStorage and handle null case
+                    const userGrade = localStorage.getItem('userGrade');
+                    if (!userGrade) {
+                        console.error('User grade not found in localStorage');
+                        // Show error message to user
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'message error-message';
+                        errorDiv.innerHTML = `
+                            <div class="message-content">Error: User grade not found. Please log in again.</div>
+                        `;
+                        document.querySelector('.chat-messages')?.appendChild(errorDiv);
+                        return;
+                    }
+                    
+                    // Select the subject in dropdown
+                    const subjectSelect = document.querySelector('#selectedSubject');
+                    if (subjectSelect) {
+                        subjectSelect.textContent = subject;
+                    }
+                    
+                    // Select the chapter in dropdown
+                    const chapterSelect = document.querySelector('#selectedChapter');
+                    if (chapterSelect) {
+                        chapterSelect.textContent = chapter;
+                    }
+                    
+                    // Load questions for this subject and chapter
+                    try {
+                        const questionsResponse = await fetch(`/main/api/navigation/questions.php?grade=${userGrade}&subject=${subject}&chapter=${chapter}`);
+                        const questionsData = await questionsResponse.json();
+                        
+                        if (questionsData.questions) {
+                            // Initialize global selectedQuestions if it doesn't exist
+                            window.selectedQuestions = window.selectedQuestions || new Set();
+                            // Clear existing questions
+                            window.selectedQuestions.clear();
+                            // Add the new question
+                            window.selectedQuestions.add(questionText);
+                            
+                            // Update the UI
+                            const selectedQuestionsContainer = document.querySelector('#selectedQuestionsContainer');
+                            if (selectedQuestionsContainer) {
+                                const tag = document.createElement('div');
+                                tag.className = 'question-tag';
+                                tag.innerHTML = `
+                                    <span>${questionText}</span>
+                                    <div class="remove-question">×</div>
+                                `;
+                                selectedQuestionsContainer.innerHTML = ''; // Clear existing questions
+                                selectedQuestionsContainer.appendChild(tag);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading questions:', error);
+                    }
+                }
+
                 // Clear existing chat messages
                 const chatMessages = document.querySelector('.chat-messages');
                 if (chatMessages) {
                     chatMessages.innerHTML = '';
                 }
-                // Add messages to chat
+
+                // Keep track of processed messages to avoid duplicates
+                const processedMessages = new Set();
+
+                // Add all messages since system messages are already filtered out on the server
                 data.conversation.forEach(msg => {
-                    // Assuming you have an addMessage function in your chat UI
-                    window.addMessage(msg.sender, msg.message);
+                    if (!msg || typeof msg.sender !== 'string' || typeof msg.message !== 'string') {
+                        console.warn('Invalid message format:', msg);
+                        return;
+                    }
+
+                    // Always use 'bot' for AI messages
+                    const sender = msg.sender === 'ai' || msg.sender === 'bot' ? 'bot' : msg.sender;
+                    
+                    // Create a unique key for each message
+                    const messageKey = JSON.stringify({
+                        sender: sender,
+                        message: msg.message,
+                        timestamp: msg.timestamp || ''
+                    });
+
+                    if (processedMessages.has(messageKey)) {
+                        console.log('Skipping duplicate message:', msg);
+                        return; // Skip duplicate messages
+                    }
+                    processedMessages.add(messageKey);
+
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${sender}-message`;
+                    
+                    if (sender === 'bot') {  // Use normalized sender
+                        // Format bot message with markdown and styling
+                        const formattedContent = msg.message
+                            // Bold text
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            // Numbered sections
+                            .replace(/^(\d+\.\s+[^\n]+)/gm, '<div class="section-heading">$1</div>')
+                            // Main bullet points
+                            .replace(/^•\s*([^\n]+)/gm, '<li>$1</li>')
+                            // Example lines
+                            .replace(/^Example:\s*([^\n]+)/gm, '<div class="example">Example: $1</div>')
+                            // Wrap lists
+                            .replace(/((?:<li[^>]*>.*?<\/li>\n*)+)/g, '<ul>$1</ul>')
+                            // Memory tips
+                            .replace(/Memory Tip:\s*([^\n]+)/g, 
+                                '<div class="memory-tip"><div class="memory-tip-label">💡 Memory Tip</div>$1</div>')
+                            // Clean up extra whitespace
+                            .replace(/\n\n+/g, '\n')
+                            .replace(/\n(?![<])/g, '<br>');
+
+                        messageDiv.innerHTML = `
+                            <div class="bot-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content markdown-content">${formattedContent}</div>
+                        `;
+                    } else {
+                        messageDiv.innerHTML = `
+                            <div class="message-content">${msg.message}</div>
+                        `;
+                    }
+                    
+                    chatMessages.appendChild(messageDiv);
                 });
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                throw new Error('Invalid or empty conversation data received');
             }
         } catch (error) {
             console.error('Error loading chat session:', error);
+            // Show error message to user
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'message error-message';
+            errorDiv.innerHTML = `
+                <div class="message-content">Failed to load chat history. Please try again.</div>
+            `;
+            document.querySelector('.chat-messages')?.appendChild(errorDiv);
         }
     }
 
@@ -305,6 +450,7 @@ class ChatHistoryManager {
 
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
+            historyItem.dataset.sessionId = item.id; // Set the session ID in the dataset
             historyItem.dataset.subject = item.subject;
             historyItem.dataset.chapter = item.chapter;
             
@@ -320,7 +466,11 @@ class ChatHistoryManager {
             `;
 
             historyItem.addEventListener('click', () => {
-                this.loadChatSession(item.id);
+                if (item.id) {
+                    this.loadChatSession(item.id);
+                } else {
+                    console.error('No session ID found for history item:', item);
+                }
             });
 
             this.historyContainer.appendChild(historyItem);

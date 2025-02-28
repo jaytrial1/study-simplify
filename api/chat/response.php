@@ -70,7 +70,7 @@ try {
         // Save AI's response
         $chatHistory->addMessage(
             $data['session_id'],
-            'ai',
+            'bot',
             $aiResponse
         );
     }

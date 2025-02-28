@@ -81,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let userGrade = localStorage.getItem('userGrade');
     let currentSubject = '';
     let currentChapter = '';
-    const selectedQuestions = new Set();
+    // Initialize global selectedQuestions if it doesn't exist
+    window.selectedQuestions = window.selectedQuestions || new Set();
     let chapters = []; 
     let allChapters = [];
     let cachedQuestions = [];
@@ -280,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // If it's a new chat command, clear everything
             if (message === '/') {
                 chatHistory.currentSessionId = null;
-                selectedQuestions.clear();
+                window.selectedQuestions.clear();  // Use window.selectedQuestions
                 const chatMessages = document.querySelector('.chat-messages');
                 if (chatMessages) chatMessages.innerHTML = '';
                 const questionDisplay = document.querySelector('.selected-questions');
@@ -290,17 +291,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Add alert if no question is selected
-            if (selectedQuestions.size === 0) {
+            if (window.selectedQuestions.size === 0) {  // Use window.selectedQuestions
                 showError('Please select a question before sending a message.');
                 return;
             }
 
             // Get the current question
-            const currentQuestion = Array.from(selectedQuestions)[0];
+            const currentQuestion = Array.from(window.selectedQuestions)[0];  // Use window.selectedQuestions
             let answerType = chatHistory.getAnswerType(currentQuestion);
             let isNewSession = false; // Add this flag
             
-            if (selectedQuestions.size > 0) {
+            if (window.selectedQuestions.size > 0) {
                 const sessionResponse = await chatHistory.startNewChat(  // Store the response
                     selectedSubject.textContent,
                     selectedChapter.textContent,
@@ -345,12 +346,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(queryData.error || 'Failed to get AI response');
             }
             
-            // Display responses
-            queryData.responses.forEach(async response => {
+            // Only display messages, don't save them (they are saved in the backend)
+            queryData.responses.forEach(response => {
+                // Display user message
                 addMessage('user', message);
+                // Display bot response
                 addMessage('bot', response.text);
-                // Save AI response to chat history
-                await chatHistory.addMessage(response.text, 'bot');
             });
             
             // Clear input but keep the question selected
@@ -506,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Filter out already selected questions
         const availableQuestions = filteredQuestions.filter(q => 
-            !selectedQuestions.has(q)
+            !window.selectedQuestions.has(q)
         );
 
         if (availableQuestions.length === 0) {
@@ -552,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the input including the '/' character
         userInput.value = '';
         
-        selectedQuestions.add(command);
+        window.selectedQuestions.add(command);
         updateSelectedQuestionsUI();
         commandPanel.classList.remove('active');
         userInput.focus();
@@ -562,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('selectedQuestionsContainer').addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-question')) {
             const questionText = e.target.previousElementSibling.textContent;
-            selectedQuestions.delete(questionText);
+            window.selectedQuestions.delete(questionText);
             updateSelectedQuestionsUI(); // Each selected question are added into container as a tag with cross to remove them
         }
     });
@@ -662,10 +663,10 @@ document.addEventListener('DOMContentLoaded', () => {
             commandPanel.classList.remove('active');
         }
         
-        if (selectedQuestions.size > 0) {
+        if (window.selectedQuestions.size > 0) {
             const confirmed = await showChangeConfirmation(); //If the subject or chapter is changed with questions in the container then this function is used...!
             if (!confirmed) return false;
-            selectedQuestions.clear();
+            window.selectedQuestions.clear();
             updateSelectedQuestionsUI(); // Each selected question are added into container as a tag with cross to remove them
         }
         return true;
@@ -777,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('selectedQuestionsContainer');
         container.innerHTML = '';
         
-        selectedQuestions.forEach(question => {
+        window.selectedQuestions.forEach(question => {
             const tag = document.createElement('div');
             tag.className = 'question-tag';
             tag.innerHTML = `
@@ -873,7 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add to your question removal handler
     function removeQuestion(question) {
-        selectedQuestions.delete(question);
+        window.selectedQuestions.delete(question);
         chatHistory.removeQuestion(question);
         updateSelectedQuestionsDisplay();
     }
