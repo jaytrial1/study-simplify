@@ -45,59 +45,72 @@ class AIHandler {
     }
     
     public function callGeminiAPI($promptData) {
-        if (is_array($promptData) && isset($promptData['messages'])) {
-            // For chat history, format according to Gemini's chat model
-            $data = [
-                'contents' => [
-                    [
-                        'role' => 'user',
-                        'parts' => [['text' => 'You are a helpful AI assistant. Please maintain context of our conversation.']]
-                    ],
-                    [
-                        'role' => 'model',
-                        'parts' => [['text' => 'I understand and will maintain context of our conversation.']]
+        try {
+            if (is_array($promptData) && isset($promptData['messages'])) {
+                // Filter out any empty messages and format for Gemini
+                $messages = array_filter($promptData['messages'], function($message) {
+                    return !empty($message['parts'][0]['text']);
+                });
+                
+                if (empty($messages)) {
+                    throw new Exception("No valid messages found in chat history");
+                }
+
+                $data = ['contents' => array_values($messages)];
+            } else {
+                // Validate single prompt
+                if (empty($promptData)) {
+                    throw new Exception("Empty prompt provided");
+                }
+
+                $data = [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [['text' => $promptData]]
+                        ]
                     ]
-                ]
-            ];
-            
-            // Add previous messages
-            foreach ($promptData['messages'] as $message) {
-                $data['contents'][] = [
-                    'role' => $message['role'],
-                    'parts' => [['text' => $message['parts'][0]['text']]]
                 ];
             }
-        } else {
-            // For first message
-            $data = [
-                'contents' => [
-                    [
-                        'role' => 'user',
-                        'parts' => [['text' => $promptData]]
-                    ]
-                ]
-            ];
-        }
 
-        $ch = curl_init($this->apiUrl . '?key=' . $this->apiKey);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($data),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json']
-        ]);
-        
-        error_log("Sending to Gemini: " . json_encode($data)); // Debug log
-        $response = curl_exec($ch);
-        error_log("Gemini Response: " . $response); // Debug log
-        
-        if ($error = curl_error($ch)) {
-            throw new Exception("API Error: " . $error);
-        }
-        curl_close($ch);
+            error_log("Sending to Gemini: " . json_encode($data));
+            
+            $ch = curl_init($this->apiUrl . '?key=' . $this->apiKey);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json']
+            ]);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            error_log("Gemini Response (HTTP $httpCode): " . $response);
+            
+            if ($error = curl_error($ch)) {
+                throw new Exception("CURL Error: " . $error);
+            }
+            
+            curl_close($ch);
 
-        $responseData = json_decode($response, true);
-        return $responseData['candidates'][0]['content']['parts'][0]['text'] ?? 
-               throw new Exception("Unexpected API response format");
+            if ($httpCode !== 200) {
+                $responseData = json_decode($response, true);
+                $errorMessage = isset($responseData['error']['message']) 
+                    ? $responseData['error']['message'] 
+                    : "API request failed with HTTP $httpCode";
+                throw new Exception($errorMessage);
+            }
+
+            $responseData = json_decode($response, true);
+            if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+                error_log("Invalid API response: " . json_encode($responseData));
+                throw new Exception("API returned unexpected format");
+            }
+            
+            return $responseData['candidates'][0]['content']['parts'][0]['text'];
+        } catch (Exception $e) {
+            error_log("Error in callGeminiAPI: " . $e->getMessage());
+            throw $e;
+        }
     }
 } 
