@@ -18,4 +18,7 @@ CREATE TABLE chat_history (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
-); 
+);
+
+-- Added grade column for chat history filtering (Added on March 2024)
+ALTER TABLE chat_history ADD COLUMN grade VARCHAR(50) NOT NULL AFTER user_id; 
