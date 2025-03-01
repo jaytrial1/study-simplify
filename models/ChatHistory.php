@@ -12,9 +12,10 @@ class ChatHistory {
     public function createSession($userId, $subject, $chapter, $questions) {
         try {
             $questionStr = is_array($questions) ? implode(',', $questions) : $questions;
+            $grade = $_GET['grade'] ?? null;  // Get grade from request
             
-            $sql = "INSERT INTO chat_history (user_id, question_identifier, subject, chapter, conversation) 
-                    VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO chat_history (user_id, grade, question_identifier, subject, chapter, conversation) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
                     
             $initialConversation = json_encode([
                 ['sender' => 'system', 'message' => 'Chat started', 'timestamp' => date('Y-m-d H:i:s')]
@@ -26,7 +27,7 @@ class ChatHistory {
                 return false;
             }
             
-            $stmt->bind_param("issss", $userId, $questionStr, $subject, $chapter, $initialConversation);
+            $stmt->bind_param("isssss", $userId, $grade, $questionStr, $subject, $chapter, $initialConversation);
             
             $success = $stmt->execute();
             if (!$success) {
@@ -229,10 +230,11 @@ class ChatHistory {
                 chapter 
                 FROM chat_history 
                 WHERE user_id = ?
+                AND grade = ?
                 ORDER BY subject, chapter";
                 
             $stmt = $this->conn->prepare($filtersSql);
-            $stmt->bind_param("i", $userId);
+            $stmt->bind_param("is", $userId, $_GET['grade']);
             $stmt->execute();
             $filtersResult = $stmt->get_result();
             
@@ -251,9 +253,9 @@ class ChatHistory {
             }
             
             // Get filtered chat history
-            $historySql = "SELECT * FROM chat_history WHERE user_id = ?";
-            $params = [$userId];
-            $types = "i";
+            $historySql = "SELECT * FROM chat_history WHERE user_id = ? AND grade = ?";
+            $params = [$userId, $_GET['grade']];
+            $types = "is";
             
             // Add subject filter if provided
             if (!empty($_GET['subject'])) {

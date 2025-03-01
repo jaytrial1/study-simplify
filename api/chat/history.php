@@ -17,6 +17,7 @@ try {
                 try {
                     // Pass all filter parameters to the method
                     $filters = [
+                        'grade' => $_GET['grade'] ?? null,
                         'subject' => $_GET['subject'] ?? null,
                         'chapter' => $_GET['chapter'] ?? null,
                         'search' => $_GET['search'] ?? null
@@ -84,6 +85,9 @@ try {
             if (!isset($data['user_id'], $data['subject'], $data['chapter'], $data['questions'])) {
                 throw new Exception('Missing required fields');
             }
+            
+            // Get grade from request data
+            $_GET['grade'] = $data['grade'] ?? null;  // Set grade in $_GET for createSession
             
             // Check for existing session first
             $existingSessionId = $chatHistory->getExistingSession(

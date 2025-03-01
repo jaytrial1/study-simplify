@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Add new chat button handler
+    document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
+        window.location.href = '/main/public/html/chatbot.html';
+    });
+
     const settingsForm = document.getElementById('settingsForm');
     const editButton = document.getElementById('editButton');
     const saveButton = document.getElementById('saveButton');

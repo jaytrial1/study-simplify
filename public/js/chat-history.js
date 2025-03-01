@@ -18,12 +18,19 @@ class ChatHistoryManager {
         
         this.setupEventListeners();
         this.loadHistory();
+
+        // Listen for grade changes
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'userGrade') {
+                this.reloadHistoryOnGradeChange();
+            }
+        });
     }
 
     setupEventListeners() {
         // Listen for new chat button clicks
         document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-            this.startNewChat();
+            window.location.href = '/main/public/html/chatbot.html';  // Updated to correct path
         });
 
         // Listen for history item clicks
@@ -144,15 +151,20 @@ class ChatHistoryManager {
     async startNewChat(subject, chapter, question) {
         try {
             const userId = localStorage.getItem('user_id');
+            const userGrade = localStorage.getItem('userGrade');
             if (!userId) {
                 throw new Error('User ID not found in localStorage');
             }
+            if (!userGrade) {
+                throw new Error('User grade not found in localStorage');
+            }
 
             // Debug log to see what values we're receiving
-            console.log('StartNewChat params:', { subject, chapter, question, userId });
+            console.log('StartNewChat params:', { subject, chapter, question, userId, userGrade });
 
             const requestBody = {
                 user_id: userId,
+                grade: userGrade,
                 subject: subject,
                 chapter: chapter,
                 questions: [question],
@@ -415,12 +427,14 @@ class ChatHistoryManager {
     async loadHistory() {
         try {
             const userId = localStorage.getItem('user_id');
+            const userGrade = localStorage.getItem('userGrade'); // Get current grade
             const searchTerm = this.searchInput?.value || '';
             const subject = this.subjectFilter?.value || '';
             const chapter = this.chapterFilter?.value || '';
 
+            // Include grade in the API request
             const response = await fetch(
-                `/main/api/chat/history.php?user_id=${userId}&search=${searchTerm}&subject=${subject}&chapter=${chapter}`
+                `/main/api/chat/history.php?user_id=${userId}&grade=${userGrade}&search=${searchTerm}&subject=${subject}&chapter=${chapter}`
             );
             const data = await response.json();
 
@@ -485,6 +499,11 @@ class ChatHistoryManager {
     // Add method to get answer type
     getAnswerType(questionId) {
         return this.answerTypeMap.get(questionId);
+    }
+
+    // Add a method to reload history when grade changes
+    reloadHistoryOnGradeChange() {
+        this.loadHistory();
     }
 }
 

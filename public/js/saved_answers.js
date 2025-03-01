@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Add new chat button handler
+    document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
+        window.location.href = '/main/public/html/chatbot.html';
+    });
+
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
 
