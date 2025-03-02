@@ -1,0 +1,150 @@
+/* =============================
+   Chat Container (#chatMessages)
+   ============================= */
+   #chatMessages {
+    overflow-y: auto; /* Allow vertical scrolling */
+    scroll-behavior: smooth;
+}
+
+/* Auto-scroll behavior, preventing unwanted jumps */
+#chatMessages.scrolling {
+    scroll-behavior: auto;
+}
+
+/* =============================
+   User & Bot Message Styling
+   ============================= */
+.response.user-response {
+    text-align: left;
+    background-color: #4166d5;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+    min-width: 50px;
+    margin: 8px 0 8px auto; /* Align to right */
+    display: table; /* Adjust bubble to text size */
+    word-wrap: break-word;
+    align-items: flex-end;
+}
+
+.response.bot-response {
+    display: flex; /* Align bot icon and message side by side */
+    align-items: flex-start; /* Keep them aligned properly */
+    gap: 8px; /* Small space between bot icon and text */
+    text-align: left;
+    background: transparent; /* Remove background bubble */
+    color: white; /* Ensure white text */
+    padding: 0;
+    max-width: 100%; /* Take full width of screen */
+    margin: 8px 0;
+}
+
+.formatted-content {
+    width: 100%;
+}
+
+/* =============================
+   Text Formatting
+   ============================= */
+.formatted-content p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.formatted-content ul, 
+.formatted-content ol {
+    padding-left: 20px;
+}
+
+.formatted-content li {
+    margin-bottom: 5px;
+}
+
+.formatted-content blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 10px;
+    margin: 8px 0;
+    color: #555;
+    font-style: italic;
+}
+
+.formatted-content code {
+    background-color: #eee;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.formatted-content h1,
+.formatted-content h2,
+.formatted-content h3,
+.formatted-content h4,
+.formatted-content h5,
+.formatted-content h6 {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.formatted-content a {
+    color: #007aff;
+    text-decoration: none;
+}
+
+.formatted-content a:hover {
+    text-decoration: underline;
+}
+
+/* =============================
+   Table Formatting
+   ============================= */
+.formatted-content table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+    max-width: 100%;
+    touch-action: pan-y; /* Fix for mobile scrolling */
+}
+
+.formatted-content th, 
+.formatted-content td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.formatted-content th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+/* =============================
+   Topic Separators
+   ============================= */
+.chat-messages hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 16px 0;
+}
+
+/* =============================
+   Reaction Buttons
+   ============================= */
+.bot-response .reaction-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.reaction-buttons button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #555;
+}
+
+.reaction-buttons button:hover {
+    color: #000;
+}

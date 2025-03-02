@@ -370,37 +370,21 @@ class ChatHistoryManager {
                     processedMessages.add(messageKey);
 
                     const messageDiv = document.createElement('div');
-                    messageDiv.className = `message ${sender}-message`;
+                    messageDiv.className = `response ${sender}-response`;
                     
-                    if (sender === 'bot') {  // Use normalized sender
-                        // Format bot message with markdown and styling
-                        const formattedContent = msg.message
-                            // Bold text
-                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                            // Numbered sections
-                            .replace(/^(\d+\.\s+[^\n]+)/gm, '<div class="section-heading">$1</div>')
-                            // Main bullet points
-                            .replace(/^•\s*([^\n]+)/gm, '<li>$1</li>')
-                            // Example lines
-                            .replace(/^Example:\s*([^\n]+)/gm, '<div class="example">Example: $1</div>')
-                            // Wrap lists
-                            .replace(/((?:<li[^>]*>.*?<\/li>\n*)+)/g, '<ul>$1</ul>')
-                            // Memory tips
-                            .replace(/Memory Tip:\s*([^\n]+)/g, 
-                                '<div class="memory-tip"><div class="memory-tip-label">💡 Memory Tip</div>$1</div>')
-                            // Clean up extra whitespace
-                            .replace(/\n\n+/g, '\n')
-                            .replace(/\n(?![<])/g, '<br>');
+                    if (sender === 'bot') {
+                        // Convert Markdown to HTML using marked.js
+                        const formattedContent = marked.parse(msg.message);
 
                         messageDiv.innerHTML = `
                             <div class="bot-icon">
                                 <i class="fas fa-robot"></i>
                             </div>
-                            <div class="message-content markdown-content">${formattedContent}</div>
+                            <div class="chat-content formatted-content">${formattedContent}</div>
                         `;
                     } else {
                         messageDiv.innerHTML = `
-                            <div class="message-content">${msg.message}</div>
+                            <div class="chat-content selected-question">${msg.message}</div>
                         `;
                     }
                     
