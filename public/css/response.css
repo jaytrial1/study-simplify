@@ -22,7 +22,7 @@
     border-radius: 8px;
     max-width: 80%;
     min-width: 50px;
-    margin: 8px 0 8px auto; /* Align to right */
+    margin: 25px 0 25px auto; /* Increased space */
     display: table; /* Adjust bubble to text size */
     word-wrap: break-word;
     align-items: flex-end;
@@ -37,7 +37,7 @@
     color: white; /* Ensure white text */
     padding: 0;
     max-width: 100%; /* Take full width of screen */
-    margin: 8px 0;
+    margin: 16px 0; /* Increased space */
 }
 
 .formatted-content {
@@ -148,3 +148,5 @@
 .reaction-buttons button:hover {
     color: #000;
 }
+
+

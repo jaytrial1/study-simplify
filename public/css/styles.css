@@ -95,6 +95,12 @@ body {
     border-top: 1px solid #404045;
     padding-top: 1rem;
     margin-top: 0.5rem;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.chat-history::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 .chat-history h3 {
@@ -228,6 +234,8 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100vh; /* Ensure full viewport height */
+    overflow: hidden; /* Prevent double scrolling */
     animation: contentFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -299,10 +307,20 @@ body {
 }
 
 .chat-messages {
-    flex: 1;
+    position: fixed;
+    top: 140px;
+    bottom: 90px;
+    left: 0;
+    right: 0;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 1rem;
-    background-color: #292a2d;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.chat-messages::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 .message {
@@ -443,9 +461,14 @@ body {
 }
 
 .chat-input {
-    position: relative;
-    padding: 1rem;
-    background-color: #292a2d;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #292a2d;
+    z-index: 1000;
+    padding: 0.5rem;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
 }
 
 .input-wrapper {
@@ -569,8 +592,8 @@ body {
 
     .chat-messages {
         position: fixed;
-        top: 140px; /* Adjust based on header + dropdown height */
-        bottom: 90px; /* Adjust based on input height */
+        top: 140px;
+        bottom: 90px; /* Default height when input is collapsed */
         left: 0;
         right: 0;
         overflow-y: auto;
@@ -585,7 +608,7 @@ body {
         right: 0;
         background: #292a2d;
         z-index: 1000;
-        padding: 1rem;
+        padding: 0.5rem;
         box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
 
@@ -1663,8 +1686,8 @@ select option:hover {
 #selectedQuestionsContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px;
+    gap: 5px;
+    padding: 5px;
     background: var(--bg-card);
     border-bottom: 1px solid var(--border-color);
 }
@@ -2046,3 +2069,32 @@ blockquote {
     margin-top: 4px;
 }
 
+/* -----------------Typing Loading Indicator ----------------- */
+.typing-indicator {
+    display: flex;
+    justify-content: left;
+    padding: 10px 5px;
+    gap: 4px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background-color: #555;
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}

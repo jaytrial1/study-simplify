@@ -22,3 +22,17 @@ CREATE TABLE chat_history (
 
 -- Added grade column for chat history filtering (Added on March 2024)
 ALTER TABLE chat_history ADD COLUMN grade VARCHAR(50) NOT NULL AFTER user_id; 
+
+
+CREATE TABLE saved_answers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    question_identifier VARCHAR(255),
+    subject VARCHAR(100),
+    chapter VARCHAR(100),
+    grade VARCHAR(50),  -- Added grade column
+    answer_text TEXT,
+    save_type ENUM('normal', 'question_related'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

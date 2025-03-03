@@ -276,7 +276,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleSend(e) {
         e.preventDefault();
         const message = userInput.value.trim();
-        
+
+        // Check if it's the first message in a new chat session
+        const isFirstMessage = chatHistory.currentSessionId === null;
+
+        // Allow submission without input if it's the first message
+        if (!message && !isFirstMessage) return; // Prevent sending empty messages unless it's the first message
+
         try {
             // If it's a new chat command, clear everything
             if (message === '/') {
@@ -300,6 +306,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentQuestion = Array.from(window.selectedQuestions)[0];  // Use window.selectedQuestions
             let answerType = chatHistory.getAnswerType(currentQuestion);
             let isNewSession = false; // Add this flag
+
+            // Clear input but keep the question selected
+            userInput.value = '';
+
+            // Display user message immediately
+            addMessage('user', message);
+            // Show a temporary "loading" message for the AI response
+            const loadingMessageId = addMessage('bot', '', true);
             
             if (window.selectedQuestions.size > 0) {
                 const sessionResponse = await chatHistory.startNewChat(  // Store the response
@@ -346,49 +360,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(queryData.error || 'Failed to get AI response');
             }
             
-            // Only display messages, don't save them (they are saved in the backend)
             queryData.responses.forEach(response => {
-                // Display user message
-                addMessage('user', message);
-                // Display bot response
-                addMessage('bot', response.text);
+                updateMessage(loadingMessageId, response.text); // Replace loading text with AI response
             });
-            
-            // Clear input but keep the question selected
-            userInput.value = '';
-            
+
         } catch (error) {
             console.error('Error in handleSend:', error);
             addMessage('error', 'Failed to get response. Please try again.');
         }
     }
+
+    // Function to update an existing message
+    function updateMessage(messageElement, newText) {
+        if (messageElement) {
+            messageElement.querySelector('.chat-content').innerHTML = marked.parse(newText);
+        }
+    }
     //--------------------------------------------------------------------------------------------------------------
 
     //--------------------------------Add response on the chat window---------------------------------------------
-    function addMessage(type, content) {
+    function addMessage(type, content, isLoading = false) {
         const messagesContainer = document.querySelector('.chat-messages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `response ${type}-response`;
-    
+
         if (type === 'bot') {
-            // Convert Markdown to HTML using marked.js
-            const formattedContent = marked.parse(content);
-    
-            messageDiv.innerHTML = `
-                <div class="bot-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="chat-content formatted-content">${formattedContent}</div>
-            `;
+            if (isLoading) {
+                // Show spinner animation
+                messageDiv.innerHTML = `
+                    <div class="bot-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chat-content formatted-content">
+                        <div class="typing-indicator">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Convert Markdown to HTML using marked.js
+                const formattedContent = marked.parse(content);
+                messageDiv.innerHTML = `
+                    <div class="bot-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chat-content formatted-content">${formattedContent}</div>
+                `;
+            }
         } else {
             messageDiv.innerHTML = `
                 <div class="chat-content selected-question">${content}</div>
             `;
         }
-    
+
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }    
+
+        return messageDiv; // Return message element to update later
+    }
+    
     //--------------------------------------------------------------------------------------------------------------------
 
 
@@ -582,6 +612,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const newHeight = Math.min(userInput.scrollHeight, 150);
         userInput.style.height = newHeight + 'px';
         userInput.style.overflowY = userInput.scrollHeight > 150 ? 'auto' : 'hidden';
+        
+        // Calculate total input height including padding
+        const chatInput = document.querySelector('.chat-input');
+        const totalInputHeight = chatInput.offsetHeight;
+        
+        // Adjust chat messages bottom position
+        const chatMessages = document.querySelector('.chat-messages');
+        chatMessages.style.bottom = `${totalInputHeight}px`;
     }
 
     // Add event listeners for auto-resize
@@ -769,83 +807,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(message);
     }
 
-
-    // Add this function with other utility functions
-    // function updateSelectedQuestionsDisplay() {
-    //     const container = document.getElementById('selectedQuestionsContainer');
-    //     container.innerHTML = '';
-        
-    //     selectedQuestions.forEach(question => {
-    //         const questionTag = document.createElement('div');
-    //         questionTag.className = 'selected-question';
-    //         questionTag.innerHTML = `
-    //             ${question}
-    //             <span class="remove-question" data-question="${question}">&times;</span>
-    //         `;
-    //         container.appendChild(questionTag);
-    //     });
-
-    //     // Add click handlers for remove buttons
-    //     container.querySelectorAll('.remove-question').forEach(button => {
-    //         button.addEventListener('click', (e) => {
-    //             const questionToRemove = e.target.dataset.question;
-    //             selectedQuestions.delete(questionToRemove);
-    //             updateSelectedQuestionsDisplay();
-    //         });
-    //     });
-    // }
-
-
-    // // Function to handle user message
-    // function handleUserMessage() {
-    //     const message = userInput.value.trim();
-    //     if (message) {
-    //         if (message.startsWith('/')) {
-    //             handleCommand(message);
-    //         } else {
-    //             addMessage(message, true);
-    //         }
-    //         // userInput.value = '';
-    //         // autoResizeTextarea(); // Reset the textarea height
-    //         commandPanel.classList.remove('active');
-    //     }
-    // }
-
-    // sendButton.addEventListener('click', handleUserMessage);
-    // userInput.addEventListener('keydown', (e) => {
-    //     const isMobile = 'ontouchstart' in window;
-        
-    //     // Mobile: Allow Enter for new lines, only button submits
-    //     if (isMobile && e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
-    //         return; // Let browser handle normally (new line)
-    //     }
-
-    //     // Desktop: Ctrl/Cmd + Enter to submit
-    //     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-    //         e.preventDefault();
-    //         handleUserMessage();
-    //     }
-    // });
-
-    // // Check if there are questions from a different chapter
-    // if (hasQuestionsFromDifferentChapter(value.slice(0, lastSlashIndex), selectedChapter)) {
-    //     commandPanel.innerHTML = `
-    //         <div class="command-list">
-    //             <div class="command-item" style="
-    //                 background: #f8d7da;
-    //                 color: #721c24;
-    //                 border: 1px solid #f5c6cb;
-    //                 padding: 12px;
-    //                 border-radius: 4px;
-    //                 text-align: center;
-    //             ">
-    //                 Please send your current message or clear the input to select questions from a different chapter
-    //             </div>
-    //         </div>`;
-    //     commandPanel.classList.add('active');
-    //     return;
-    // }
-
     // Add to your question removal handler
     function removeQuestion(question) {
         window.selectedQuestions.delete(question);
@@ -877,144 +838,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-
-
-
-
-
-
-
-
-
-    // // Variables for long press detection
-    // let longPressTimer;
-    // const longPressDuration = 500; // 500ms for long press
-
-    // // Add this function at the start of your DOMContentLoaded event listener
-    // function addBotResponseListeners(element) {
-    //     // Prevent text selection
-    //     element.style.userSelect = 'none';
-    //     element.style.webkitUserSelect = 'none';
-    //     element.style.msUserSelect = 'none';
-
-    //     // Touch events for mobile
-    //     element.addEventListener('touchstart', (e) => {
-    //         longPressTimer = setTimeout(() => {
-    //             showAnswerActionPopup(e.touches[0].clientX, e.touches[0].clientY);
-    //         }, longPressDuration);
-    //     });
-
-    //     element.addEventListener('touchend', () => {
-    //         clearTimeout(longPressTimer);
-    //     });
-
-    //     element.addEventListener('touchmove', () => {
-    //         clearTimeout(longPressTimer);
-    //     });
-
-    //     // Right click for desktop
-    //     element.addEventListener('contextmenu', (e) => {
-    //         e.preventDefault();
-    //         showAnswerActionPopup(e.clientX, e.clientY);
-    //     });
-    // }
-
-    // // Use a MutationObserver to watch for new bot responses
-    // const observer = new MutationObserver((mutations) => {
-    //     mutations.forEach((mutation) => {
-    //         mutation.addedNodes.forEach((node) => {
-    //             if (node.nodeType === 1) { // Check if it's an element node
-    //                 const botResponses = node.classList?.contains('bot-response') ? 
-    //                     [node] : 
-    //                     Array.from(node.getElementsByClassName('bot-response'));
-                    
-    //                 botResponses.forEach(response => {
-    //                     addBotResponseListeners(response);
-    //                 });
-    //             }
-    //         });
-    //     });
-    // });
-
-    // // Start observing the chat messages container
-    // observer.observe(chatMessages, { childList: true, subtree: true });
-
-    // // Also handle any existing bot responses
-    // document.querySelectorAll('.response.bot-response').forEach(response => {
-    //     addBotResponseListeners(response);
-    // });
-
-    // // Function to show popup
-    // function showAnswerActionPopup(x, y) {
-    //     // Remove existing popup if any
-    //     const existingPopup = document.querySelector('.answer-action-popup');
-    //     if (existingPopup) {
-    //         existingPopup.remove();
-    //     }
-
-    //     // Create new popup
-    //     const popup = document.createElement('div');
-    //     popup.className = 'answer-action-popup';
-    //     popup.style.display = 'block'; // Change from flex to block
-    //     popup.innerHTML = `
-    //         <div class="action-content">
-    //             <button class="answer-action-button" data-type="Best Answer">Best Answer</button>
-    //             <button class="answer-action-button" data-type="Save">Save</button>
-    //             <button class="answer-action-button" data-type="Regenerate">Regenerate</button>
-    //             <button class="answer-action-button" data-type="Copy Text">Copy Text</button>
-    //         </div>
-    //     `;
-    //     document.body.appendChild(popup);
-
-    //     // Position the popup near the click/touch point
-    //     const popupContent = popup.querySelector('.action-content');
-    //     if (popupContent) {
-    //         const safeArea = 10; // Reduced padding from viewport edges
-            
-    //         // Get viewport dimensions
-    //         const viewportWidth = window.innerWidth;
-    //         const viewportHeight = window.innerHeight;
-            
-    //         // Get popup dimensions
-    //         const popupWidth = popupContent.offsetWidth;
-    //         const popupHeight = popupContent.offsetHeight;
-            
-    //         // Calculate position to keep popup within viewport
-    //         let posX = x;
-    //         let posY = y;
-            
-    //         // Adjust horizontal position if needed
-    //         if (x + popupWidth + safeArea > viewportWidth) {
-    //             posX = x - popupWidth;
-    //         }
-            
-    //         // Adjust vertical position if needed
-    //         if (y + popupHeight + safeArea > viewportHeight) {
-    //             posY = y - popupHeight;
-    //         }
-            
-    //         // Ensure popup doesn't go outside viewport
-    //         posX = Math.max(safeArea, Math.min(posX, viewportWidth - popupWidth - safeArea));
-    //         posY = Math.max(safeArea, Math.min(posY, viewportHeight - popupHeight - safeArea));
-            
-    //         popupContent.style.position = 'fixed';
-    //         popupContent.style.left = `${posX}px`;
-    //         popupContent.style.top = `${posY}px`;
-    //     }
-    // }
-
-    // // Close popup when clicking outside
-    // document.addEventListener('click', (e) => {
-    //     const popup = document.querySelector('.answer-action-popup');
-    //     if (!popup) return;
-
-    //     const popupContent = popup.querySelector('.action-content');
-    //     if (!popupContent) return;
-        
-    //     if (!popupContent.contains(e.target)) {
-    //         popup.style.display = 'none';
-    //     }
-    // });
 
 });
