@@ -269,7 +269,21 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const isPrevious = btn.textContent.includes('Previous');
         currentIndex = Math.max(0, Math.min(currentAnswers.length - 1, currentIndex + (isPrevious ? -1 : 1)));
-        updateModalContent();
+        
+        const answerItem = currentAnswers[currentIndex];
+        if (answerItem) {
+            const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
+            const formattedAnswer = marked.parse(rawAnswer || '');
+            
+            updateModalContent();
+            
+            // Update the answer text with formatted content
+            document.querySelector('.answer-text').innerHTML = `
+                <div class="formatted-content">
+                    ${formattedAnswer}
+                </div>
+            `;
+        }
     });
 });
 
@@ -295,7 +309,7 @@ function updateModalContent() {
 
 document.querySelector('.close-modal').addEventListener('click', () => {
     document.getElementById('answerModal').classList.remove('active');
-    document.body.style.overflow = '';
+    document.body.style.overflow = 'auto';
 });
 
 // Save type dropdown with current selection
@@ -324,4 +338,433 @@ document.querySelectorAll('.dropdown-content a').forEach(option => {
         updateSaveTypeButton(newType);
         dropdownContent.classList.remove('active');
     });
+});
+
+
+// Main class to handle all saved answers functionality
+class SavedAnswersManager {
+    constructor() {
+        this.userGrade = localStorage.getItem('userGrade');
+        this.answersTree = document.querySelector('.answers-tree');
+        this.savedAnswersCache = null;
+        this.modal = document.getElementById('answerModal');
+        this.currentAnswers = [];
+        this.currentIndex = 0;
+        this.init();
+        this.setupEventListeners();
+    }
+
+    async init() {
+        try {
+            // First fetch all saved answers
+            await this.fetchSavedAnswers();
+            // Then load subjects
+            await this.loadSubjects();
+        } catch (error) {
+            console.error('Error initializing:', error);
+        }
+    }
+
+    async fetchSavedAnswers() {
+        try {
+            const userId = localStorage.getItem('user_id');
+            if (!userId) {
+                console.error('User ID not found in localStorage');
+                return;
+            }
+
+            if (!this.userGrade) {
+                console.error('User grade not found in localStorage');
+                return;
+            }
+
+            console.log('Fetching saved answers with:', {
+                userId,
+                grade: this.userGrade
+            });
+
+            const url = `/main/api/saved-answers/saved_answers.php?grade=${encodeURIComponent(this.userGrade)}&user_id=${encodeURIComponent(userId)}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Server response:', errorData);
+                throw new Error(errorData.error || 'Failed to fetch saved answers');
+            }
+
+            const data = await response.json();
+            console.log('Received saved answers:', data);
+            
+            // Group answers by subject and chapter
+            this.savedAnswersCache = {};
+            if (data.answers && Array.isArray(data.answers)) {
+                data.answers.forEach(answer => {
+                    if (!this.savedAnswersCache[answer.subject]) {
+                        this.savedAnswersCache[answer.subject] = {};
+                    }
+                    if (!this.savedAnswersCache[answer.subject][answer.chapter]) {
+                        this.savedAnswersCache[answer.subject][answer.chapter] = [];
+                    }
+                    this.savedAnswersCache[answer.subject][answer.chapter].push(answer);
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching saved answers:', error);
+            this.savedAnswersCache = {};
+        }
+    }
+
+    async loadSubjects() {
+        try {
+            const response = await fetch(`/main/api/navigation/subjects.php?grade=${this.userGrade}`);
+            const data = await response.json();
+            await Promise.all(data.subjects.map(subject => this.loadSubjectData(subject)));
+        } catch (error) {
+            console.error('Error loading subjects:', error);
+        }
+    }
+
+    async loadSubjectData(subject) {
+        try {
+            const chaptersResponse = await fetch(`/main/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
+            const chaptersData = await chaptersResponse.json();
+
+            const subjectHtml = `
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-content">
+                            <div class="header-title">
+                                <span>${subject}</span>
+                            </div>
+                            <div class="header-actions">
+                                <button class="toggle-section-btn" title="Expand/Collapse this section">
+                                    <i class="fas fa-expand-alt"></i>
+                                </button>
+                                <i class="fas fa-chevron-right arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        ${await this.generateChaptersHtml(subject, chaptersData.chapters)}
+                    </div>
+                </div>
+            `;
+
+            this.answersTree.innerHTML += subjectHtml;
+        } catch (error) {
+            console.error(`Error loading data for subject ${subject}:`, error);
+        }
+    }
+
+    generateChaptersHtml(subject, chapters) {
+        let chaptersHtml = '';
+        
+        for (const chapter of chapters) {
+            const chapterAnswers = this.savedAnswersCache[subject]?.[chapter] || [];
+            
+            chaptersHtml += `
+                <div class="chapter-item">
+                    <div class="chapter-header">
+                        <div class="header-content">
+                            <div class="header-title">
+                                <span>${chapter}</span>
+                            </div>
+                            <div class="header-actions">
+                                <button class="toggle-section-btn" title="Expand/Collapse this chapter">
+                                    <i class="fas fa-expand-alt"></i>
+                                </button>
+                                <i class="fas fa-chevron-right arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chapter-content">
+                        ${this.generateQuestionsHtml(chapterAnswers)}
+                    </div>
+                </div>`;
+        }
+        
+        return chaptersHtml;
+    }
+
+    generateQuestionsHtml(answers) {
+        if (!answers || answers.length === 0) return '';
+        
+        const MAX_PREVIEW_LENGTH = 150;
+        
+        // Group answers by question_identifier
+        const groupedAnswers = answers.reduce((groups, answer) => {
+            if (!groups[answer.question_identifier]) {
+                groups[answer.question_identifier] = [];
+            }
+            groups[answer.question_identifier].push(answer);
+            return groups;
+        }, {});
+        
+        return Object.entries(groupedAnswers).map(([questionId, questionAnswers]) => {
+            const answersHtml = questionAnswers.map(answer => {
+                // Create preview text (plain text)
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = answer.answer_text;
+                const textContent = tempDiv.textContent;
+                const previewText = textContent.length > MAX_PREVIEW_LENGTH ? 
+                    textContent.substring(0, MAX_PREVIEW_LENGTH) + '...' : 
+                    textContent;
+                
+                return `
+                    <div class="answer-item" data-save-type="${answer.save_type}" data-full-answer="${encodeURIComponent(answer.answer_text)}">
+                        <div class="answer-body">
+                            ${previewText}
+                        </div>
+                        <button class="view-full-answer">View Full Answer</button>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>${questionId}</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="question-content">
+                        ${answersHtml}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    setupEventListeners() {
+        // Toggle all sections button
+        const toggleAllBtn = document.querySelector('.toggle-all-btn');
+        let isExpanded = false;
+
+        toggleAllBtn?.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            toggleAllBtn.classList.toggle('active');
+            toggleAllBtn.innerHTML = isExpanded ? 
+                '<i class="fas fa-compress-alt"></i>' : 
+                '<i class="fas fa-expand-alt"></i>';
+            
+            document.querySelectorAll('.accordion-item, .chapter-item, .question-item').forEach(item => {
+                if (isExpanded) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+
+        // Subject level accordion
+        this.answersTree.addEventListener('click', (e) => {
+            const accordionHeader = e.target.closest('.accordion-header');
+            if (accordionHeader) {
+                const accordionItem = accordionHeader.closest('.accordion-item');
+                accordionItem.classList.toggle('active');
+                e.stopPropagation();
+            }
+
+            // Chapter level accordion
+            const chapterHeader = e.target.closest('.chapter-header');
+            if (chapterHeader) {
+                const chapterItem = chapterHeader.closest('.chapter-item');
+                chapterItem.classList.toggle('active');
+                e.stopPropagation();
+            }
+
+            // Question level accordion
+            const questionHeader = e.target.closest('.question-header');
+            if (questionHeader) {
+                const questionItem = questionHeader.closest('.question-item');
+                questionItem.classList.toggle('active');
+                e.stopPropagation();
+            }
+
+            // Individual toggle buttons
+            const toggleBtn = e.target.closest('.toggle-section-btn');
+            if (toggleBtn) {
+                const section = toggleBtn.closest('.accordion-item, .chapter-item');
+                const isExpanded = section.classList.contains('active');
+                
+                toggleBtn.innerHTML = isExpanded ? 
+                    '<i class="fas fa-expand-alt"></i>' : 
+                    '<i class="fas fa-compress-alt"></i>';
+                e.stopPropagation();
+            }
+        });
+
+        // Add modal-related event listeners
+        this.answersTree.addEventListener('click', (e) => {
+            const viewFullBtn = e.target.closest('.view-full-answer');
+            if (viewFullBtn) {
+                const answerItem = viewFullBtn.closest('.answer-item');
+                const questionItem = answerItem.closest('.question-item');
+                
+                // Get all answers in the current chapter for navigation
+                const chapterItem = questionItem.closest('.chapter-item');
+                this.currentAnswers = Array.from(chapterItem.querySelectorAll('.answer-item'));
+                this.currentIndex = this.currentAnswers.indexOf(answerItem);
+                
+                this.openModal(answerItem);
+            }
+        });
+
+        // Modal navigation
+        document.querySelector('.navigation-buttons').addEventListener('click', (e) => {
+            const navBtn = e.target.closest('.nav-btn');
+            if (!navBtn) return;
+
+            if (navBtn.textContent.includes('Previous') && this.currentIndex > 0) {
+                this.currentIndex--;
+                this.updateModalContent();
+            } else if (navBtn.textContent.includes('Next') && this.currentIndex < this.currentAnswers.length - 1) {
+                this.currentIndex++;
+                this.updateModalContent();
+            }
+        });
+
+        // Close modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            this.modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    openModal(answerItem) {
+        const questionItem = answerItem.closest('.question-item');
+        const subject = questionItem.closest('.accordion-item').querySelector('.header-title span').textContent;
+        const chapter = questionItem.closest('.chapter-item').querySelector('.header-title span').textContent;
+        const question = questionItem.querySelector('.question-header span').textContent;
+        const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
+        const saveType = answerItem.dataset.saveType;
+
+        // Parse the answer with marked
+        const formattedAnswer = marked.parse(rawAnswer);
+
+        // Update modal content
+        document.querySelector('.modal-title h3').textContent = 'Saved Answer';
+        document.querySelector('.answer-meta').textContent = `${subject} > ${chapter}`;
+        document.querySelector('.question-section h4').textContent = question;
+        document.querySelector('.answer-text').innerHTML = `
+            <div class="formatted-content">
+                ${formattedAnswer}
+            </div>
+        `;
+
+        // Update save type in dropdown
+        const saveBtn = document.querySelector('.save-btn');
+        saveBtn.textContent = saveType || 'Question Related';
+
+        // Update navigation buttons state
+        document.querySelector('.nav-btn:first-child').disabled = this.currentIndex === 0;
+        document.querySelector('.nav-btn:last-child').disabled = this.currentIndex === this.currentAnswers.length - 1;
+
+        // Show modal and prevent body scroll
+        this.modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    updateModalContent() {
+        const answerItem = this.currentAnswers[this.currentIndex];
+        this.openModal(answerItem);
+    }
+
+    openModalFromData(answer) {
+        if (!answer) return;
+
+        // Update modal content directly from answer data
+        document.querySelector('.modal-title h3').textContent = 'Saved Answer';
+        document.querySelector('.answer-meta').textContent = 
+            `${answer.subject || ''} > ${answer.chapter || ''}`;
+        document.querySelector('.question-section h4').textContent = 
+            answer.question_identifier || '';
+        
+        // Safely parse the answer text
+        const answerText = answer.answer_text || '';
+        const formattedAnswer = marked.parse(answerText);
+        
+        document.querySelector('.answer-text').innerHTML = `
+            <div class="formatted-content">
+                ${formattedAnswer}
+            </div>
+        `;
+
+        // Update save type and navigation buttons
+        const saveBtn = document.querySelector('.save-btn');
+        saveBtn.textContent = answer.save_type || 'Question Related';
+        
+        // Update navigation state
+        document.querySelector('.nav-btn:first-child').disabled = this.currentIndex === 0;
+        document.querySelector('.nav-btn:last-child').disabled = 
+            this.currentIndex === this.currentAnswers.length - 1;
+    }
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const savedAnswersManager = new SavedAnswersManager();
+});
+
+// Add this to saved_answers.js
+class FilterManager {
+    constructor() {
+        this.userGrade = localStorage.getItem('userGrade');
+        this.subjectSelect = document.querySelector('.subject-select');
+        this.chapterSelect = document.querySelector('.chapter-select');
+        
+        this.init();
+    }
+
+    async init() {
+        await this.loadSubjects();
+        this.setupEventListeners();
+    }
+
+    async loadSubjects() {
+        try {
+            const response = await fetch(`/main/api/navigation/subjects.php?grade=${this.userGrade}`);
+            const data = await response.json();
+            
+            // Populate subject filter
+            this.subjectSelect.innerHTML = '<option value="">All Subjects</option>';
+            data.subjects.forEach(subject => {
+                this.subjectSelect.innerHTML += `<option value="${subject}">${subject}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading subjects:', error);
+        }
+    }
+
+    async loadChapters(subject) {
+        try {
+            const response = await fetch(`/main/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
+            const data = await response.json();
+            
+            // Populate chapter filter
+            this.chapterSelect.innerHTML = '<option value="">All Chapters</option>';
+            data.chapters.forEach(chapter => {
+                this.chapterSelect.innerHTML += `<option value="${chapter}">${chapter}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading chapters:', error);
+        }
+    }
+
+    setupEventListeners() {
+        // When subject changes, load corresponding chapters
+        this.subjectSelect.addEventListener('change', (e) => {
+            const subject = e.target.value;
+            if (subject) {
+                this.loadChapters(subject);
+            } else {
+                // Reset chapter select if "All Subjects" is chosen
+                this.chapterSelect.innerHTML = '<option value="">All Chapters</option>';
+            }
+        });
+    }
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const filterManager = new FilterManager();
 });

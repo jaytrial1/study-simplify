@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             queryData.responses.forEach(response => {
-                updateMessage(loadingMessageId, response.text); // Replace loading text with AI response
+                updateMessage(loadingMessageId, response.text); // Replace loading text with raw AI response
             });
 
         } catch (error) {
