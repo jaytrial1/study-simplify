@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get UI elements
     const searchToggle = document.querySelector('.search-toggle');
     const filterToggle = document.querySelector('.filter-toggle');
     const searchPanel = document.querySelector('.history-search-panel');
@@ -9,6 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyItems = document.querySelector('.history-items');
     const clearFiltersBtn = document.querySelector('.clear-filters-btn');
 
+    // Check if we're on the chatbot page (where history features are available)
+    // If elements don't exist, exit early
+    if (!searchToggle || !searchPanel || !historyItems) {
+        console.log('Chat history elements not found - likely on a different page');
+        return;
+    }
+
     // Toggle search panel
     searchToggle.addEventListener('click', () => {
         searchPanel.classList.toggle('active');
@@ -18,39 +26,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Toggle filters
-    filterToggle.addEventListener('click', () => {
-        filterPanel.classList.toggle('active');
-    });
+    if (filterToggle && filterPanel) {
+        filterToggle.addEventListener('click', () => {
+            filterPanel.classList.toggle('active');
+        });
+    }
 
     // Real-time search
     let debounceTimer;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            filterHistoryItems();
-        }, 300);
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                filterHistoryItems();
+            }, 300);
+        });
+    }
 
     // Filter changes
-    subjectFilter.addEventListener('change', filterHistoryItems);
-    chapterFilter.addEventListener('change', filterHistoryItems);
+    if (subjectFilter) {
+        subjectFilter.addEventListener('change', filterHistoryItems);
+    }
+    
+    if (chapterFilter) {
+        chapterFilter.addEventListener('change', filterHistoryItems);
+    }
 
-    clearFiltersBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        subjectFilter.value = '';
-        chapterFilter.value = '';
-        filterHistoryItems();
-        
-        // On mobile, close the filter panel after clearing
-        if (window.innerWidth <= 768) {
-            filterPanel.classList.remove('active');
-        }
-    });
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            if (subjectFilter) subjectFilter.value = '';
+            if (chapterFilter) chapterFilter.value = '';
+            filterHistoryItems();
+            
+            // On mobile, close the filter panel after clearing
+            if (window.innerWidth <= 768 && filterPanel) {
+                filterPanel.classList.remove('active');
+            }
+        });
+    }
 
     function filterHistoryItems() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedSubject = subjectFilter.value;
-        const selectedChapter = chapterFilter.value;
+        if (!historyItems) return;
+        
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const selectedSubject = subjectFilter ? subjectFilter.value : '';
+        const selectedChapter = chapterFilter ? chapterFilter.value : '';
 
         const items = historyItems.querySelectorAll('.history-item');
         
@@ -70,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Populate filters with available options
     function populateFilters() {
+        if (!historyItems || !subjectFilter || !chapterFilter) return;
+        
         const subjects = new Set();
         const chapters = new Set();
 
@@ -89,5 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    populateFilters();
+    // Only populate filters if we're on the chatbot page
+    if (historyItems && subjectFilter && chapterFilter) {
+        populateFilters();
+    }
 });

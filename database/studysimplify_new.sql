@@ -30,8 +30,9 @@ CREATE TABLE saved_answers (
     question_identifier VARCHAR(255),
     subject VARCHAR(100),
     chapter VARCHAR(100),
-    grade VARCHAR(50),  -- Added grade column
+    grade VARCHAR(50),
     answer_text TEXT,
     save_type ENUM('Best response', 'question_related'),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_answer (user_id, subject, question_identifier, chapter, answer_text(255))
 );
