@@ -132,6 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', () => {
                 const selectedType = button.dataset.type;
                 console.log('Selected Type:', selectedType);
+
+                // Format the save type to match database ENUM values exactly
+                const formattedSaveType = selectedType === 'Question Related' ? 'question_related' : 
+                                        selectedType === 'Best response' ? 'Best response' : 
+                                        selectedType; // Keep original if not matching known types
+
                 const currentQuestion = Array.from(window.selectedQuestions)[0]; // Get the current question
                 const subject = document.getElementById('selectedSubject').innerText;
                 const chapter = document.getElementById('selectedChapter').innerText;
@@ -160,9 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         question: currentQuestionText,
                         subject, 
                         chapter, 
-                        saveType: selectedType, 
+                        saveType: formattedSaveType, 
                         grade, 
-                        aiResponse //: selectedResponseText
+                        aiResponse
                     })
                 })
                 // .then(response => {
@@ -185,8 +191,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         // If the answer already exists, show the correct saved type
                         if (data.message && data.message.includes('already exists')) {
-                            const saveType = data.save_type || "Unknown"; // Get correct type from response
-                            showToast(`This answer has already been saved as "${saveType}".`, false);
+                            // Get the save type and convert it to display format
+                            let saveTypeDisplay = "Unknown";
+                            if (data.save_type) {
+                                if (data.save_type === 'question_related') {
+                                    saveTypeDisplay = 'Question Related';
+                                } else if (data.save_type === 'Best response') {
+                                    saveTypeDisplay = 'Best response'; // Keep exact database format
+                                } else {
+                                    saveTypeDisplay = data.save_type; // Use as is if not recognized
+                                }
+                            }
+                            
+                            // Create a more specific message depending on if it's an exact match
+                            let message = data.message.includes('exact') 
+                                ? `This exact response has already been saved as "${saveTypeDisplay}"`
+                                : `A response to this question has already been saved as "${saveTypeDisplay}"`;
+                            
+                            // Use the toast notification system
+                            createToastMessage(message, false);
                         } else {
                             showToast('Error saving answer: ' + data.message, false);
                         }
@@ -223,23 +246,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showToast(message, withAction = false) {
+    // Use the new createToastMessage function for consistency
+    if (!withAction) {
+        createToastMessage(message, false);
+        return;
+    }
+    
+    // For toasts with actions, keep the original implementation
     const toast = document.getElementById('toastNotification');
     
-    if (withAction) {
-        toast.innerHTML = `
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                <span id="toastMessage">${message}</span>
-                <span style="font-size: 0.9em; color: #842029;">Do you want to remove it?</span>
-                <div class="toast-buttons">
-                    <button class="ok-btn" onclick="clearInput()">OK</button>
-                    <button class="cancel-btn" onclick="hideToast()">Cancel</button>
-                </div>
+    toast.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <span id="toastMessage">${message}</span>
+            <span style="font-size: 0.9em; color: #842029;">Do you want to remove it?</span>
+            <div class="toast-buttons">
+                <button class="ok-btn" onclick="clearInput()">OK</button>
+                <button class="cancel-btn" onclick="hideToast()">Cancel</button>
             </div>
-        `;
-    } else {
-        const toastMessage = document.getElementById('toastMessage');
-        toastMessage.textContent = message;
-    }
+        </div>
+    `;
 
     toast.classList.add('active');
 
@@ -247,5 +272,29 @@ function showToast(message, withAction = false) {
         if (toast.classList.contains('active')) {
             toast.classList.remove('active');
         }
-    }, 1000); // Display for 1 second
+    }, 5000); // Display for 5 seconds for action toasts
+}
+
+function createToastMessage(message, isError = false) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'toast-message' + (isError ? ' error' : '');
+    toast.textContent = message;
+
+    // Add to toast container
+    const container = document.getElementById('toast-container');
+    if (container) {
+        container.appendChild(toast);
+    } else {
+        // If container doesn't exist, create it
+        const newContainer = document.createElement('div');
+        newContainer.id = 'toast-container';
+        document.body.appendChild(newContainer);
+        newContainer.appendChild(toast);
+    }
+
+    // Automatically remove after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }

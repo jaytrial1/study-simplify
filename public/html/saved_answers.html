@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/saved_answers.css">
     <link rel="stylesheet" href="../css/response.css">
+    <link rel="stylesheet" href="../css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
@@ -144,11 +145,11 @@
             <div class="modal-footer">
                 <div class="answer-actions">
                     <div class="navigation-buttons">
-                        <button class="nav-btn" disabled>
+                        <button class="nav-btn prev-btn" disabled>
                             <i class="fas fa-chevron-left"></i>
                             Previous
                         </button>
-                        <button class="nav-btn">
+                        <button class="nav-btn next-btn">
                             Next
                             <i class="fas fa-chevron-right"></i>
                         </button>
@@ -159,14 +160,14 @@
                             Chat History
                         </button>
                         <div class="save-type-dropdown">
-                            <button class="action-btn save-btn">
+                            <button class="action-btn save-btn" data-answer-id="">
                                 <i class="fas fa-bookmark"></i>
                                 Question Related
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                             <div class="dropdown-content">
-                                <a href="#">Best Response</a>
-                                <a href="#" class="active">Question Related</a>
+                                <a href="#" data-type="Best response">Best Response</a>
+                                <a href="#" data-type="question_related" class="active">Question Related</a>
                             </div>
                         </div>
                     </div>
@@ -174,7 +175,13 @@
             </div>
         </div>
     </div>
+    <!-- Toast Message Container -->
+    <div id="toast-container"></div>
+    
+    <!-- Scripts -->
+    <script src="../js/user-session.js"></script>
     <script src="../js/saved_answers.js"></script>
+    <script src="../js/save-type-handler.js"></script>
     <script src="../js/history-search.js"></script>
 </body>
 </html>

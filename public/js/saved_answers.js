@@ -1,3 +1,17 @@
+// Function to show toast messages
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-message' + (isError ? ' error' : '');
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    // Automatically remove the toast after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Add new chat button handler
     document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
@@ -320,35 +334,6 @@ document.querySelector('.close-modal').addEventListener('click', () => {
     document.body.style.overflow = 'auto';
 });
 
-// Save type dropdown with current selection
-const saveTypeBtn = document.querySelector('.save-type-dropdown .action-btn');
-const dropdownContent = document.querySelector('.dropdown-content');
-
-// Update button text to show current selection
-function updateSaveTypeButton(text) {
-    saveTypeBtn.innerHTML = `
-        <i class="fas fa-bookmark"></i>
-        ${text} <i class="fas fa-chevron-down"></i>
-    `;
-}
-
-saveTypeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdownContent.classList.toggle('active');
-});
-
-document.querySelectorAll('.dropdown-content a').forEach(option => {
-    option.addEventListener('click', (e) => {
-        e.preventDefault();
-        const newType = e.target.textContent;
-        document.querySelectorAll('.dropdown-content a').forEach(a => a.classList.remove('active'));
-        option.classList.add('active');
-        updateSaveTypeButton(newType);
-        dropdownContent.classList.remove('active');
-    });
-});
-
-
 // Main class to handle all saved answers functionality
 class SavedAnswersManager {
     constructor() {
@@ -636,40 +621,6 @@ class SavedAnswersManager {
             this.modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
-
-        // Add this to the setupEventListeners method in SavedAnswersManager class
-        // document.querySelectorAll('.dropdown-content a').forEach(option => {
-        //     option.addEventListener('click', async (e) => {
-        //         e.preventDefault();
-        //         const newType = e.target.textContent;
-        //         const answerItem = this.currentAnswers[this.currentIndex];
-        //         const answerId = answerItem.dataset.id;
-                
-        //         try {
-        //             const response = await fetch('/main/api/saved-answers/save_to_database.php', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify({
-        //                     id: answerId,
-        //                     saveType: newType === 'Question Related' ? 'question_related' : 'Best Response',
-        //                     updateType: true // Add this flag to indicate we're updating
-        //                 })
-        //             });
-
-        //             const data = await response.json();
-        //             if (data.success) {
-        //                 // Update the UI
-        //                 answerItem.dataset.saveType = newType;
-        //                 updateSaveTypeButton(newType);
-        //                 document.querySelector('.dropdown-content').classList.remove('active');
-        //             }
-        //         } catch (error) {
-        //             console.error('Error updating save type:', error);
-        //         }
-        //     });
-        // });
     }
 
     // Private method to decode HTML entities
@@ -684,11 +635,11 @@ class SavedAnswersManager {
         const subject = questionItem.closest('.accordion-item').querySelector('.header-title span').textContent;
         const chapter = questionItem.closest('.chapter-item').querySelector('.header-title span').textContent;
         const question = questionItem.querySelector('.question-header span').textContent;
-        // const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
         const saveType = answerItem.dataset.saveType;
+        const answerId = answerItem.dataset.id;
 
-        // Parse the answer with marked
-        // const formattedAnswer = marked.parse(rawAnswer);
+        console.log('Opening modal for answer:', answerId, 'with save type:', saveType);
+
         // Decode the stored full answer
         const fullAnswer = this.decodeHtml(decodeURIComponent(answerItem.dataset.fullAnswer));
 
@@ -702,13 +653,22 @@ class SavedAnswersManager {
             </div>
         `;
 
-        // Update save type in dropdown
+        // Set the answer ID in the save button for the save type handler
         const saveBtn = document.querySelector('.save-btn');
-        saveBtn.textContent = saveType || 'Question Related';
+        saveBtn.setAttribute('data-answer-id', answerId);
+        
+        // Update the save type handler with the current answer ID
+        if (window.saveTypeHandler) {
+            console.log('Setting current answer ID in save type handler:', answerId);
+            window.saveTypeHandler.setCurrentAnswerId(answerId);
+            window.saveTypeHandler.updateButtonText(saveType || 'Question Related');
+        } else {
+            console.warn('Save type handler not found');
+        }
 
         // Update navigation buttons state
-        document.querySelector('.nav-btn:first-child').disabled = this.currentIndex === 0;
-        document.querySelector('.nav-btn:last-child').disabled = this.currentIndex === this.currentAnswers.length - 1;
+        document.querySelector('.prev-btn').disabled = this.currentIndex === 0;
+        document.querySelector('.next-btn').disabled = this.currentIndex === this.currentAnswers.length - 1;
 
         // Show modal and prevent body scroll
         this.modal.style.display = 'block';
@@ -734,8 +694,7 @@ class SavedAnswersManager {
         // const answerText = answer.answer_text || '';
         // const formattedAnswer = marked.parse(answerText);
         
-        document.querySelector('.answer-text').innerHTML = `
-            <div class="formatted-content">
+        document.querySelector('.answer-text').innerHTML = `            <div class="formatted-content">
                 ${answer.answer_text || ''}
             </div>
         `;
@@ -819,3 +778,4 @@ class FilterManager {
 document.addEventListener('DOMContentLoaded', () => {
     const filterManager = new FilterManager();
 });
+

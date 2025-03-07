@@ -807,8 +807,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add this function to show errors to the user
     function showError(message) {
-        // You can implement this based on your UI, for now using alert
-        alert(message);
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = 'toast-message error';
+        toast.textContent = message;
+
+        // Add to toast container
+        const container = document.getElementById('toast-container');
+        container.appendChild(toast);
+
+        // Automatically remove after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
     }
 
     // Add to your question removal handler
