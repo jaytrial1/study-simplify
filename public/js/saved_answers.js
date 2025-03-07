@@ -296,11 +296,19 @@ function updateModalContent() {
     const chapter = questionItem.closest('.chapter-item').querySelector('.chapter-header span').textContent;
     const question = questionItem.querySelector('.question-header span').textContent;
 
+    // Create a temporary div to parse the HTML string
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = decodeURIComponent(answerItem.dataset.fullAnswer);
+ 
     // Update modal content
     document.querySelector('.modal-title h3').textContent = 'Saved Answer';
     document.querySelector('.answer-meta').textContent = `${subject} > ${chapter}`;
     document.querySelector('.question-section h4').textContent = question;
-    document.querySelector('.answer-text').textContent = answerItem.dataset.fullAnswer;
+    document.querySelector('.answer-text').innerHTML = `
+        <div class="formatted-content">
+            ${tempDiv.innerHTML}
+        </div>
+    `;
 
     // Update navigation state
     document.querySelector('.nav-btn:first-child').disabled = currentIndex === 0;
@@ -378,10 +386,10 @@ class SavedAnswersManager {
                 return;
             }
 
-            console.log('Fetching saved answers with:', {
-                userId,
-                grade: this.userGrade
-            });
+            // console.log('Fetching saved answers with:', {
+            //     userId,
+            //     grade: this.userGrade
+            // });
 
             const url = `/main/api/saved-answers/saved_answers.php?grade=${encodeURIComponent(this.userGrade)}&user_id=${encodeURIComponent(userId)}`;
             const response = await fetch(url);
@@ -511,7 +519,7 @@ class SavedAnswersManager {
                     textContent;
                 
                 return `
-                    <div class="answer-item" data-save-type="${answer.save_type}" data-full-answer="${encodeURIComponent(answer.answer_text)}">
+                    <div class="answer-item" data-id="${answer.id}" data-save-type="${answer.save_type}" data-full-answer="${encodeURIComponent(answer.answer_text)}">
                         <div class="answer-body">
                             ${previewText}
                         </div>
@@ -628,6 +636,47 @@ class SavedAnswersManager {
             this.modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
+
+        // Add this to the setupEventListeners method in SavedAnswersManager class
+        // document.querySelectorAll('.dropdown-content a').forEach(option => {
+        //     option.addEventListener('click', async (e) => {
+        //         e.preventDefault();
+        //         const newType = e.target.textContent;
+        //         const answerItem = this.currentAnswers[this.currentIndex];
+        //         const answerId = answerItem.dataset.id;
+                
+        //         try {
+        //             const response = await fetch('/main/api/saved-answers/save_to_database.php', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify({
+        //                     id: answerId,
+        //                     saveType: newType === 'Question Related' ? 'question_related' : 'Best Response',
+        //                     updateType: true // Add this flag to indicate we're updating
+        //                 })
+        //             });
+
+        //             const data = await response.json();
+        //             if (data.success) {
+        //                 // Update the UI
+        //                 answerItem.dataset.saveType = newType;
+        //                 updateSaveTypeButton(newType);
+        //                 document.querySelector('.dropdown-content').classList.remove('active');
+        //             }
+        //         } catch (error) {
+        //             console.error('Error updating save type:', error);
+        //         }
+        //     });
+        // });
+    }
+
+    // Private method to decode HTML entities
+    decodeHtml(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
     }
 
     openModal(answerItem) {
@@ -635,11 +684,13 @@ class SavedAnswersManager {
         const subject = questionItem.closest('.accordion-item').querySelector('.header-title span').textContent;
         const chapter = questionItem.closest('.chapter-item').querySelector('.header-title span').textContent;
         const question = questionItem.querySelector('.question-header span').textContent;
-        const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
+        // const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
         const saveType = answerItem.dataset.saveType;
 
         // Parse the answer with marked
-        const formattedAnswer = marked.parse(rawAnswer);
+        // const formattedAnswer = marked.parse(rawAnswer);
+        // Decode the stored full answer
+        const fullAnswer = this.decodeHtml(decodeURIComponent(answerItem.dataset.fullAnswer));
 
         // Update modal content
         document.querySelector('.modal-title h3').textContent = 'Saved Answer';
@@ -647,7 +698,7 @@ class SavedAnswersManager {
         document.querySelector('.question-section h4').textContent = question;
         document.querySelector('.answer-text').innerHTML = `
             <div class="formatted-content">
-                ${formattedAnswer}
+                ${fullAnswer}
             </div>
         `;
 
@@ -680,12 +731,12 @@ class SavedAnswersManager {
             answer.question_identifier || '';
         
         // Safely parse the answer text
-        const answerText = answer.answer_text || '';
-        const formattedAnswer = marked.parse(answerText);
+        // const answerText = answer.answer_text || '';
+        // const formattedAnswer = marked.parse(answerText);
         
         document.querySelector('.answer-text').innerHTML = `
             <div class="formatted-content">
-                ${formattedAnswer}
+                ${answer.answer_text || ''}
             </div>
         `;
 

@@ -39,7 +39,8 @@ try {
             'chapter' => $row['chapter'],
             'question_identifier' => $row['question_identifier'],
             'answer_text' => $row['answer_text'],
-            'created_at' => $row['created_at']
+            'created_at' => $row['created_at'],
+            'save_type' => $row['save_type']
         ];
     }
     

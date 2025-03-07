@@ -32,7 +32,6 @@ CREATE TABLE saved_answers (
     chapter VARCHAR(100),
     grade VARCHAR(50),  -- Added grade column
     answer_text TEXT,
-    save_type ENUM('normal', 'question_related'),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    save_type ENUM('Best response', 'question_related'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -66,6 +66,8 @@ function showChangeConfirmation() {
     });
 }
 
+// Global variable to store the last AI response
+let lastAIResponse = '';
 
 // Initialize the script after the page is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -362,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             queryData.responses.forEach(response => {
                 updateMessage(loadingMessageId, response.text); // Replace loading text with raw AI response
+                lastAIResponse = response.text; // Store the full AI response in the global variable
+                console.log('Full AI Response:', lastAIResponse); // Log the full AI response
             });
 
         } catch (error) {

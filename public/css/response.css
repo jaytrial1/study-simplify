@@ -42,6 +42,7 @@
 
 .formatted-content {
     width: 100%;
+    overflow-x: hidden; /* Prevent chat container from scrolling horizontally */
 }
 
 /* =============================
@@ -70,7 +71,7 @@
 }
 
 .formatted-content code {
-    background-color: #eee;
+    background-color: transparent;
     padding: 2px 4px;
     border-radius: 4px;
     font-family: monospace;
@@ -115,7 +116,7 @@
 }
 
 .formatted-content th {
-    background-color: #f0f0f0;
+    background-color: transparent;
     font-weight: bold;
 }
 
