@@ -561,6 +561,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the input including the '/' character
         userInput.value = '';
         
+        // Clear any previously selected questions before adding new one
+        window.selectedQuestions.clear();
+        // Add the selected question
         window.selectedQuestions.add(command);
         updateSelectedQuestionsUI();
         commandPanel.classList.remove('active');
