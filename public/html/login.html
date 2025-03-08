@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatBot - Login</title>
+    <!-- PWA Support -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#4166d5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <!-- CSS Files -->
     <link rel="stylesheet" href="../css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
@@ -16,6 +23,13 @@
             if (token && userId) {
                 // Optional: You could add a server validation step here
                 window.location.href = 'chatbot.html';
+            }
+            
+            // Register service worker for PWA functionality
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.log('Service Worker registration failed', err));
             }
         });
     </script>

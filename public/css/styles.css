@@ -2302,3 +2302,72 @@ blockquote {
 .bot-typing-active {
     position: relative;
 }
+
+/* PWA Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    background-color: #4166d5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.splash-logo i {
+    font-size: 60px;
+    color: white;
+}
+
+.splash-text {
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards 0.5s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(65, 102, 213, 0.3);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}

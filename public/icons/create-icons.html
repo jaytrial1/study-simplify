@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate App Icons</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .icon-container { 
+            margin: 20px 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas { 
+            border: 1px solid #ccc; 
+            margin-bottom: 10px;
+        }
+        button {
+            background: #4166d5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>App Icon Generator</h1>
+    <p>Click the buttons below to generate and download app icons.</p>
+    
+    <div class="icon-container">
+        <canvas id="canvas192" width="192" height="192"></canvas>
+        <button onclick="downloadIcon(192)">Download 192x192 Icon</button>
+    </div>
+    
+    <div class="icon-container">
+        <canvas id="canvas512" width="512" height="512"></canvas>
+        <button onclick="downloadIcon(512)">Download 512x512 Icon</button>
+    </div>
+    
+    <script>
+        // Draw icons on load
+        window.onload = function() {
+            drawIcon(192);
+            drawIcon(512);
+        };
+        
+        // Draw icon on canvas
+        function drawIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#4166d5';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Robot icon
+            ctx.fillStyle = 'white';
+            
+            // Head
+            const headSize = size * 0.5;
+            const headX = (size - headSize) / 2;
+            const headY = size * 0.2;
+            
+            ctx.fillRect(headX, headY, headSize, headSize);
+            
+            // Eyes
+            ctx.fillStyle = '#4166d5';
+            const eyeSize = size * 0.1;
+            const eyeY = headY + headSize * 0.3;
+            
+            // Left eye
+            ctx.fillRect(headX + headSize * 0.25 - eyeSize/2, eyeY, eyeSize, eyeSize);
+            
+            // Right eye
+            ctx.fillRect(headX + headSize * 0.75 - eyeSize/2, eyeY, eyeSize, eyeSize);
+            
+            // Mouth
+            ctx.fillRect(headX + headSize * 0.25, eyeY + headSize * 0.3, headSize * 0.5, eyeSize/2);
+            
+            // Antenna
+            ctx.fillStyle = 'white';
+            const antennaWidth = size * 0.05;
+            const antennaHeight = size * 0.15;
+            const antennaX = headX + headSize/2 - antennaWidth/2;
+            const antennaY = headY - antennaHeight;
+            
+            ctx.fillRect(antennaX, antennaY, antennaWidth, antennaHeight);
+            
+            // Antenna top
+            ctx.beginPath();
+            ctx.arc(antennaX + antennaWidth/2, antennaY, antennaWidth, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // Download icon
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const dataURL = canvas.toDataURL('image/png');
+            
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = dataURL;
+            link.click();
+        }
+    </script>
+</body>
+</html> 

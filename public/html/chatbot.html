@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>ChatBot UI</title>
+    <!-- PWA Support -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#4166d5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <!-- CSS Files -->
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/response.css">
     <link rel="stylesheet" href="../css/ans_action.css">
@@ -24,12 +31,23 @@
                 window.location.href = 'login.html';
             }
             
-            // Optional: You could add a token validation request to the server here
-            // For better security, implement a server-side check of the token
+            // Register service worker for PWA functionality
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            }
         });
     </script>
 </head>
 <body>
+    <!-- PWA Splash Screen -->
+    <div class="splash-screen" id="splash-screen">
+        <div class="splash-logo">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="splash-text">Study Assistant</div>
+    </div>
 
     <div class="app-container">
         <!-- Sidebar -->
@@ -168,5 +186,25 @@
     <script src="../js/transitions.js"></script>
     <script src="../js/chat-history.js"></script>
     <script src="../js/answer-action-popup.js"></script>
+    <script>
+        // Handle splash screen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show splash screen only when launched as PWA
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                const splashScreen = document.getElementById('splash-screen');
+                // Hide splash screen after 2 seconds
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                    // Remove from DOM after animation completes
+                    setTimeout(() => {
+                        splashScreen.remove();
+                    }, 500);
+                }, 2000);
+            } else {
+                // Not in PWA mode, remove splash immediately
+                document.getElementById('splash-screen').remove();
+            }
+        });
+    </script>
 </body>
 </html> 
