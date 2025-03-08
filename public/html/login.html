@@ -6,6 +6,19 @@
     <title>ChatBot - Login</title>
     <link rel="stylesheet" href="../css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Check for authentication token on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('user_id');
+            
+            // If valid token exists, redirect to chatbot
+            if (token && userId) {
+                // Optional: You could add a server validation step here
+                window.location.href = 'chatbot.html';
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="auth-container">

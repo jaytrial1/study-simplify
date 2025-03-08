@@ -178,14 +178,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Logout failed');
             }
 
+            // Clear all authentication data
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
+            localStorage.removeItem('userGrade');
+            localStorage.removeItem('savedCredentials'); // Clear saved credentials
+
             window.location.href = 'login.html';
         } catch (error) {
             console.error('Error:', error);
             // Still redirect to login even if server logout fails
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
+            localStorage.removeItem('userGrade');
+            localStorage.removeItem('savedCredentials'); // Clear saved credentials
+            
             window.location.href = 'login.html';
         }
     });

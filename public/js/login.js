@@ -13,6 +13,18 @@ function hideError() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.querySelector('.remember-me input[type="checkbox"]');
+    
+    // Check for saved credentials and autofill if present
+    const savedCredentials = getSavedCredentials();
+    if (savedCredentials) {
+        emailInput.value = savedCredentials.email || '';
+        if (savedCredentials.rememberMe) {
+            rememberMeCheckbox.checked = true;
+        }
+    }
     
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -22,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.disabled = true;
             
             const formData = {
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value
+                email: emailInput.value.trim(),
+                password: passwordInput.value,
+                rememberMe: rememberMeCheckbox.checked
             };
 
             // Basic validation
@@ -50,6 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('token', data.token);
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('userGrade', data.grade);
+            
+            // Handle "Remember me" by saving credentials securely if checked
+            if (rememberMeCheckbox.checked) {
+                saveCredentials(formData.email, data.token, true);
+            } else {
+                // If not checked, clear any previously saved credentials
+                clearSavedCredentials();
+            }
 
             // Success - redirect to chatbot.html
             window.location.href = 'chatbot.html';
@@ -69,4 +90,48 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('#loginForm input').forEach(input => {
         input.addEventListener('input', hideError);
     });
-}); 
+});
+
+// Function to save credentials to localStorage
+function saveCredentials(email, token, rememberMe) {
+    try {
+        const credentials = {
+            email: email,
+            token: token,
+            rememberMe: rememberMe,
+            timestamp: new Date().getTime()
+        };
+        localStorage.setItem('savedCredentials', JSON.stringify(credentials));
+    } catch (error) {
+        console.error('Error saving credentials:', error);
+    }
+}
+
+// Function to get saved credentials
+function getSavedCredentials() {
+    try {
+        const savedCredentials = localStorage.getItem('savedCredentials');
+        if (!savedCredentials) return null;
+        
+        const credentials = JSON.parse(savedCredentials);
+        
+        // Check if credentials are expired (30 days expiration)
+        const currentTime = new Date().getTime();
+        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+        
+        if (credentials.timestamp && (currentTime - credentials.timestamp) > thirtyDaysInMs) {
+            clearSavedCredentials();
+            return null;
+        }
+        
+        return credentials;
+    } catch (error) {
+        console.error('Error retrieving credentials:', error);
+        return null;
+    }
+}
+
+// Function to clear saved credentials
+function clearSavedCredentials() {
+    localStorage.removeItem('savedCredentials');
+} 
