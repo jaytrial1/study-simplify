@@ -663,6 +663,21 @@ body {
     .bot-message .message-content {
         padding: 1rem;
     }
+
+    /* Table specific mobile styling */
+    .bot-message .message-content,
+    .bot-message .formatted-content {
+        max-width: 100%;
+        overflow-x: visible; /* Allow horizontal scrolling of content */
+    }
+    
+    /* Create a proper scrollable container for tables on mobile */
+    .bot-message .formatted-content table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 /* Update these styles for the navigation button */
