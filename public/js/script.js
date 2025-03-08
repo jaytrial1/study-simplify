@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Don't show questions that are already in the input
                 const currentInput = value.toLowerCase();
                 return !currentInput.includes(question.toLowerCase()) && 
-                       question.toLowerCase().startsWith(searchText);
+                       question.toLowerCase().includes(searchText);
             })
             : cachedQuestions.filter(question => 
                 !value.toLowerCase().includes(question.toLowerCase())
