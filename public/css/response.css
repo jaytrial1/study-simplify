@@ -49,17 +49,26 @@
    Text Formatting
    ============================= */
 .formatted-content p {
-    margin: 8px 0;
-    line-height: 1.5;
+    margin: 12px 0;  /* Increased from 8px to 12px */
+    line-height: 1.7; /* Increased from 1.5 to 1.7 for better readability */
+    padding-bottom: 0.2rem; /* Add a little padding at bottom of paragraphs */
+    font-size: 1rem; /* Ensure consistent font size */
+}
+
+/* Add more space between paragraphs */
+.formatted-content p + p {
+    margin-top: 16px; /* Extra space between consecutive paragraphs */
 }
 
 .formatted-content ul, 
 .formatted-content ol {
-    padding-left: 20px;
+    padding-left: 24px; /* Increased from 20px */
+    margin: 14px 0; /* Add margin around lists */
 }
 
 .formatted-content li {
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* Increased from 5px */
+    line-height: 1.7; /* Match paragraph line height */
 }
 
 .formatted-content blockquote {

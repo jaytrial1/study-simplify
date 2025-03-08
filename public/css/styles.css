@@ -378,10 +378,19 @@ body {
     background: #1E1E2D;
     border-radius: 12px;
     padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.7;
     color: #E6E6E6;
+}
+
+.bot-message .message-content p {
+    margin: 12px 0;
+    padding-bottom: 0.2rem;
+}
+
+.bot-message .message-content p + p {
+    margin-top: 16px;
 }
 
 /* Main heading */
@@ -2097,4 +2106,50 @@ blockquote {
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
+}
+
+/* Apply consistent styling to chat messages format */
+.chat-content {
+    line-height: 1.7; /* Match the line height */
+}
+
+/* Ensure consistent paragraph spacing in all contexts */
+.chat-content p {
+    margin: 12px 0;
+    padding-bottom: 0.2rem;
+}
+
+.chat-content p + p {
+    margin-top: 16px;
+}
+
+/* Enhanced message content formatting */
+.message .formatted-content,
+.bot-message .formatted-content {
+    font-size: 15px;
+    color: #E6E6E6;
+    line-height: 1.7;
+}
+
+/* Ensure proper spacing in the chat messages container */
+#chatMessages p {
+    margin: 12px 0;
+    padding-bottom: 0.2rem;
+    line-height: 1.7;
+}
+
+#chatMessages p + p {
+    margin-top: 16px;
+}
+
+/* Ensure consistent list styling */
+#chatMessages ul,
+#chatMessages ol {
+    padding-left: 24px;
+    margin: 14px 0;
+}
+
+#chatMessages li {
+    margin-bottom: 8px;
+    line-height: 1.7;
 }
