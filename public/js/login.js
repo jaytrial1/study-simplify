@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('All fields are required');
             }
 
-            const response = await fetch('/main/api/auth/login.php', {
+            const response = await fetch(baseUrl + 'api/auth/login.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

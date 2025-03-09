@@ -1,16 +1,16 @@
 // Service Worker for ChatBot Study Assistant
 const CACHE_NAME = 'study-assistant-v1';
 const urlsToCache = [
-  '/Main/public/html/chatbot.html',
-  '/Main/public/css/styles.css',
-  '/Main/public/css/response.css',
-  '/Main/public/css/ans_action.css',
-  '/Main/public/css/toast.css',
-  '/Main/public/js/script.js',
-  '/Main/public/js/history-search.js',
-  '/Main/public/js/transitions.js',
-  '/Main/public/js/chat-history.js',
-  '/Main/public/js/answer-action-popup.js',
+  './html/chatbot.html',
+  './css/styles.css',
+  './css/response.css',
+  './css/ans_action.css',
+  './css/toast.css',
+  './js/script.js',
+  './js/history-search.js',
+  './js/transitions.js',
+  './js/chat-history.js',
+  './js/answer-action-popup.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
   'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
 ];

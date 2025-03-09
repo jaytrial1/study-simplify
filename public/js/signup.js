@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gradeSelect = document.getElementById('grade-level');
 
     // Fetch available grades from PDF repository
-    fetch('/main/api/navigation/grades.php')
+    fetch(baseUrl + 'api/navigation/grades.php')
         .then(response => response.json())
         .then(data => {
             gradeSelect.innerHTML = data.grades.map(grade => 
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Log the request URL and data
-            console.log('Sending request to:', '/main/api/auth/register.php');
+            console.log('Sending request to:', baseUrl + 'api/auth/register.php');
             console.log('Request data:', formData);
 
-            const response = await fetch('/main/api/auth/register.php', {
+            const response = await fetch(baseUrl + 'api/auth/register.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

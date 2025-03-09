@@ -2,19 +2,19 @@
   "name": "ChatBot Study Assistant",
   "short_name": "Study AI",
   "description": "AI-powered study assistant for educational content",
-  "start_url": "/Main/public/html/chatbot.html",
+  "start_url": "./html/chatbot.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#4166d5",
   "icons": [
     {
-      "src": "../public/icons/icon-192x192.png",
+      "src": "./icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "../public/icons/icon-512x512.png",
+      "src": "./icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

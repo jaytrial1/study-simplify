@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="../js/base-url.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatBot - Login</title>
     <!-- PWA Support -->
@@ -25,12 +26,7 @@
                 window.location.href = 'chatbot.html';
             }
             
-            // Register service worker for PWA functionality
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('../sw.js')
-                    .then(reg => console.log('Service Worker registered', reg))
-                    .catch(err => console.log('Service Worker registration failed', err));
-            }
+            // Service worker is now handled in base-url.js
         });
     </script>
 </head>
