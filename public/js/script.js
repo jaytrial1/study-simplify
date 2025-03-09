@@ -955,6 +955,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const text = node.textContent;
                     const textContainer = document.createElement('span');
                     textContainer.className = 'typewriter-animation';
+                    textContainer.setAttribute('data-animation-element', 'true'); // Add a data attribute for easier identification
                     parentElement.appendChild(textContainer);
                     
                     // Remove cursor during text typing

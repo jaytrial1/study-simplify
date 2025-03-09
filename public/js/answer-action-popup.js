@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Get the AI response from the clicked element's formatted content
                 const formattedContent = clickedElement.querySelector('.formatted-content');
-                const aiResponse = formattedContent ? formattedContent.innerHTML : '';
+                const aiResponse = formattedContent ? standardizeFormattedContent(formattedContent.innerHTML) : '';
 
                 // Log the data for debugging
                 console.log('Current Question:', currentQuestion);
@@ -297,4 +297,42 @@ function createToastMessage(message, isError = false) {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+// Add this new function to standardize the format of saved answers
+function standardizeFormattedContent(htmlContent) {
+    // Create a temporary div to parse the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    
+    // Remove any animation-specific classes or elements created during typing
+    tempDiv.querySelectorAll('.typewriter-animation, [data-animation-element="true"]').forEach(el => {
+        // Replace typewriter spans with their text content directly
+        const parent = el.parentNode;
+        const textContent = el.textContent;
+        const textNode = document.createTextNode(textContent);
+        parent.replaceChild(textNode, el);
+    });
+    
+    // Remove any blinking cursor elements that might be present
+    tempDiv.querySelectorAll('.cursor-blink, .cursor').forEach(el => {
+        el.remove();
+    });
+    
+    // Remove animation-related classes from parent elements
+    tempDiv.querySelectorAll('.bot-typing-active').forEach(el => {
+        el.classList.remove('bot-typing-active');
+    });
+    
+    // Fix any nested spans or divs created during animation
+    // This is a simple cleanup - replace any empty spans with their content
+    tempDiv.querySelectorAll('span:empty, div:empty').forEach(el => {
+        if (!el.hasChildNodes() && !el.textContent.trim()) {
+            el.remove();
+        }
+    });
+    
+    // Convert to a clean, standardized format
+    // Extract just the meaningful content without animation artifacts
+    return tempDiv.innerHTML;
 }
