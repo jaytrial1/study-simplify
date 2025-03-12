@@ -29,10 +29,23 @@ if (!$realChapterPath || strpos($realChapterPath, $realRoot) !== 0) {
 
 $questions = [];
 if (is_dir($chapterPath)) {
-    $files = glob($chapterPath . '/*.pdf');
-    foreach ($files as $file) {
-        $question = basename($file, '.pdf');
+    // Get both MD and PDF files
+    $mdFiles = glob($chapterPath . '/*.md');
+    $pdfFiles = glob($chapterPath . '/*.pdf');
+    
+    // Process MD files (preferred format)
+    foreach ($mdFiles as $file) {
+        $question = basename($file, '.md');
         if (empty($search) || stripos($question, $search) !== false) {
+            $questions[] = $question;
+        }
+    }
+    
+    // Process PDF files (but don't add duplicates)
+    foreach ($pdfFiles as $file) {
+        $question = basename($file, '.pdf');
+        // Only add if we don't already have an MD version
+        if ((empty($search) || stripos($question, $search) !== false) && !in_array($question, $questions)) {
             $questions[] = $question;
         }
     }

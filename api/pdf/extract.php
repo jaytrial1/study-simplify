@@ -24,7 +24,7 @@ try {
     // Debug log the paths
     $basePath = $_SERVER['DOCUMENT_ROOT'] . '/main/public/pdf_repository/';
     $fullPath = $basePath . $data['grade'] . '/' . $data['subject'] . '/' . $data['chapter'] . '/';
-    error_log("Looking for PDFs in: " . $fullPath);
+    error_log("Looking for files in: " . $fullPath);
     
     $parser = new PDFParser();
     
@@ -35,14 +35,9 @@ try {
     
     foreach ($questions as $question) {
         try {
-            // Debug log each file attempt
-            $pdfPath = $fullPath . $question . '.pdf';
-            error_log("Attempting to read: " . $pdfPath);
-            
-            if (!file_exists($pdfPath)) {
-                error_log("PDF not found: " . $pdfPath);
-                continue;
-            }
+            // Let the PDFParser class handle the file format detection
+            // It will first look for .md files, then fall back to .pdf files
+            error_log("Attempting to read: " . $question);
             
             $result = $parser->extractText(
                 $data['grade'],
@@ -60,12 +55,12 @@ try {
             $successCount++;
             
         } catch (Exception $e) {
-            error_log("Error extracting from {$question}.pdf: " . $e->getMessage());
+            error_log("Error extracting from {$question}: " . $e->getMessage());
         }
     }
     
     if ($successCount === 0) {
-        throw new Exception('Failed to extract text from any of the provided PDFs');
+        throw new Exception('Failed to extract text from any of the provided files');
     }
     
     echo json_encode([
@@ -74,7 +69,7 @@ try {
     ], JSON_PRETTY_PRINT);
 
 } catch (Exception $e) {
-    error_log("Error in PDF extraction: " . $e->getMessage());
+    error_log("Error in text extraction: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'success' => false,
