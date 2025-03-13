@@ -4,10 +4,12 @@ require_once __DIR__ . '/config.php';
 class AIHandler {
     private $apiKey;
     private $apiUrl;
+    private $generalInstructions;
     
     public function __construct() {
         $this->apiKey = GEMINI_API_KEY;
         $this->apiUrl = GEMINI_API_URL;
+        $this->generalInstructions = require __DIR__ . "/../api/ai/templates/general_instructions.php";
     }
     
     public function getPromptTemplate($type = 'long') {
@@ -15,18 +17,26 @@ class AIHandler {
     }
     
     public function createPrompt($template, $data) {
+        // Combine general instructions with specific template
+        $fullPrompt = $this->generalInstructions . "\n\nFor this specific response:\n" . $template;
+        
         return str_replace(
             ['{extracted_text}', '{user_prompt}', '{question_name}'],
             [$data['extracted_text'], $data['user_prompt'], $data['question_name']],
-            $template
+            $fullPrompt
         );
     }
     
     public function createContinuationPrompt($previousMessages, $userPrompt) {
         $formattedMessages = [];
         
+        // Add general instructions as a user message instead of system
+        $formattedMessages[] = [
+            'role' => 'user',
+            'parts' => [['text' => "[Instructions]\n" . $this->generalInstructions]]
+        ];
+        
         foreach ($previousMessages as $msg) {
-            // Include system messages as user messages
             $role = ($msg['sender'] === 'ai') ? 'model' : 'user';
             
             $formattedMessages[] = [
@@ -58,13 +68,17 @@ class AIHandler {
 
                 $data = ['contents' => array_values($messages)];
             } else {
-                // Validate single prompt
+                // For single prompts, include general instructions as user message
                 if (empty($promptData)) {
                     throw new Exception("Empty prompt provided");
                 }
 
                 $data = [
                     'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [['text' => "[Instructions]\n" . $this->generalInstructions]]
+                        ],
                         [
                             'role' => 'user',
                             'parts' => [['text' => $promptData]]
