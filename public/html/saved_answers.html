@@ -2,13 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="../js/base-url.js"></script>
+    <script>
+        // Check if we're on a local server
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
+        
+        // CSS paths
+        const stylesPath = isLocalServer ? "../css/styles.css" : "/public/css/styles.css";
+        const savedAnswersPath = isLocalServer ? "../css/saved_answers.css" : "/public/css/saved_answers.css";
+        const responsePath = isLocalServer ? "../css/response.css" : "/public/css/response.css";
+        const toastPath = isLocalServer ? "../css/toast.css" : "/public/css/toast.css";
+        
+        // JavaScript paths
+        const userSessionPath = isLocalServer ? "../js/user-session.js" : "/public/js/user-session.js";
+        const savedAnswersJsPath = isLocalServer ? "../js/saved_answers.js" : "/public/js/saved_answers.js";
+        const saveTypeHandlerPath = isLocalServer ? "../js/save-type-handler.js" : "/public/js/save-type-handler.js";
+        const historySearchPath = isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js";
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saved Answers</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/saved_answers.css">
-    <link rel="stylesheet" href="../css/response.css">
-    <link rel="stylesheet" href="../css/toast.css">
+    <script>
+        document.write(`<link rel="stylesheet" href="${stylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${savedAnswersPath}">`);
+        document.write(`<link rel="stylesheet" href="${responsePath}">`);
+        document.write(`<link rel="stylesheet" href="${toastPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -158,9 +186,12 @@
     <div id="toast-container"></div>
     
     <!-- Scripts -->
-    <script src="../js/user-session.js"></script>
-    <script src="../js/saved_answers.js"></script>
-    <script src="../js/save-type-handler.js"></script>
-    <script src="../js/history-search.js"></script>
+    <script>
+        // Load JavaScript files using the determined paths
+        document.write(`<script src="${userSessionPath}"><\/script>`);
+        document.write(`<script src="${savedAnswersJsPath}"><\/script>`);
+        document.write(`<script src="${saveTypeHandlerPath}"><\/script>`);
+        document.write(`<script src="${historySearchPath}"><\/script>`);
+    </script>
 </body>
 </html>

@@ -2,12 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="../js/base-url.js"></script>
+    <script>
+        // Check if we're on a local server
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
+        
+        // CSS paths
+        const stylesPath = isLocalServer ? "../css/styles.css" : "/public/css/styles.css";
+        const authPath = isLocalServer ? "../css/auth.css" : "/public/css/auth.css";
+        const settingsPath = isLocalServer ? "../css/settings.css" : "/public/css/settings.css";
+        
+        // JavaScript paths
+        const settingsJsPath = isLocalServer ? "../js/settings.js" : "/public/js/settings.js";
+        const historySearchPath = isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js";
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/auth.css">
-    <link rel="stylesheet" href="../css/settings.css">
+    <script>
+        document.write(`<link rel="stylesheet" href="${stylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${authPath}">`);
+        document.write(`<link rel="stylesheet" href="${settingsPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -161,7 +186,10 @@
         </div>
     </div>
 
-    <script src="../js/settings.js"></script>
-    <script src="../js/history-search.js"></script>
+    <script>
+        // Load JavaScript files using the determined paths
+        document.write(`<script src="${settingsJsPath}"><\/script>`);
+        document.write(`<script src="${historySearchPath}"><\/script>`);
+    </script>
 </body>
 </html>

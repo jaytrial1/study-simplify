@@ -2,10 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="../js/base-url.js"></script>
+    <script>
+        // Check if we're on a local server
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // CSS path - choosing between local path and production path
+        const cssPath = isLocalServer ? "../css/auth.css" : "/public/css/auth.css";
+        console.log("CSS Path:", cssPath);
+        
+        // JS path - choosing between local path and production path
+        const baseUrlJsPath = isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
+        const signupJsPath = isLocalServer ? "../js/signup.js" : "/public/js/signup.js";
+        
+        // Create and append CSS link
+        document.write(`<link rel="stylesheet" href="${cssPath}">`);
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatBot - Sign Up</title>
-    <link rel="stylesheet" href="../css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -63,6 +82,9 @@
             </div>
         </div>
     </div>
-    <script src="../js/signup.js"></script>
+    <script>
+        // Load the JavaScript file using the determined path
+        document.write(`<script src="${signupJsPath}"><\/script>`);
+    </script>
 </body>
 </html> 
