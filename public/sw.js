@@ -1,27 +1,42 @@
 // Service Worker for ChatBot Study Assistant
 const CACHE_NAME = 'study-assistant-v1';
-const urlsToCache = [
-  './html/chatbot.html',
-  './css/styles.css',
-  './css/response.css',
-  './css/ans_action.css',
-  './css/toast.css',
-  './js/script.js',
-  './js/history-search.js',
-  './js/transitions.js',
-  './js/chat-history.js',
-  './js/answer-action-popup.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
-  'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
-];
 
-// Install event - cache key resources
+// The URLs to cache depend on whether we're in local or production environment
+// We'll determine this at runtime when the service worker is installed
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        
+        // Determine paths at runtime based on scope
+        return self.registration.scope.then(scope => {
+          const isLocalServer = 
+            scope.includes('localhost') || 
+            scope.includes('127.0.0.1') || 
+            scope.includes('192.168.') || 
+            scope.includes('10.0.');
+            
+          const basePath = isLocalServer ? './public' : '.';
+          
+          const urlsToCache = [
+            `${basePath}/html/chatbot.html`,
+            `${basePath}/css/styles.css`,
+            `${basePath}/css/response.css`,
+            `${basePath}/css/ans_action.css`,
+            `${basePath}/css/toast.css`,
+            `${basePath}/js/base-url.js`,
+            `${basePath}/js/script.js`,
+            `${basePath}/js/history-search.js`,
+            `${basePath}/js/transitions.js`,
+            `${basePath}/js/chat-history.js`,
+            `${basePath}/js/answer-action-popup.js`,
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+            'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
+          ];
+          
+          return cache.addAll(urlsToCache);
+        });
       })
   );
 });

@@ -3,29 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const gradeSelect = document.getElementById('grade-level');
 
-    // Detect environment
-    const isLocalServer = window.location.hostname === 'localhost' || 
-                         window.location.hostname === '127.0.0.1' || 
-                         window.location.hostname.includes('192.168.') || 
-                         window.location.hostname.includes('10.0.');
-    
-    console.log("Server detection in signup.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+    console.log("Server detection in signup.js:", window.isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+    console.log("Using API base path from base-url.js:", window.apiBasePath);
 
-    // Set API paths based on environment
-    let apiBasePath;
-    if (isLocalServer) {
-        // Local development - use current baseUrl from base-url.js
-        apiBasePath = baseUrl;
-    } else {
-        // Production - use absolute paths
-        apiBasePath = window.location.origin + '/';
-    }
-
-    // Log the API path we're using
-    console.log("Using API base path:", apiBasePath);
-    
     // Fetch available grades from PDF repository
-    fetch(apiBasePath + 'api/navigation/grades.php')
+    fetch(`${window.apiBasePath}/api/navigation/grades.php`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -68,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Log the request URL and data
-            const apiUrl = apiBasePath + 'api/auth/register.php';
+            const apiUrl = `${window.apiBasePath}/api/auth/register.php`;
             console.log('Sending request to:', apiUrl);
             console.log('Request data:', formData);
 

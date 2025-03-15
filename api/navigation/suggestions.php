@@ -14,8 +14,23 @@ if (empty($grade) || empty($subject) || empty($chapter)) {
     exit;
 }
 
-$pdfRoot = $_SERVER['DOCUMENT_ROOT'] . '/main/public/pdf_repository/';
+// Detect if we're on a local server
+$isLocalServer = 
+    $_SERVER['SERVER_NAME'] == 'localhost' || 
+    $_SERVER['SERVER_NAME'] == '127.0.0.1' ||
+    strpos($_SERVER['SERVER_NAME'], '192.168.') === 0 ||
+    strpos($_SERVER['SERVER_NAME'], '10.0.') === 0;
+
+// Set proper base path for PDF root
+$basePath = $isLocalServer ? '/main' : '';
+$pdfRoot = $_SERVER['DOCUMENT_ROOT'] . $basePath . '/public/pdf_repository/';
 $chapterPath = $pdfRoot . $grade . '/' . $subject . '/' . $chapter;
+
+// Log paths for debugging
+error_log("Server name: " . $_SERVER['SERVER_NAME']);
+error_log("Is local server: " . ($isLocalServer ? "true" : "false"));
+error_log("PDF root path: " . $pdfRoot);
+error_log("Chapter path: " . $chapterPath);
 
 // Validate the path
 $realRoot = realpath($pdfRoot);
@@ -23,7 +38,12 @@ $realChapterPath = realpath($chapterPath);
 
 if (!$realChapterPath || strpos($realChapterPath, $realRoot) !== 0) {
     http_response_code(403);
-    echo json_encode(['error' => 'Invalid path']);
+    echo json_encode(['error' => 'Invalid path', 'path_info' => [
+        'document_root' => $_SERVER['DOCUMENT_ROOT'],
+        'base_path' => $basePath,
+        'full_path' => $pdfRoot,
+        'chapter_path' => $chapterPath
+    ]]);
     exit;
 }
 

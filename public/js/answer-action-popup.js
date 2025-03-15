@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('AI Response:', aiResponse);
 
                 // Send data to backend
-                fetch('/main/api/saved-answers/save_to_database.php', {
+                fetch(`${window.apiBasePath}/api/saved-answers/save_to_database.php`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ 
@@ -335,4 +335,106 @@ function standardizeFormattedContent(htmlContent) {
     // Convert to a clean, standardized format
     // Extract just the meaningful content without animation artifacts
     return tempDiv.innerHTML;
+}
+
+class AnswerActionPopup {
+    constructor() {
+        // Detect server environment
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' || 
+                           window.location.hostname.includes('192.168.') || 
+                           window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection in answer-action-popup.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Set API base path based on environment
+        this.apiBasePath = isLocalServer ? '/main' : '';
+        console.log("API base path in answer-action-popup.js:", this.apiBasePath);
+
+        this.container = null;
+        this.popup = null;
+        this.messageElement = null;
+        this.questionText = '';
+        this.answerText = '';
+        this.subject = '';
+        this.chapter = '';
+        this.messageId = 0;
+        this.userId = localStorage.getItem('user_id');
+        this.savedType = null;
+        
+        // Create popup elements
+        this.createPopup();
+        
+        // Add global event to close popup when clicking outside
+        document.addEventListener('click', (e) => {
+            if (this.popup && 
+                this.popup.classList.contains('visible') && 
+                !this.popup.contains(e.target) &&
+                !e.target.closest('.message')) {
+                this.hidePopup();
+            }
+        });
+    }
+    
+    // ... existing code ...
+    
+    async saveAnswer(saveType) {
+        try {
+            const data = {
+                user_id: this.userId,
+                message_id: this.messageId,
+                question: this.questionText,
+                answer: this.answerText,
+                subject: this.subject,
+                chapter: this.chapter,
+                save_type: saveType
+            };
+            
+            fetch(`${this.apiBasePath}/api/saved-answers/save_to_database.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    this.showToast('Answer saved successfully!');
+                    // Update the button state
+                    const saveBtn = this.popup.querySelector('.save-btn');
+                    saveBtn.classList.add('saved');
+                    saveBtn.querySelector('i').className = 'fas fa-bookmark';
+                    
+                    // Update saved type
+                    this.savedType = saveType;
+                    
+                    // Update button text
+                    const textNode = saveBtn.childNodes[1];
+                    textNode.nodeValue = ' ' + (saveType === 'best_response' ? 'Best Response' : 'Question Related');
+                    
+                    // Update dropdown
+                    const items = this.popup.querySelectorAll('.dropdown-content a');
+                    items.forEach(item => {
+                        if (item.dataset.type === saveType) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                } else {
+                    this.showToast('Error: ' + (result.error || 'Unable to save answer'));
+                }
+            })
+            .catch(error => {
+                console.error('Error saving answer:', error);
+                this.showToast('Error saving answer. Please try again.');
+            });
+        } catch (error) {
+            console.error('Error in saveAnswer:', error);
+            this.showToast('An unexpected error occurred.');
+        }
+    }
+    
+    // ... rest of code ...
 }

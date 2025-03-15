@@ -3,6 +3,8 @@
  * Handles user session data storage and retrieval
  */
 
+console.log("Using global API base path in user-session.js:", window.apiBasePath);
+
 // Function to set user data in localStorage
 function setUserData(userData) {
     if (userData.userId) {
@@ -41,7 +43,7 @@ async function loadUserData() {
     
     if (!userId) {
         try {
-            const response = await fetch('/main/api/user/session.php');
+            const response = await fetch(`${window.apiBasePath}/api/user/session.php`);
             const data = await response.json();
             
             if (data.success && data.user) {

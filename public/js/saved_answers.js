@@ -15,7 +15,7 @@ function showToast(message, isError = false) {
 document.addEventListener('DOMContentLoaded', () => {
     // Add new chat button handler
     document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-        window.location.href = '/main/public/html/chatbot.html';
+        window.location.href = `${window.apiBasePath}/public/html/chatbot.html`;
     });
 
     const menuToggle = document.getElementById('menuToggle');
@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation();
         });
     }
+
+    console.log("Using global API base path in saved_answers.js:", window.apiBasePath);
+    
+    // Initialize the saved answers manager
+    const savedAnswersManager = new SavedAnswersManager();
+    savedAnswersManager.init();
 }); 
 
 // Toggle subject accordion level
@@ -337,46 +343,40 @@ document.querySelector('.close-modal').addEventListener('click', () => {
 // Main class to handle all saved answers functionality
 class SavedAnswersManager {
     constructor() {
+        this.apiBasePath = window.apiBasePath || '';
+        
+        // Initialize properties
         this.userGrade = localStorage.getItem('userGrade');
-        this.answersTree = document.querySelector('.answers-tree');
-        this.savedAnswersCache = null;
-        this.modal = document.getElementById('answerModal');
-        this.currentAnswers = [];
-        this.currentIndex = 0;
-        this.init();
+        this.userId = localStorage.getItem('user_id');
+        this.savedAnswers = [];
+        this.subjectChapterMap = new Map();
+        this.allSubjects = new Set();
+        this.allChapters = new Set();
+        
+        // DOM elements
+        this.answersContainer = document.querySelector('.answers-tree');
+        this.subjectSelect = document.querySelector('.subject-select');
+        this.chapterSelect = document.querySelector('.chapter-select');
+        this.searchInput = document.querySelector('.search-input');
+        this.expandAllButton = document.querySelector('.toggle-all-btn');
+        this.clearFiltersButton = document.querySelector('.clear-filters');
+    }
+    
+    init() {
         this.setupEventListeners();
+        this.loadSavedAnswers();
     }
-
-    async init() {
-        try {
-            // First fetch all saved answers
-            await this.fetchSavedAnswers();
-            // Then load subjects
-            await this.loadSubjects();
-        } catch (error) {
-            console.error('Error initializing:', error);
-        }
-    }
-
-    async fetchSavedAnswers() {
+    
+    async loadSavedAnswers() {
         try {
             const userId = localStorage.getItem('user_id');
             if (!userId) {
-                console.error('User ID not found in localStorage');
+                window.location.href = 'login.html';
                 return;
             }
-
-            if (!this.userGrade) {
-                console.error('User grade not found in localStorage');
-                return;
-            }
-
-            // console.log('Fetching saved answers with:', {
-            //     userId,
-            //     grade: this.userGrade
-            // });
-
-            const url = `/main/api/saved-answers/saved_answers.php?grade=${encodeURIComponent(this.userGrade)}&user_id=${encodeURIComponent(userId)}`;
+            
+            // Load saved answers data based on current grade and filters
+            const url = `${this.apiBasePath}/api/saved-answers/saved_answers.php?grade=${encodeURIComponent(this.userGrade)}&user_id=${encodeURIComponent(userId)}`;
             const response = await fetch(url);
             
             if (!response.ok) {
@@ -402,129 +402,39 @@ class SavedAnswersManager {
                 });
             }
         } catch (error) {
-            console.error('Error fetching saved answers:', error);
+            console.error('Error loading saved answers:', error);
             this.savedAnswersCache = {};
         }
     }
-
+    
     async loadSubjects() {
         try {
-            const response = await fetch(`/main/api/navigation/subjects.php?grade=${this.userGrade}`);
+            const response = await fetch(`${this.apiBasePath}/api/navigation/subjects.php?grade=${this.userGrade}`);
             const data = await response.json();
-            await Promise.all(data.subjects.map(subject => this.loadSubjectData(subject)));
+            
+            // Populate subject filter
+            this.subjectSelect.innerHTML = '<option value="">All Subjects</option>';
+            data.subjects.forEach(subject => {
+                this.subjectSelect.innerHTML += `<option value="${subject}">${subject}</option>`;
+            });
         } catch (error) {
             console.error('Error loading subjects:', error);
         }
     }
-
-    async loadSubjectData(subject) {
+    
+    async loadChapters(subject) {
         try {
-            const chaptersResponse = await fetch(`/main/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
-            const chaptersData = await chaptersResponse.json();
-
-            const subjectHtml = `
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-content">
-                            <div class="header-title">
-                                <span>${subject}</span>
-                            </div>
-                            <div class="header-actions">
-                                <button class="toggle-section-btn" title="Expand/Collapse this section">
-                                    <i class="fas fa-expand-alt"></i>
-                                </button>
-                                <i class="fas fa-chevron-right arrow"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-content">
-                        ${await this.generateChaptersHtml(subject, chaptersData.chapters)}
-                    </div>
-                </div>
-            `;
-
-            this.answersTree.innerHTML += subjectHtml;
-        } catch (error) {
-            console.error(`Error loading data for subject ${subject}:`, error);
-        }
-    }
-
-    generateChaptersHtml(subject, chapters) {
-        let chaptersHtml = '';
-        
-        for (const chapter of chapters) {
-            const chapterAnswers = this.savedAnswersCache[subject]?.[chapter] || [];
+            const chaptersResponse = await fetch(`${this.apiBasePath}/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
+            const data = await chaptersResponse.json();
             
-            chaptersHtml += `
-                <div class="chapter-item">
-                    <div class="chapter-header">
-                        <div class="header-content">
-                            <div class="header-title">
-                                <span>${chapter}</span>
-                            </div>
-                            <div class="header-actions">
-                                <button class="toggle-section-btn" title="Expand/Collapse this chapter">
-                                    <i class="fas fa-expand-alt"></i>
-                                </button>
-                                <i class="fas fa-chevron-right arrow"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chapter-content">
-                        ${this.generateQuestionsHtml(chapterAnswers)}
-                    </div>
-                </div>`;
+            // Populate chapter filter
+            this.chapterSelect.innerHTML = '<option value="">All Chapters</option>';
+            data.chapters.forEach(chapter => {
+                this.chapterSelect.innerHTML += `<option value="${chapter}">${chapter}</option>`;
+            });
+        } catch (error) {
+            console.error('Error loading chapters:', error);
         }
-        
-        return chaptersHtml;
-    }
-
-    generateQuestionsHtml(answers) {
-        if (!answers || answers.length === 0) return '';
-        
-        const MAX_PREVIEW_LENGTH = 150;
-        
-        // Group answers by question_identifier
-        const groupedAnswers = answers.reduce((groups, answer) => {
-            if (!groups[answer.question_identifier]) {
-                groups[answer.question_identifier] = [];
-            }
-            groups[answer.question_identifier].push(answer);
-            return groups;
-        }, {});
-        
-        return Object.entries(groupedAnswers).map(([questionId, questionAnswers]) => {
-            const answersHtml = questionAnswers.map(answer => {
-                // Create preview text (plain text)
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = answer.answer_text;
-                const textContent = tempDiv.textContent;
-                const previewText = textContent.length > MAX_PREVIEW_LENGTH ? 
-                    textContent.substring(0, MAX_PREVIEW_LENGTH) + '...' : 
-                    textContent;
-                
-                return `
-                    <div class="answer-item" data-id="${answer.id}" data-save-type="${answer.save_type}" data-full-answer="${encodeURIComponent(answer.answer_text)}">
-                        <div class="answer-body">
-                            ${previewText}
-                        </div>
-                        <button class="view-full-answer">View Full Answer</button>
-                    </div>
-                `;
-            }).join('');
-
-            return `
-                <div class="question-item">
-                    <div class="question-header">
-                        <span>${questionId}</span>
-                        <i class="fas fa-chevron-right arrow"></i>
-                    </div>
-                    <div class="question-content">
-                        ${answersHtml}
-                    </div>
-                </div>
-            `;
-        }).join('');
     }
 
     setupEventListeners() {
@@ -549,7 +459,7 @@ class SavedAnswersManager {
         });
 
         // Subject level accordion
-        this.answersTree.addEventListener('click', (e) => {
+        this.answersContainer.addEventListener('click', (e) => {
             const accordionHeader = e.target.closest('.accordion-header');
             if (accordionHeader) {
                 const accordionItem = accordionHeader.closest('.accordion-item');
@@ -587,7 +497,7 @@ class SavedAnswersManager {
         });
 
         // Add modal-related event listeners
-        this.answersTree.addEventListener('click', (e) => {
+        this.answersContainer.addEventListener('click', (e) => {
             const viewFullBtn = e.target.closest('.view-full-answer');
             if (viewFullBtn) {
                 const answerItem = viewFullBtn.closest('.answer-item');
@@ -710,17 +620,15 @@ class SavedAnswersManager {
     }
 }
 
-// Initialize when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    const savedAnswersManager = new SavedAnswersManager();
-});
-
 // Add this to saved_answers.js
 class FilterManager {
     constructor() {
         this.userGrade = localStorage.getItem('userGrade');
         this.subjectSelect = document.querySelector('.subject-select');
         this.chapterSelect = document.querySelector('.chapter-select');
+        
+        // Use the global apiBasePath
+        this.apiBasePath = window.apiBasePath || '';
         
         this.init();
     }
@@ -732,7 +640,7 @@ class FilterManager {
 
     async loadSubjects() {
         try {
-            const response = await fetch(`/main/api/navigation/subjects.php?grade=${this.userGrade}`);
+            const response = await fetch(`${this.apiBasePath}/api/navigation/subjects.php?grade=${this.userGrade}`);
             const data = await response.json();
             
             // Populate subject filter
@@ -747,7 +655,7 @@ class FilterManager {
 
     async loadChapters(subject) {
         try {
-            const response = await fetch(`/main/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
+            const response = await fetch(`${this.apiBasePath}/api/navigation/chapters.php?grade=${this.userGrade}&subject=${subject}`);
             const data = await response.json();
             
             // Populate chapter filter

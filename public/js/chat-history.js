@@ -2,7 +2,9 @@
 class ChatHistoryManager {
     constructor() {
         this.currentSessionId = null;
-        this.apiBasePath = '/main'; // Add this base path
+        
+        console.log("Using global API base path in chat-history.js:", window.apiBasePath);
+        
         this.questionSessionMap = new Map(JSON.parse(localStorage.getItem('questionSessionMap') || '[]'));
         this.answerTypeMap = new Map(); // Add this to store answer types
         this.historyContainer = document.querySelector('.history-items');
@@ -30,7 +32,7 @@ class ChatHistoryManager {
     setupEventListeners() {
         // Listen for new chat button clicks
         document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-            window.location.href = '/main/public/html/chatbot.html';  // Updated to correct path
+            window.location.href = window.apiBasePath + '/public/html/chatbot.html';  // Updated path based on environment
         });
 
         // Listen for history item clicks
@@ -173,7 +175,7 @@ class ChatHistoryManager {
 
             console.log('Request body:', requestBody);
 
-            const response = await fetch(`${this.apiBasePath}/api/chat/history.php`, {
+            const response = await fetch(`${window.apiBasePath}/api/chat/history.php`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json'
@@ -220,7 +222,7 @@ class ChatHistoryManager {
 
         try {
             console.log('Adding message to session:', this.currentSessionId);
-            const response = await fetch(`${this.apiBasePath}/api/chat/history.php`, {
+            const response = await fetch(`${window.apiBasePath}/api/chat/history.php`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -259,7 +261,7 @@ class ChatHistoryManager {
                 document.dispatchEvent(new MouseEvent('click'));
             }
 
-            const response = await fetch(`${this.apiBasePath}/api/chat/history.php?session_id=${sessionId}`, {
+            const response = await fetch(`${window.apiBasePath}/api/chat/history.php?session_id=${sessionId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -308,7 +310,7 @@ class ChatHistoryManager {
                     
                     // Load questions for this subject and chapter
                     try {
-                        const questionsResponse = await fetch(`/main/api/navigation/questions.php?grade=${userGrade}&subject=${subject}&chapter=${chapter}`);
+                        const questionsResponse = await fetch(`${window.apiBasePath}/api/navigation/questions.php?grade=${encodeURIComponent(userGrade)}&subject=${encodeURIComponent(subject)}&chapter=${encodeURIComponent(chapter)}`);
                         const questionsData = await questionsResponse.json();
                         
                         if (questionsData.questions) {
@@ -416,10 +418,15 @@ class ChatHistoryManager {
             const subject = this.subjectFilter?.value || '';
             const chapter = this.chapterFilter?.value || '';
 
-            // Include grade in the API request
+            // Include grade in the API request with environment-aware path
             const response = await fetch(
-                `/main/api/chat/history.php?user_id=${userId}&grade=${userGrade}&search=${searchTerm}&subject=${subject}&chapter=${chapter}`
+                `${window.apiBasePath}/api/chat/history.php?user_id=${encodeURIComponent(userId)}&grade=${encodeURIComponent(userGrade)}&search=${encodeURIComponent(searchTerm)}&subject=${encodeURIComponent(subject)}&chapter=${encodeURIComponent(chapter)}`
             );
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
 
             if (data.success) {
@@ -488,6 +495,91 @@ class ChatHistoryManager {
     // Add a method to reload history when grade changes
     reloadHistoryOnGradeChange() {
         this.loadHistory();
+    }
+
+    // Update the getQuestions method to use the apiBasePath
+    async getQuestions(session) {
+        const subject = session.subject || '';
+        const chapter = session.chapter || '';
+        const userGrade = localStorage.getItem('userGrade');
+
+        try {
+            const questionsResponse = await fetch(`${window.apiBasePath}/api/navigation/questions.php?grade=${encodeURIComponent(userGrade)}&subject=${encodeURIComponent(subject)}&chapter=${encodeURIComponent(chapter)}`)
+                .then(res => res.json());
+            
+            return questionsResponse.questions || [];
+        } catch (error) {
+            console.error('Error loading available questions:', error);
+            return [];
+        }
+    }
+
+    async deleteSession(sessionId) {
+        try {
+            // Get user ID for API request with proper URL encoding
+            const userId = encodeURIComponent(localStorage.getItem('user_id'));
+            
+            const response = await fetch(`${window.apiBasePath}/api/chat/history.php`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: localStorage.getItem('user_id'),
+                    session_id: sessionId
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Remove the session from the UI
+                const sessionElement = document.getElementById(`session-${sessionId}`);
+                if (sessionElement) {
+                    sessionElement.remove();
+                }
+                
+                // Show success message
+                this.showToast('Session deleted successfully!', 'success');
+                
+                // Reload history to update counts
+                this.loadHistory();
+            } else {
+                this.showToast('Failed to delete session. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting chat session:', error);
+            this.showToast('Error deleting session. Please try again.', 'error');
+        }
+    }
+
+    async updateSessionTitle(sessionId, newTitle) {
+        try {
+            const response = await fetch(`${window.apiBasePath}/api/chat/history.php?session_id=${encodeURIComponent(sessionId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    title: newTitle
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.success;
+        } catch (error) {
+            console.error('Error updating session title:', error);
+            return false;
+        }
     }
 }
 

@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("Using global API base path in settings.js:", window.apiBasePath);
+
     // Add new chat button handler
     document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-        window.location.href = '/main/public/html/chatbot.html';
+        window.location.href = `${window.apiBasePath}/public/html/chatbot.html`;
     });
 
     const settingsForm = document.getElementById('settingsForm');
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUserData();
     
     // Load available grades (using the same endpoint as signup)
-    fetch('/main/api/navigation/grades.php')
+    fetch(`${window.apiBasePath}/api/navigation/grades.php`)
         .then(response => response.json())
         .then(data => {
             gradeSelect.innerHTML = data.grades.map(grade => 
@@ -68,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const userId = localStorage.getItem('user_id');
             const token = localStorage.getItem('token');
 
-            const response = await fetch(`/main/api/user/profile.php?id=${userId}`, {
+            const response = await fetch(`${window.apiBasePath}/api/user/profile.php?id=${encodeURIComponent(userId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const userId = localStorage.getItem('user_id');
-            const response = await fetch(`/main/api/auth/change-password.php?id=${userId}`, {
+            const response = await fetch(`${window.apiBasePath}/api/auth/change-password.php?id=${encodeURIComponent(userId)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
     logoutButton.addEventListener('click', async function() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/main/api/auth/logout.php', {
+            const response = await fetch(`${window.apiBasePath}/api/auth/logout.php`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -217,7 +219,7 @@ async function loadUserData() {
         }
 
         // First load the grades
-        const gradesResponse = await fetch('/main/api/navigation/grades.php');
+        const gradesResponse = await fetch(`${window.apiBasePath}/api/navigation/grades.php`);
         const gradesData = await gradesResponse.json();
         const gradeSelect = document.getElementById('grade-level');
         gradeSelect.innerHTML = gradesData.grades.map(grade => 
@@ -225,7 +227,7 @@ async function loadUserData() {
         ).join('');
 
         // Then load user data
-        const response = await fetch(`/main/api/user/profile.php?id=${userId}`, {
+        const response = await fetch(`${window.apiBasePath}/api/user/profile.php?id=${encodeURIComponent(userId)}`, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -318,7 +320,8 @@ function resetPasswordForm() {
 
 async function verifyCurrentPassword(password) {
     const userId = localStorage.getItem('user_id');
-    return fetch(`/main/api/auth/verify-password.php?id=${userId}`, {
+    
+    return fetch(`${window.apiBasePath}/api/auth/verify-password.php?id=${encodeURIComponent(userId)}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -328,34 +331,18 @@ async function verifyCurrentPassword(password) {
     });
 }
 
-// Add this function to handle form submission
 async function updateProfile(formData) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('/main/api/user/profile.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to update profile');
-        }
-
-        // Just update localStorage - script.js will detect the change
-        if (formData.grade) {
-            localStorage.setItem('userGrade', formData.grade);
-        }
-
-        showSuccess('Profile updated successfully');
-        return true;
-    } catch (error) {
-        console.error('Error:', error);
-        showError(error.message || 'Failed to update profile');
-        return false;
-    }
+    const userId = localStorage.getItem('user_id');
+    
+    const response = await fetch(`${window.apiBasePath}/api/user/profile.php`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(formData)
+    });
+    
+    return response.json();
 } 

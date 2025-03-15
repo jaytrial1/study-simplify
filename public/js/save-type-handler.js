@@ -5,6 +5,18 @@
 
 class SaveTypeHandler {
     constructor() {
+        // Detect server environment
+        const isLocalServer = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' || 
+                           window.location.hostname.includes('192.168.') || 
+                           window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection in save-type-handler.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Set API base path based on environment
+        this.apiBasePath = isLocalServer ? '/main' : '';
+        console.log("API base path in save-type-handler.js:", this.apiBasePath);
+
         this.dropdownBtn = document.querySelector('.save-type-dropdown .action-btn');
         this.dropdownContent = document.querySelector('.dropdown-content');
         this.dropdownOptions = document.querySelectorAll('.dropdown-content a');
@@ -51,7 +63,7 @@ class SaveTypeHandler {
                     this.updateSaveType(this.currentAnswerId, newType, dataType);
                 } else {
                     console.error('No answer ID set. Cannot update save type.');
-                    showToast('Error: No answer selected', true);
+                    this.showToast('Error: No answer selected', true);
                 }
             });
         });
@@ -105,14 +117,14 @@ class SaveTypeHandler {
             console.log('Save type to send:', saveType);
             
             // Send the update request - only send answerId and saveType
-            const response = await fetch('/main/api/saved-answers/update_save_type.php', {
+            const response = await fetch(`${this.apiBasePath}/api/saved-answers/update_save_type.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    answerId: parseInt(answerId),
-                    saveType: saveType
+                    answer_id: parseInt(answerId),
+                    save_type: saveType
                 })
             });
             
@@ -125,7 +137,7 @@ class SaveTypeHandler {
                 this.dropdownContent.classList.remove('active');
                 
                 // Show success message
-                showToast(`Save type updated to "${newType}"`, false);
+                this.showToast(`Save type updated to "${newType}"`, false);
                 
                 // Update dataset on the answer item
                 const answerItem = document.querySelector(`[data-id="${answerId}"]`);
@@ -143,40 +155,38 @@ class SaveTypeHandler {
                 document.dispatchEvent(event);
             } else {
                 console.error('Error from server:', data);
-                showToast(`Error: ${data.error || data.message || 'Failed to update save type'}`, true);
+                this.showToast(`Error: ${data.error || data.message || 'Failed to update save type'}`, true);
             }
         } catch (error) {
             console.error('Error updating save type:', error);
-            showToast(`Error: ${error.message || 'Failed to update save type'}`, true);
+            this.showToast(`Error: ${error.message || 'Failed to update save type'}`, true);
         }
     }
-}
 
-/**
- * Show toast notification
- * @param {string} message - The message to display
- * @param {boolean} isError - Whether it's an error message
- */
-function showToast(message, isError = false) {
-    // Check if the showToast function is already defined in the global scope
-    if (window.showToast && window.showToast !== showToast) {
-        // If it exists, use that one
-        window.showToast(message, isError);
-        return;
+    /**
+     * Show toast notification
+     * @param {string} message - The message to display
+     * @param {boolean} isError - Whether it's an error message
+     */
+    showToast(message, isError = false) {
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) return;
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-message' + (isError ? ' error' : '');
+        toast.textContent = message;
+        
+        toastContainer.appendChild(toast);
+        
+        // Add visible class after a small delay (for animation)
+        setTimeout(() => toast.classList.add('visible'), 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('visible');
+            setTimeout(() => toast.remove(), 300); // Wait for fade out animation
+        }, 3000);
     }
-    
-    const toast = document.createElement('div');
-    toast.className = 'toast-message' + (isError ? ' error' : '');
-    toast.textContent = message;
-
-    // Use toast container if it exists, otherwise append to body
-    const container = document.getElementById('toast-container') || document.body;
-    container.appendChild(toast);
-
-    // Automatically remove the toast after 3 seconds
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
 }
 
 // Initialize the save type handler when the DOM is loaded

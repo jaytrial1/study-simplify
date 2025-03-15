@@ -89,6 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let allChapters = [];
     let cachedQuestions = [];
 
+    // Detect server environment
+    const isLocalServer = window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1' || 
+                       window.location.hostname.includes('192.168.') || 
+                       window.location.hostname.includes('10.0.');
+    
+    console.log("Server detection in script.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+    
+    // Set API base path based on environment
+    const apiBasePath = isLocalServer ? '/main' : '';
+    console.log("API base path in script.js:", apiBasePath);
+
     // -----------------------------------------------Variables--------------------------------------------------------------
     //  Define userGrade once
     //-----------------------------------------------------------------------------------------------------------------------
@@ -149,8 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add these functions after DOMContentLoaded
     function loadSubjects(grade) {
         console.log('Loading subjects for grade:', grade);
-        fetch(`/main/api/navigation/subjects.php?grade=${grade}`)
-            .then(response => response.json())
+        fetch(`${apiBasePath}/api/navigation/subjects.php?grade=${grade}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('Received subjects:', data);
                 const subjectList = document.querySelector('.subject-list');
@@ -174,10 +191,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadChapters(grade, subject) {
-        return fetch(`/main/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
-            .then(response => response.json())
+        return fetch(`${apiBasePath}/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => data.chapters)
-            .catch(error => console.error('Error loading chapters:', error));
+            .catch(error => {
+                console.error('Error loading chapters:', error);
+                return [];
+            });
     }
 
     function renderChapters(chapters) {
@@ -344,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Send to query.php
             const userGrade = localStorage.getItem('userGrade');
-            const queryResponse = await fetch('/main/api/ai/query.php', {
+            const queryResponse = await fetch(`${apiBasePath}/api/ai/query.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -470,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Funtion to load the question dynamically based on selected grade, subject and chapter
     async function loadQuestions(grade, subject, chapter, searchTerm = '') {
         try {
-            const response = await fetch(`/main/api/navigation/questions.php?grade=${grade}&subject=${subject}&chapter=${chapter}&search=${searchTerm}`);
+            const response = await fetch(`${apiBasePath}/api/navigation/questions.php?grade=${grade}&subject=${subject}&chapter=${chapter}&search=${searchTerm}`);
             const data = await response.json();
             return data.questions || [];
         } catch (error) {
@@ -810,19 +835,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //--------------------------------------Load all the chanpters existing inside the selected grade and subject--------------------------------------
     async function loadAllChapters(grade) {
-        const subjects = await fetch(`/main/api/navigation/subjects.php?grade=${grade}`)
-            .then(response => response.json())
-            .then(data => data.subjects);
-        
-        for (const subject of subjects) {
-            const chapters = await loadChapters(grade, subject);
-            allChapters.push(...chapters.map(chapter => ({
-                name: chapter,
-                subject: subject
-            })));
+        try {
+            const response = await fetch(`${apiBasePath}/api/navigation/subjects.php?grade=${grade}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            const subjects = data.subjects || [];
+            
+            for (const subject of subjects) {
+                const chapters = await loadChapters(grade, subject);
+                allChapters.push(...chapters.map(chapter => ({
+                    name: chapter,
+                    subject: subject
+                })));
+            }
+            
+            renderChapters(allChapters);
+        } catch (error) {
+            console.error('Error loading all chapters:', error);
         }
-        
-        renderChapters(allChapters);
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------
 
