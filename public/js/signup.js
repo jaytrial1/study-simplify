@@ -3,15 +3,49 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const gradeSelect = document.getElementById('grade-level');
 
+    // Detect environment
+    const isLocalServer = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' || 
+                         window.location.hostname.includes('192.168.') || 
+                         window.location.hostname.includes('10.0.');
+    
+    console.log("Server detection in signup.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+
+    // Set API paths based on environment
+    let apiBasePath;
+    if (isLocalServer) {
+        // Local development - use current baseUrl from base-url.js
+        apiBasePath = baseUrl;
+    } else {
+        // Production - use absolute paths
+        apiBasePath = window.location.origin + '/';
+    }
+
+    // Log the API path we're using
+    console.log("Using API base path:", apiBasePath);
+    
     // Fetch available grades from PDF repository
-    fetch(baseUrl + 'api/navigation/grades.php')
-        .then(response => response.json())
+    fetch(apiBasePath + 'api/navigation/grades.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log("Grades data:", data);
             gradeSelect.innerHTML = data.grades.map(grade => 
                 `<option value="${grade}">${grade}</option>`
             ).join('');
         })
-        .catch(error => console.error('Error loading grades:', error));
+        .catch(error => {
+            console.error('Error loading grades:', error);
+            // Add fallback grades if API fails
+            const fallbackGrades = ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'];
+            gradeSelect.innerHTML = fallbackGrades.map(grade => 
+                `<option value="${grade}">${grade}</option>`
+            ).join('');
+        });
 
     signupForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -34,10 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Log the request URL and data
-            console.log('Sending request to:', baseUrl + 'api/auth/register.php');
+            const apiUrl = apiBasePath + 'api/auth/register.php';
+            console.log('Sending request to:', apiUrl);
             console.log('Request data:', formData);
 
-            const response = await fetch(baseUrl + 'api/auth/register.php', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
