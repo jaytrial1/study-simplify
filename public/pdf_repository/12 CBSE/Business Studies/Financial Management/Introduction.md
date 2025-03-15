@@ -1,0 +1,3 @@
+# INTRODUCTION
+
+Every business enterprise, whether big or small, needs finances to carry on its operations. The importance of finance has increased tremendously these days because of mass production and use of capital-intensive techniques. Success of a business depends on how well finance is invested in assets and operations and how timely and cheaply the finances are arranged from outside or from within the business. As a result, finance is considered as the life-blood of any business.

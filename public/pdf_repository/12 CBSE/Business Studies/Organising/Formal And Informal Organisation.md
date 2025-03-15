@@ -1,0 +1,122 @@
+# FORMAL AND INFORMAL ORGANISATION 
+
+On the basis of relationship, an organisation may be divided into two broad categories:
+(i) Formal Organisation; and (ii) Informal Organisation.
+
+Both types of organisations are necessary, just like two blades are needed for a pair of scissors.
+
+## Formal Organisation
+
+Formal organisation refers to the organisation structure which is designed by the management to accomplish a particular task.
+
+## Definitions of Formal Organisation
+
+- Formal organisation is a system of consciously coordinated activities of two or more persons toward a common objective.
+-Chester Barnard
+- The formal organisation is a system of well-defined jobs, each bearing a definite measure of authority, responsibility and accountability.
+
+- In formal organisation, position, responsibility, authority and accountability of each level is clearly and explicitly defined.
+- Every member is responsible to perform a specified task assigned to him on the basis of authority-responsibility relationship.
+- There is a systematic coordination among the various activities to achieve organisational goals.
+- To enable smooth functioning of the enterprise, job description and rules and procedures related to work processes are laid down.
+- The structure in a formal organisation can be functional or divisional.
+
+
+## Features of Formal Organisation 
+
+The formal organisation can be better understood by a study of its features:
+
+1. It specifies the relationships among various job positions and the nature of their interrelationship. This clarifies who has to report to whom.
+2. It is a means to achieve the objectives as it lays down rules and procedures essential for their achievement.
+3. Formal organisation coordinates and integrates the efforts of various departments.
+4. It is deliberately designed by the top management to facilitate smooth functioning of the organisation.
+5. It places more emphasis on work than interpersonal relationships among the employees.
+
+## Advantages of Formal Organisation
+
+The main advantages of formal organisation are:
+
+1. Fixation of Responsibility: It is easier to fix responsibility as mutual relationships are clearly defined and inefficient employees can be easily held accountable.
+2. Clarity of Duties: Role and duties of each member are clearly and explicitly specified. So, there is no confusion and it helps in avoiding duplication of efforts.
+3. Unity of Command: There is unity of command as formal organisation makes more use of official channels of command and communication.
+4. Helpful in Achieving Objectives: It leads to effective accomplishment of objectives by providing framework for operations to be performed and clarity of roles in the minds of employees.
+5. Provides Stability: It provides stability to the organisation as behaviour of employees can be fairly predicted since there are specific rules to guide them.
+
+## Disadvantages of Formal Organisation
+
+The formal organisation suffers from the following limitations:
+
+1. Procedural Delays: The formal communication may lead to delay in decision-making and action as the official chain of command has to be followed, which increases the time taken for decision making.
+2. Inadequate Recognition to Creative Talent: Formal organisation does not allow any deviations from rigidly laid down polices and strict rules. Such poor organisation practices
+
+may not provide adequate recognition to creative talent and it kills the spirit of initiative and creativity among the members of the organisation.
+3. Ignores Human Element: Formal organisation places more emphasis on structure and work. It ignores the importance of interpersonal relations and human needs.
+
+## Informal Organisation 
+
+In every organisation, people often cut across the official channels and form their own informal social groups to fulfil their social needs. This gives rise to informal organisation.
+Informal organisation refers to network of social relations, which emerges on its own due to formal roles and relationships among people.
+
+## Definitions of Informal Organisation
+
+- An informal organisation is an aggregate of interpersonal relationships without any conscious purpose but which may contribute to joint results.
+-Chester Barnard
+- Informal organisation is a network of personal and social relations not established or required by the formal organisation but arising spontaneously as people associate with one another.
+—Keith Davis
+- Informal organisation emerges from within the formal organisation when people interact beyond their officially defined roles. When people have frequent contacts they cannot be forced into a rigid formal structure.
+- It means, informal organisation is not preplanned. It arises automatically due to frequent contact of people with each other.
+- On the basis of interaction and friendship, members tend to form groups which show conformity in terms of interest.
+- Informal Organisation has no prescribed rules or policies and does not have fixed lines of communication.
+For example, employees with common interest in sports, films, religion, etc. may form their own informal groups, like who take part in cricket matches on Sundays, meet in the cafeteria for coffee, etc.
+
+
+## Features of Informal Organisation
+
+Informal organisation can be better understood with the help of the following features:
+
+1. An informal organisation originates from within the formal organisation as a result of social interactions among people.
+2. The standards of behaviour evolve from group norms and not from officially laid down rules and regulations.
+3. There is no specific direction of flow of information. It follows the independent channels of command and communication.
+4. It emerges spontaneously (out of mutual liking and tastes) and is not deliberately created by the management.
+5. It has no definite structure as it is a complex network of social relationships among members.
+
+Employees with common interest form their own informal groups to fulfil their social needs.
+
+## Advantages of Informal Organisation 
+
+1. Faster Communication: Informal organisation follows the independent channels of communication as there is no prescribed official channel. It leads to faster spread of information as well as quick feedback.
+Sometimes, management also uses such communication to transmit certain information, which formal system fails to convey.
+2. Fulfil Social Needs: Informal organisation satisfies social needs of the members, which is not satisfied in formal organisation. This enhances their job satisfaction as it gives them a sense of belongingness.
+3. Helps in Achieving Organisational Objectives: It contributes towards fulfillment of organisational objectives by compensating for inadequacies in the formal organisation. For example, employees reactions towards plans and policies can be tested through the informal network.
+Informal Organisation provides employees' feedback about work experiences as they can discuss their views and ideas with superiors without any fear or hesitation.
+
+## Disadvantages of Informal Organisation
+
+1. Spread of Rumours: When an informal organisation spreads rumours, it becomes a destructive force and goes against the interest of the formal organisation.
+Such rumours not only spoil the team spirit and morale but also adversely affect the smooth working of the organisation.
+2. Resistance to Change: The management may not be successful in implementing changes if the informal organisation opposes them. Such resistance to change may delay or restrict growth.
+3. Pressure of Group Norms: In case of informal organisation, people are under pressure to observe group norms. This can be harmful to the organisation if the norms set by the group are against organisational interests.
+
+## Informal Organisation cannot be altogether Eliminated
+
+- Informal organisation supplements the functioning of formal organisation and makes it more efficient in achieving organisational goals.
+- The knowledge of such groups can be used to gather their support for improved organisational performance.
+- Informal groups can also provide useful communication channels.
+- Instead of confronting them, the management should skillfully take advantage of both the formal and informal organisation so that work continues smoothly.
+- The goals of an organisation can be achieved only when personal needs of members are satisfied.
+- Therefore, it is in the best interest of the organisation to recognise the existence of such groups and harmonise it with formal organisation.
+
+## Difference between Formal and Informal Organisation 
+
+| Basis | Formal Organisation | Informal Organisation |
+| :--: | :--: | :--: |
+| 1. Meaning | It refers to structure of authority relationships created by the management. | It is a network of social relationships, arising out of interaction among employees. |
+| 2. Origin/Formation | It is formed deliberately as a result of company rules and policies. | It emerges spontaneously as a result of social interaction. |
+| 3. Authority | It arises by virtue of position in management. | It arises out of personal qualities. |
+| 4. Behaviour | Standards of behaviour are directed by rules. | There is no set behaviour pattern in case of informal organisation. |
+| 5. Flow of Communication | Communication takes place through formal channels, known as scalar chain. | Communication does not flow through a planned route. It can take place in any direction. |
+| 6. Nature | It is very rigid in nature | It is flexible in nature |
+| 7. Leadership | The person with the maximum authority (like manager) is considered as the leader. | Leaders may or may not be managers. They are chosen by the group. |
+| 8. Flow of authority | Authority flows from top to bottom. | Authority can flow in all the directions. |
+| 9. Purpose | It is created to work systematically and achieve goals of the organisation. | It aims to serve group interest and to provide social satisfaction to them. |
+| 10. Stability | It is more stable as it exists till survival of the organisation. | It is less stable as employees can change their social group according to their desire. |

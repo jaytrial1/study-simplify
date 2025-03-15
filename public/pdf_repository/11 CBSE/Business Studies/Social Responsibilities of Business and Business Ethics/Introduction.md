@@ -1,0 +1,4 @@
+# 6.1 INTRODUCTION
+
+Business is an indispensible part of the society and gets its manpower and other resources from the society. It is permitted by the society to carry on industrial or commercial activities and thereby earn profits. When the very existence of a business organisation depends on society, it should not ignore its responsibility towards the society. It should conduct the activities in a manner that fulfill its obligations towards the society. It should not indulge in any socially undesirable practices (like black marketing, adulteration, etc.). Business can get success in the long run only when it is socially responsible and follows ethical behaviour.
+It must be noted that now business enterprise is considered not only an economic institution but also a social institution.

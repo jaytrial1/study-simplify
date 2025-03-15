@@ -1,0 +1,3 @@
+# 7.1 INTRODUCTION
+
+Every business enterprise, whether big or small, needs finance to carry on its operations. The importance of finance has increased tremendously these days because of mass production and use of capital-intensive techniques. As a result, finance is considered as the life-blood of any business. In this chapter, we will study the various sources of finance on the basis of ownership.

@@ -1,0 +1,44 @@
+# LIMITATIONS OF PLANNING 
+
+Planning is a very crucial function for any business enterprise. However, unforeseen events, continuous rise in costs and prices, changes in business environment, government interventions, legal regulations, etc. affects our planning process and it becomes necessary to modify the plans as per the changed circumstances. The major limitations of planning are:
+
+1. Planning leads to Rigidity: In an organisation, plans are drawn up with specific goals to be achieved within a specific time frame.
+
+- These plans decide the future course of action and managers may not be in a position to change it. This kind of rigidity in plans may create difficulty.
+- Managers need to be given some flexibility to cope up with changed circumstances because following a pre-decided plan in case of change in circumstances may not be in the interest of the organisation.
+
+2. Planning may not work in a Dynamic Environment: The business environment is dynamic. Plans have to operate in an external environment, which consists of a number of dimensions like economic, political, technological, legal and social dimensions. The organisation has to constantly adapt itself to changes.
+
+- It is very difficult to make accurate forecasts in the environment if there is change in economic policies or political conditions are not stable or there is a natural calamity.
+- Competition in the market can also upset financial plans, sales targets and cash budgets.
+- Since planning cannot foresee everything, there may be obstacles to effective planning.
+
+3. Planning Reduces Creativity: Planning is an activity which is done by the top management and rest of the members have to strictly follow these plans.
+
+- Middle management and other decision makers are neither allowed to deviate from plans nor are they permitted to act on their own.
+- As a result, they do not get opportunity to show their skills and it limits their initiative and creativity.
+- Most of the time, employees do not even attempt to formulate plans and only carry out orders.
+- Thus, planning reduces creativity as people tend to think along the same lines as others. There is nothing new or innovative.
+
+4. Planning involves Huge Costs: When plans are drawn up, huge costs are involved in their formulation. These may be in terms of time and money. For example, checking accuracy of facts may involve lot of time.
+
+- Detailed plans require scientific calculations to ascertain facts and figures.
+- Planning also involve number of incidental costs like expenses on boardroom meetings, discussions with professional experts and preliminary investigations to find out the viability of the plan.
+- If costs incurred on planning do not justify the benefits derived from it, then planning should be avoided.
+
+5. Planning is a Time-Consuming Process: The process of planning requires considerable time in evaluating the various possible alternatives and selecting the best one.
+
+- Sometimes, formulation of plans take so much time that there is not much time left for their implementation.
+- During sudden and unexpected emergencies, if the management thinks of completing the planning process before taking some decision, then it may worsen the situation.
+- Due to this reason, planning has to be avoided whenever there is a need for prompt and immediate decision.
+
+6. Planning does not Guarantee Success: The success of an enterprise is possible only when plans are properly drawn up and implemented. It means, plans need to be translated into action, otherwise they become meaningless.
+
+- Managers have a tendency to rely on previously tried and tested successful plans.
+- However, it is not necessary that a plan, which has worked before, will work again in the changed and competitive environment.
+- This kind of false sense of security may actually lead to failure instead of success. Mere planning does not ensure success, rather efforts have to be made for it.
+
+
+## Conclusion 
+
+The given limitations of planning indicate the complexities and problems involved in the planning process. However, they do not limit the importance of planning. Recognition of these limitations will help the managers in more careful and systematic planning.

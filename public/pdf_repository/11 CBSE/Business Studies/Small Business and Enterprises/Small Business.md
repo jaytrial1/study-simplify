@@ -1,0 +1,4 @@
+# SMALL BUSINESS
+
+Small scale industries play a significant role in the development process and acts as a vital link in the industrialisation in terms of production, employment generation and exports. Small business helps in economic prosperity by widening entrepreneurial base and use of local raw materials and indigenous skills. Small businesses dominate the industrial sector in the country with major proportion of labour force and tremendous export potential.
+In India, the 'village and small industries sector' consists of both 'traditional' and 'modern' small industries. This sector has 8 subgroups: (i) Handlooms; (ii) Handicrafts; (iii) Coir; (iv) Sericulture; (v) Khadi; (vi) Village Industries; (vii) Small Scale Industries; and (viii) Powerlooms. The last two come under the modern small industries, while the others come under traditional industries. Village and small industries together provide the largest employment opportunities in India.

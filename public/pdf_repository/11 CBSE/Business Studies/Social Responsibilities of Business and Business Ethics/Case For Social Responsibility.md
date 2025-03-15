@@ -1,0 +1,19 @@
+# 6.2 CASE FOR SOCIAL RESPONSIBILITY 
+
+The various points advanced in favour of business assuming social responsibility are as follows:
+
+1. Justification for Existence and Growth: As business is the creation of society, it is expected to satisfy human needs by providing goods and services.
+
+- Although, profit is an important objective of any business activity, but it should be looked upon as an outcome of service to the people.
+- A business with a good public image enjoys the support of society and it can prosper and grow only when it continuously assumes social responsibility.
+As business is a part and parcel of the society, it must think of social obligations.
+
+2. Long-term Interest of the Firm: It is in the long-term self-interest of the business to fulfill its social responsibility towards various groups of society, like workers, consumers, shareholders, government officials, etc. A better social set improves its public image and prospects of growth in the long run. The society may also reject an enterprise if it does not care for the social welfare.
+3. Avoidance of Government Regulation: If the businessmen fail to meet their social responsibilities voluntarily, then the government may intervene and enact suitable legislations to force them to assume social responsibility. However, businessmen do not like government legislation as it restricts their freedom and flexibility. Hence, it is in the interest of businessman to voluntarily fulfill its obligations to the society.
+4. Maintenance of Society: If the people related to a business feel that they are not getting their dues, then they may resort to anti-social activities. This may be harmful for the business. So, business enterprises must fulfill social responsibilities.
+5. Availability of Resources with Business: Business enterprises have considerable financial and human resources, which can be effectively used for solving social problems. For example, managerial talent, technical expertise and capital resources of the business can help the society to tackle its problems better.
+Business enterprises have tremendous social power because of huge resources in hand. Their decisions and activities considerably affect the economic growth. So, a business must discharge its social responsibilitics to strike a balance between 'responsibility' and 'power'.
+
+6. Converting Problems into Opportunities: It is a common saying that 'risk is the reward of profit bearing'. Business is capable of converting risky situations into profitable deals. It not only helps in solving social problems but can also be used effectively as an opportunity for growth. For example, by setting up industries in backward regions, the problem of regional disparity can be solved and a businessman can benefit from various tax incentives offered by the government.
+7. Better Environment for Doing Business: When the society is confronted with diverse and complicated problems, then there are little chances for the success of the business. So, in order to have better environment for doing business, the business should assume social responsibilities to solve problems of the society.
+8. Holding Business Responsible for Social Problems: Every business uses capital, physical and human resources of the society for business purposes. Moreover, a number of social problems like environmental pollution, unsafe workplaces, corruption, etc. arise due to activities of business enterprise. So, it is the moral responsibility of business to help society in solving such problems and devoting some of its resources in the overall development of the society.

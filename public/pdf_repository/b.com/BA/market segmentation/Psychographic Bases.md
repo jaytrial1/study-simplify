@@ -1,0 +1,23 @@
+7\. PSYCHOGRAPHIC BASES:
+
+In psychographic segmentation, buyers are divided into distinct groups on the basis of social class, lifestyle, personality and product consumption.
+
+1\) Social Class It is easy to distinguish between such social classes as (i) very rich, (ii) rich, (iii) upper middle class, (iv) lower middle class and (v) poor or low income group. They buy different products. A person born in a rich family is accustomed to purchasing expensive products since childhood. The contractors, politicians and businessmen who have recently entered the rich class, prefer to purchase those valuables through which they can make a show of their riches. The upper middle class includes such professionals as doctors, advocates and professors who believe in maintaining a higher standard of living and hence prefer to purchase comforts of life. Their interest in literature induces them to purchase magazines and books regularly. They are inclined to buy expensive cloth, modern furniture, scooters and cars also. An average person belonging to the middle class strives to live a systematic life at low cost. The products which they prefer to buy to make life comfortable are reasonably priced products. Finally, the poor who can hardly make two ends meet, are highly price conscious. They prefer low priced products only.
+
+(2) Life Style: It refers to one's way of living. The buyers can be grouped according to their lifestyle also. For instance, a manufacturer of women's clothing has to design different clothes for simple women, fashionable women, manly women etc. This variable is particularly useful in segmenting the market for the product like cosmetics, furniture, drinks, eatables etc. The life-style changes with time and producers must keep an eye on these changes. For instance, since the last few years, the desire for a comfortable life has been increasing in intensity. Hence, even middle class persons have begun to buy furniture, television sets, refrigerators, decorative materials, magazines, tomato catch-up, muddles, instant food packets, Bournvita etc. The change is clearly visible in the case of dressing. The young boys prefer jeans pants and tea shirts, while the matured persons prefer the safari suits.
+
+(3) Personality Personality is an important determinant of a buyer's behaviour. Hence it is also used as a variable for market segmentation. Generally, every person tries to express his or her personality through the purchase of certain products. Men of different personalities insist on purchasing different types of products. On the basis of personality, buyers can be divided into such groups as ambitious and dignified, adventurous and enterprising, independent, prestige-conscious, self-confident, conservative, progressive, thrifty, extravagant and safety-conscious. How powerful is the influence of personality on purchase decisions will be clear from the following examples:
+
+(i) The company executives always prefer to stay at five star hotels which suit their personality most. The advertisements of such hotels also put stress on this fact.
+
+(ii) The advertisements saying that the men of dignity who wish to develop their personality always insist on Raymond's suiting or Vimal's suiting can appeal directly to the persons who are eager to build social prestige and high status.
+
+(iii) The young girls liberally use expensive cosmetics just to make their personality more impressive. The producers of such products as Lakme lipstick, Premium talcum powder, Sunsilk shampoo, Supreme Lux soap, Garden sarees etc. also try to raise their sales by appealing to the same instinct.
+
+(iv) Even Maruti Zen and Contessa and Cielo and other such models of motor cars are introduced in the market with a view to exploiting the personality variable.
+
+(v) The cigarettes such as 555, State Express and Dunhill etc. also appeal to the rich and upper middle class persons by inciting their desire to build an impressive personality.
+
+(vi) It is observed that conservative investors prefer to put their money in bank deposits while venturesome investors prefer to put their savings with private companies and firms.
+
+(4) Product Consumption: Different persons purchase and consume products for different reasons. Their motives behind purchase are different, and hence they desire different amounts of utility from the same product. Their scale of preference differs for the same reason.

@@ -1,0 +1,6 @@
+# CONSUMER PROTECTION ACT, 2019 
+
+The Consumer Protection Act, 2019 has replaced the Act 1986 and seeks to widen its scope in addressing consumer concerns. The Act aims to protect and promote the interests of consumers and to establish authorities for timely and effective administration and settlement of consumers' disputes. The scope of the Act is very wide. It applies to all undertakings, irrespective of size, nature or ownership. The main features of the Act are:
+(i) The Act has granted certain rights to consumers to empower them \& to protect their interests.
+(ii) The Act also provides safeguards to consumers against defective goods, deficient services, unfair trade practices and other forms of exploitation.
+(iii) The Act has provided three-tier machinery: District Commission, State Commission and National Commission, to provide simple, quick and easy remedy to consumers. It also provides for the formation of consumer protection councils in every District and State and at the apex level.

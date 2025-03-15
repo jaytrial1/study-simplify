@@ -1,0 +1,63 @@
+# FINANCIAL PLANNING 
+
+Financial planning is essentially the preparation of a financial blueprint of an organisation's future operations. It is the process of estimating the fund requirements of a business and specifying the sources of funds. It aims to ensure that enough funds are available at right time.
+
+- If adequate funds are not available, the firm will not be able to honour its commitments and carry out its plans.
+- On the other hand, if excess funds are available, it will unnecessarily add to the cost and may encourage wasteful expenditure.
+- Financial planning takes into consideration the growth, performance, investments and requirement of funds for a given period.
+- In Short, Financial Planning includes:
+(i) Estimation of requirements of funds.
+(ii) Identifying the sources of funds, i.e. whether to raise the funds internally or from external sources like equity shares, preference shares, debentures, etc.
+(iii) Proper utilisation and administration of funds.
+
+## Objectives of Financial Planning 
+
+The objective of financial planning is to ensure that enough funds are available at right time. It aims to achieve the following two objectives:
+
+1. To ensure availability of funds whenever required: Financial planning basically aims to ensure that sufficient funds are available at the right time for different purposes such as purchase of assets, day-to-day business expenses, etc.
+Apart from this, there is a need to estimate the time at which these funds are to be made available. It also tries to specify the possible sources of these funds.
+2. To ensure that unnecessary finance is not raised: Excess funding is almost as bad as inadequate funding. In case of surplus funds, financial planning aims to use it in the best possible manner so that the financial resources are not left idle and don't unnecessarily add to the cost.
+So, Financial Planning aims to match funds requirements with their availability.
+
+## Financial Planning involves both Short-term and Long-term Planning
+
+- Long-term financial planning is done for long-term growth and investment and focuses on capital expenditure programmes. Long-term planning is generally done for 3 to 5 years as beyond that, financial planning becomes more difficult and less useful.
+- Short-term financial planning covers plans for one year or less. Budget is an example of financial planning done for short-term.
+
+
+## Process of Financial Planning
+
+1. Sales Forecast: Financial Planning of a firm usually begins with the preparation of its sales forecast. For example, if the firm is making a financial plan for the next five years, then it will first estimate its sales for the next five years.
+2. Preparation of Financial Statements: Based on its sales estimate, the firm prepares its financial statements, keeping in mind the requirements of funds for investment in the fixed capital and working capital.
+3. Estimation of Expected Profit: Then the firm makes an estimate of the expected profits during the period, in order to determine how much of the funds requirements can be met through retained earnings (after dividend payouts).
+4. Sources of External Funds: In the next step, the financial planner estimates the requirement for external funds, i.e. how much funds are to be raised from debt and how much from equity.
+5. Preparation of Cash Budgets: Then the cash budgets are made, incorporating these factors.
+
+## Importance of Financial Planning
+
+Financial planning is an important part of overall planning of any business enterprise. It helps the company to tackle the uncertainty in respect of the availability and timing of funds and helps in smooth functioning of an organisation.
+
+The importance of financial planning will be clear from the following points:
+
+1. Financial Planning helps the company to prepare for the future. It tries to forecast what may happen in future under different business situations and helps to face the future in a better way. Financial Planning prepares alternative financial plans to meet different uncertain events.
+For example, suppose a company predicts a growth of $20 \%$ in sales. However, it is possible that the growth rate turns out to be $10 \%$ or $30 \%$. Many items of expenses shall be different in these three situations. Financial Planning prepares a blueprint of these three situations in advance, which helps the management in deciding what must be done in each of these situations.
+2. It helps in avoiding business shocks and surprises and improves the chances of financial success.
+3. It helps in achieving coordination between various functions by providing clear policies and procedures.
+4. It prevents duplication of efforts and gaps in planning by preparing detailed plans of action.
+5. It helps to link present with future. It links the existing financial resources and future financial requirements by forecasting growth and expansion plans.
+6. It provides a link between investment and financing decisions on a continuous basis. It helps in deciding proportion of debt and equity to be issued (financing decision) and how the raised funds have to be invested (investment decision).
+7. It makes the evaluation of actual performance easier by clearly specifying the detailed objectives of various business segments.
+
+## Financial Management Vs Financial Planning 
+
+Financial planning must not be confused as a substitute for financial management.
+
+- Financial Management aims at choosing the best investment and financing alternatives by focusing on their costs and benefits, i.e. its objective is to increase the shareholders' wealth.
+- On the other hand, Financial Planning aims at smooth operations by focusing on fund requirements and their availability in the light of financial decisions.
+For example, if a capital budgeting decision is taken, then financial planning enables the management to foresee the quantum and timing of the fund requirements. It also tries to forecast shortage and surpluses so that necessary activities are taken in advance to meet those situations.
+
+| Basis | Financial Management | Financial Planning |
+| :--: | :--: | :--: |
+| 1. Meaning | Financial Management is concerned with procurement of funds, investment of funds and distribution of earnings to the owners. | Financial Planning involves estimation of requirements of funds, identifying the sources of funds and optimum utilisation of funds. |
+| 2. Scope | It is wider in scope as financial planning is a part of financial management. | It is narrow in scope as it is a part of financial management. |
+| 3. Objective | Its most important objective is to maximise wealth of equity shareholders. As such, financial management aims to manage all activities related to the finance. | Financial Planning aims to ensure availability of funds whenever required and to ensure that unnecessary finance is not raised. |

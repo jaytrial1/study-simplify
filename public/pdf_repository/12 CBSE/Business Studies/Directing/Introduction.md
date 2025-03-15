@@ -1,0 +1,3 @@
+# INTRODUCTION 
+
+After preparing plans, designing the organisation structure and arranging necessary human force, the next major managerial function is to direct the activities of employees. Directing aims to ensure that activities of all employees are mobilised towards organisational goals. It is the connecting link between the preparatory functions of management (i.e. planning, organising, staffing) and the function of controlling.

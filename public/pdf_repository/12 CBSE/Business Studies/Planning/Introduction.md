@@ -1,0 +1,8 @@
+# INTRODUCTION
+
+Planning is the beginning of the management process. Every manager and all forms of enterprise (business, government or educational) require planning. In this rapidly changing environment and globalisation, planning is considered as a strategic area of management.
+All business firms dream of becoming successful, increase their sales and earn profits. To turn these dreams into reality, managers need to work hard in thinking about the future, in making business predictions and achieving targets. Dreams can be turned into reality only if business managers think in advance on what to do and how to do it. This is the essence of planning.
+
+## Planning is needed for studies
+
+A student, who wants to secure good marks in the examination, has to plan his study. He needs to decide how much time he has to devote for different subjects; on which topics to lay greater stress and so on. In other words, one has to decide the course of action in order to get good marks.
