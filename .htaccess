@@ -1,0 +1,27 @@
+# Prevent caching for PHP, HTML, JS, and CSS files
+<FilesMatch "\.(php|html|js|css)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Enable CORS
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Compress text files for faster downloads
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "^(\.htaccess|\.htpasswd|config\.php)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Redirect HTTP to HTTPS (uncomment when SSL is configured)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
