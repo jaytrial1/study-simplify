@@ -415,11 +415,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Add this new function after the existing functions
+    function preprocessMarkdown(markdown) {
+        if (!markdown) return '';
+        
+        // If the content starts with triple backticks followed by markdown, remove them
+        let processed = markdown;
+        
+        // Handle the case where the entire content is a fenced code block
+        const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+        if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+            return fullBlockMatch[2];
+        }
+        
+        return processed;
+    }
+
     // Function to update an existing message
     function updateMessage(messageElement, newText) {
         if (messageElement) {
-            // Convert markdown to HTML
-            const formattedContent = marked.parse(newText);
+            // Process markdown content to clean up any issues before rendering
+            const processedMarkdown = preprocessMarkdown(newText);
+            
+            // Convert markdown to HTML with failsafe
+            let formattedContent = '';
+            try {
+                if (typeof marked !== 'undefined' && marked) {
+                    formattedContent = marked.parse(processedMarkdown);
+                } else {
+                    console.warn('Marked library not fully loaded, displaying raw text');
+                    formattedContent = `<pre>${processedMarkdown}</pre>`;
+                }
+            } catch (error) {
+                console.error('Error parsing markdown:', error);
+                formattedContent = `<pre>${processedMarkdown}</pre>`;
+            }
             
             // Update the content
             messageElement.querySelector('.chat-content').innerHTML = formattedContent;
@@ -462,8 +492,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             } else {
-                // Convert Markdown to HTML using marked.js
-                const formattedContent = marked.parse(content);
+                // Process markdown content to clean up any issues before rendering
+                const processedMarkdown = preprocessMarkdown(content);
+                
+                // Convert Markdown to HTML using marked.js with failsafe
+                let formattedContent = '';
+                try {
+                    if (typeof marked !== 'undefined' && marked) {
+                        formattedContent = marked.parse(processedMarkdown);
+                    } else {
+                        console.warn('Marked library not fully loaded, displaying raw text');
+                        formattedContent = `<pre>${processedMarkdown}</pre>`;
+                    }
+                } catch (error) {
+                    console.error('Error parsing markdown:', error);
+                    formattedContent = `<pre>${processedMarkdown}</pre>`;
+                }
+                
                 messageDiv.innerHTML = `
                     <div class="bot-icon">
                         <i class="fas fa-robot"></i>

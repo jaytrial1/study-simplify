@@ -48,7 +48,7 @@ try {
     );
     
     // Get appropriate template
-    $template = $aiHandler->getPromptTemplate($postData['answerType']);
+    $template = $aiHandler->getPromptTemplate($postData['answerType'], $postData['grade']);
     
     // Create prompt
     $prompt = $aiHandler->createPrompt($template, [

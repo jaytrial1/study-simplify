@@ -1,3 +1,19 @@
+// Add this function before the ChatHistoryManager class declaration
+function preprocessMarkdown(markdown) {
+    if (!markdown) return '';
+    
+    // If the content starts with triple backticks followed by markdown, remove them
+    let processed = markdown;
+    
+    // Handle the case where the entire content is a fenced code block
+    const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+    if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+        return fullBlockMatch[2];
+    }
+    
+    return processed;
+}
+
 // Chat History Management
 class ChatHistoryManager {
     constructor() {
@@ -375,8 +391,22 @@ class ChatHistoryManager {
                     messageDiv.className = `response ${sender}-response`;
                     
                     if (sender === 'bot') {
-                        // Convert Markdown to HTML using marked.js
-                        const formattedContent = marked.parse(msg.message);
+                        // Process markdown content first
+                        const processedMarkdown = preprocessMarkdown(msg.message);
+                        
+                        // Convert Markdown to HTML using marked.js with failsafe
+                        let formattedContent = '';
+                        try {
+                            if (typeof marked !== 'undefined' && marked) {
+                                formattedContent = marked.parse(processedMarkdown);
+                            } else {
+                                console.warn('Marked library not fully loaded, displaying raw text');
+                                formattedContent = `<pre>${processedMarkdown}</pre>`;
+                            }
+                        } catch (error) {
+                            console.error('Error parsing markdown:', error);
+                            formattedContent = `<pre>${processedMarkdown}</pre>`;
+                        }
 
                         messageDiv.innerHTML = `
                             <div class="bot-icon">

@@ -41,7 +41,7 @@ try {
             $data['questions']
         );
         
-        $template = $aiHandler->getPromptTemplate($data['answerType']);
+        $template = $aiHandler->getPromptTemplate($data['answerType'], $data['grade']);
         $prompt = $aiHandler->createPrompt($template, [
             'extracted_text' => $result['text'],
             'user_prompt' => $data['userPrompt'],

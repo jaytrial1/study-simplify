@@ -12,7 +12,33 @@ class AIHandler {
         $this->generalInstructions = require __DIR__ . "/../api/ai/templates/general_instructions.php";
     }
     
-    public function getPromptTemplate($type = 'long') {
+    public function getPromptTemplate($type = 'long', $grade = null) {
+        // If grade is provided, check for grade-specific template
+        if ($grade) {
+            // Normalize grade format to match directory naming (remove spaces, dots, convert to lowercase)
+            $gradeDir = strtolower(str_replace([' ', '.', '-'], '', $grade));
+            
+            // Log the normalized grade for debugging
+            error_log("Original grade: {$grade}, normalized to: {$gradeDir}");
+            
+            // Path to grade-specific template
+            $gradePath = __DIR__ . "/../api/ai/templates/{$gradeDir}/{$type}.php";
+            
+            // If grade-specific template exists, use it
+            if (file_exists($gradePath)) {
+                error_log("Using grade-specific template: {$gradePath}");
+                return require $gradePath;
+            }
+            
+            // Log if grade directory exists but specific template doesn't
+            $gradeDirPath = __DIR__ . "/../api/ai/templates/{$gradeDir}";
+            if (is_dir($gradeDirPath)) {
+                error_log("Grade directory exists but {$type}.php not found in {$gradeDirPath}");
+            }
+        }
+        
+        // Fall back to default template if grade-specific not found
+        error_log("Using default template for type: {$type}");
         return require __DIR__ . "/../api/ai/templates/{$type}.php";
     }
     

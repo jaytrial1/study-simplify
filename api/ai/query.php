@@ -42,7 +42,7 @@ try {
             );
             
             // Get template and create initial prompt
-            $template = $aiHandler->getPromptTemplate($data['answerType']);
+            $template = $aiHandler->getPromptTemplate($data['answerType'], $data['grade']);
             $initialPrompt = $aiHandler->createPrompt($template, [
                 'extracted_text' => $result['text'],
                 'user_prompt' => $data['userPrompt'],

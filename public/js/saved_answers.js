@@ -1,3 +1,19 @@
+// Add this function at the top of the file
+function preprocessMarkdown(markdown) {
+    if (!markdown) return '';
+    
+    // If the content starts with triple backticks followed by markdown, remove them
+    let processed = markdown;
+    
+    // Handle the case where the entire content is a fenced code block
+    const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+    if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+        return fullBlockMatch[2];
+    }
+    
+    return processed;
+}
+
 // Function to show toast messages
 function showToast(message, isError = false) {
     const toast = document.createElement('div');
@@ -532,7 +548,23 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
         const answerItem = currentAnswers[currentIndex];
         if (answerItem) {
             const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer);
-            const formattedAnswer = marked.parse(rawAnswer || '');
+            
+            // Process markdown content first
+            const processedMarkdown = preprocessMarkdown(rawAnswer || '');
+            
+            // Convert Markdown to HTML using marked.js with failsafe
+            let formattedAnswer = '';
+            try {
+                if (typeof marked !== 'undefined' && marked) {
+                    formattedAnswer = marked.parse(processedMarkdown);
+                } else {
+                    console.warn('Marked library not fully loaded, displaying raw text');
+                    formattedAnswer = `<pre>${processedMarkdown}</pre>`;
+                }
+            } catch (error) {
+                console.error('Error parsing markdown:', error);
+                formattedAnswer = `<pre>${processedMarkdown}</pre>`;
+            }
             
             updateModalContent();
             

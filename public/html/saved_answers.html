@@ -39,6 +39,76 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Configure marked.js with proper settings
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set options for marked to ensure consistent rendering
+            marked.setOptions({
+                renderer: new marked.Renderer(),
+                highlight: function(code, lang) {
+                    try {
+                        return hljs.highlight(code, { language: lang || 'plaintext' }).value;
+                    } catch (e) {
+                        console.warn('Language not supported for highlighting:', lang);
+                        return hljs.highlight(code, { language: 'plaintext' }).value;
+                    }
+                },
+                pedantic: false,
+                gfm: true,
+                breaks: true,
+                sanitize: false,
+                smartLists: true,
+                smartypants: false,
+                xhtml: false
+            });
+            
+            // Add a custom renderer for code blocks to better handle fenced code blocks
+            const renderer = new marked.Renderer();
+            
+            // Override the code block renderer
+            renderer.code = function(code, language) {
+                // Handle triple backtick fences within the content
+                if (code.startsWith('```') && (code.match(/```/g) || []).length >= 2) {
+                    // Extract just the code contents without the backticks
+                    const codeMatch = code.match(/```(?:(\w+)\n)?([\s\S]*?)```/);
+                    if (codeMatch) {
+                        const extractedLang = codeMatch[1] || language || 'plaintext';
+                        const extractedCode = codeMatch[2].trim();
+                        
+                        try {
+                            const highlighted = hljs.highlight(extractedCode, { 
+                                language: extractedLang || 'plaintext'
+                            }).value;
+                            
+                            return `<pre><code class="hljs language-${extractedLang}">${highlighted}</code></pre>`;
+                        } catch (e) {
+                            console.warn('Error highlighting nested code:', e);
+                        }
+                    }
+                }
+                
+                // Normal code highlighting
+                let highlighted;
+                try {
+                    highlighted = hljs.highlight(code, { 
+                        language: language || 'plaintext'
+                    }).value;
+                } catch (e) {
+                    console.warn('Language not supported:', language);
+                    highlighted = hljs.highlight(code, { language: 'plaintext' }).value;
+                }
+                
+                return `<pre><code class="hljs language-${language || 'plaintext'}">${highlighted}</code></pre>`;
+            };
+            
+            // Set the custom renderer
+            marked.setOptions({ renderer: renderer });
+            
+            console.log('Marked.js has been properly initialized with custom options');
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 </head>
 <body>
     <div class="app-container">
