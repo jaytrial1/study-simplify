@@ -1,79 +1,97 @@
-# Web App Backend Development Instructions
+# StudySimplify - AI-Powered Educational Assistant
 
 ## Overview
-This document provides a structured set of instructions for developing the backend of a web app designed for B.Com students. The app will later expand to include 11th, 12th, and CBSE students. The frontend UI is already built and designed for mobile users. The backend will be developed using PHP and MySQL.
+StudySimplify is a comprehensive web application designed for students across different grade levels (B.Com, 11th, 12th, CBSE). The application offers an AI-powered chatbot interface that helps students access educational content, save important answers, and maintain a history of their interactions. The application is built with a mobile-first approach but works seamlessly across all devices.
 
-## Core Features & Functionality
+## Key Features
 
-### 1. **User Signup**
-- Users will register with the following details:
-  - Name
-  - Email ID
-  - Password & Confirm Password
-  - Grade Level (Standard selection)
+### 1. **User Authentication System**
+- Secure signup and login functionality
+- User profile management
+- Grade-specific content access
+- Password management and security features
 
-### 2. **Main Chat Interface**
-- After logging in, users reach the chat interface where they can:
-  - Select a **Subject** and **Chapter** from a dropdown at the top.
-  - Use **"/"** to open a **suggestion box** (similar to a Telegram bot command panel) to search and select a question.
-  - Start chatting with AI based on the selected question.
-  - After selecting a **question**, the user can choose the **answer length** (Short or Long).
-  - Each length has a **different predefined prompt**:
-    - If "Long" is selected, the extracted PDF text is inserted into a **predefined prompt template for long responses** before generating the answer.
-    - If "Short" is selected, the extracted PDF text is inserted into a **predefined prompt template for short responses** before generating the answer.
+### 2. **AI-Powered Chatbot Interface**
+- Intuitive chat interface with the Gemini 2 Flash Lite API integration
+- Dynamic subject and chapter selection
+- Command-based question search using "/"
+- Support for both short and long-form answers
+- Real-time markdown rendering and code syntax highlighting
 
-### 3. **Saving Responses**
-- Users can save AI responses in two ways:
-  - **Normal Save**: For exam revision purposes.
-  - **Question-Related Save**: For responses related to curiosity, methods, or extra information.
+### 3. **Advanced Content Navigation**
+- Grade → Subject → Chapter → Question hierarchy
+- Searchable question repository
+- Filter-based navigation for subjects and chapters
+- Dynamic content loading based on user selections
 
-### 4. **Backend Logic**
-- The AI model used for backend processing is **Gemini 2 Flash Lite API**.
-- All subjects and chapters displayed in the selection panel of the chatbot are fetched dynamically based on the **grade level** stored in the database.
-- All questions shown in the **suggestion box** (from typing "/") are fetched from a **PDF repository folder**, not stored in the database directly.
-- The folder structure is as follows:
-  - **Grade Level Folder** → **Subject Folder** → **Chapter Folder** → **PDFs named after questions**
-  - When the user selects a **grade**, the corresponding **subjects and chapters** update dynamically in the selection panel.
-  - When the user selects a **chapter**, the chatbot suggestion box updates to show only the relevant **questions** (PDF names) belonging to that chapter.
-  - When the user selects a **question**, the corresponding PDF text is extracted and passed into the **prebuilt Gemini 2 Flash Lite prompt**.
-  - If multiple questions are selected, texts from all selected PDFs are extracted and merged into the prompt before generating a response.
-  - After selecting a question, the system prompts the user to **choose an answer length (Short or Long)**.
-  - Based on the selection, the extracted PDF text is inserted into the **corresponding prompt template** before generating a response.
+### 4. **Answer Management System**
+- Two-type saving system:
+  - "Best response" for exam revision
+  - "Question-related" for additional information
+- Comprehensive saved answers page with:
+  - Subject/chapter organization
+  - Search and filter capabilities
+  - Expandable/collapsible view
+  - Answer preview and full view options
 
-### 5. **Chat History**
-- The chat system saves interactions between two **"/"** commands as a single chat history entry.
-- If the user starts another chat with a new question, a new chat history entry is created.
-- If the user selects multiple questions in the same interaction, the response is stored under both questions' histories.
-- Users can search chat history by:
-  - **Typing a question name**.
-  - **Filtering by subject and chapter**.
+### 5. **Chat History Tracking**
+- Session-based chat history
+- Searchable past conversations
+- Subject and chapter filtering
+- Quick access to previous interactions
 
-### 6. **Saved Answers Page**
-- Users can navigate to saved answers via the **menu bar**.
-- Features include:
-  - A **search bar** to find saved answers.
-  - **Filters for subject and chapter**.
-  - A **tree-view structure** to browse saved answers (Subject → Chapter → Question → Answers).
-  - **View Full Answer**: Opens the complete saved response.
-  - **Navigation Buttons**: Move between saved answers for the same question (Previous/Next).
-  - **Open Chat History**: Redirects to the chatbot and highlights the original conversation.
-  - **Change Save Type**: Users can modify the save type (Normal Save or Question-Related Save).
-  - **Collapse/Expand Buttons** for structured browsing.
+### 6. **Progressive Web App (PWA) Support**
+- Offline functionality through service worker
+- Cache management for resources
+- "Add to Home Screen" capability
+- Responsive design for all device sizes
 
-### 7. **Settings Page**
-- Allows users to update:
-  - Name
-  - Email
-  - Grade Level (which dynamically updates the subject & chapter selection panel accordingly)
-  - Password
-  - Logout
+### 7. **User Settings Management**
+- Profile information updates
+- Grade level changes
+- Password management
+- Logout functionality
 
-## Summary
-- The AI backend is powered by **Gemini 2 Flash Lite API**.
-- All selection options (Grade, Subject, Chapter) dynamically affect the chatbot’s question suggestion box.
-- All questions are **fetched from the PDF repository** based on selection, rather than being stored in a database.
-- Users can select the **answer length** (Short or Long), with each having a **predefined prompt template**.
-- The backend should handle chat history, saved responses, and dynamic updates efficiently.
+## Technical Implementation
 
-This document serves as a complete backend instruction guide to be sent to Cursor AI for backend implementation in PHP and MySQL.
+### Frontend
+- HTML5, CSS3, and JavaScript
+- Responsive design with mobile-first approach
+- Client-side caching using service workers
+- Markdown rendering with Marked.js
+- Code syntax highlighting with Highlight.js
+
+### Backend
+- PHP-based API endpoints
+- MySQL database for data storage
+- PDF content repository organization
+- AI integration with Gemini 2 Flash Lite API
+- Session management and security features
+
+### Database Structure
+- Users table for authentication and profile management
+- Chat history table for conversation tracking
+- Saved answers table for storing important responses
+
+### Content Organization
+- Structured PDF repository:
+  - Grade-level folders (B.com, 11 CBSE, 12 CBSE)
+  - Subject folders within each grade
+  - Chapter folders within each subject
+  - Markdown files for each question/topic
+
+## Environment Support
+- Dynamic detection of local vs. production environments
+- Automatic path adjustment based on environment
+- Cross-browser compatibility
+- Optimized for both mobile and desktop devices
+
+## Performance Optimizations
+- Smart caching strategies with version-based invalidation
+- Separate user data caching to preserve sessions
+- Network-first approach for critical resources
+- Cache-first approach for static assets
+- Compression and minification of assets
+
+This modern educational platform combines the power of AI with a user-friendly interface to enhance the learning experience for students across different educational levels.
 
