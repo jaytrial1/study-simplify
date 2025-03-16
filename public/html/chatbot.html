@@ -12,22 +12,22 @@
         console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
         
         // Resource paths - choosing between local path and production path
-        const baseUrlJsPath = _isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
+        const baseUrlJsPath = _isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js?v=<?php echo time(); ?>";
         const manifestPath = _isLocalServer ? "../manifest.json" : "/public/manifest.json";
         const iconPath = _isLocalServer ? "../icons/icon-192x192.png" : "/public/icons/icon-192x192.png";
         
         // CSS paths
-        const stylesPath = _isLocalServer ? "../css/styles.css" : "/public/css/styles.css";
-        const responsePath = _isLocalServer ? "../css/response.css" : "/public/css/response.css";
-        const ansActionPath = _isLocalServer ? "../css/ans_action.css" : "/public/css/ans_action.css";
-        const toastPath = _isLocalServer ? "../css/toast.css" : "/public/css/toast.css";
+        const stylesPath = _isLocalServer ? "../css/styles.css" : "/public/css/styles.css?v=<?php echo time(); ?>";
+        const responsePath = _isLocalServer ? "../css/response.css" : "/public/css/response.css?v=<?php echo time(); ?>";
+        const ansActionPath = _isLocalServer ? "../css/ans_action.css" : "/public/css/ans_action.css?v=<?php echo time(); ?>";
+        const toastPath = _isLocalServer ? "../css/toast.css" : "/public/css/toast.css?v=<?php echo time(); ?>";
         
         // JavaScript paths
-        const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js";
-        const historySearchPath = _isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js";
-        const transitionsPath = _isLocalServer ? "../js/transitions.js" : "/public/js/transitions.js";
-        const chatHistoryPath = _isLocalServer ? "../js/chat-history.js" : "/public/js/chat-history.js";
-        const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js";
+        const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js?v=<?php echo time(); ?>";
+        const historySearchPath = _isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js?v=<?php echo time(); ?>";
+        const transitionsPath = _isLocalServer ? "../js/transitions.js" : "/public/js/transitions.js?v=<?php echo time(); ?>";
+        const chatHistoryPath = _isLocalServer ? "../js/chat-history.js" : "/public/js/chat-history.js?v=<?php echo time(); ?>";
+        const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js?v=<?php echo time(); ?>";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
@@ -162,22 +162,24 @@
                     <div class="dropdown-search">
                         <input type="text" placeholder="Search..." class="search-input">
                     </div>
-                    <div class="dropdown-section">
-                        <div class="dropdown-header">
-                            <h4>Subjects</h4>
-                            <span class="item-count">3</span>
+                    <div class="dropdown-content-wrapper">
+                        <div class="dropdown-section">
+                            <div class="dropdown-header">
+                                <h4>Subjects</h4>
+                                <span class="item-count">3</span>
+                            </div>
+                            <div class="dropdown-items subject-list">
+                                <!-- Sorted subjects will be added here dynamically -->
+                            </div>
                         </div>
-                        <div class="dropdown-items subject-list">
-                            <!-- Sorted subjects will be added here dynamically -->
-                        </div>
-                    </div>
-                    <div class="dropdown-section">
-                        <div class="dropdown-header">
-                            <h4>Chapters</h4>
-                            <span class="item-count">5</span>
-                        </div>
-                        <div class="dropdown-items chapter-list">
-                            <!-- Sorted chapters will be added here dynamically -->
+                        <div class="dropdown-section">
+                            <div class="dropdown-header">
+                                <h4>Chapters</h4>
+                                <span class="item-count">5</span>
+                            </div>
+                            <div class="dropdown-items chapter-list">
+                                <!-- Sorted chapters will be added here dynamically -->
+                            </div>
                         </div>
                     </div>
                 </div>

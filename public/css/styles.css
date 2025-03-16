@@ -2371,3 +2371,27 @@ blockquote {
         opacity: 1;
     }
 }
+
+
+.dropdown-content-wrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Update these existing styles for subject-list and chapter-list */
+.subject-list, .chapter-list {
+    max-height: none !important; /* Remove height limitation */
+    overflow-y: visible !important; /* Remove scrollability */
+    height: auto !important; /* Allow content to determine height */
+}
+
+/* Add scrollbar styling for the wrapper */
+.dropdown-content-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-content-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
