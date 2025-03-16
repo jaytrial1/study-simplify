@@ -9,34 +9,39 @@ self.addEventListener('install', event => {
       .then(cache => {
         console.log('Opened cache');
         
-        // Determine paths at runtime based on scope
-        return self.registration.scope.then(scope => {
-          const isLocalServer = 
-            scope.includes('localhost') || 
-            scope.includes('127.0.0.1') || 
-            scope.includes('192.168.') || 
-            scope.includes('10.0.');
-            
-          const basePath = isLocalServer ? './public' : '.';
+        // Get the scope directly - it's a string property, not a Promise
+        const scope = self.registration.scope;
+        
+        // Determine environment based on scope URL
+        const isLocalServer = 
+          scope.includes('localhost') || 
+          scope.includes('127.0.0.1') || 
+          scope.includes('192.168.') || 
+          scope.includes('10.0.');
           
-          const urlsToCache = [
-            `${basePath}/html/chatbot.html`,
-            `${basePath}/css/styles.css`,
-            `${basePath}/css/response.css`,
-            `${basePath}/css/ans_action.css`,
-            `${basePath}/css/toast.css`,
-            `${basePath}/js/base-url.js`,
-            `${basePath}/js/script.js`,
-            `${basePath}/js/history-search.js`,
-            `${basePath}/js/transitions.js`,
-            `${basePath}/js/chat-history.js`,
-            `${basePath}/js/answer-action-popup.js`,
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
-            'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
-          ];
-          
-          return cache.addAll(urlsToCache);
-        });
+        // Use absolute paths based on the scope
+        const rootPath = isLocalServer ? '/main/public' : '/public';
+        
+        console.log('Service Worker caching for environment:', isLocalServer ? 'local' : 'production');
+        console.log('Service Worker scope:', scope);
+        console.log('Service Worker root path:', rootPath);
+        
+        // Don't try to cache everything immediately - just the essentials
+        // This reduces the chance of installation failures
+        const essentialUrls = [
+          `${rootPath}/html/chatbot.html`,
+          `${rootPath}/css/styles.css`, 
+          `${rootPath}/js/base-url.js`
+        ];
+        
+        // Try to cache essential files only
+        console.log('Caching essential files:', essentialUrls);
+        return cache.addAll(essentialUrls)
+          .catch(error => {
+            console.error('Error caching essential files:', error);
+            // Continue installation even if caching fails
+            return Promise.resolve();
+          });
       })
   );
 });

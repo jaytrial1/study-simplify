@@ -20,14 +20,17 @@ window.isLocalServer = isLocalServer;
 window.apiBasePath = apiBasePath;
 
 // Configure service worker path based on environment
-const swPath = isLocalServer ? '/main/sw.js' : '/sw.js';
+const swPath = isLocalServer ? '/main/public/sw.js' : '/public/sw.js';
+// Set the correct scope that matches the service worker location
+const swScope = isLocalServer ? '/main/public/' : '/public/';
 console.log("Service Worker path:", swPath);
+console.log("Service Worker scope:", swScope);
 
 // Register service worker if supported
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register(swPath, {
-            scope: isLocalServer ? '/main/' : '/'
+            scope: swScope // Fixed scope to match the SW location
         }).then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
         }).catch(error => {

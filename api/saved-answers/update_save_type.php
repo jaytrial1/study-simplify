@@ -16,8 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Get input data
 $input = json_decode(file_get_contents('php://input'), true);
-$answerId = $input['answerId'] ?? null;
-$saveType = $input['saveType'] ?? null;
+
+// Accept both camelCase and snake_case parameter names
+$answerId = $input['answerId'] ?? $input['answer_id'] ?? null;
+$saveType = $input['saveType'] ?? $input['save_type'] ?? null;
 
 // Log params for debugging
 error_log("answerId: $answerId, saveType: $saveType");

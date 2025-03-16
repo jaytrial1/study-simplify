@@ -22,8 +22,13 @@ class SaveTypeHandler {
         this.dropdownOptions = document.querySelectorAll('.dropdown-content a');
         this.currentAnswerId = null;
         
-        // Initialize the handler
-        this.init();
+        // Wait for DOM to be fully loaded before initializing
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.init());
+        } else {
+            // If DOM is already loaded, initialize now
+            this.init();
+        }
     }
     
     /**
@@ -31,11 +36,24 @@ class SaveTypeHandler {
      */
     init() {
         console.log('SaveTypeHandler initialized');
+        
+        // Get the required DOM elements
+        this.dropdownBtn = document.querySelector('.save-type-dropdown .action-btn');
+        this.dropdownContent = document.querySelector('.dropdown-content');
+        this.dropdownOptions = document.querySelectorAll('.dropdown-content a');
+        
+        console.log('Found elements:', {
+            dropdownBtn: !!this.dropdownBtn,
+            dropdownContent: !!this.dropdownContent,
+            dropdownOptions: this.dropdownOptions?.length || 0
+        });
+        
         // Set up event listeners for dropdown toggle
         if (this.dropdownBtn) {
             this.dropdownBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.dropdownContent.classList.toggle('active');
+                console.log('Dropdown toggled', this.dropdownContent.classList.contains('active'));
             });
             
             // Close dropdown when clicking elsewhere
@@ -47,26 +65,43 @@ class SaveTypeHandler {
             this.dropdownContent.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
+        } else {
+            console.error('Save type dropdown button not found. Cannot initialize dropdown.');
         }
         
         // Set up event listeners for dropdown options
-        this.dropdownOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.preventDefault();
-                const newType = e.target.textContent;
-                const dataType = e.target.getAttribute('data-type');
-                
-                console.log('Option clicked:', newType, 'data-type:', dataType);
-                
-                if (this.currentAnswerId) {
-                    // Use the data-type attribute if available (more reliable)
-                    this.updateSaveType(this.currentAnswerId, newType, dataType);
-                } else {
-                    console.error('No answer ID set. Cannot update save type.');
-                    this.showToast('Error: No answer selected', true);
-                }
+        if (this.dropdownOptions && this.dropdownOptions.length > 0) {
+            this.dropdownOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newType = e.target.textContent;
+                    const dataType = e.target.getAttribute('data-type');
+                    
+                    console.log('Option clicked:', newType, 'data-type:', dataType);
+                    console.log('Current answer ID when option clicked:', this.currentAnswerId);
+                    
+                    if (this.currentAnswerId) {
+                        // Use the data-type attribute if available (more reliable)
+                        this.updateSaveType(this.currentAnswerId, newType, dataType);
+                    } else {
+                        // Try to get answer ID from save button as fallback
+                        const saveBtn = document.querySelector('.save-btn');
+                        const fallbackId = saveBtn?.getAttribute('data-answer-id');
+                        
+                        if (fallbackId) {
+                            console.log('Using fallback answer ID from save button:', fallbackId);
+                            this.currentAnswerId = fallbackId;
+                            this.updateSaveType(fallbackId, newType, dataType);
+                        } else {
+                            console.error('No answer ID set or found. Cannot update save type.');
+                            this.showToast('Error: No answer selected', true);
+                        }
+                    }
+                });
             });
-        });
+        } else {
+            console.error('Save type dropdown options not found. Cannot initialize dropdown items.');
+        }
     }
     
     /**
@@ -111,22 +146,50 @@ class SaveTypeHandler {
         try {
             console.log('Updating save type for answer:', answerId);
             
+            // Check if answer ID is valid
+            if (!answerId) {
+                console.error('Missing answer ID. Cannot update save type.');
+                this.showToast('Error: Missing answer ID', true);
+                return;
+            }
+            
+            // Make sure answerId is a number
+            const id = parseInt(answerId, 10);
+            if (isNaN(id)) {
+                console.error('Invalid answer ID:', answerId);
+                this.showToast('Error: Invalid answer ID', true);
+                return;
+            }
+            
             // Convert display type to database type - prefer data-type if available
             const saveType = dataType || (newType === 'Question Related' ? 'question_related' : 'Best response');
             
             console.log('Save type to send:', saveType);
             
-            // Send the update request - only send answerId and saveType
+            // Create the payload
+            const payload = {
+                answer_id: id,
+                save_type: saveType
+            };
+            
+            console.log('Sending payload:', payload);
+            
+            // Send the update request
             const response = await fetch(`${this.apiBasePath}/api/saved-answers/update_save_type.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    answer_id: parseInt(answerId),
-                    save_type: saveType
-                })
+                body: JSON.stringify(payload)
             });
+            
+            // Check if the response is OK
+            if (!response.ok) {
+                console.error('Server response not OK:', response.status, response.statusText);
+                const errorText = await response.text();
+                console.error('Error response text:', errorText);
+                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            }
             
             const data = await response.json();
             console.log('Response:', data);
@@ -192,5 +255,10 @@ class SaveTypeHandler {
 // Initialize the save type handler when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing SaveTypeHandler');
-    window.saveTypeHandler = new SaveTypeHandler();
+    if (!window.saveTypeHandler) {
+        window.saveTypeHandler = new SaveTypeHandler();
+        console.log('SaveTypeHandler initialized globally');
+    } else {
+        console.log('SaveTypeHandler already initialized');
+    }
 }); 
