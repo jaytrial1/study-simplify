@@ -1,0 +1,9 @@
+# Matrix Organization
+
+## Meaning :
+Matrix organization is a modern kind of organization, which has two different types of structures. One is the simple kind of structure, which forms the part of decision making and the second one is the technical problems solution based, which is called Project structure. The combination of both this results in Matrix organization. Hence matrix organization is a modern organization type which is involving work based and project based peculiarities. In this type of organization, the specialized work needs are given benefits. At the same time, project management benefits are also obtained. It is multi faced structure.
+## Design :
+In Matrix organization we find the combination of work based and project based organization. In this type of organization, each project manager is given different type of work responsibilities. As many Projects Managers are appointed as per the number of projects. The responsibility of the project manager is to successfully complete the project assigned to him. He is also responsible to complete it on time. The experts from different staff members are obtained from different work areas. Such kind of selected experts are divided into different groups. For example, computer expert, research expert, Manufacture and Creation special expert, technical expert, etc. These kind of experts are obtained from different work groups. Once when the work is done, they are sent to their respective work areas to which they belonged.
+
+
+From the above diagram it is clear that in Matrix organization, the flow of authorities is double fold. For example, the General manager from upper level, passes on the the project heads to lower level in Linear manner. It is also mentioned here that all the project heads function independently. They obtain experts needed by them from different work groups or areas. This type of organisation is favareble where it is necessary to combined technology with functions.

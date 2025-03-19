@@ -1,14 +1,27 @@
 // Add this function at the top of the file
 function preprocessMarkdown(markdown) {
+    // Ensure input is a string
     if (!markdown) return '';
+    if (typeof markdown !== 'string') {
+        try {
+            markdown = String(markdown);
+        } catch (e) {
+            console.error('Failed to convert markdown to string:', e);
+            return '';
+        }
+    }
     
     // If the content starts with triple backticks followed by markdown, remove them
     let processed = markdown;
     
     // Handle the case where the entire content is a fenced code block
-    const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
-    if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
-        return fullBlockMatch[2];
+    try {
+        const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+        if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+            return fullBlockMatch[2];
+        }
+    } catch (e) {
+        console.error('Error processing markdown:', e);
     }
     
     return processed;

@@ -9,7 +9,7 @@ Your task is to CONDENSE the given material into a CLEAR, MEMORABLE format that 
 Key requirements:
 - Keep it brief but comprehensive according to CBSE 11th standards
 - Highlight main keywords (in **bold**)
-- Include 1-2 memory tips specifically helpful for 11th CBSE students
+- Include 1-2 memory tips specifically helpful for the students (Only if you feel is required)
 - Use bullet points for clarity
 - Follow CBSE 11th grade short-answer format
 

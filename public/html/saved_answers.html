@@ -67,10 +67,13 @@
             
             // Override the code block renderer
             renderer.code = function(code, language) {
+                // Ensure code is a string
+                const codeStr = typeof code === 'string' ? code : String(code || '');
+                
                 // Handle triple backtick fences within the content
-                if (code.startsWith('```') && (code.match(/```/g) || []).length >= 2) {
+                if (codeStr.startsWith('```') && (codeStr.match(/```/g) || []).length >= 2) {
                     // Extract just the code contents without the backticks
-                    const codeMatch = code.match(/```(?:(\w+)\n)?([\s\S]*?)```/);
+                    const codeMatch = codeStr.match(/```(?:(\w+)\n)?([\s\S]*?)```/);
                     if (codeMatch) {
                         const extractedLang = codeMatch[1] || language || 'plaintext';
                         const extractedCode = codeMatch[2].trim();
@@ -90,12 +93,12 @@
                 // Normal code highlighting
                 let highlighted;
                 try {
-                    highlighted = hljs.highlight(code, { 
+                    highlighted = hljs.highlight(codeStr, { 
                         language: language || 'plaintext'
                     }).value;
                 } catch (e) {
                     console.warn('Language not supported:', language);
-                    highlighted = hljs.highlight(code, { language: 'plaintext' }).value;
+                    highlighted = hljs.highlight(codeStr, { language: 'plaintext' }).value;
                 }
                 
                 return `<pre><code class="hljs language-${language || 'plaintext'}">${highlighted}</code></pre>`;

@@ -1,0 +1,4 @@
+# Qualities of a Good Leader
+(1) Physical Qualities : Good health is a prime requisite for an effective leader. Other than this, physical structure, attractive physique, cheerful nature inspires the subordinates.
+(2) Intellectual Qualities : A good leader should be intelligent. Intellectual qualities include decision making power, mental ability, grasping power, scientific approach, curiosity, reasoning ability, foresight as well as different skills like elocution, calculative skill, knowledge of inter-relation, human skills etc.
+(3) Psychological Qualities : Pshychological qualities like pleasant personality, zeal, courage, sense of co-operation, tact, interest in work, affection, patience etc. are included.

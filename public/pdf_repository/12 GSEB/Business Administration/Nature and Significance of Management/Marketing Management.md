@@ -1,0 +1,11 @@
+# Marketing Management
+In a broad sense, marketing management is the activity of providing goods or services from producers to customers. Marketing management includes exchange of goods with money as well as market research, distributive method, sales promotion, storage, insurance, etc.
+
+Marketing management is such a process which decides the necessity of customers. It is converted into goods or services and then these goods or services are finally made available to the customer, consumer or user. Thus it can satisfy the needs of a particular customer or group of such people. It gives importance to optimum utilisation of resources and profitability of the organisation. Marketing management aims at creating demand for goods or services. The main elements are goods or services, physical distribution policy, price policy, increase in sale, packaging, etc.
+
+## Functions : 
+
+(i) Product or Proudct-mix : The decision regarding development of new product or existing product includes appearance, colour, size, shape, weight, print, packing, guarantee of work, after slaes services, variety of product, etc.
+(ii) Price : In modern times, a customer expects availability of better quality of goods at reasonable rate. Therefore utmost care should be taken while deciding the price of the product. The price decision includes sales policy, credit policy, policy regarding discount, wholesale or retail sale and also commission to mediators, etc. are also considered.
+(iii) Distribution : Distribution-mix include decisions regarding various ways of selling like direct selling, through the wholeseller, retailers agents, as well as problems related to transportation, etc. Distribution-mix is related to the size and scope of a business unit.
+(iv) Promotion : Promotion aims at remarkable increase in sale. It includes the matters like advertisement, publicity, selling through salesmen ways and means to attract customers and traders etc. Though promotion mix is expensive, it leads to increase in sale, which results into higher profitability.

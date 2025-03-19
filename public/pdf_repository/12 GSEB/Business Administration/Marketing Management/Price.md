@@ -1,0 +1,3 @@
+# Price
+Price determination of a product is most important for any business unit. Price is very important for both the buyers and sellers in the market. Demand for a product is inversely related to the price of that product. When price of the product rises, demand tends to fall and when price fall the demand rises. Price determination process of any business unit determines the market situation. A firm's income and profit depends on the price of product. Every firm has to fix reasonable price for the product.
+Concept : Price refers to the value paid by the consumer for the physical, economic, social and psychological satisfaction received from the product. Price is the economic value of a product, which is generally depicted in the form of money.

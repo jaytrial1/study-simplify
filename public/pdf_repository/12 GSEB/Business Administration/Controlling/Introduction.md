@@ -1,0 +1,3 @@
+# Introduction
+
+A business enterprise is established for the achievement of specific objectives. Objectives can be for long term or short term. For the achievement of these objectives, various activities are planned. In order to implement these plans an organization is established. But, however perfectly or carefully planning may be done or an ideal organization may be established, many obstacles may arise while implementing the plans. The function of controlling is to remove these obstacles and to see that the work is performed exactly in conformity with the plan. Controlling is the process of checking the performance of the staff, to find out the deviations and remove the deviations by necessary corrective measures for the implementation of the plan.

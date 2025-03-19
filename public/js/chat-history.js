@@ -1,14 +1,27 @@
 // Add this function before the ChatHistoryManager class declaration
 function preprocessMarkdown(markdown) {
+    // Ensure input is a string
     if (!markdown) return '';
+    if (typeof markdown !== 'string') {
+        try {
+            markdown = String(markdown);
+        } catch (e) {
+            console.error('Failed to convert markdown to string:', e);
+            return '';
+        }
+    }
     
     // If the content starts with triple backticks followed by markdown, remove them
     let processed = markdown;
     
     // Handle the case where the entire content is a fenced code block
-    const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
-    if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
-        return fullBlockMatch[2];
+    try {
+        const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+        if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+            return fullBlockMatch[2];
+        }
+    } catch (e) {
+        console.error('Error processing markdown:', e);
     }
     
     return processed;
@@ -391,8 +404,23 @@ class ChatHistoryManager {
                     messageDiv.className = `response ${sender}-response`;
                     
                     if (sender === 'bot') {
+                        // Handle non-string message content
+                        let messageContent = msg.message;
+                        if (messageContent === null || messageContent === undefined) {
+                            messageContent = "Error: Empty response from server";
+                        } else if (typeof messageContent === 'object') {
+                            try {
+                                // Try to convert it to JSON string first
+                                messageContent = JSON.stringify(messageContent);
+                                console.warn('Message was an object, converted to:', messageContent);
+                            } catch (e) {
+                                messageContent = "Error: Received object instead of text";
+                                console.error('Failed to stringify object message:', e);
+                            }
+                        }
+                        
                         // Process markdown content first
-                        const processedMarkdown = preprocessMarkdown(msg.message);
+                        const processedMarkdown = preprocessMarkdown(messageContent);
                         
                         // Convert Markdown to HTML using marked.js with failsafe
                         let formattedContent = '';

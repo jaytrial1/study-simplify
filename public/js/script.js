@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add alert if no question is selected
             if (window.selectedQuestions.size === 0) {  // Use window.selectedQuestions
-                showError('Please select a question before sending a message.');
+                showError('Please select a topic by typing "/" before sending a message.');
                 return;
             }
 
@@ -391,8 +391,25 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Process each response
             queryData.responses.forEach(response => {
+                // Check if response.text is an object and convert it properly
+                let responseText = response.text;
+                
+                // Handle case where response.text is an object
+                if (responseText === null || responseText === undefined) {
+                    responseText = "Error: Empty response from server";
+                } else if (typeof responseText === 'object') {
+                    try {
+                        // Try to convert it to JSON string first
+                        responseText = JSON.stringify(responseText);
+                        console.warn('Response was an object, converted to:', responseText);
+                    } catch (e) {
+                        responseText = "Error: Received object instead of text";
+                        console.error('Failed to stringify object response:', e);
+                    }
+                }
+                
                 // Update loading message with AI response
-                updateMessage(loadingMessageId, response.text);
+                updateMessage(loadingMessageId, responseText);
                 
                 // Apply typewriter effect to the updated message
                 setTimeout(() => {
@@ -405,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 50);
                 
                 // Store the full AI response in the global variable
-                lastAIResponse = response.text;
+                lastAIResponse = responseText;
                 console.log('Full AI Response:', lastAIResponse);
             });
             
@@ -417,15 +434,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add this new function after the existing functions
     function preprocessMarkdown(markdown) {
+        // Ensure input is a string
         if (!markdown) return '';
+        if (typeof markdown !== 'string') {
+            try {
+                markdown = String(markdown);
+            } catch (e) {
+                console.error('Failed to convert markdown to string:', e);
+                return '';
+            }
+        }
         
         // If the content starts with triple backticks followed by markdown, remove them
         let processed = markdown;
         
         // Handle the case where the entire content is a fenced code block
-        const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
-        if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
-            return fullBlockMatch[2];
+        try {
+            const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
+            if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
+                return fullBlockMatch[2];
+            }
+        } catch (e) {
+            console.error('Error processing markdown:', e);
         }
         
         return processed;
