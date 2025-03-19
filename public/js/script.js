@@ -411,14 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update loading message with AI response
                 updateMessage(loadingMessageId, responseText);
                 
-                // Apply typewriter effect to the updated message
+                // Process code blocks immediately instead of waiting for typing effect
                 setTimeout(() => {
-                    applyTypewriterEffect(loadingMessageId);
-                    
-                    // Process code blocks after the typewriter effect is applied
-                    setTimeout(() => {
-                        enhanceCodeBlocks(loadingMessageId);
-                    }, 100);
+                    enhanceCodeBlocks(loadingMessageId);
                 }, 50);
                 
                 // Store the full AI response in the global variable
@@ -464,6 +459,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to update an existing message
     function updateMessage(messageElement, newText) {
         if (messageElement) {
+            // Remove thinking class when updating with real content
+            messageElement.classList.remove('thinking');
+            
             // Process markdown content to clean up any issues before rendering
             const processedMarkdown = preprocessMarkdown(newText);
             
@@ -484,13 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update the content
             messageElement.querySelector('.chat-content').innerHTML = formattedContent;
             
-            // Remove loading indicator if present
-            const loadingIndicator = messageElement.querySelector('.typing-indicator');
-            if (loadingIndicator) {
-                loadingIndicator.remove();
-            }
-            
-            // Ensure message has proper classes for animation
+            // Ensure message has proper classes
             messageElement.classList.add('bot-message');
             
             // Find the content container and ensure it has the formatted-content class
@@ -510,14 +502,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (type === 'bot') {
             if (isLoading) {
-                // Show spinner animation
+                // Add 'thinking' class for animated effects
+                messageDiv.classList.add('thinking');
+                
+                // Show an animated "Thinking..." message that perfectly matches the dark UI
                 messageDiv.innerHTML = `
                     <div class="bot-icon">
                         <i class="fas fa-robot"></i>
                     </div>
                     <div class="chat-content formatted-content">
-                        <div class="typing-indicator">
-                            <span></span><span></span><span></span>
+                        <div class="thinking-animation">
+                            <span>Thinking</span>
+                            <span class="dot-animation">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </span>
                         </div>
                     </div>
                 `;
@@ -553,9 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         messagesContainer.appendChild(messageDiv);
+        
+        // Auto-scroll to bottom (with smooth animation)
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        return messageDiv; // Return message element to update later
+        
+        // Return the element for later reference/updates
+        return messageDiv;
     }
     
     //--------------------------------------------------------------------------------------------------------------------
@@ -999,182 +1002,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             });
         });
-    }
-
-    // Apply a fast typewriter effect to the AI response - more like ChatGPT
-    function applyTypewriterEffect(messageElement) {
-        if (!messageElement || !messageElement.classList.contains('bot-message')) return;
-        
-        const contentDiv = messageElement.querySelector('.chat-content');
-        if (!contentDiv) return;
-        
-        // Store the original HTML
-        const originalHTML = contentDiv.innerHTML;
-        
-        // Extract all text content by parsing HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = originalHTML;
-        
-        // Hide the original content
-        contentDiv.innerHTML = '';
-        
-        // Add the cursor element
-        const cursor = document.createElement('span');
-        cursor.className = 'cursor-blink';
-        contentDiv.appendChild(cursor);
-        
-        // Track if user has manually scrolled
-        let userHasScrolled = false;
-        const scrollContainer = messageElement.closest('.chat-messages');
-        
-        // Add scroll event listener to detect manual scrolling
-        const scrollHandler = () => {
-            // Check if user has scrolled to the bottom
-            if (scrollContainer) {
-                const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 20; // 20px tolerance
-                
-                // If at bottom, enable auto-scroll, otherwise disable it
-                userHasScrolled = !isAtBottom;
-            } else {
-                userHasScrolled = true;
-            }
-        };
-        
-        if (scrollContainer) {
-            scrollContainer.addEventListener('scroll', scrollHandler, { passive: true });
-            scrollContainer.addEventListener('wheel', scrollHandler, { passive: true });
-            scrollContainer.addEventListener('touchmove', scrollHandler, { passive: true });
-            // Touch start event to capture finger scrolling
-            scrollContainer.addEventListener('touchstart', () => {
-                // Don't reset the flag here, just detect the start of touch interaction
-            }, { passive: true });
-        }
-        
-        // Process the HTML to maintain formatting but add typing animation
-        const processNodeWithTyping = (node, parentElement) => {
-            if (node.nodeType === Node.TEXT_NODE) {
-                // Skip empty text nodes
-                if (!node.textContent.trim()) {
-                    parentElement.appendChild(node.cloneNode(true));
-                    return Promise.resolve();
-                }
-                
-                // Animation for text nodes
-                return new Promise(resolve => {
-                    const text = node.textContent;
-                    const textContainer = document.createElement('span');
-                    textContainer.className = 'typewriter-animation';
-                    textContainer.setAttribute('data-animation-element', 'true'); // Add a data attribute for easier identification
-                    parentElement.appendChild(textContainer);
-                    
-                    // Remove cursor during text typing
-                    if (cursor.parentNode) {
-                        cursor.parentNode.removeChild(cursor);
-                    }
-                    
-                    // Type the text quickly - much faster than ChatGPT but still visible
-                    let charIndex = 0;
-                    const textLength = text.length;
-                    
-                    // Function to add characters with dynamically calculated delay
-                    const typeNextBatch = () => {
-                        // Process multiple characters at once for speed
-                        const charsPerBatch = Math.max(1, Math.floor(textLength / 50)); // Dynamic batch size
-                        const endIndex = Math.min(charIndex + charsPerBatch, textLength);
-                        
-                        // Add a batch of characters
-                        textContainer.textContent += text.substring(charIndex, endIndex);
-                        charIndex = endIndex;
-                        
-                        // Auto-scroll only if user hasn't manually scrolled
-                        if (scrollContainer && !userHasScrolled) {
-                            scrollContainer.scrollTop = scrollContainer.scrollHeight;
-                        }
-                        
-                        if (charIndex < textLength) {
-                            // Calculate dynamic delay - faster for longer texts
-                            const baseDelay = 5; // Base milliseconds between batches (very fast)
-                            const dynamicDelay = Math.max(1, baseDelay - (textLength / 1000)); // Reduce delay for longer texts
-                            
-                            setTimeout(typeNextBatch, dynamicDelay);
-                        } else {
-                            // Finished this text node
-                            parentElement.appendChild(cursor);
-                            resolve();
-                        }
-                    };
-                    
-                    // Start typing
-                    typeNextBatch();
-                });
-            } else if (node.nodeType === Node.ELEMENT_NODE) {
-                // Clone the element without its children
-                const newElement = document.createElement(node.tagName);
-                
-                // Copy attributes
-                for (let i = 0; i < node.attributes.length; i++) {
-                    const attr = node.attributes[i];
-                    newElement.setAttribute(attr.name, attr.value);
-                }
-                
-                // Add to parent
-                parentElement.appendChild(newElement);
-                
-                // If it's a code block, handle differently (no typing animation for code)
-                if (node.tagName === 'PRE' || (node.tagName === 'CODE')) {
-                    newElement.innerHTML = node.innerHTML;
-                    return Promise.resolve();
-                }
-                
-                // Process children sequentially with reduced delay
-                const processChildren = async () => {
-                    for (let i = 0; i < node.childNodes.length; i++) {
-                        await processNodeWithTyping(node.childNodes[i], newElement);
-                    }
-                };
-                
-                return processChildren();
-            } else {
-                // Other node types (comments, etc.)
-                parentElement.appendChild(node.cloneNode(true));
-                return Promise.resolve();
-            }
-        };
-        
-        // Start processing the entire content
-        messageElement.classList.add('bot-typing-active');
-        
-        // Process all nodes in the original content
-        const processContent = async () => {
-            for (let i = 0; i < tempDiv.childNodes.length; i++) {
-                await processNodeWithTyping(tempDiv.childNodes[i], contentDiv);
-            }
-            
-            // Animation complete - clean up
-            messageElement.classList.remove('bot-typing-active');
-            
-            // Remove cursor when done
-            if (cursor.parentNode) {
-                setTimeout(() => {
-                    cursor.parentNode.removeChild(cursor);
-                }, 500);
-            }
-            
-            // Remove scroll listeners
-            if (scrollContainer) {
-                scrollContainer.removeEventListener('scroll', scrollHandler);
-                scrollContainer.removeEventListener('wheel', scrollHandler);
-                scrollContainer.removeEventListener('touchmove', scrollHandler);
-            }
-            
-            // Enhance any code blocks
-            setTimeout(() => {
-                enhanceCodeBlocks(messageElement);
-            }, 100);
-        };
-        
-        // Begin the animation
-        processContent();
     }
 
     // Function to enhance code blocks

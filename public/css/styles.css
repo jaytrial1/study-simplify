@@ -2106,50 +2106,6 @@ blockquote {
     margin-top: 4px;
 }
 
-/* -----------------Typing Loading Indicator ----------------- */
-.typing-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 12px 16px;
-    background: rgba(65, 102, 213, 0.08);
-    border-radius: 12px;
-    width: fit-content;
-    margin: 12px 0;
-}
-
-.typing-indicator span {
-    height: 8px;
-    width: 8px;
-    background: linear-gradient(to bottom, #4166d5, #7e8ce0);
-    border-radius: 50%;
-    display: inline-block;
-    animation: typingBounce 1.4s infinite ease-in-out both;
-}
-
-.typing-indicator span:nth-child(1) {
-    animation-delay: 0s;
-}
-
-.typing-indicator span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes typingBounce {
-    0%, 80%, 100% { 
-        transform: translateY(0);
-        opacity: 0.6;
-    }
-    40% { 
-        transform: translateY(-8px);
-        opacity: 1;
-    }
-}
-
 /* User message submit animation */
 .user-message {
     animation: messageSubmit 0.4s cubic-bezier(0.17, 0.67, 0.48, 1.13);
@@ -2170,16 +2126,6 @@ blockquote {
 /* AI Response Animations */
 .bot-message {
     animation: messageAppear 0.5s ease-out;
-}
-
-/* Typewriter effect for bot response */
-.typewriter-text {
-    display: inline-block;
-    overflow: hidden;
-    border-right: 2px solid transparent;
-    white-space: normal;
-    animation: typing 0.05s steps(1, end);
-    max-width: 100%;
 }
 
 /* Paragraph-by-paragraph fade-in */
@@ -2205,7 +2151,23 @@ blockquote {
 
 /* Apply consistent styling to chat messages format */
 .chat-content {
-    line-height: 1.7; /* Match the line height */
+    transition: all 0.25s ease;
+    line-height: 1.5;
+}
+
+.thinking .chat-content {
+    background-color: transparent;
+    opacity: 1;
+    padding: 0;
+    margin-left: 6px;
+}
+
+.response.bot-response {
+    transition: all 0.25s ease-in-out;
+}
+
+.response.bot-response.thinking {
+    background-color: transparent;
 }
 
 /* Ensure consistent paragraph spacing in all contexts */
@@ -2249,43 +2211,6 @@ blockquote {
     line-height: 1.7;
 }
 
-/* AI Response Typing Animation */
-.typewriter-animation {
-    display: inline-block;
-    overflow: hidden;
-    white-space: normal;
-    position: relative;
-}
-
-/* Cursor animation for typewriter effect */
-.cursor-blink {
-    display: inline-block;
-    margin-left: 2px;
-    width: 2px;
-    height: 18px;
-    background-color: #4166d5;
-    animation: cursorBlink 0.8s infinite;
-    vertical-align: middle;
-}
-
-@keyframes cursorBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-/* Speed up the typewriter effect */
-@keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-}
-
-/* Hide content until its revealed by animation */
-.typing-hidden {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-}
-
 /* Fast entry animation for messages */
 @keyframes fastEntry {
     from {
@@ -2296,11 +2221,6 @@ blockquote {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Applied to the container during animation */
-.bot-typing-active {
-    position: relative;
 }
 
 /* PWA Splash Screen */
@@ -2395,3 +2315,144 @@ blockquote {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 3px;
 }
+
+/* Thinking animation styles */
+.thinking-animation {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: #2a2a2a;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #4166d5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: fit-content;
+    margin: 2px 0;
+    animation: thinking-box-animation 3s infinite ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle glow effect behind the thinking animation */
+.thinking-animation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(65, 102, 213, 0.1), transparent);
+    transform: translateX(-100%);
+    animation: shine-effect 2s infinite;
+}
+
+@keyframes shine-effect {
+    0% {
+        transform: translateX(-100%);
+    }
+    50%, 100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes thinking-box-animation {
+    0% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(65, 102, 213, 0.1);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@keyframes pulse-icon {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(65, 102, 213, 0.7);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+        box-shadow: 0 0 0 4px rgba(65, 102, 213, 0);
+    }
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(65, 102, 213, 0);
+    }
+}
+
+.dot-animation {
+    display: inline-flex;
+    margin-left: 4px;
+    animation: subtle-bounce 2s infinite ease-in-out;
+}
+
+@keyframes subtle-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-1px);
+    }
+}
+
+.dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #4166d5;
+    margin: 0 2px;
+    animation: thinking-dots 1.4s infinite;
+    opacity: 0;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes thinking-dots {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+    40% {
+        opacity: 1;
+        transform: translateY(-1px);
+    }
+    80%, 100% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+}
+
+/* Ensure the bot icon in thinking state has correct styling */
+.bot-response.thinking .bot-icon {
+    background-color: #4166d5;
+    color: white;
+    animation: pulse-icon 2s infinite ease-in-out;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(65, 102, 213, 0.5);
+}
+
+/* Redesigned thinking animation to match the dark UI perfectly */
