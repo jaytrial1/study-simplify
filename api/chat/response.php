@@ -81,9 +81,12 @@ try {
         'metadata' => [
             'question' => $data['questions'],
             'answerType' => $data['answerType'],
-            'extractionInfo' => [
-                'pages' => $result['pages'],
-                'size' => $result['size']
+            'extractionInfo' => isset($result) ? [
+                'pages' => $result['pages'] ?? 0,
+                'size' => $result['size'] ?? 0
+            ] : [
+                'pages' => 0,
+                'size' => 0
             ]
         ]
     ]);

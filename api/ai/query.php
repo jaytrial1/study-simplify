@@ -63,7 +63,8 @@ try {
         
         // Get AI response with chat history context
         $aiResponse = $aiHandler->callGeminiAPI(
-            $isNewSession ? $prompt : [
+            $isNewSession ? $prompt : 
+            ($aiHandler->model === 'gemini' ? [
                 'messages' => array_merge(
                     array_map(function($msg) {
                         return [
@@ -78,7 +79,7 @@ try {
                         ]
                     ]
                 )
-            ]
+            ] : $aiHandler->createContinuationPrompt($previousMessages, $data['userPrompt']))
         );
         
         // Save messages to chat history

@@ -93,15 +93,21 @@ if ('serviceWorker' in navigator) {
         }).then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
             
-            // Check for updates immediately
-            updateServiceWorker(registration);
-            
-            // Check for updates regularly
-            setInterval(() => {
+            // Check for updates only when explicitly requested
+            // This prevents automatic reloads
+            window.checkForUpdates = () => {
                 registration.update()
-                    .then(() => console.log('Checked for service worker updates'))
+                    .then(() => {
+                        console.log('Checked for service worker updates');
+                        // Only refresh if there's a new version
+                        if (registration.waiting) {
+                            if (confirm('A new version is available. Would you like to update now?')) {
+                                registration.waiting.postMessage({ action: 'skipWaiting' });
+                            }
+                        }
+                    })
                     .catch(err => console.error('Error checking for updates:', err));
-            }, 60 * 60 * 1000); // Check once per hour
+            };
             
         }).catch(error => {
             console.error('Service Worker registration failed:', error);

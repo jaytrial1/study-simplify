@@ -187,15 +187,17 @@ self.addEventListener('activate', event => {
       );
     })
     .then(() => {
-      // Claim any clients immediately, so the new service worker takes over
-      return self.clients.claim();
+      // Don't automatically claim clients
+      // This prevents automatic page takeover
+      return Promise.resolve();
     })
   );
-}); 
+});
 
 // Add a message event listener to handle manual updates
 self.addEventListener('message', event => {
   if (event.data.action === 'skipWaiting') {
+    // Only skip waiting if explicitly requested
     self.skipWaiting();
   }
 }); 
