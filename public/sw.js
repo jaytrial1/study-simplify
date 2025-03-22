@@ -1,5 +1,7 @@
 // Service Worker for ChatBot Study Assistant
-const CACHE_VERSION = Date.now(); // Dynamic cache version based on timestamp
+// Use a more stable cache version that doesn't change on every load
+// This prevents constant cache invalidation
+const CACHE_VERSION = '1.0.0'; // Replace dynamic timestamp with stable version
 const CACHE_NAME = `study-assistant-v1-${CACHE_VERSION}`;
 const USER_DATA_CACHE_NAME = 'study-assistant-user-data'; // Separate cache for user data
 
@@ -78,8 +80,9 @@ function addCacheBustingParam(url) {
     if (urlObj.origin !== location.origin) {
       return url;
     }
-    // Add cache-busting for HTML, JS, CSS, and PHP files
-    if (urlObj.pathname.match(/\.(html|js|css|php)$/)) {
+    // Add cache-busting for HTML and PHP files only
+    // Skip JS and CSS to prevent flash of unstyled content
+    if (urlObj.pathname.match(/\.(html|php)$/)) {
       urlObj.searchParams.set('_v', CACHE_VERSION);
       return urlObj.href;
     }
@@ -173,6 +176,16 @@ self.addEventListener('fetch', event => {
 
 // Activate event - clean up old caches and claim clients
 self.addEventListener('activate', event => {
+  // Don't automatically clean up caches on activation
+  // Only clean up when explicitly requested
+  // This prevents unexpected cache clearing
+  
+  // Don't automatically claim clients
+  // This prevents automatic page takeover
+  console.log('Service worker activated but not claiming clients or clearing caches');
+  
+  // The following code is disabled to prevent automatic updates:
+  /*
   event.waitUntil(
     // Clean up old caches except user data
     caches.keys().then(cacheNames => {
@@ -192,6 +205,7 @@ self.addEventListener('activate', event => {
       return Promise.resolve();
     })
   );
+  */
 });
 
 // Add a message event listener to handle manual updates

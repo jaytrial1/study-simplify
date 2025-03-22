@@ -36,6 +36,12 @@ if ('serviceWorker' in navigator) {
         // Add a timestamp/version parameter to force refresh
         const cacheBuster = `?v=${window.appVersion}`;
         
+        console.log('Content refresh requested with version:', window.appVersion);
+        
+        // Don't immediately refresh - wait for next user navigation/action
+        // This prevents the flash of unstyled content
+        return; // Early return to disable automatic refreshing
+        
         // Refresh key assets
         const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
         cssLinks.forEach(link => {
@@ -79,8 +85,10 @@ if ('serviceWorker' in navigator) {
     
     // Handle controller change (new service worker activated)
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('New service worker activated, refreshing content');
-        refreshContent();
+        console.log('New service worker activated');
+        // Don't automatically refresh content - this causes the flash of unstyled content
+        // Instead, let the user refresh the page manually to get the new version
+        // refreshContent();
     });
     
     // Register service worker
@@ -92,6 +100,33 @@ if ('serviceWorker' in navigator) {
             scope: swScope
         }).then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
+            
+            // Store registration globally for later use
+            window.swRegistration = registration;
+            
+            // Check for updates only when the page is refreshed
+            // This is the recommended way to get updates without causing flashes
+            let isPageRefresh = false;
+            
+            // Modern method (supports modern browsers)
+            if (performance.getEntriesByType && performance.getEntriesByType('navigation').length > 0) {
+                const navEntry = performance.getEntriesByType('navigation')[0];
+                isPageRefresh = navEntry.type === 'reload';
+            } 
+            // Legacy method (for older browsers)
+            else if (performance.navigation && performance.navigation.type === 1) {
+                isPageRefresh = true;
+            }
+            
+            if (isPageRefresh) {
+                // This is a page refresh
+                console.log('Page was refreshed - checking for updates');
+                registration.update()
+                    .then(() => {
+                        console.log('Checked for updates on page refresh');
+                    })
+                    .catch(err => console.error('Error checking for updates:', err));
+            }
             
             // Check for updates only when explicitly requested
             // This prevents automatic reloads
