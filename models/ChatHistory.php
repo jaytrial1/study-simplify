@@ -61,8 +61,24 @@ class ChatHistory {
                 return false;
             }
             
+            // Ensure proper UTF-8 encoding of the conversation JSON
+            $conversationJson = $row['conversation'];
+            
+            // Make sure the JSON is valid UTF-8
+            if (!mb_check_encoding($conversationJson, 'UTF-8')) {
+                $conversationJson = mb_convert_encoding($conversationJson, 'UTF-8', 'auto');
+                error_log("Converted existing conversation JSON to UTF-8");
+            }
+            
             // Add new message
-            $conversation = json_decode($row['conversation'], true);
+            $conversation = json_decode($conversationJson, true);
+            
+            // Check if json_decode failed
+            if ($conversation === null && json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Error decoding existing conversation: " . json_last_error_msg());
+                // Initialize with empty array if can't decode
+                $conversation = [];
+            }
             
             // Check for duplicate message
             $isDuplicate = false;
@@ -75,14 +91,27 @@ class ChatHistory {
             
             // Only add if not a duplicate
             if (!$isDuplicate) {
+                // Ensure the message is valid UTF-8
+                if (!mb_check_encoding($message, 'UTF-8')) {
+                    $message = mb_convert_encoding($message, 'UTF-8', 'auto');
+                    error_log("Converted message to UTF-8");
+                }
+                
                 $conversation[] = [
                     'sender' => $sender,
                     'message' => $message,
                     'timestamp' => date('Y-m-d H:i:s')
                 ];
                 
-                // Update conversation
-                $conversationJson = json_encode($conversation);
+                // Update conversation with proper encoding for Unicode characters
+                $conversationJson = json_encode($conversation, JSON_UNESCAPED_UNICODE);
+                
+                // Check if json_encode failed
+                if ($conversationJson === false) {
+                    error_log("Error encoding conversation: " . json_last_error_msg());
+                    return false;
+                }
+                
                 $sql = "UPDATE chat_history SET conversation = ? WHERE id = ?";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bind_param("si", $conversationJson, $sessionId);
@@ -155,8 +184,26 @@ class ChatHistory {
             $result = $stmt->get_result();
             
             if ($row = $result->fetch_assoc()) {
-                $messages = json_decode($row['conversation'], true);
-                error_log("Retrieved messages: " . json_encode($messages)); // Debug log
+                // Ensure proper UTF-8 encoding of the conversation JSON
+                $conversationJson = $row['conversation'];
+                
+                // Make sure the JSON is valid UTF-8
+                if (!mb_check_encoding($conversationJson, 'UTF-8')) {
+                    $conversationJson = mb_convert_encoding($conversationJson, 'UTF-8', 'auto');
+                    error_log("Converted conversation JSON to UTF-8");
+                }
+                
+                // Use JSON_UNESCAPED_UNICODE to preserve Gujarati characters
+                $messages = json_decode($conversationJson, true);
+                
+                // Verify the decoding was successful
+                if ($messages === null && json_last_error() !== JSON_ERROR_NONE) {
+                    error_log("JSON decode error: " . json_last_error_msg());
+                    error_log("Original JSON: " . substr($conversationJson, 0, 200) . "...");
+                    return [];
+                }
+                
+                error_log("Retrieved messages with proper encoding, count: " . count($messages));
                 return $messages;
             }
             error_log("No messages found for session: " . $sessionId);

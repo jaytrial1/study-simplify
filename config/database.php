@@ -49,6 +49,14 @@ function getConnection() {
         die("Connection failed: " . $conn->connect_error);
     }
     
+    // Set charset to UTF-8 to support Gujarati and other Unicode characters
+    $conn->set_charset("utf8mb4");
+    
+    // Force UTF-8 connection for all operations
+    $conn->query("SET NAMES utf8mb4");
+    $conn->query("SET CHARACTER SET utf8mb4");
+    $conn->query("SET COLLATION_CONNECTION=utf8mb4_unicode_ci");
+    
     return $conn;
 }
 ?>

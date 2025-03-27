@@ -61,7 +61,7 @@ function formatSaveTypeClass(saveType) {
 document.addEventListener('DOMContentLoaded', () => {
     // Add new chat button handler
     document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-        window.location.href = '/main/public/html/chatbot.html';
+        window.location.href = `${window.apiBasePath}/public/html/chatbot.html`;
     });
 
     const menuToggle = document.getElementById('menuToggle');

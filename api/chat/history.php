@@ -6,7 +6,8 @@ require_once '../../lib/config.php';
 ini_set('display_errors', 0);
 error_reporting(0);
 
-header('Content-Type: application/json');
+// Set content type to UTF-8 JSON
+header('Content-Type: application/json; charset=utf-8');
 
 $chatHistory = new ChatHistory();
 
@@ -32,14 +33,14 @@ try {
                         'success' => true,
                         'filters' => $result['filters'],
                         'history' => $result['history']
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 } catch (Exception $e) {
                     error_log("Error getting user history: " . $e->getMessage());
                     http_response_code(500);
                     echo json_encode([
                         'success' => false,
                         'error' => 'Failed to retrieve chat history'
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
             } else if (isset($_GET['session_id'])) {
                 // Get specific chat session
@@ -48,7 +49,7 @@ try {
                     echo json_encode([
                         'success' => false,
                         'error' => 'Invalid session ID'
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                     break;
                 }
 
@@ -58,11 +59,17 @@ try {
                     echo json_encode([
                         'success' => false,
                         'error' => 'Chat session not found'
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                     break;
                 }
 
-                $conversation = json_decode($session['conversation'], true);
+                // Ensure conversation is valid UTF-8
+                $conversationJson = $session['conversation'];
+                if (!mb_check_encoding($conversationJson, 'UTF-8')) {
+                    $conversationJson = mb_convert_encoding($conversationJson, 'UTF-8', 'auto');
+                }
+                
+                $conversation = json_decode($conversationJson, true);
                 
                 // Filter out system messages
                 $filteredConversation = array_filter($conversation, function($msg) {
@@ -72,7 +79,7 @@ try {
                 echo json_encode([
                     'success' => true,
                     'conversation' => array_values($filteredConversation)
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             } else {
                 throw new Exception('Missing user_id or session_id parameter');
             }
@@ -100,7 +107,7 @@ try {
                     'success' => true,
                     'session_id' => $existingSessionId,
                     'existing' => true
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
                 break;
             }
             
@@ -119,7 +126,7 @@ try {
             echo json_encode([
                 'success' => true,
                 'session_id' => $sessionId
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
             break;
             
         case 'PUT':
@@ -136,7 +143,7 @@ try {
                 $data['message']
             );
             
-            echo json_encode(['success' => $success]);
+            echo json_encode(['success' => $success], JSON_UNESCAPED_UNICODE);
             break;
     }
 } catch (Exception $e) {
@@ -145,5 +152,5 @@ try {
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
