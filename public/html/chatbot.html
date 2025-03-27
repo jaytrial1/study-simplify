@@ -21,6 +21,9 @@
         const responsePath = _isLocalServer ? "../css/response.css" : "/public/css/response.css?v=<?php echo time(); ?>";
         const ansActionPath = _isLocalServer ? "../css/ans_action.css" : "/public/css/ans_action.css?v=<?php echo time(); ?>";
         const toastPath = _isLocalServer ? "../css/toast.css" : "/public/css/toast.css?v=<?php echo time(); ?>";
+        const chatCssPath = _isLocalServer ? "../css/chat.css" : "/public/css/chat.css?v=<?php echo time(); ?>";
+        const mobileSidebarPath = _isLocalServer ? "../css/mobile-sidebar.css" : "/public/css/mobile-sidebar.css?v=<?php echo time(); ?>";
+        const followUpCssPath = _isLocalServer ? "../css/follow-up.css" : "/public/css/follow-up.css?v=<?php echo time(); ?>";
         
         // JavaScript paths
         const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js?v=<?php echo time(); ?>";
@@ -28,6 +31,7 @@
         const transitionsPath = _isLocalServer ? "../js/transitions.js" : "/public/js/transitions.js?v=<?php echo time(); ?>";
         const chatHistoryPath = _isLocalServer ? "../js/chat-history.js" : "/public/js/chat-history.js?v=<?php echo time(); ?>";
         const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js?v=<?php echo time(); ?>";
+        const followUpJsPath = _isLocalServer ? "../js/follow-up-prompts.js" : "/public/js/follow-up-prompts.js?v=<?php echo time(); ?>";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
@@ -46,6 +50,9 @@
         document.write(`<link rel="stylesheet" href="${responsePath}">`);
         document.write(`<link rel="stylesheet" href="${ansActionPath}">`);
         document.write(`<link rel="stylesheet" href="${toastPath}">`);
+        document.write(`<link rel="stylesheet" href="${chatCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${mobileSidebarPath}">`);
+        document.write(`<link rel="stylesheet" href="${followUpCssPath}">`);
     </script>
     <!-- Highlight.js for code syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
@@ -288,6 +295,7 @@
         document.write(`<script src="${transitionsPath}"><\/script>`);
         document.write(`<script src="${chatHistoryPath}"><\/script>`);
         document.write(`<script src="${answerActionPath}"><\/script>`);
+        document.write(`<script src="${followUpJsPath}"><\/script>`);
     </script>
     <script>
         // Handle splash screen

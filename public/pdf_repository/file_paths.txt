@@ -1,0 +1,291 @@
+ 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\file_paths.txt 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\run.bat 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Banking Services.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Banking.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Business Services  Meaning And Types.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Business Services.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Comparison Between Life  Fire And Marine Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Electronic Banking Or E-Banking.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Fire Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Health Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Life Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Marine Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Postal Services.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Principles Of Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Reinsurance And Double Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Telecom Services.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Types Of Bank Accounts.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Types Of Insurance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Business Services\Types Of Life Insurance Policies.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\Business Process Outsourcing (BPO).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\E-Business Vs Traditional Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\E-Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\Emerging Modes Of Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\Knowledge Process Outsourcing (KPO).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Emerging Modes of Business\Outsourcing.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Branches Of Commerce.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Business Risk.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Classification Of Business Activities.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Commerce.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Concept Of Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Concept Of Employment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Concept Of Profession.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Difference Between Business  Profession And Employment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Evolution And Fundamentals Of Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\History Of Commerce In India.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Indigenous Banking System.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Introduction  Human Activities.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Objectives Of Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Position Of Indian Subcontinent In World Economy.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Rise Of Intermediaries.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Trading Communities.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Transport.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Evolution and Fundamentals of Business\Types Of Human Activities.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Capital Subscription.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Choice Of Form Of Business Organisation.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Comparison Of Different Forms Of Business Organisations.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Cooperative Society.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Difference Between Company And Cooperative Society.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Difference Between Company And Partnership.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Difference Between Partnership And Hindu Undivided Family Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Difference Between Partnership And Sole Proprietorship.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Formation Of A Company.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Forms Of Business Organisations.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Hindu Undivided Family Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Important Documents Required.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Incorporation Of The Company.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Joint Stock Company.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Partnership Deed.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Partnership.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Promotion Of A Company.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Sole Proprietorship.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Starting A Business - Basic Factors.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Types Of Companies.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Types Of Cooperative Societies.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Types Of Partners.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Forms of Business Organisations\Types Of Partnerships.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Chain Stores Or Multiple Shops.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Difference Between Wholesaler And Retailer.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Fixed Shop Large Retailers.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Fixed Shop Retailers.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Fixed Shop Small Retailers.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Goods And Services Tax (GST).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Internal Trade.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Itinerant Retailers.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Mail Order Houses.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Retail Trade.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Vending Machines.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Internal Trade\Wholesale Trade.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\Advantages Of International Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\Disadvantages Of International Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\Export Trade.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\Import Trade.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\International Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\Meaning And Nature Of International Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\International Trade\World Trade Organization  Wto .md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Comparison Between Forms Of Public Sector Enterprises.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Departmental Undertaking.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Forms Of Public Sector Enterprises.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Global Enterprises Or Multinational Companies.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Government Company.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Private  Public And Global Enterprises.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Private Sector And Public Sector.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Public Private Partnership.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Private,Public and Global Enterprises\Statutory Corporation Or Public Corporation.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Administrative Setup For Small Scale Industries.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Copyright.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Design.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Entrepreneurship Development.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Future Of The Small Business Sector.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Geographical Indication.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Incentives For Enterprises In Rural  Backward And Hilly Areas.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Intellectual Property Rights  Ipr .md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Measures To Promote Small Business Units.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Patent.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Plant Variety.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Problems Of Small Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Role Of Small Business In India.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Role Of Small Business In Rural India.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Semiconductor Integrated Circuits Layout Design.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Small Business And Enterprises.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Small Business.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Small Scale Enterprises As Per Msmed Act  2006.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Start-Up India Scheme.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Small Business and Enterprises\Trademark.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Business And Environmental Protection.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Business Ethics.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Case For Social Responsibility.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Causes Of Pollution.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Concept Of Social Responsibility.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Corporate Social Responsibility.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Social Responsibilities Of Business And Business Ethics.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Social Responsibilities of Business and Business Ethics\Social Responsibility Towards Different Interest Groups.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\ADR Vs GDR.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\American Depository Receipts (ADRs - Long-Term Source Of Finance).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Concept Of Business Finance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Debentures And Bonds  Long-Term Source Of Finance .md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Difference Between Equity Shares And Preference Shares.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Difference Between Owners  Funds And Borrowed Funds.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Equity Shares  Long-Term Source Of Finance .md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Features Of Debentures.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Global Depository Receipts (GDRs-Long-Term Source Of Finance).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Indian Depository Receipts (IDRs-Long-Term Source Of Finance).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Inter-Corporate Deposits (ICD-Short Term Source Of Finance).md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Loan From Financial Institutions.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Loans From Commercial Banks.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Preference Shares.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Public Deposits.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Retained Earnings.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Sources Of Borrowed Funds.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Sources Of Business Finance.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Sources Of Funds On The Basis Of Ownership.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Sources Of Owners Funds.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 CBSE\Business Studies\Sources of Business Finance\Trade Credit  Short-Term Source Of Finance .md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\આંતરરાષ્ટ્રીય વેપારની સમસ્યાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\આંતરરાષ્ટ્રીય વેપારનો ખ્યાલ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\આંતરરાષ્ટ્રીય વ્યાપાર સંધિકરાર અને વિશ્વ વ્યાપાર સંગઠનની ખૂમિકા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\આંતરિક અને આંતરરાષ્ટ્રીય વેપારનો વચ્યેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\આયાતવિધિ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\નિકાસવિધિ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\નિકાસવેપાર માટેનાં પ્રોત્સાહનો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરરાષ્ટ્રીય વેપાર\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\આંતરિક વેપાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ઈન્ટરનેટ માર્કેટિંગ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ખાતાંવાળી દુકાન અને સંકળાયેલી દુકાન વચ્યેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ખાતાંવાળી દુકાનો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\છૂટક વેપાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\છૂટક વેપારી અને જથ્થાબંધ વેપારી વચ્યેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\જથ્થાબંધ વેપાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ટપાલ વ્યવહારી દુકાનો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ટેલિમાર્કેટિંગ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ફરતી દુકાનો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\ફ્રેન્ચાઇઝ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\વેપારના પારિભાષિક શબ્દો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\શોપિંગ મોલ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\સંકળાયેલી દુકાનો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\સુપર માર્કેટ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\આંતરીક વેપાર\સ્વયંસંચાલિત વેચાણયંત્રો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\ખાતાકીય સંચાલન સરકારી ખાતું.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\ખાનગીક્ષેત્રનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેર ઉપયોગિતા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેર નિગમ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેરક્ષેત્ર અને ખાનગીક્ષેત્ર વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેરક્ષેત્રની બદલાતી જતી ભૂમિકા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેરક્ષેત્રનો અર્થ અને લાક્ષણિકતા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\જાહેરખાનગી ભાગીદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\ભારત અને વૈશ્વિક સાહસો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\વૈશ્વિક સાહસનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\સંયુક્ત સાહસનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\જાહેરક્ષેત્ર, ખાનગીક્ષેત્ર અને વૈશ્વિક સાહસો\સરકારી કંપની.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\આંતરકંપની થાપણો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\ઇક્વિટી શૅર અને પ્રેફરન્સ શૅર વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\ઈક્વિટી શેર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\જાહેર થાપણો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\ડિબેન્ચર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\ધંધાકીય મૂડી અને તેની જરૂરિયાત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\નફાનું ધંધામાં પુનરોકાણ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\નાણાકીય સંસ્થાઓ દ્વારા લોન.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\પ્રેફરન્સ શૅર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\બોન્ડ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\માલિકીનાં ભંડોળ અને ઉછીનાં ભંડોળ વચ્યેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\વેપારીશાખ અથવા ધંધાના લેણદારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય મૂડીના પ્રાપ્તિસ્થાનો\વ્યાપારી બેન્કો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારના પ્રકારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારી કરારનામું.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારી પેઢીના પ્રકારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારી પેઢીના ફાયદા અને મર્યાદા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારી પેઢીની નોંધણી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\ભાગીદારી પેઢીનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\વૈયક્તિક માલિકી અને ભાગીદારી પેઢી વચ્યેનો તક્ષવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\વૈયક્તિક માલિકીના ફાયદા અને મર્યાદા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\વૈયક્તિક માલિકીનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-1\હિન્દુ અવિભક્ત કુટુંબ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\કંપનીના પ્રકારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\કંપનીના ફાયદા અને મર્યાદા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\કંપનીની સ્થાપનાવિધિ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\ખાનગી કંપની અને જાહેર કંપની વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\ભાગીદારી પેઢી અને કંપની વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\સંયુક્ત હિસ્સાવાળી કંપનીનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\સહકારી મંડળી અને કંપની વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\સહકારી મંડળીના ફાયદા અને મર્યાદા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય વ્યવસ્થાના સ્વરૂપો-2\સહકારી મંડળીનો અર્થ અને લાક્ષણિકતાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\અન્ય વીમા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\આગનો વીમો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\જીવનનો વીમો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\ટપાલ સેવાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\માલની હેરફેરનો વીમો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\વખાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\વાહનવ્યવહાર અને હેરફેરની સેવાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\વીમાનું ખાનગીકરણ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-1\વીમાનો અર્થ અને સિદ્ધાંતો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\ઈબેન્કિંગ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્ક ખાતાના પ્રકારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્કનાં ગૌણ કાર્યો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્કનાં મુખ્ય કાર્યો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્કની સેવાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્કનો અર્થ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાકીય સેવાઓ-2\બેન્કિંગ સંબંધિત સેવાઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\કર્મચારી પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\ગ્રાહકો પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\ધંધાકીય એકમ અને પર્યાવરણની જાળવણી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\ધંધાકીય નીતિમત્તા.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\પુરવઠો પૂરો પાડનાર પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\માલિક પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\રોકાણકાર પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\સમાજ પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાની સામાજિક જવાબદારી\સરકાર પ્રત્યે ધંધાની સામાજિક જવાબદારી.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\ઉદ્યોગ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\ધંધાકીય જોખમોનાં કારણો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\ધંધાના હેતુુઓ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\ધંધો વ્યવસાય અને રોજગાર વચ્ચેની તુલના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\ધંધો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\રોજગાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\વાણિજય.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\વેપાર અને વાણિજય વચ્ચેનો તફાવત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\વેપાર.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\ધંધાનું હેતુ સ્વરૂપ અને કાર્યક્ષેત્ર\વ્યવસાય.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\આઉટસોર્સિંગ  બહિર્સ્ત્રોત.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\ઈકોમર્સ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\ઈન્ટરનેટના મુખ્ય કાર્યો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\ઈન્ટરનેટનો અર્થ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\કમ્યૂટર નેટવર્કના પ્રકારો.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\પ્રસ્તાવના.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\11 GSEB Gujarati\Business Administration\માહિતીસંચાર, ઈ-કોમર્સ અને આઉટસોર્સિંગ\માહિતીસંચારનો અર્થ.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Demonetisation.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Dimensions - Elements Of Business Environment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Features - Characteristics Of Business Environment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Importance Of Business Environment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\Meaning Of Business Environment.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Business Environment\New Industrial Policy - New Economic Policy.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Consumer Awareness - Role Of Consumer Organisations And Ngos.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Consumer Protection Act  2019.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Consumer Rights.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Importance Of Consumer Protection.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Meaning Of Consumer.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Redressal Agencies.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Consumer Protection\Reliefs  Remedies  Available To Consumers.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Controlling\Controlling Process.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Controlling\Importance Of Controlling.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Controlling\Introduction.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Controlling\Meaning Of Controlling.md 
+E:\jay\Xampp\htdocs\Main\public\pdf_repository\12 CBSE\Business Studies\Controlling\Relationship Between Planning And Controlling.md 

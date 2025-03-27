@@ -218,7 +218,7 @@ class AIHandler {
                 error_log("General instructions preview: " . $instructionsPreview);
                 
                 $data = [
-                    'model' => 'deepseek/deepseek-chat:free',
+                    'model' => 'deepseek/deepseek-chat-v3-0324:free',
                     'messages' => [
                         [
                             'role' => 'system',

@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isFirstMessage = chatHistory.currentSessionId === null;
 
         // Allow submission without input if it's the first message
-        if (!message && !isFirstMessage) return; // Prevent sending empty messages unless it's the first message
+        if (!message && !isFirstMessage) return;
 
         try {
             // If it's a new chat command, clear everything
@@ -338,10 +338,10 @@ document.addEventListener('DOMContentLoaded', () => {
             userInput.value = '';
 
             // Display user message with animation
-            const userMessageElement = addMessage('user', message);
+            const userMessageResult = addMessage('user', message);
             
             // Show a temporary "loading" message with improved animation
-            const loadingMessageId = addMessage('bot', '', true);
+            const loadingMessageResult = addMessage('bot', '', true);
             
             if (window.selectedQuestions.size > 0) {
                 const sessionResponse = await chatHistory.startNewChat(  // Store the response
@@ -409,11 +409,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Update loading message with AI response
-                updateMessage(loadingMessageId, responseText);
+                updateMessage(loadingMessageResult.element, responseText);
                 
                 // Process code blocks immediately instead of waiting for typing effect
                 setTimeout(() => {
-                    enhanceCodeBlocks(loadingMessageId);
+                    enhanceCodeBlocks(loadingMessageResult.element);
                 }, 50);
                 
                 // Store the full AI response in the global variable
@@ -458,6 +458,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update an existing message
     function updateMessage(messageElement, newText) {
+        // Handle the case where messageElement is in the new format (object with element property)
+        if (messageElement && typeof messageElement === 'object' && messageElement.element) {
+            messageElement = messageElement.element;
+        }
+        
         if (messageElement) {
             // Remove thinking class when updating with real content
             messageElement.classList.remove('thinking');
@@ -499,8 +504,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagesContainer = document.querySelector('.chat-messages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `response ${type}-response`;
-
+        
+        // Generate a unique message ID for bot messages
+        let messageId = null;
         if (type === 'bot') {
+            messageId = 'msg-' + Date.now();
+            messageDiv.dataset.messageId = messageId;
+            
             if (isLoading) {
                 // Add 'thinking' class for animated effects
                 messageDiv.classList.add('thinking');
@@ -557,8 +567,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Auto-scroll to bottom (with smooth animation)
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         
-        // Return the element for later reference/updates
-        return messageDiv;
+        // Return the message element and ID (if it's a bot message)
+        return { element: messageDiv, id: messageId };
     }
     
     //--------------------------------------------------------------------------------------------------------------------

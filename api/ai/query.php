@@ -3,6 +3,7 @@ require_once '../../lib/pdf_parser.php';
 require_once '../../lib/ai_handler.php';
 require_once '../../lib/config.php';
 require_once '../../models/ChatHistory.php';
+require_once 'handle_follow_up.php'; // Include the follow-up handler
 
 header('Content-Type: application/json');
 
@@ -25,6 +26,29 @@ try {
         error_log("Retrieved messages for session " . $data['session_id'] . ": " . json_encode($previousMessages));
     }
     
+    // Check if this is a follow-up request
+    $followUpPromptId = null;
+    $isFollowUp = false;
+    if (isset($data['userPrompt'])) {
+        $followUpPromptId = isFollowUpRequest($data['userPrompt']);
+        if ($followUpPromptId !== false) {
+            $isFollowUp = true;
+            error_log("Detected follow-up request: " . $followUpPromptId);
+        }
+    }
+    
+    // If it's a follow-up, we need the previous AI response
+    $previousAiResponse = '';
+    if ($isFollowUp && !empty($previousMessages)) {
+        // Find the last AI message
+        for ($i = count($previousMessages) - 1; $i >= 0; $i--) {
+            if ($previousMessages[$i]['sender'] === 'ai') {
+                $previousAiResponse = $previousMessages[$i]['message'];
+                break;
+            }
+        }
+    }
+    
     // Determine if this is a new session
     $isNewSession = $data['isFirstMessage'];
     $responses = [];
@@ -32,7 +56,18 @@ try {
     foreach ($data['questions'] as $question) {
         $prompt = null;
         
-        if ($isNewSession) {
+        if ($isFollowUp) {
+            // Load the follow-up template
+            $followUpTemplate = loadFollowUpTemplate($followUpPromptId);
+            if (!$followUpTemplate) {
+                throw new Exception("Follow-up template not found: " . $followUpPromptId);
+            }
+            $prompt = $followUpTemplate;
+            
+            // Update the user message for chat history
+            $data['userPrompt'] = "Follow-up question: " . str_replace('_', ' ', $followUpPromptId);
+        }
+        else if ($isNewSession) {
             // Extract PDF text and use template
             $result = $parser->extractText(
                 $data['grade'],
@@ -63,7 +98,8 @@ try {
         
         // Get AI response with chat history context
         $aiResponse = $aiHandler->callGeminiAPI(
-            $isNewSession ? $prompt : 
+            $isFollowUp ? $prompt :
+            ($isNewSession ? $prompt : 
             ($aiHandler->model === 'gemini' ? [
                 'messages' => array_merge(
                     array_map(function($msg) {
@@ -79,7 +115,7 @@ try {
                         ]
                     ]
                 )
-            ] : $aiHandler->createContinuationPrompt($previousMessages, $data['userPrompt']))
+            ] : $aiHandler->createContinuationPrompt($previousMessages, $data['userPrompt'])))
         );
         
         // Save messages to chat history
@@ -90,7 +126,8 @@ try {
         
         $responses[] = [
             'questionName' => $question,
-            'text' => $aiResponse
+            'text' => $aiResponse,
+            'isFollowUp' => $isFollowUp
         ];
     }
     

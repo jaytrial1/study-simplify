@@ -73,16 +73,46 @@ document.addEventListener('DOMContentLoaded', () => {
             existingPopup.remove();
         }
 
-        // Create new popup with only two options
+        // Create new popup with divider and sections
         const popup = document.createElement('div');
         popup.className = 'answer-action-popup';
         popup.style.display = 'block';
-        popup.innerHTML = `
+        
+        // Start with the save options
+        let popupHTML = `
             <div class="action-content">
-                <button class="answer-action-button" data-type="Best response">Best response</button>
-                <button class="answer-action-button" data-type="Question Related">Question Related</button>
-            </div>
+                <div class="action-section save-section">
+                    <h4 class="action-section-title">Save as</h4>
+                    <button class="answer-action-button" data-type="Best response">Best response</button>
+                    <button class="answer-action-button" data-type="Question Related">Question Related</button>
+                </div>
         `;
+        
+        // Add follow-up options section if follow-up manager is available
+        if (window.followUpManager && window.followUpManager.initialized && window.followUpManager.prompts.length > 0) {
+            popupHTML += `
+                <div class="action-divider"></div>
+                <div class="action-section follow-up-section">
+                    <h4 class="action-section-title">Follow up</h4>
+            `;
+            
+            // Add each follow-up option as a button
+            window.followUpManager.prompts.forEach(prompt => {
+                popupHTML += `
+                    <button class="answer-action-button follow-up-button" data-prompt-id="${prompt.id}">
+                        ${prompt.title}
+                    </button>
+                `;
+            });
+            
+            popupHTML += `</div>`;
+        }
+        
+        // Close the main container
+        popupHTML += `</div>`;
+        
+        // Set the HTML content
+        popup.innerHTML = popupHTML;
         document.body.appendChild(popup);
 
         // Position the popup near the click/touch point
@@ -127,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Log the user ID for debugging
         console.log('User ID:', userId);
 
-        // Add event listeners for the buttons
-        popup.querySelectorAll('.answer-action-button').forEach(button => {
+        // Add event listeners for the save buttons
+        popup.querySelectorAll('.answer-action-button:not(.follow-up-button)').forEach(button => {
             button.addEventListener('click', () => {
                 const selectedType = button.dataset.type;
                 console.log('Selected Type:', selectedType);
@@ -143,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const chapter = document.getElementById('selectedChapter').innerText;
                 const grade = localStorage.getItem('userGrade') || 'N/A'; // Retrieve from localStorage, default to 'N/A' if not found
                 const currentQuestionText = currentQuestion; // Assuming currentQuestion holds the full text
-                // const aiResponse = selectedResponseText; // Use the selected response text
 
                 // Get the AI response from the clicked element's formatted content
                 const formattedContent = clickedElement.querySelector('.formatted-content');
@@ -171,18 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         aiResponse
                     })
                 })
-                // .then(response => {
-                //     // Check if the response is JSON before trying to parse it
-                //     const contentType = response.headers.get("content-type");
-                //     if (contentType && contentType.indexOf("application/json") !== -1) {
-                //         return response.json();
-                //     } else {
-                //         // If it's not JSON, return the text content
-                //         return response.text().then(text => {
-                //             throw new Error("Expected JSON but received: " + text);
-                //         });
-                //     }
-                // })
                 .then(response => response.json())
                 .then(data => {
                     console.log('Response from server:', data);
@@ -226,7 +243,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         showToast('An error occurred while saving the answer.', false);
                     }
+                    popup.style.display = 'none';
                 });
+            });
+        });
+        
+        // Add event listeners for the follow-up buttons
+        popup.querySelectorAll('.follow-up-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const promptId = button.dataset.promptId;
+                console.log('Selected Follow-up:', promptId);
+                
+                // Handle the follow-up action using the followUpManager
+                if (window.followUpManager) {
+                    window.followUpManager.handleFollowUpSelection(promptId);
+                    popup.style.display = 'none';
+                } else {
+                    console.error('Follow-up manager not initialized');
+                    showToast('Error: Follow-up system not available', true);
+                }
             });
         });
     }
