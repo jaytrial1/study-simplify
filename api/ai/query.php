@@ -57,8 +57,8 @@ try {
         $prompt = null;
         
         if ($isFollowUp) {
-            // Load the follow-up template
-            $followUpTemplate = loadFollowUpTemplate($followUpPromptId);
+            // Load the follow-up template and pass the previous response
+            $followUpTemplate = loadFollowUpTemplate($followUpPromptId, $previousAiResponse);
             if (!$followUpTemplate) {
                 throw new Exception("Follow-up template not found: " . $followUpPromptId);
             }

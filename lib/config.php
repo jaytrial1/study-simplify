@@ -3,7 +3,7 @@
 define('AI_MODEL', 'deepseek'); // Options: 'gemini' or 'deepseek'
 define('GEMINI_API_KEY', 'AIzaSyDdKHmIzLbGBKIX_j2DWm8Lg4Jqy4CihYo');
 define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent');
-define('DEEPSEEK_API_KEY', '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');
+define('DEEPSEEK_API_KEY', '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');
 define('DEEPSEEK_API_URL', 'https://openrouter.ai/api/v1/chat/completions');
 
 // File Repository Configuration

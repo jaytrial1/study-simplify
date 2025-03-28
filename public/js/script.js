@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let chapters = []; 
     let allChapters = [];
     let cachedQuestions = [];
+    let allGradeQuestions = [];
 
     // Detect server environment
     const isLocalServer = window.location.hostname === 'localhost' || 
@@ -343,10 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show a temporary "loading" message with improved animation
             const loadingMessageResult = addMessage('bot', '', true);
             
+            // Get selected subject and chapter from UI
+            const selectedSubjectText = document.getElementById('selectedSubject').textContent;
+            const selectedChapterText = document.getElementById('selectedChapter').textContent;
+            
             if (window.selectedQuestions.size > 0) {
                 const sessionResponse = await chatHistory.startNewChat(  // Store the response
-                    selectedSubject.textContent,
-                    selectedChapter.textContent,
+                    selectedSubjectText,
+                    selectedChapterText,
                     currentQuestion
                 );
                 
@@ -374,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     grade: userGrade,
-                    subject: selectedSubject.textContent,
-                    chapter: selectedChapter.textContent,
+                    subject: selectedSubjectText,
+                    chapter: selectedChapterText,
                     questions: [currentQuestion],
                     answerType: answerType,
                     userPrompt: message,
@@ -504,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagesContainer = document.querySelector('.chat-messages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `response ${type}-response`;
-        
+
         // Generate a unique message ID for bot messages
         let messageId = null;
         if (type === 'bot') {
@@ -592,6 +597,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to load all questions for a grade regardless of subject and chapter
+    async function loadAllQuestions(grade, searchTerm = '') {
+        try {
+            const response = await fetch(`${apiBasePath}/api/navigation/questions.php?grade=${grade}&search=${searchTerm}`);
+            const data = await response.json();
+            return data.all_questions || [];
+        } catch (error) {
+            console.error('Error loading all questions:', error);
+            return [];
+        }
+    }
+
 
     //------------------------------Dynamic Question Suggestor--------------------------------------------
 
@@ -602,6 +619,80 @@ document.addEventListener('DOMContentLoaded', () => {
     // - Prevents selecting questions from different chapters  
     // - Hides suggestions if no valid question is found  
     // - Uses cached questions to reduce API calls  
+
+    // Helper function to show question scope selection dialog
+    function showQuestionScopeDialog() {
+        return new Promise((resolve) => {
+            // Store input field reference 
+            const inputField = document.getElementById('userInput');
+            // Save the current selection range before showing dialog
+            const selectionStart = inputField.selectionStart;
+            const selectionEnd = inputField.selectionEnd;
+            
+            // Create the dialog as a floating element above the keyboard
+            const scopeDialog = document.createElement('div');
+            scopeDialog.className = 'answer-type-popup active';
+            scopeDialog.style.position = 'fixed';
+            scopeDialog.style.bottom = '160px'; // Position above keyboard
+            scopeDialog.style.left = '0';
+            scopeDialog.style.right = '0';
+            scopeDialog.style.zIndex = '1000';
+            scopeDialog.innerHTML = `
+                <div class="popup-content" style="background-color: #1c1c1c; border-radius: 8px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); max-width: 320px; width: 90%; margin: 0 auto;">
+                    <h3 style="color: #fff; margin-top: 0; margin-bottom: 16px; font-size: 16px; text-align: center;">Which questions would you like to see?</h3>
+                    <button class="scope-button" data-scope="chapter">Only from current chapter</button>
+                    <button class="scope-button" data-scope="all">All questions</button>
+                </div>
+            `;
+            document.body.appendChild(scopeDialog);
+
+            const buttons = scopeDialog.querySelectorAll('.scope-button');
+            buttons.forEach(button => {
+                button.onclick = () => {
+                    const scope = button.dataset.scope;
+                    
+                    // Remove the dialog without affecting focus
+                    document.body.removeChild(scopeDialog);
+                    
+                    // Ensure input still has focus without refocusing
+                    if (document.activeElement !== inputField) {
+                        // Only refocus if necessary (avoid unnecessary focus changes)
+                        inputField.focus();
+                        
+                        // Restore selection position
+                        try {
+                            inputField.setSelectionRange(selectionStart, selectionEnd);
+                        } catch (e) {
+                            // Handle any errors silently
+                            console.log("Error restoring selection", e);
+                        }
+                    }
+                    
+                    resolve(scope);
+                };
+            });
+
+            // Add click outside to close but preserve focus
+            scopeDialog.addEventListener('click', (e) => {
+                if (e.target === scopeDialog) {
+                    // Remove dialog without disturbing focus
+                    document.body.removeChild(scopeDialog);
+                    
+                    // Only refocus if necessary
+                    if (document.activeElement !== inputField) {
+                        inputField.focus();
+                        try {
+                            inputField.setSelectionRange(selectionStart, selectionEnd);
+                        } catch (e) {
+                            console.log("Error restoring selection", e);
+                        }
+                    }
+                    
+                    resolve('all'); // Default to all questions if closed without selection
+                }
+            });
+        });
+    }
 
     // Update command panel event listener
     userInput.addEventListener('input', async (e) => {
@@ -620,71 +711,197 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedSubject = document.getElementById('selectedSubject').textContent;
         const selectedChapter = document.getElementById('selectedChapter').textContent;
         
-        // Check if subject is selected
-        if (selectedSubject === 'Select Subject' || selectedChapter === 'Select Chapter') {
-            commandPanel.innerHTML = `
-                <div class="command-list">
-                    <div class="command-item">
-                        <i class="fas fa-info-circle"></i>
-                        ${selectedSubject === 'Select Subject' ? 'Please select a subject first' : 'Please select a chapter first'}
-                    </div>
-                </div>`;
-            commandPanel.classList.add('active');
-            
-            // Remove the slash after 1.5 seconds
-            setTimeout(() => {
-                if (userInput.value.endsWith('/')) {
-                    userInput.value = userInput.value.slice(0, -1);
-                    commandPanel.classList.remove('active');
-                }
-            }, 1500);
-            return;
-        }
-        
         // Get the search text after slash
         const searchText = value.slice(lastSlashIndex, cursorPosition).slice(1).toLowerCase();
         
-        // Load questions only if we don't have them cached
-        if (cachedQuestions.length === 0) {
-            cachedQuestions = await loadQuestions(userGrade, selectedSubject, selectedChapter);
+        // Check if we need to load questions for specific subject/chapter or all questions
+        let questionsToDisplay = [];
+        
+        // Only show the scope selection dialog when:
+        // 1. User has just typed "/" (no additional text after slash)
+        // 2. Subject and chapter have already been selected
+        // 3. Command panel is not already active
+        
+        // First check if we already have a scope set in the data attribute
+        let questionScope = commandPanel.dataset.currentScope || 'all'; 
+        
+        // Only prompt for scope if this is a fresh "/" with nothing after it
+        if (value === '/' && 
+            selectedSubject !== 'Select Subject' && 
+            selectedChapter !== 'Select Chapter' && 
+            !commandPanel.classList.contains('active')) {
+            questionScope = await showQuestionScopeDialog();
+            // Save the user's choice in the data attribute for persistence during typing
+            commandPanel.dataset.currentScope = questionScope;
+        }
+        
+        // Now, use the scope to determine which questions to display
+        if (questionScope === 'chapter' && selectedSubject !== 'Select Subject' && selectedChapter !== 'Select Chapter') {
+            // Show only current chapter questions
+            if (cachedQuestions.length === 0) {
+                showLoadingIndicator();
+                cachedQuestions = await loadQuestions(userGrade, selectedSubject, selectedChapter);
+                hideLoadingIndicator();
+            }
+            questionsToDisplay = cachedQuestions;
+            commandPanel.classList.add('chapter-specific'); // Add class for chapter-specific height
+        } else {
+            // Default to showing all questions
+            if (allGradeQuestions.length === 0) {
+                showLoadingIndicator();
+                allGradeQuestions = await loadAllQuestions(userGrade);
+                hideLoadingIndicator();
+            }
+            questionsToDisplay = allGradeQuestions;
+            commandPanel.classList.remove('chapter-specific'); // Use default height for global questions
         }
         
         // Real-time filtering based on what user types
-        const filteredQuestions = searchText 
-            ? cachedQuestions.filter(question => {
-                // Don't show questions that are already in the input
-                const currentInput = value.toLowerCase();
-                return !currentInput.includes(question.toLowerCase()) && 
-                       question.toLowerCase().includes(searchText);
-            })
-            : cachedQuestions.filter(question => 
-                !value.toLowerCase().includes(question.toLowerCase())
-            );
+        let filteredQuestions = [];
         
-        // Filter out already selected questions
-        const availableQuestions = filteredQuestions.filter(q => 
-            !window.selectedQuestions.has(q)
-        );
+        if (Array.isArray(questionsToDisplay) && questionsToDisplay.length > 0) {
+            // Check if we're dealing with the all-questions format (objects with question, subject, chapter)
+            const isAllQuestionsFormat = typeof questionsToDisplay[0] === 'object' && questionsToDisplay[0].hasOwnProperty('question');
+            
+            if (isAllQuestionsFormat) {
+                // Filter the questions based on search text and current scope
+                filteredQuestions = searchText 
+                    ? questionsToDisplay.filter(item => {
+                        const questionText = item.question.toLowerCase();
+                        const subjectText = item.subject.toLowerCase();
+                        const chapterText = item.chapter.toLowerCase();
+                        
+                        // For chapter-specific scope, only show questions from current chapter
+                        if (commandPanel.dataset.currentScope === 'chapter') {
+                            return item.subject === selectedSubject && 
+                                   item.chapter === selectedChapter && 
+                                   questionText.includes(searchText) && 
+                                   !window.selectedQuestions.has(item.question);
+                        }
+                        
+                        // For global scope, show all matching questions
+                        return (questionText.includes(searchText) || 
+                                subjectText.includes(searchText) || 
+                                chapterText.includes(searchText)) && 
+                                !window.selectedQuestions.has(item.question);
+                    })
+                    : questionsToDisplay.filter(item => {
+                        // Apply the same scope filtering even without search text
+                        if (commandPanel.dataset.currentScope === 'chapter') {
+                            return item.subject === selectedSubject && 
+                                   item.chapter === selectedChapter && 
+                                   !window.selectedQuestions.has(item.question);
+                        }
+                        return !window.selectedQuestions.has(item.question);
+                    });
+            } else {
+                // Regular format (just question strings)
+                filteredQuestions = searchText 
+                    ? questionsToDisplay.filter(question => 
+                        question.toLowerCase().includes(searchText) && 
+                        !window.selectedQuestions.has(question)
+                    )
+                    : questionsToDisplay.filter(question => !window.selectedQuestions.has(question));
+            }
+        }
 
-        if (availableQuestions.length === 0) {
+        // Apply pagination for large result sets
+        const currentPage = 1;
+        const resultsPerPage = 20;
+        const paginatedQuestions = applyPagination(filteredQuestions, currentPage, resultsPerPage);
+        const totalPages = Math.ceil(filteredQuestions.length / resultsPerPage);
+        
+        // Update UI based on filtered questions
+        if (filteredQuestions.length === 0) {
             commandPanel.innerHTML = `
                 <div class="command-list">
-                    <div class="command-item">No new questions available</div>
+                    <div class="command-item">
+                        <div class="command-content">
+                            <div class="text-col">
+                                <div class="command-question">No questions available</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>`;
         } else {
             commandPanel.innerHTML = `
                 <div class="command-list">
-                    ${availableQuestions
-                        .map(question => `
-                            <div class="command-item" data-command="${question}">
-                                ${question}
-                            </div>`)
-                        .join('')}
+                    ${paginatedQuestions.map(item => {
+                        // Handle both formats (object or string)
+                        const isObject = typeof item === 'object';
+                        const question = isObject ? item.question : item;
+                        const subject = isObject ? item.subject : null;
+                        const chapter = isObject ? item.chapter : null;
+                        
+                        // Clean up question text - remove leading slash if present
+                        let displayText = question;
+                        let cleanedQuestion = question;
+                        
+                        if (displayText.startsWith('/')) {
+                            displayText = displayText.substring(1).trim();
+                            cleanedQuestion = displayText; // Store cleaned version for data-command
+                        }
+                        
+                        // Truncate if needed
+                        const maxQuestionLength = 60;
+                        if (displayText.length > maxQuestionLength) {
+                            displayText = displayText.substring(0, maxQuestionLength) + '...';
+                        }
+                            
+                        return `
+                            <div class="command-item" 
+                                data-command="${cleanedQuestion}"
+                                ${subject ? `data-subject="${subject}"` : ''}
+                                ${chapter ? `data-chapter="${chapter}"` : ''}>
+                                <div class="command-content">
+                                    <div class="text-col">
+                                        <div class="command-question">${displayText}</div>
+                                        ${subject && chapter ? 
+                                            `<div class="command-context"><i class="fas fa-folder"></i> ${subject} > ${chapter}</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>`;
+                    }).join('')}
+                    
+                    ${totalPages > 1 ? `
+                    <div class="pagination-info">
+                        Showing ${Math.min(resultsPerPage, filteredQuestions.length)} of ${filteredQuestions.length} questions
+                        ${searchText ? `matching "${searchText}"` : ''}
+                    </div>` : ''}
                 </div>`;
         }
         
         commandPanel.classList.add('active');
     });
+    
+    // Helper function to paginate results
+    function applyPagination(items, currentPage, itemsPerPage) {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return items.slice(startIndex, startIndex + itemsPerPage);
+    }
+    
+    // Helper functions for loading indicators
+    function showLoadingIndicator() {
+        // Check if loading indicator already exists
+        if (!document.querySelector('.command-loading')) {
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'command-loading';
+            loadingIndicator.innerHTML = `
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Loading...</span>
+            `;
+            commandPanel.innerHTML = '';
+            commandPanel.appendChild(loadingIndicator);
+            commandPanel.classList.add('active');
+        }
+    }
+    
+    function hideLoadingIndicator() {
+        const loadingIndicator = document.querySelector('.command-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+    }
     //----------------------------------------------------------------------------------------------------------------
 
 
@@ -699,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // - Refocuses on the input field for continuous typing  
 
     // Update the click handler for command items
-    commandPanel.addEventListener('click', (e) => {
+    commandPanel.addEventListener('click', async (e) => {
         const commandItem = e.target.closest('.command-item');
         if (!commandItem) return;
         
@@ -709,13 +926,73 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the input including the '/' character
         userInput.value = '';
         
+        // Get subject and chapter from the data attributes
+        const subject = commandItem.dataset.subject;
+        const chapter = commandItem.dataset.chapter;
+        
+        // If we have subject/chapter info, update the UI selections
+        if (subject && chapter) {
+            document.getElementById('selectedSubject').textContent = subject;
+            document.getElementById('selectedChapter').textContent = chapter;
+            currentSubject = subject;
+            currentChapter = chapter;
+            
+            // Also update the dropdown UI if needed
+            const filteredChapters = allChapters.filter(c => c.subject === subject);
+            renderChapters(filteredChapters);
+        }
+        
+        // Ensure the command doesn't have a leading slash when added to the set
+        let cleanCommand = command;
+        if (cleanCommand.startsWith('/')) {
+            cleanCommand = cleanCommand.substring(1).trim();
+        }
+        
+        // Check if there's an existing chat session for this question
+        try {
+            const userId = localStorage.getItem('user_id');
+            if (!userId) {
+                throw new Error('User ID not found');
+            }
+            
+            // Make API call to check for existing chat session
+            const response = await fetch(`${apiBasePath}/api/chat/check_existing.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    question: cleanCommand
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.exists && data.session_id) {
+                // Close the command panel before redirecting
+                commandPanel.classList.remove('active');
+                // Session exists - load the existing chat
+                await chatHistory.loadChatSession(data.session_id);
+                return; // Exit early since we've redirected to existing chat
+            }
+        } catch (error) {
+            console.error('Error checking for existing chat:', error);
+            // Continue with normal flow if there's an error
+        }
+        
+        // Normal flow - no existing chat or error checking
         // Clear any previously selected questions before adding new one
         window.selectedQuestions.clear();
-        // Add the selected question
-        window.selectedQuestions.add(command);
+        
+        // Add the selected question (without slash)
+        window.selectedQuestions.add(cleanCommand);
+        
         updateSelectedQuestionsUI();
         commandPanel.classList.remove('active');
-        userInput.focus();
+        
+        // Use setTimeout to preserve focus and keep the keyboard open on mobile
+        setTimeout(() => {
+            userInput.focus();
+        }, 10);
     });
 
     // Add click handler for removing questions
@@ -755,6 +1032,200 @@ document.addEventListener('DOMContentLoaded', () => {
             color: #4166d5;
             margin-top: 0.2rem;
             display: block;
+        }
+        
+        /* Scope selection dialog buttons */
+        .scope-button {
+            background-color: #252525;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scope-button:hover {
+            background-color: #2d2d2d;
+        }
+        
+        .scope-button:before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            background-color: #333;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .scope-button[data-scope="chapter"]:before {
+            background-color: #4166d5;
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+        
+        .scope-button[data-scope="all"]:before {
+            background-color: #4166d5;
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>');
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+        
+        /* Command panel styling - updated for mobile */
+        .command-panel {
+            overflow-y: auto;
+            border-radius: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background-color: #1c1c1c;
+            padding: 0;
+            /* Better positioning for mobile */
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            margin: 0 0 8px 0;
+            /* Add a nice animation */
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            /* Default max-height for global questions */
+            max-height: 48vh;
+        }
+        
+        /* Specific height for chapter questions to not overlap selection panel */
+        .command-panel.chapter-specific {
+            max-height: calc(100vh - 280px);
+        }
+        
+        .command-panel.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .command-list {
+            padding: 6px;
+        }
+        
+        /* Completely redesigned question item styling */
+        .command-item {
+            margin: 6px;
+            background-color: #252525;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        
+        .command-content {
+            display: flex;
+            align-items: center;
+            min-height: 56px;
+            padding: 10px 12px;
+        }
+        
+        .text-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .command-question {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .command-context {
+            font-size: 11px;
+            color: #4166d5;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+        
+        .command-context i {
+            margin-right: 5px;
+            font-size: 11px;
+        }
+        
+        .command-item:hover {
+            background-color: #2d2d2d;
+        }
+        
+        /* Loading indicator */
+        .command-loading {
+            padding: 12px;
+            text-align: center;
+            color: #aaa;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #1c1c1c;
+        }
+        
+        .command-loading i {
+            color: #4166d5;
+            font-size: 14px;
+        }
+        
+        /* Pagination info */
+        .pagination-info {
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            background-color: #1c1c1c;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Make question tag in selected container more appealing */
+        .question-tag {
+            background-color: #4166d5;
+            border-radius: ;
+            padding: 6px 10px;
+            margin-right: 6px;ss
+            margin-bottom: 6px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 13px;
+        }
+        
+        .question-tag .remove-question {
+            margin-left: 6px;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            
+            cursor: pointer;
+            font-size: 11px;
         }
     `;
     document.head.appendChild(style);
@@ -955,10 +1426,22 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         
         window.selectedQuestions.forEach(question => {
+            // Remove leading slash if present
+            let displayText = question;
+            if (displayText.startsWith('/')) {
+                displayText = displayText.substring(1).trim();
+            }
+            
+            // Truncate question text if too long
+            const maxQuestionLength = 40;
+            const displayQuestion = displayText.length > maxQuestionLength 
+                ? displayText.substring(0, maxQuestionLength) + '...' 
+                : displayText;
+                
             const tag = document.createElement('div');
             tag.className = 'question-tag';
             tag.innerHTML = `
-                <span>${question}</span>
+                <span title="${question}">${displayQuestion}</span>
                 <div class="remove-question">×</div>
             `;
             container.appendChild(tag);
@@ -992,6 +1475,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper function to show answer type popup
     function showAnswerTypePopup() {
         return new Promise((resolve) => {
+            // Store input field reference to refocus later
+            const inputField = document.getElementById('userInput');
+            
             const answerTypePopup = document.createElement('div');
             answerTypePopup.className = 'answer-type-popup active';
             answerTypePopup.innerHTML = `
@@ -1008,8 +1494,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.onclick = () => {
                     const type = button.dataset.type;
                     answerTypePopup.remove();
+                    
+                    // Refocus the input field to keep keyboard open on mobile
+                    setTimeout(() => {
+                        inputField.focus();
+                    }, 10);
+                    
                     resolve(type);
                 };
+            });
+            
+            // Add click outside to close
+            answerTypePopup.addEventListener('click', (e) => {
+                if (e.target === answerTypePopup) {
+                    answerTypePopup.remove();
+                    
+                    // Refocus the input field to keep keyboard open on mobile
+                    setTimeout(() => {
+                        inputField.focus();
+                    }, 10);
+                    
+                    resolve('short'); // Default to short answer if closed without selection
+                }
             });
         });
     }
