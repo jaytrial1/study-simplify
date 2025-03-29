@@ -1,0 +1,18 @@
+# Co-operative Society Meaning and Characteristics
+
+## Meaning
+
+Co-operative society is a voluntary form of business organisation. Where in persons with common interest get associated voluntarily. The individuals form a co-operative society to achieve their definite objective. The objective of a co-operative society is to promote the economic interest of the members through co-operation among the members. In simple words the definition of co-operative society is as follows : Co-operative society is a form of business organisation in which individuals get associated for the upliftment of their economic interests on equal basis.
+
+## Characteristics
+(1) Voluntary Association : It is a voluntary association of individuals. Individuals join in the Co-operative society on the basis of equity.
+(2) Easy Formation Process : The formation process of a Co-operative society is easier than that of a company. Minimum ten persons join together and get it registered with the Registrar of Co-operative Society under Co-operative Society Act. With registration, the society gets a separate legal identity.
+(3) Equality of Members : Members have equal right and equal opportunity in the co-operative society. There is no distinction among the members due to capital investment or for any other reason.
+(4) Separate Identity : With the registration, the co-operative society gets a legal separate identity from its members. Entry or Exit of the member does not affect on its existence.
+(5) Democratic Management : A Co-operative society is managed by the representatives, elected by the members. In company voting right is per share, but in the Co-operative society voting right is per member. Significance is not to capital but significance is given to man in Co-operative society. Any member can contest the election of executive committee, can participate in management. The management of the Co-operative society is really democratic as compared to a Company. Hence, Co-operative society is called a training school of democracy.
+(6) Main Motive of Service : The main objective of co-operative society is to serve members. Profit is a secondary objective. Economic upliftment of the members is through service motive. Co-operative society attempts to raise the living standard of the members and make them self reliant E.g. the aim of a consumers' co-operative society is to provide the goods of proper quality at a fair price.
+(7) Fair Distribution of Profit : Inspite of motto of service, if there is excess of income, the profit is distributed among the members of society subject to the provisions of law. Residual profit is utilized for the welfare of the members of society.
+(8) Low Price of Share :Person with low income can purchase share and become the member of society, as the price of share of co-operative society is low. Sometimes, instalment facility is also provided to member instead of paying full amount at once.
+(9) Voting Right Per Member : Each member is entitled to a single vote regardless of the number of shares held by him. Representatives are elected on the basis of the principle of one member one vote. Conference and training classes are planned to promote equality and brotherhood and to add knowledge among the members.
+(10) Separate Institution From Politics and Religion : Membership of co-operative society is open to all irrespective of religion, caste and sex. A co-operative society cannot exist on the political or religion principle. Thus, Co-operative society is separate from politics and religion.
+(11) Unrestricted number of members : There is no restriction on the numbers of members so that as many persons as possible can become members of society for their economic upliftment.

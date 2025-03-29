@@ -86,5 +86,43 @@
         // Load the JavaScript file using the determined path
         document.write(`<script src="${signupJsPath}"><\/script>`);
     </script>
+    
+    <!-- Active User Tracking Script -->
+    <script>
+    // Auto-detect server environment and load the appropriate script
+    (function() {
+        // Determine if we're in production or local
+        const isProduction = !(
+            window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1' || 
+            window.location.hostname.startsWith('192.168.') ||
+            window.location.hostname.includes('.local')
+        );
+        
+        // Get the base path (main folder detection)
+        const getBasePath = () => {
+            const pathParts = window.location.pathname.split('/');
+            if (pathParts.length > 1 && pathParts[1] === 'main') {
+                return '/main';
+            }
+            return '';
+        };
+        
+        // Construct the correct script URL based on environment
+        const basePath = getBasePath();
+        const scriptPath = isProduction 
+            ? '/active-users/js/tracker.js' 
+            : basePath + '/active-users/js/tracker.js';
+        
+        // Create and append the script element
+        const script = document.createElement('script');
+        script.src = scriptPath;
+        script.async = true;
+        
+        // Add the script to the document
+        document.body.appendChild(script);
+    })();
+    </script>
+    <!-- End Active User Tracking Script -->
 </body>
 </html> 

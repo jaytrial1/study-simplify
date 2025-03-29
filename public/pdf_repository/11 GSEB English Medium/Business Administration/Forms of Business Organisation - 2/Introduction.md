@@ -1,0 +1,3 @@
+# Introduction
+
+Sole proprietorship, Partnership and Company are three forms of business organisation from the point of view of their primary objective of profit. All these three forms can exploit the customers through various means to get profit e.g. providing low quality goods, charging high price, black marketing of goods etc. Though co-operative society is a form of business organisation, it differs from the other forms of business organisation due to its special characteristics. Put in to execution the slogen No progress without cooperation. It comes in to being with the objective of Each for all and all for each.

@@ -6,6 +6,30 @@ function clearInput() {
     document.getElementById('commandPanel').classList.remove('active');
 }
 
+// Function to check if chat is empty and show instructions
+function checkEmptyChatAndShowInstructions() {
+    const chatMessages = document.querySelector('.chat-messages');
+    
+    // If there are no messages in the chat area
+    if (chatMessages && chatMessages.children.length === 0) {
+        const instructionBox = document.createElement('div');
+        instructionBox.className = 'empty-chat-instructions';
+        instructionBox.innerHTML = `
+            <div class="instruction-content">
+                <i class="fas fa-keyboard"></i>
+                <p>Type "/" in from your keyboard to see the questions and further type question name after "/" to find the question you want to study</p>
+            </div>
+        `;
+        chatMessages.appendChild(instructionBox);
+    } else if (chatMessages && chatMessages.querySelector('.empty-chat-instructions') && chatMessages.children.length > 1) {
+        // Remove the instruction box if there are other messages
+        const instructionBox = chatMessages.querySelector('.empty-chat-instructions');
+        if (instructionBox) {
+            instructionBox.remove();
+        }
+    }
+}
+
 // Show toast notification, withAction is optional, if true, show the action button, if false, show the message (Little pop up notification at the top of the page)
 function showToast(message, withAction = false) {
     const toast = document.getElementById('toastNotification');
@@ -101,6 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set API base path based on environment
     const apiBasePath = isLocalServer ? '/main' : '';
     console.log("API base path in script.js:", apiBasePath);
+
+    // Check if chat is empty and show instructions
+    checkEmptyChatAndShowInstructions();
 
     // -----------------------------------------------Variables--------------------------------------------------------------
     //  Define userGrade once
@@ -295,6 +322,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (introMessage) {
             introMessage.remove();
         }
+
+        // Also remove the instruction box if it exists
+        const instructionBox = document.querySelector('.empty-chat-instructions');
+        if (instructionBox) {
+            instructionBox.remove();
+        }
     };
     //----------------------------------------------------------------------------------------------------------------------
 
@@ -321,6 +354,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const questionDisplay = document.querySelector('.selected-questions');
                 if (questionDisplay) questionDisplay.innerHTML = '';
                 userInput.value = '';
+                
+                // Show the instruction box when clearing the chat
+                checkEmptyChatAndShowInstructions();
                 return;
             }
 
@@ -507,6 +543,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //--------------------------------Add response on the chat window---------------------------------------------
     function addMessage(type, content, isLoading = false) {
         const messagesContainer = document.querySelector('.chat-messages');
+        
+        // Remove instruction box if it exists when adding a new message
+        const instructionBox = messagesContainer.querySelector('.empty-chat-instructions');
+        if (instructionBox) {
+            instructionBox.remove();
+        }
+        
         const messageDiv = document.createElement('div');
         messageDiv.className = `response ${type}-response`;
 
@@ -633,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const scopeDialog = document.createElement('div');
             scopeDialog.className = 'answer-type-popup active';
             scopeDialog.style.position = 'fixed';
-            scopeDialog.style.bottom = '160px'; // Position above keyboard
+            scopeDialog.style.bottom = '100px'; // Position lower than before (was 160px)
             scopeDialog.style.left = '0';
             scopeDialog.style.right = '0';
             scopeDialog.style.zIndex = '1000';

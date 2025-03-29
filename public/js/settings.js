@@ -2,8 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Using global API base path in settings.js:", window.apiBasePath);
 
     // Add new chat button handler
-    document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
+    document.querySelector('.new-chat-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Navigate to chatbot page
         window.location.href = `${window.apiBasePath}/public/html/chatbot.html`;
+        
+        // The rest of the functionality will be handled by the script in chatbot.html
     });
 
     const settingsForm = document.getElementById('settingsForm');

@@ -1,0 +1,13 @@
+# Public Corporation
+Public corporation is that, which comes into existence through a special Act of either the parliament or Legislative Assembly. In this act corporation's authorities-duties, rights, responsibilites, service rules for employees and relationship with government department is mentioned. i.e. Life Insurance Corporation of India, Food Corporation of India, Gujarat State Textbooks Board etc.
+
+## Characteristics
+
+(1) Establishment : The establishment and management of public corporation is through a special act of either the Parliament or the Legislative Assembly. In this act, all objectives, powers, responsibilities and special facilities to public corporation are stated.
+(2) Ownership : The ownership is either with the central or the state government or with both. Government decide the financial responsibility and profit sharing of these corporations. The burden of loss is naturally borne by the government.
+(3) Capital Accumulation through Government : Government provides capital to this Corporation. They can also borrow capital from the government or the public, if needed.
+(4) Seperate Identity : Public corporations has legal identity and it can command all the facilities structure like any other company.
+(5) Managerial Autonomy : Ownership of public corporation lies with the government. Still it has complete autonomy. The minister does not interfere in the day today activities. The corporation gets enough freedom to take decisions and to implement them.
+(6) Service Rules : The employees of public corporations are not bound by the service rules of the government employees. The job rules of the employees of corporation are determined by the concerned corporation and accordingly the employees will have to perform duties. Many times, government officers are sent on deputation to manage this corporation.
+(7) Management Through Board of Directors : The Board of Directors manage the working of the public corporation. The government appoints the Board of Directors from celebrities, eminent personalities, prominent industrial experts, professionals etc. The Board of directors takes care of policy decisions. Managing director is responsible to implement the policy decisions and also takes care of day to day activites.
+(8) Answerable to Parliament/Legislative Assembly : As periodical report has to be submitted to the Parliament/Legislative Assembly, corporation is unable to earn extra profit at the cost the public. As such Parliament and Legislative Assembly has control over these public corporations.

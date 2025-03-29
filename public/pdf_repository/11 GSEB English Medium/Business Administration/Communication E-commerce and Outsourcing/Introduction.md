@@ -1,0 +1,3 @@
+# Introduction
+
+Now a days the competition in business has increased. In this age of competition, for the development of business, the factor like human resources have become important. Elements like high quality goods, low cost, prompt transportation of goods and better services to customers have become important in business. The process of communication through proper means of communication has become essential for business units. E-Commerce has come into existence for the transactions between units and with the customers. Further, outsourcing has also become necessary for smooth operation of internal transactions of business.

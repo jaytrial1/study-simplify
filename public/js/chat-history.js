@@ -60,8 +60,39 @@ class ChatHistoryManager {
 
     setupEventListeners() {
         // Listen for new chat button clicks
-        document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
-            window.location.href = window.apiBasePath + '/public/html/chatbot.html';  // Updated path based on environment
+        document.querySelector('.new-chat-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Reset current session
+            this.currentSessionId = null;
+            
+            // Clear selected questions
+            window.selectedQuestions = window.selectedQuestions || new Set();
+            window.selectedQuestions.clear();
+            
+            // Clear chat messages
+            const chatMessages = document.querySelector('.chat-messages');
+            if (chatMessages) chatMessages.innerHTML = '';
+            
+            // Clear selected questions container
+            const selectedQuestionsContainer = document.querySelector('#selectedQuestionsContainer');
+            if (selectedQuestionsContainer) selectedQuestionsContainer.innerHTML = '';
+            
+            // Reset subject and chapter selection
+            const selectedSubject = document.querySelector('#selectedSubject');
+            if (selectedSubject) selectedSubject.textContent = 'Select Subject';
+            
+            const selectedChapter = document.querySelector('#selectedChapter');
+            if (selectedChapter) selectedChapter.textContent = 'Select Chapter';
+            
+            // Close the sidebar on mobile
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.remove('active');
+            
+            // Show the instruction box
+            if (typeof checkEmptyChatAndShowInstructions === 'function') {
+                checkEmptyChatAndShowInstructions();
+            }
         });
 
         // Listen for history item clicks
@@ -304,6 +335,17 @@ class ChatHistoryManager {
             if (data.success && Array.isArray(data.conversation)) {
                 this.currentSessionId = sessionId;
                 
+                // Clear existing chat messages
+                const chatMessages = document.querySelector('.chat-messages');
+                
+                // Remove the instruction box if it exists
+                const instructionBox = chatMessages?.querySelector('.empty-chat-instructions');
+                if (instructionBox) {
+                    instructionBox.remove();
+                }
+                
+                chatMessages.innerHTML = '';
+                
                 // Auto-select the subject and chapter from history item
                 const historyItem = document.querySelector(`.history-item[data-session-id="${sessionId}"]`);
                 if (historyItem) {
@@ -366,12 +408,6 @@ class ChatHistoryManager {
                     } catch (error) {
                         console.error('Error loading questions:', error);
                     }
-                }
-
-                // Clear existing chat messages
-                const chatMessages = document.querySelector('.chat-messages');
-                if (chatMessages) {
-                    chatMessages.innerHTML = '';
                 }
 
                 // Keep track of processed messages to avoid duplicates
@@ -657,6 +693,11 @@ function debounce(func, wait) {
 // Initialize the chat history manager
 document.addEventListener('DOMContentLoaded', () => {
     new ChatHistoryManager();
+    
+    // Show instruction box if chat area is empty
+    if (typeof checkEmptyChatAndShowInstructions === 'function') {
+        checkEmptyChatAndShowInstructions();
+    }
 });
 
 // Export for use in other files

@@ -60,8 +60,13 @@ function formatSaveTypeClass(saveType) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Add new chat button handler
-    document.querySelector('.new-chat-btn')?.addEventListener('click', () => {
+    document.querySelector('.new-chat-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Navigate to chatbot page
         window.location.href = `${window.apiBasePath}/public/html/chatbot.html`;
+        
+        // The rest of the functionality will be handled by the script in chatbot.html
     });
 
     const menuToggle = document.getElementById('menuToggle');
@@ -102,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .no-answers-message p {
             margin: 10px 0;
-            color: #555;
+            color: #c4c2c2;
         }
         
         .no-chapters-message, .no-answers-message-chapter {
@@ -673,7 +678,10 @@ class SavedAnswersManager {
                     this.answersTree.innerHTML = `
                         <div class="no-answers-message">
                             <p>You haven't saved any answers yet.</p>
-                            <p>When chatting with the bot, click the bookmark icon to save answers for later reference.</p>
+                            <p>Long press at any of the ai answer that you like to save for the futuer for quick revision.</p>
+                            <p>there are 2 type of save</p>
+                            <p>1. save response - save the response is good for you to revise for your exams</p>
+                            <p>2. question related - save the respose whcih is not your answer of quetsion, but help you to remember that answer</p>
                         </div>
                     `;
                 } else {

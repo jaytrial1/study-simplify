@@ -1,0 +1,5 @@
+# Life Insurance
+(a) Whole-Life Insurance : When a person who is insured dies, the insurance company undertakes to pay a pre-decided sum as a compensation to the legal heir of the deceased according to the contract or an agreement, it is known as whole life insurance. The insurer has to pay periodic premium which is to be paid, throughout his life.
+
+Life is precious and hence there cannot be any price decided for it. An insuree decides the value of his life and his capacity to pay premium. In this case, the principle of Indemnity cannot be applied at the time of death of an insuree. If the death is not unnatural, the insurance company has to give the full amount as per the contract to the heir of the deceased.
+(b) Endowment Insurance : When the insurance company promises to pay the policy amount to the insuree at the end of the policy period to him or to the legal heir in the event of his death, it is known as endowment insurance. In return, the insuree pays a pre-decided amount as premium, periodically till the duration of the policy.

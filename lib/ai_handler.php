@@ -218,7 +218,7 @@ class AIHandler {
                 error_log("General instructions preview: " . $instructionsPreview);
                 
                 $data = [
-                    'model' => 'deepseek/deepseek-chat-v3-0324:free',
+                    'model' => 'qwen/qwq-32b:free',
                     'messages' => [
                         [
                             'role' => 'system',
@@ -238,7 +238,7 @@ class AIHandler {
 
             // Ensure model is specified for OpenRouter
             if (!isset($data['model'])) {
-                $data['model'] = 'deepseek/deepseek-chat:free';
+                $data['model'] = 'qwen/qwq-32b:free';
             }
             
             // Format the data JSON for logging with better readability

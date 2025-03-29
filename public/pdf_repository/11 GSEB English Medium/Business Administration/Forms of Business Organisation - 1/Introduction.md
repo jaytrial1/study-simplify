@@ -1,0 +1,3 @@
+# Introduction
+
+Along with the time the needs of man has increased and become varied. Man became incapable to satisfy his needs by himself so he needed the help of other people. Thus, the trading activites began through barter system. Therefore a class of people came into existance in the society, who started spending time and energy to satisfy the needs of people by exchange activites of goods, services and money. This class was called traders. For activites of purchase and sale, they introduced a different arrangement. Thus, different forms of business organisations, such as Sole Proprietorship, Partnership, Hindu Undivided Family (HUF), Co-operative Society and Joint Stock Companies came in to existance, one after the other.

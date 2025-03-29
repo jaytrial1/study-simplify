@@ -1,0 +1,2 @@
+# INTRODUCTION
+Exchange of directives, instructions, views and information is inevitable in business management. As Chester Bernard has stated "the first executive function is to develop and maintain a system of communication." It is no exaggeration to say that the success of a manager depends as much on his skill in communication as on his skill in other areas of management. Through good communication, a manager can get better work from his subordinates; employees can accept policies readily; they understand instructions easily and extend co-operation willingly.
