@@ -1,0 +1,113 @@
+/* 
+ * Topic List CSS
+ * Styling for the topic list container and topic previews
+ */
+
+/* Container styling */
+.topic-container {
+    background-color: #252525;
+    border-radius: 8px;
+    overflow: visible; /* Changed from hidden to allow full content visibility */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    width: 100%;
+    flex-shrink: 0; /* Prevent container from shrinking */
+}
+
+/* Keep the existing topic button styling but remove margin */
+.topic-container .topic-button {
+    margin: 0;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 500;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+/* Preview container - ensure it expands to fit all content */
+.topic-preview {
+    padding: 10px 12px 15px; /* Added more padding at bottom */
+    background-color: #1e1e1e;
+    font-size: 13px;
+    color: #bbb;
+    border-radius: 0 0 8px 8px; /* Round bottom corners */
+    width: 100%; /* Ensure it takes full width */
+    height: auto; /* Allow height to adjust to content */
+}
+
+/* Bullet list styling */
+.bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure it takes full width */
+}
+
+/* Main bullet points */
+.bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    width: 100%; /* Ensure text takes full width */
+}
+
+.bullet-list li:last-child {
+    margin-bottom: 0;
+}
+
+.bullet-list li:before {
+    content: "•";
+    position: absolute;
+    left: 6px;
+    color: #4166d5;
+}
+
+/* Indentation levels for nested bullets */
+.bullet-list .bullet-level-0 {
+    padding-left: 18px;
+    font-weight: 500;
+    color: #ddd;
+}
+
+.bullet-list .bullet-level-1 {
+    padding-left: 28px;
+    color: #ccc;
+}
+
+.bullet-list .bullet-level-1:before {
+    left: 16px;
+    color: #3a5ac2;
+}
+
+.bullet-list .bullet-level-2 {
+    padding-left: 38px;
+}
+
+.bullet-list .bullet-level-2:before {
+    left: 26px;
+    color: #334fa8;
+}
+
+.bullet-list .bullet-level-3 {
+    padding-left: 48px;
+    font-size: 12px;
+}
+
+.bullet-list .bullet-level-3:before {
+    left: 36px;
+    color: #2d4590;
+}
+
+/* When there are no bullet points, adjust the button radius */
+.topic-container .topic-button:only-child {
+    border-radius: 8px;
+}
+
+/* Topic button hover that matches the entire container */
+.topic-container:hover .topic-button {
+    background-color: #2d2d2d;
+}
+
+/* Remove scrollbar styles for topic-preview since it no longer scrolls */ 

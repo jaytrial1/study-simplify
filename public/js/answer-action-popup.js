@@ -167,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formattedSaveType = selectedType === 'Question Related' ? 'question_related' : 
                                         selectedType === 'Best response' ? 'Best response' : 
                                         selectedType; // Keep original if not matching known types
+                console.log('Formatted Save Type:', formattedSaveType);
 
                 const currentQuestion = Array.from(window.selectedQuestions)[0]; // Get the current question
                 const subject = document.getElementById('selectedSubject').innerText;
@@ -174,40 +175,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 const grade = localStorage.getItem('userGrade') || 'N/A'; // Retrieve from localStorage, default to 'N/A' if not found
                 const currentQuestionText = currentQuestion; // Assuming currentQuestion holds the full text
 
+                console.log('Collected Data:', {
+                    currentQuestion,
+                    subject,
+                    chapter,
+                    grade,
+                    currentQuestionText
+                });
+
                 // Get the AI response from the clicked element's formatted content
                 const formattedContent = clickedElement.querySelector('.formatted-content');
-                const aiResponse = formattedContent ? standardizeFormattedContent(formattedContent.innerHTML) : '';
+                
+                // Debug logging to identify the structure
+                console.log('Clicked element:', clickedElement);
+                console.log('Clicked element classes:', clickedElement.className);
+                console.log('Clicked element dataset:', clickedElement.dataset);
+                
+                // Try to find bot response element
+                const botResponseElement = clickedElement.closest('.bot-response');
+                console.log('Bot Response Element:', botResponseElement);
+                
+                // Get the AI response text
+                const aiResponse = formattedContent ? standardizeFormattedContent(formattedContent.innerHTML, clickedElement) : '';
+                console.log('AI Response Length:', aiResponse.length);
+                console.log('AI Response Preview:', aiResponse.substring(0, 100) + '...');
 
-                // Log the data for debugging
-                console.log('Current Question:', currentQuestion);
-                console.log('Current Question Text:', currentQuestionText);
-                console.log('Subject:', subject);
-                console.log('Chapter:', chapter);
-                console.log('Grade:', grade);
-                console.log('AI Response:', aiResponse);
+                // Get user ID from localStorage
+                const userId = localStorage.getItem('user_id');
+                console.log('User ID:', userId);
+
+                // Create payload for saving
+                const payload = { 
+                    user_id: userId,
+                    question: currentQuestionText,
+                    subject, 
+                    chapter, 
+                    saveType: formattedSaveType, 
+                    grade, 
+                    aiResponse
+                };
+
+                // console.log('--- Saving Answer Payload ---', JSON.stringify(payload, null, 2));
 
                 // Send data to backend
                 fetch(`${window.apiBasePath}/api/saved-answers/save_to_database.php`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        user_id: userId,
-                        question: currentQuestionText,
-                        subject, 
-                        chapter, 
-                        saveType: formattedSaveType, 
-                        grade, 
-                        aiResponse
-                    })
+                    body: JSON.stringify(payload)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Response Status:', response.status);
+                    console.log('Response Headers:', response.headers);
+                    return response.json();
+                })
                 .then(data => {
                     console.log('Response from server:', data);
                     if (data.success) {
+                        console.log('Save successful');
                         showToast('Answer saved successfully!', false);
                     } else {
+                        console.log('Save failed:', data);
                         // If the answer already exists, show the correct saved type
-                        if (data.message && data.message.includes('already exists')) {
+                        if (data && data.message && data.message.includes('already exists')) {
+                            console.log('Answer already exists with type:', data.save_type);
                             // Get the save type and convert it to display format
                             let saveTypeDisplay = "Unknown";
                             if (data.save_type) {
@@ -225,24 +255,21 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ? `This exact response has already been saved as "${saveTypeDisplay}"`
                                 : `A response to this question has already been saved as "${saveTypeDisplay}"`;
                             
+                            console.log('Showing message:', message);
                             // Use the toast notification system
                             createToastMessage(message, false);
                         } else {
-                            showToast('Error saving answer: ' + data.message, false);
+                            // Handle other error cases
+                            const errorMessage = data && data.message ? data.message : 'An error occurred while saving the answer';
+                            console.log('Error message:', errorMessage);
+                            showToast(errorMessage, false);
                         }
                     }
                     popup.style.display = 'none';
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    if (error instanceof SyntaxError) {
-                        showToast('Error: Invalid server response. Please try again.', false);
-                    } else if (error.message.startsWith("Expected JSON but received:")) {
-                        // Display the actual server error message
-                        showToast('Server Error: ' + error.message.replace("Expected JSON but received:", ""), false);
-                    } else {
-                        showToast('An error occurred while saving the answer.', false);
-                    }
+                    console.error('Error during save operation:', error);
+                    showToast('An error occurred while saving the answer', false);
                     popup.style.display = 'none';
                 });
             });
@@ -335,15 +362,48 @@ function createToastMessage(message, isError = false) {
 }
 
 // Add this new function to standardize the format of saved answers
-function standardizeFormattedContent(htmlContent) {
+function standardizeFormattedContent(htmlContent, clickedElement) {
     if (!htmlContent) return '';
     
-    // Create a temporary div to parse the HTML
+    // Try to find the parent bot-response element to get the original markdown
+    let botResponseElement = clickedElement;
+    
+    // Check if the clicked element is a bot-response or contains one
+    if (botResponseElement && !botResponseElement.classList.contains('bot-response')) {
+        botResponseElement = botResponseElement.closest('.bot-response');
+    }
+    
+    // If we found the bot response element, check for original markdown
+    if (botResponseElement && botResponseElement.dataset && botResponseElement.dataset.originalMarkdown) {
+        console.log('Found original markdown in dataset, using it for saving');
+        return botResponseElement.dataset.originalMarkdown;
+    }
+    
+    // If we couldn't find the original markdown, look for it in the first response element 
+    // This is needed because we might have clicked on a child element
+    const responseElement = clickedElement.querySelector('.response.bot-response');
+    if (responseElement && responseElement.dataset && responseElement.dataset.originalMarkdown) {
+        console.log('Found original markdown in child response element, using it for saving');
+        return responseElement.dataset.originalMarkdown;
+    }
+    
+    // Final attempt - look for dataset in the parent
+    let parentElement = clickedElement.parentElement;
+    while (parentElement) {
+        if (parentElement.classList && parentElement.classList.contains('bot-response') && 
+            parentElement.dataset && parentElement.dataset.originalMarkdown) {
+            console.log('Found original markdown in parent element, using it for saving');
+            return parentElement.dataset.originalMarkdown;
+        }
+        parentElement = parentElement.parentElement;
+    }
+    
+    // Fallback: Create a temporary div to parse the HTML
+    console.log('Could not find original markdown, falling back to HTML content');
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
     
-    // No need to clean up animation elements anymore since they don't exist
-    // Just return the HTML content directly
+    // Just return the HTML content as fallback
     return tempDiv.innerHTML;
 }
 

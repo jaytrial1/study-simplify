@@ -11,8 +11,12 @@ const isLocalServer = window.location.hostname === 'localhost' ||
 
 console.log("Server detection in base-url.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
 
+// Check if we're in the /main/ directory (more reliable path detection)
+const isInMainDirectory = window.location.pathname.includes('/main/');
+console.log("Path check - in /main/ directory:", isInMainDirectory);
+
 // Set API base path based on environment
-const apiBasePath = isLocalServer ? '/main' : '';
+const apiBasePath = isLocalServer && isInMainDirectory ? '/main' : '';
 console.log("API base path in base-url.js:", apiBasePath);
 
 // Make these available globally

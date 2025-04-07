@@ -8,6 +8,34 @@ require_once 'handle_follow_up.php'; // Include the follow-up handler
 header('Content-Type: application/json');
 
 try {
+    // Check for Authorization header
+    $authHeader = null;
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        // Sometimes Apache puts it in a different variable
+        $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    } elseif (function_exists('apache_request_headers')) {
+        $requestHeaders = apache_request_headers();
+        if (isset($requestHeaders['Authorization'])) {
+            $authHeader = $requestHeaders['Authorization'];
+        }
+    }
+    
+    // Simplified token check for development purposes
+    // In production, you should validate the token properly
+    if (!$authHeader || !preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+        throw new Exception('No auth credentials found');
+    }
+    
+    $token = $matches[1];
+    // For local development, we'll accept any non-empty token
+    // In production, validate the token properly
+    if (empty($token)) {
+        throw new Exception('Invalid token');
+    }
+    
+    // Process the request data
     $data = json_decode(file_get_contents('php://input'), true);
     
     if (!$data) {

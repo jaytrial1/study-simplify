@@ -107,22 +107,32 @@
 }
 
 /* =============================
+   Scrollable Wrapper for Tables and Equations
+   ============================= */
+.scrollable-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px; /* Add padding at bottom for better UX */
+    margin-bottom: 10px;
+    position: relative;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Modified table display to ensure tables can be fully scrolled */
+.scrollable-wrapper table {
+    display: table;
+    margin-right: 50px; /* Add right margin to the table itself for buffer space */
+    white-space: nowrap; /* Prevent text wrapping in tables */
+}
+
+/* =============================
    Table Formatting
    ============================= */
 .formatted-content table {
     width: 100%;
     border-collapse: collapse;
-    overflow-x: auto;
-    display: block;
-    max-width: 100%;
-    touch-action: auto; /* Allow all touch actions for mobile users */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     margin-bottom: 1rem;
-}
-
-/* Create wrapper for tables to allow horizontal scrolling */
-.formatted-content table {
-    white-space: nowrap; /* Prevent text wrapping in tables */
+    min-width: max-content; /* Prevent table from shrinking smaller than content */
 }
 
 /* But allow wrapping in specific table cells if needed */
@@ -141,6 +151,29 @@
 .formatted-content th {
     background-color: transparent;
     font-weight: bold;
+}
+
+/* =============================
+   MathJax Equations
+   ============================= */
+.scrollable-wrapper .MathJax {
+    max-width: none !important;
+    overflow: visible !important;
+    margin-right: 50px !important; /* Add right margin to MathJax elements */
+    display: inline-block !important; /* Ensure block display for horizontal layout */
+}
+
+/* Ensure the MathJax container spans full width for proper scrolling */
+.scrollable-wrapper .MJX-TEX {
+    width: auto !important;
+    max-width: none !important;
+}
+
+/* Improve large display equations for better horizontal scrolling */
+.mjx-chtml {
+    overflow-x: visible !important;
+    overflow-y: hidden !important;
+    max-width: none !important;
 }
 
 /* =============================
@@ -171,6 +204,47 @@
 
 .reaction-buttons button:hover {
     color: #000;
+}
+
+/* Chart improvements for mobile */
+@media (max-width: 768px) {
+    .chart-placeholder {
+        margin: 10px 0;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .formatted-content {
+        overflow-x: auto;
+    }
+    
+    .chart-placeholder canvas {
+        width: 100% !important;
+    }
+
+    /* Increase specificity and ensure overflow applies directly */
+    .bot-response .formatted-content { /* Changed selector */
+        overflow-x: auto;
+        /* Add explicit max-width just in case */
+        max-width: 100%;
+    }
+}
+
+/* Ensure charts are fully visible on all screen sizes */
+.chart-placeholder {
+    display: block;
+    position: relative;
+    margin: 15px 0;
+}
+
+.chart-error {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 3px solid #ff6b6b;
+    margin: 5px 0;
+    font-size: 14px;
 }
 
 

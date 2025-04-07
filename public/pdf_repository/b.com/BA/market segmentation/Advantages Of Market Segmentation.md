@@ -4,9 +4,7 @@ The basic object of market segmentation is to identify the groups of homogenous 
 
 (1) Significant Increase in Sales: Naturally, there will be a significant increase in sales, if needs and preferences of a particular group of buyers are studied systematically and a sales promotion campaign appealing to them is forcefully launched. A producer who sells in a general market to all groups of buyers cannot influence them so successfully and therefore his market is bound to be limited.
 
-(2) Proper Market Strategy: If a limited group of buyers is to be
-
-served, it is possible to frame a suitable advertisement and publicity to appeal to the group in question most effectively. For example, the companies making jeans pants can attract the youth and the adolescent through impressing upon them the charm of current fashions. In the field of personal selling also, salesmen can focus on a limited group of buyers. The gift scheme, competition etc. can be arranged to appeal to a particular group of buyers. For instance, the jeans pant manufacturers can arrange a competition of identifying the film actors on the basis of the given photographs. The expenditure on such marketing strategies prove to be profitable.
+(2) Proper Market Strategy: If a limited group of buyers is to be served, it is possible to frame a suitable advertisement and publicity to appeal to the group in question most effectively. For example, the companies making jeans pants can attract the youth and the adolescent through impressing upon them the charm of current fashions. In the field of personal selling also, salesmen can focus on a limited group of buyers. The gift scheme, competition etc. can be arranged to appeal to a particular group of buyers. For instance, the jeans pant manufacturers can arrange a competition of identifying the film actors on the basis of the given photographs. The expenditure on such marketing strategies prove to be profitable.
 
 (3) Production According to Needs: The needs of the distinct group buyers can be determined and only these products can be produced which can meet those needs effectively. Thus, the modern concept of marketing can materialise.
 

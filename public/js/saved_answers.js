@@ -1,30 +1,320 @@
 // Add this function at the top of the file
 function preprocessMarkdown(markdown) {
     // Ensure input is a string
-    if (!markdown) return '';
+    if (!markdown) return { markdown: '', chartData: [] };
     if (typeof markdown !== 'string') {
         try {
-            markdown = String(markdown);
+            // Handle special case for objects
+            if (typeof markdown === 'object') {
+                // Check for OpenAI-like response format
+                if (markdown.choices && Array.isArray(markdown.choices) && markdown.choices.length > 0) {
+                    if (markdown.choices[0].message && markdown.choices[0].message.content) {
+                        markdown = markdown.choices[0].message.content;
+                    } else if (markdown.choices[0].text) {
+                        markdown = markdown.choices[0].text;
+                    }
+                } 
+                // Check for common completion formats
+                else if (markdown.completion) {
+                    markdown = markdown.completion;
+                } else if (markdown.answer) {
+                    markdown = markdown.answer;
+                } 
+                // Try to extract text from known object formats
+                else if (markdown.text) {
+                    markdown = markdown.text;
+                } else if (markdown.message) {
+                    markdown = markdown.message;
+                } else if (markdown.content) {
+                    markdown = markdown.content;
+                } else if (markdown.response) {
+                    markdown = markdown.response;
+                } else if (markdown.data && typeof markdown.data === 'object') {
+                    // Try nested data object
+                    if (markdown.data.text) {
+                        markdown = markdown.data.text;
+                    } else if (markdown.data.message) {
+                        markdown = markdown.data.message;
+                    } else if (markdown.data.content) {
+                        markdown = markdown.data.content;
+                    } else if (markdown.data.response) {
+                        markdown = markdown.data.response;
+                    } else {
+                        // Stringify entire data object if no text fields found
+                        markdown = JSON.stringify(markdown.data, null, 2);
+                    }
+                } else {
+                    // Check if object has toString method that returns something useful
+                    if (typeof markdown.toString === 'function' && markdown.toString() !== '[object Object]') {
+                        markdown = markdown.toString();
+                    } else {
+                        // Last resort - stringify the entire object
+                        markdown = JSON.stringify(markdown, null, 2);
+                    }
+                }
+            } else {
+                // For other non-string types
+                markdown = String(markdown);
+            }
         } catch (e) {
             console.error('Failed to convert markdown to string:', e);
-            return '';
+            return { markdown: 'Error rendering content', chartData: [] };
         }
     }
     
-    // If the content starts with triple backticks followed by markdown, remove them
-    let processed = markdown;
+    // Handle the case where markdown might be a stringified JSON object
+    if (markdown.startsWith('{') && markdown.endsWith('}')) {
+        try {
+            const parsedObj = JSON.parse(markdown);
+            // Check for OpenAI-like format in stringified JSON
+            if (parsedObj.choices && Array.isArray(parsedObj.choices) && parsedObj.choices.length > 0) {
+                if (parsedObj.choices[0].message && parsedObj.choices[0].message.content) {
+                    markdown = parsedObj.choices[0].message.content;
+                } else if (parsedObj.choices[0].text) {
+                    markdown = parsedObj.choices[0].text;
+                }
+            }
+            // Check for other response formats
+            else if (parsedObj.completion) {
+                markdown = parsedObj.completion;
+            } else if (parsedObj.answer) {
+                markdown = parsedObj.answer;
+            } 
+            // Extract text from known object formats
+            else if (parsedObj.text) {
+                markdown = parsedObj.text;
+            } else if (parsedObj.message) {
+                markdown = parsedObj.message;
+            } else if (parsedObj.content) {
+                markdown = parsedObj.content;
+            } else if (parsedObj.response) {
+                markdown = parsedObj.response;
+            } else if (parsedObj.data && typeof parsedObj.data === 'object') {
+                // Try nested data object
+                if (parsedObj.data.text) {
+                    markdown = parsedObj.data.text;
+                } else if (parsedObj.data.message) {
+                    markdown = parsedObj.data.message;
+                } else if (parsedObj.data.content) {
+                    markdown = parsedObj.data.content;
+                } else if (parsedObj.data.response) {
+                    markdown = parsedObj.data.response;
+                } else {
+                    // If no text fields found in data, keep original stringified
+                    // Likely it's intended to be displayed as JSON
+                }
+            }
+            // If no recognized property was found, keep the original JSON string
+            // This ensures JSON intended for display stays as is
+        } catch (e) {
+            // If it couldn't be parsed as JSON, keep it as is
+            console.log('String looks like JSON but cannot be parsed:', e);
+        }
+    }
     
-    // Handle the case where the entire content is a fenced code block
+    // Handle the case where the input is the literal string "[object Object]"
+    if (markdown === '[object Object]') {
+        markdown = "Error: Response was incorrectly serialized to [object Object]";
+    }
+
+    // Handle markdown code blocks
+    if (markdown.startsWith('```markdown')) {
+        // Remove the ```markdown and ``` wrapper
+        markdown = markdown.replace(/^```markdown\n?/, '').replace(/```$/, '');
+    }
+    
+    let processed = markdown;
+    const chartData = [];
+    
+    // Process LaTeX expressions before other Markdown processing
     try {
-        const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
-        if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
-            return fullBlockMatch[2];
+        // Process block math expressions
+        // Look for $$...$$, but avoid replacing if it's already inside a code block
+        const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
+        
+        // Replace with MathJax-friendly syntax for block math
+        processed = processed.replace(blockMathPattern, function(match, fullMatch, equation) {
+            // Keep existing $$ syntax as MathJax will handle it natively
+            return fullMatch;
+        });
+        
+        // Process inline math expressions
+        // Look for $...$ but avoid $$ (block math) and ensure it's not inside a code block
+        const inlineMathPattern = /(?<!`|\$)((?<!`)\$([^\$\n]+?)\$(?![\$`]))/g;
+        
+        // Replace with MathJax-friendly syntax for inline math
+        processed = processed.replace(inlineMathPattern, function(match, fullMatch, equation) {
+            // Keep existing $ syntax as MathJax will handle it natively
+            return fullMatch;
+        });
+    } catch (e) {
+        console.error('Error processing LaTeX expressions:', e);
+    }
+    
+    try {
+        // Find and process all chart blocks - updated regex to handle both inline and multi-line formats
+        const chartBlockRegex = /```chart\s*([\s\S]*?)```/g;
+        let match;
+        let placeholderIndex = 0;
+        
+        while ((match = chartBlockRegex.exec(processed)) !== null) {
+            console.log("Chart detected:", match[1].trim());
+            
+            try {
+                const chartJson = JSON.parse(match[1].trim());
+                console.log("Parsed chart JSON:", chartJson);
+                
+                // Transform the data into Chart.js format based on chart type
+                let chartConfig;
+                const chartType = chartJson.type;
+                
+                if (!chartType) {
+                    throw new Error('Chart type is required');
+                }
+                
+                switch (chartType.toLowerCase()) {
+                    case 'bar':
+                    case 'line':
+                    case 'pie':
+                    case 'doughnut':
+                    case 'polararea':
+                    case 'radar':
+                        // For basic charts
+                        if (!chartJson.labels || !chartJson.values) {
+                            throw new Error(`${chartType} chart requires labels and values`);
+                        }
+                        
+                        chartConfig = {
+                            type: chartType.toLowerCase(),
+                            data: {
+                                labels: chartJson.labels,
+                                datasets: [{
+                                    label: chartJson.title || 'Data',
+                                    data: chartJson.values,
+                                    backgroundColor: chartJson.colors || [
+                                        'rgba(255, 99, 132, 0.5)',
+                                        'rgba(54, 162, 235, 0.5)',
+                                        'rgba(255, 206, 86, 0.5)',
+                                        'rgba(75, 192, 192, 0.5)',
+                                        'rgba(153, 102, 255, 0.5)',
+                                        'rgba(255, 159, 64, 0.5)'
+                                    ],
+                                    borderColor: chartJson.borderColors || [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                aspectRatio: 2,
+                                plugins: {
+                                    legend: {
+                                        position: 'right'
+                                    }
+                                }
+                            }
+                        };
+                        break;
+                    
+                    // Special case for multiple datasets
+                    case 'multibar':
+                    case 'multiline':
+                        if (!chartJson.labels || !chartJson.datasets) {
+                            throw new Error(`${chartType} chart requires labels and datasets`);
+                        }
+                        
+                        // Set the appropriate chart type
+                        const actualChartType = chartType.toLowerCase() === 'multibar' ? 'bar' : 'line';
+                        
+                        chartConfig = {
+                            type: actualChartType,
+                            data: {
+                                labels: chartJson.labels,
+                                datasets: chartJson.datasets
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                aspectRatio: 2
+                            }
+                        };
+                        break;
+                    
+                    case 'bubble':
+                    case 'scatter':
+                        // For bubble and scatter charts
+                        if (!chartJson.datasets) {
+                            throw new Error(`${chartType} chart requires datasets with x,y coordinates`);
+                        }
+                        
+                        chartConfig = {
+                            type: chartType.toLowerCase(),
+                            data: {
+                                datasets: chartJson.datasets
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                aspectRatio: 2
+                            }
+                        };
+                        break;
+                        
+                    default:
+                        throw new Error(`Unsupported chart type: ${chartType}`);
+                }
+                
+                // Apply any custom options
+                if (chartJson.options) {
+                    chartConfig.options = {
+                        ...chartConfig.options,
+                        ...chartJson.options
+                    };
+                }
+                
+                console.log("Transformed chart config:", chartConfig);
+                
+                // Validate chart configuration
+                if (!chartConfig.type || !chartConfig.data) {
+                    console.error('Invalid chart configuration:', chartConfig);
+                    throw new Error('Chart configuration missing required properties');
+                }
+                
+                chartData.push(chartConfig);
+                
+                // Replace the chart block with a placeholder div
+                const placeholder = `<div class="chart-placeholder" data-chart-index="${placeholderIndex}"></div>`;
+                processed = processed.replace(match[0], placeholder);
+                console.log("Chart successfully replaced at index:", placeholderIndex);
+                placeholderIndex++;
+            } catch (e) {
+                console.error('Invalid chart data:', match[1].trim(), e);
+                // Push null to maintain index alignment
+                chartData.push(null);
+                
+                // Replace with error placeholder
+                const errorPlaceholder = `<div class="chart-placeholder error" data-chart-index="${placeholderIndex}">
+                    <div class="chart-error">Invalid chart data: ${e.message}</div>
+                </div>`;
+                processed = processed.replace(match[0], errorPlaceholder);
+                placeholderIndex++;
+            }
         }
     } catch (e) {
         console.error('Error processing markdown:', e);
     }
     
-    return processed;
+    return {
+        markdown: processed,
+        chartData: chartData
+    };
 }
 
 // Function to show toast messages
@@ -574,27 +864,237 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
             let formattedAnswer = '';
             try {
                 if (typeof marked !== 'undefined' && marked) {
-                    formattedAnswer = marked.parse(processedMarkdown);
+                    formattedAnswer = marked.parse(processedMarkdown.markdown);
                 } else {
                     console.warn('Marked library not fully loaded, displaying raw text');
-                    formattedAnswer = `<pre>${processedMarkdown}</pre>`;
+                    formattedAnswer = `<pre>${processedMarkdown.markdown}</pre>`;
                 }
             } catch (error) {
                 console.error('Error parsing markdown:', error);
-                formattedAnswer = `<pre>${processedMarkdown}</pre>`;
+                formattedAnswer = `<pre>${processedMarkdown.markdown}</pre>`;
             }
             
             updateModalContent();
             
             // Update the answer text with formatted content
-            document.querySelector('.answer-text').innerHTML = `
+            const answerTextElement = document.querySelector('.answer-text');
+            answerTextElement.innerHTML = `
                 <div class="formatted-content">
                     ${formattedAnswer}
                 </div>
             `;
+            
+            // Render LaTeX expressions with MathJax if available
+            if (typeof MathJax !== 'undefined') {
+                try {
+                    // Use typesetPromise for better performance
+                    MathJax.typesetPromise([answerTextElement]).then(() => {
+                        // After MathJax has rendered, wrap equation blocks in scrollable container
+                        const displayMath = answerTextElement.querySelectorAll('.MathJax');
+                        displayMath.forEach(mathElement => {
+                            // Skip if already wrapped
+                            if (mathElement.closest('.scrollable-wrapper')) {
+                                return;
+                            }
+                            
+                            // Check if it's a display equation (block equation)
+                            // We should wrap all display math elements to ensure proper scrolling
+                            const rect = mathElement.getBoundingClientRect();
+                            const isDisplayEquation = rect.width > 200 || mathElement.getAttribute('display') === 'block';
+                            
+                            if (isDisplayEquation || rect.width > answerTextElement.clientWidth * 0.7) {
+                                // Create scrollable wrapper
+                                const wrapper = document.createElement('div');
+                                wrapper.classList.add('scrollable-wrapper');
+                                wrapper.style.overflowY = 'hidden'; // Force horizontal scrolling only
+                                
+                                // Replace equation with wrapper containing equation
+                                mathElement.parentNode.insertBefore(wrapper, mathElement);
+                                wrapper.appendChild(mathElement);
+                                
+                                // Set explicit styles on MathJax element to ensure horizontal scrolling
+                                mathElement.style.display = 'inline-block';
+                                mathElement.style.width = 'auto';
+                                mathElement.style.maxWidth = 'none';
+                            }
+                        });
+                    }).catch((err) => {
+                        console.error('MathJax typesetting error:', err);
+                    });
+                } catch (error) {
+                    console.error('Error rendering LaTeX with MathJax:', error);
+                }
+            }
         }
     });
 });
+
+// Also add a function to wrap tables in scrollable wrappers
+function wrapTablesInScrollableContainers(element) {
+    if (!element) return;
+    
+    // Find all tables
+    const tables = element.querySelectorAll('table');
+    tables.forEach(table => {
+        // Skip if already wrapped
+        if (table.closest('.scrollable-wrapper')) {
+            return;
+        }
+        
+        // Create scrollable wrapper
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('scrollable-wrapper');
+        
+        // Replace table with wrapper containing table
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    });
+}
+
+// Function to enhance code blocks and render charts
+function enhanceCodeBlocks(messageElement, chartData) {
+    if (!messageElement) return;
+    
+    console.log('Enhancing code blocks and charts for element:', messageElement);
+    
+    // Process code blocks if needed
+    const codeBlocks = messageElement.querySelectorAll('pre code');
+    codeBlocks.forEach(codeBlock => {
+        // Process code blocks if needed
+    });
+
+    // Wrap tables in scrollable wrapper
+    wrapTablesInScrollableContainers(messageElement);
+    
+    // Get chart data either from passed parameter or from the dataset
+    let finalChartData = chartData;
+    
+    // If no chart data passed but element has chartData in dataset, use that
+    if ((!finalChartData || finalChartData.length === 0) && messageElement.dataset.chartData) {
+        try {
+            console.log('Trying to parse chart data from dataset');
+            finalChartData = JSON.parse(messageElement.dataset.chartData);
+            console.log('Successfully parsed chart data from dataset:', finalChartData);
+        } catch (error) {
+            console.error('Error parsing chart data from dataset:', error);
+            finalChartData = [];
+        }
+    }
+    
+    // Process chart placeholders
+    const chartPlaceholders = messageElement.querySelectorAll('.chart-placeholder');
+    console.log('Found chart placeholders:', chartPlaceholders.length, 'Chart data available:', finalChartData ? finalChartData.length : 0);
+    
+    if (!finalChartData || finalChartData.length === 0) {
+        console.log('No chart data found in parameter or dataset');
+        if (chartPlaceholders.length > 0) {
+            chartPlaceholders.forEach(placeholder => {
+                placeholder.innerHTML = '<div class="chart-error">No chart data available</div>';
+            });
+        }
+        return;
+    }
+    
+    chartPlaceholders.forEach(placeholder => {
+        // Clear any existing content to prevent duplicates
+        placeholder.innerHTML = '';
+        
+        const chartIndex = parseInt(placeholder.getAttribute('data-chart-index'));
+        console.log('Processing chart at index:', chartIndex);
+        
+        if (!finalChartData[chartIndex]) {
+            console.log('No chart data available at index:', chartIndex);
+            placeholder.innerHTML = '<div class="chart-error">No chart data available</div>';
+            return;
+        }
+        
+        const chartConfig = finalChartData[chartIndex];
+        console.log('Chart config:', chartConfig);
+        
+        // Verify Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            placeholder.innerHTML = '<div class="chart-error">Chart.js library not loaded</div>';
+            return;
+        }
+        
+        // Create container for the chart
+        const chartContainer = document.createElement('div');
+        chartContainer.style.position = 'relative';
+        chartContainer.style.height = '300px'; // Set a fixed height
+        chartContainer.style.width = '100%';
+        chartContainer.style.maxWidth = '600px'; // Set a maximum width
+        chartContainer.style.margin = '0 auto'; // Center the chart
+        placeholder.appendChild(chartContainer);
+        
+        // Create canvas element
+        const canvas = document.createElement('canvas');
+        chartContainer.appendChild(canvas);
+        
+        // Initialize chart with error handling
+        try {
+            // Ensure chartConfig has required properties
+            if (!chartConfig || typeof chartConfig !== 'object') {
+                throw new Error('Invalid chart configuration: not an object');
+            }
+            
+            if (!chartConfig.type) {
+                throw new Error('Invalid chart configuration: missing type property');
+            }
+            
+            if (!chartConfig.data) {
+                throw new Error('Invalid chart configuration: missing data property');
+            }
+            
+            // Set default options if not provided
+            chartConfig.options = {
+                ...chartConfig.options,
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2, // Set a reasonable aspect ratio
+                plugins: {
+                    ...chartConfig.options?.plugins,
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 20,
+                            padding: 15
+                        }
+                    }
+                }
+            };
+            
+            // Create the chart
+            const chart = new Chart(canvas, chartConfig);
+            console.log('Chart successfully rendered at index:', chartIndex);
+            
+            // Store the chart instance in the placeholder for later access
+            placeholder.dataset.chartInstance = chart;
+            
+            // Add resize handler if ResizeObserver is available
+            if (typeof ResizeObserver !== 'undefined') {
+                const resizeObserver = new ResizeObserver(() => {
+                    chart.resize();
+                });
+                resizeObserver.observe(chartContainer);
+            }
+            
+        } catch (error) {
+            console.error('Failed to render chart at index:', chartIndex, error);
+            placeholder.innerHTML = `
+                <div class="chart-error">
+                    Failed to render chart: ${error.message}
+                    <div class="chart-error-details">${JSON.stringify(chartConfig, null, 2) || 'No configuration available'}</div>
+                </div>
+            `;
+        }
+    });
+    
+    // Render LaTeX expressions with MathJax for this specific message
+    // --- REMOVED MATHJAX LOGIC FROM HERE ---
+    // The MathJax typesetting will now be handled in the calling function (e.g., updateModalContent) 
+    // after enhanceCodeBlocks is finished.
+}
 
 function updateModalContent() {
     const answerItem = currentAnswers[currentIndex];
@@ -605,19 +1105,142 @@ function updateModalContent() {
     const chapter = questionItem.closest('.chapter-item').querySelector('.chapter-header .header-content span').textContent;
     const question = questionItem.querySelector('.question-header span').textContent;
 
-    // Create a temporary div to parse the HTML string
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = decodeURIComponent(answerItem.dataset.fullAnswer);
- 
+    // Get the full answer text
+    const rawAnswer = decodeURIComponent(answerItem.dataset.fullAnswer || '');
+
+    // Process markdown content first (extracts charts, ensures string)
+    const processedResult = preprocessMarkdown(rawAnswer);
+    let markdownToParse = processedResult.markdown;
+    const chartData = processedResult.chartData;
+
+    // --- BEGIN MathJax Protection ---
+    const mathPlaceholders = {};
+    let placeholderIndex = 0;
+
+    // Protect block math $$...$$
+    const blockMathPattern = /(?<!`)((?<!`)\\$\\$([\\s\\S]*?)\\$\\$(?!`))/g;
+    markdownToParse = markdownToParse.replace(blockMathPattern, (match) => {
+        const placeholder = `__MATHJAX_BLOCK_${placeholderIndex}__`;
+        mathPlaceholders[placeholder] = match;
+        placeholderIndex++;
+        return placeholder;
+    });
+
+    // Protect inline math $...$
+    const inlineMathPattern = /(?<!`|\\$)((?<!`)\\$([^\\$\\n`]+?)\\$(?![\\$`]))/g;
+     markdownToParse = markdownToParse.replace(inlineMathPattern, (match) => {
+        const placeholder = `__MATHJAX_INLINE_${placeholderIndex}__`;
+        mathPlaceholders[placeholder] = match;
+        placeholderIndex++;
+        return placeholder;
+    });
+    // --- END MathJax Protection ---
+
+
+    // Convert Markdown (with placeholders) to HTML using marked.js
+    let formattedAnswer = '';
+    try {
+        if (typeof marked !== 'undefined' && marked) {
+            formattedAnswer = marked.parse(markdownToParse); // Parse the string with placeholders
+        } else {
+            console.warn('Marked library not fully loaded, displaying raw text');
+            // If marked fails, still restore math placeholders in the raw text
+            Object.keys(mathPlaceholders).forEach(placeholder => {
+                 markdownToParse = markdownToParse.replace(placeholder, mathPlaceholders[placeholder]);
+            });
+            formattedAnswer = `<pre>${markdownToParse}</pre>`; // Use the restored markdown
+        }
+    } catch (error) {
+        console.error('Error parsing markdown:', error);
+         // If marked errors, still restore math placeholders in the raw text
+        Object.keys(mathPlaceholders).forEach(placeholder => {
+             markdownToParse = markdownToParse.replace(placeholder, mathPlaceholders[placeholder]);
+        });
+        formattedAnswer = `<pre>${markdownToParse}</pre>`; // Use the restored markdown
+    }
+
+    // --- BEGIN Restore MathJax ---
+    // Replace placeholders with original math content in the final HTML
+    Object.keys(mathPlaceholders).forEach(placeholder => {
+        // Use a function with replace to handle potential special characters in the placeholder key
+        const regex = new RegExp(placeholder.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\\\$&'), 'g'); // Escape regex special chars
+        formattedAnswer = formattedAnswer.replace(regex, () => mathPlaceholders[placeholder]);
+    });
+    // --- END Restore MathJax ---
+
     // Update modal content
     document.querySelector('.modal-title h3').textContent = 'Saved Answer';
     document.querySelector('.answer-meta').textContent = `${subject} > ${chapter}`;
     document.querySelector('.question-section h4').textContent = question;
-    document.querySelector('.answer-text').innerHTML = `
+
+    const answerTextElement = document.querySelector('.answer-text');
+    answerTextElement.innerHTML = `
         <div class="formatted-content">
-            ${tempDiv.innerHTML}
+            ${formattedAnswer}
         </div>
     `;
+
+    // Store chart data in the element's dataset if available
+    if (chartData && chartData.length > 0) {
+        answerTextElement.dataset.chartData = JSON.stringify(chartData);
+    }
+
+    // Enhance code blocks, render charts, AND RENDER MATHJAX
+    enhanceCodeBlocks(answerTextElement, chartData); // This function already calls MathJax.typesetPromise
+
+    // --- BEGIN Reinstated MathJax Rendering & Wrapping ---
+    // Render LaTeX expressions with MathJax if available
+    if (typeof MathJax !== 'undefined') {
+        try {
+            // Use typesetPromise for better performance
+            MathJax.typesetPromise([answerTextElement]).then(() => {
+                console.log("MathJax typesetting complete for modal.");
+                // After MathJax has rendered, wrap equation blocks in scrollable container
+                const displayMath = answerTextElement.querySelectorAll('.MathJax, mjx-container[display="true"]');
+                console.log(`Found ${displayMath.length} MathJax elements to check for wrapping.`);
+                
+                displayMath.forEach((mathElement, index) => {
+                    // Skip if already wrapped
+                    if (mathElement.closest('.scrollable-wrapper')) {
+                        console.log(`Skipping MathJax element ${index + 1} (already wrapped).`);
+                        return;
+                    }
+
+                    // Check if it's a display equation (block equation)
+                    // MathJax v3 uses mjx-container[display="true"]
+                    const isDisplayEquation = mathElement.tagName === 'MJX-CONTAINER' && mathElement.getAttribute('display') === 'true';
+                    const clientWidth = answerTextElement.clientWidth;
+                    const mathWidth = mathElement.offsetWidth; // Use offsetWidth for actual rendered width
+                    
+                    console.log(`Checking MathJax element ${index + 1}: Display=${isDisplayEquation}, Width=${mathWidth}, ContainerWidth=${clientWidth}`);
+
+                    // Wrap if it's a display equation OR if its width exceeds 90% of the container width
+                    if (isDisplayEquation || mathWidth > clientWidth * 0.9) {
+                        console.log(`Wrapping MathJax element ${index + 1}.`);
+                        // Create scrollable wrapper
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('scrollable-wrapper');
+                        // wrapper.style.overflowY = 'hidden'; // Let CSS handle overflow
+                        
+                        // Replace equation with wrapper containing equation
+                        mathElement.parentNode.insertBefore(wrapper, mathElement);
+                        wrapper.appendChild(mathElement);
+                        
+                        // Ensure the mjx-container itself allows scrolling if needed
+                        mathElement.style.maxWidth = '100%'; 
+                        mathElement.style.overflowX = 'auto';
+                    } else {
+                         console.log(`Skipping MathJax element ${index + 1} (inline or not wide enough).`);
+                    }
+                });
+            }).catch((err) => {
+                console.error('MathJax typesetting error in modal:', err);
+            });
+        } catch (error) {
+            console.error('Error initiating MathJax typesetting or wrapping in modal:', error);
+        }
+    }
+     // --- END Reinstated MathJax Rendering & Wrapping ---
 
     // Update navigation state
     document.querySelector('.nav-btn:first-child').disabled = currentIndex === 0;
@@ -1083,9 +1706,27 @@ class SavedAnswersManager {
             const answer = answers[0];
             console.log('Displaying single answer:', answer.id);
             
-            // Create preview text (plain text)
+            // Process markdown content first
+            const processedResult = preprocessMarkdown(answer.answer_text || '');
+            let markdownToParse = processedResult.markdown;
+            
+            // Convert Markdown to HTML using marked.js
+            let formattedAnswer = '';
+            try {
+                if (typeof marked !== 'undefined' && marked) {
+                    formattedAnswer = marked.parse(markdownToParse);
+                } else {
+                    console.warn('Marked library not fully loaded, displaying raw text');
+                    formattedAnswer = `<pre>${markdownToParse}</pre>`;
+                }
+            } catch (error) {
+                console.error('Error parsing markdown:', error);
+                formattedAnswer = `<pre>${markdownToParse}</pre>`;
+            }
+            
+            // Create preview text from HTML
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = answer.answer_text || '';
+            tempDiv.innerHTML = formattedAnswer;
             const textContent = tempDiv.textContent || 'No content';
             const previewText = textContent.length > MAX_PREVIEW_LENGTH ? 
                 textContent.substring(0, MAX_PREVIEW_LENGTH) + '...' : 
@@ -1141,9 +1782,27 @@ class SavedAnswersManager {
             console.log(`Question "${questionId}" has ${questionAnswers.length} answers`);
             
             const answersHtml = questionAnswers.map(answer => {
-                // Create preview text (plain text)
+                // Process markdown content first
+                const processedResult = preprocessMarkdown(answer.answer_text || '');
+                let markdownToParse = processedResult.markdown;
+                
+                // Convert Markdown to HTML using marked.js
+                let formattedAnswer = '';
+                try {
+                    if (typeof marked !== 'undefined' && marked) {
+                        formattedAnswer = marked.parse(markdownToParse);
+                    } else {
+                        console.warn('Marked library not fully loaded, displaying raw text');
+                        formattedAnswer = `<pre>${markdownToParse}</pre>`;
+                    }
+                } catch (error) {
+                    console.error('Error parsing markdown:', error);
+                    formattedAnswer = `<pre>${markdownToParse}</pre>`;
+                }
+                
+                // Create preview text from HTML
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = answer.answer_text || '';
+                tempDiv.innerHTML = formattedAnswer;
                 const textContent = tempDiv.textContent || 'No content';
                 const previewText = textContent.length > MAX_PREVIEW_LENGTH ? 
                     textContent.substring(0, MAX_PREVIEW_LENGTH) + '...' : 
@@ -1448,12 +2107,13 @@ class SavedAnswersManager {
         }
 
         try {
-        const questionItem = answerItem.closest('.question-item');
+            const questionItem = answerItem.closest('.question-item');
             const chapterItem = questionItem?.closest('.chapter-item');
             const accordionItem = chapterItem?.closest('.accordion-item');
 
             if (!questionItem || !chapterItem || !accordionItem) {
                 console.error('Cannot find question, chapter or subject elements');
+                showToast('Error displaying answer context. Please refresh.', true);
                 return;
             }
 
@@ -1461,7 +2121,7 @@ class SavedAnswersManager {
             const chapter = chapterItem.querySelector('.chapter-header .header-content span')?.textContent || 'Unknown Chapter';
             const question = questionItem.querySelector('.question-header span')?.textContent || 'Unknown Question';
             const saveType = answerItem.dataset.saveType || 'question_related';
-        const answerId = answerItem.dataset.id;
+            const answerId = answerItem.dataset.id;
 
             if (!answerId) {
                 console.warn('Answer ID not found in dataset');
@@ -1469,70 +2129,175 @@ class SavedAnswersManager {
                 return;
             }
 
-        console.log('Opening modal for answer:', answerId, 'with save type:', saveType);
+            console.log('Opening modal for answer:', answerId, 'with save type:', saveType);
 
-        // Decode the stored full answer
-            const fullAnswer = this.decodeHtml(decodeURIComponent(answerItem.dataset.fullAnswer || ''));
+            // === BEGIN CONSOLIDATED PROCESSING LOGIC ===
+            // Decode the stored full answer
+            const rawAnswer = this.decodeHtml(decodeURIComponent(answerItem.dataset.fullAnswer || ''));
 
-        // Update modal content
+            // Process markdown content first (extracts charts, ensures string)
+            const processedResult = preprocessMarkdown(rawAnswer);
+            let markdownToParse = processedResult.markdown;
+            const chartData = processedResult.chartData;
+
+            // Protect MathJax delimiters
+            const mathPlaceholders = {};
+            let placeholderIndex = 0;
+            const blockMathPattern = /(?<!`)((?<!`)\\$\\$([\\s\\S]*?)\\$\\$(?!`))/g;
+            markdownToParse = markdownToParse.replace(blockMathPattern, (match) => {
+                const placeholder = `__MATHJAX_BLOCK_${placeholderIndex}__`;
+                mathPlaceholders[placeholder] = match;
+                placeholderIndex++;
+                return placeholder;
+            });
+            const inlineMathPattern = /(?<!`|\\$)((?<!`)\\$([^\\$\\n`]+?)\\$(?![\\$`]))/g;
+            markdownToParse = markdownToParse.replace(inlineMathPattern, (match) => {
+                const placeholder = `__MATHJAX_INLINE_${placeholderIndex}__`;
+                mathPlaceholders[placeholder] = match;
+                placeholderIndex++;
+                return placeholder;
+            });
+
+            // Convert Markdown (with placeholders) to HTML
+            let formattedAnswer = '';
+            try {
+                if (typeof marked !== 'undefined' && marked) {
+                    formattedAnswer = marked.parse(markdownToParse);
+                } else {
+                    console.warn('Marked library not fully loaded, displaying raw text');
+                    Object.keys(mathPlaceholders).forEach(placeholder => {
+                        markdownToParse = markdownToParse.replace(placeholder, mathPlaceholders[placeholder]);
+                    });
+                    formattedAnswer = `<pre>${markdownToParse}</pre>`;
+                }
+            } catch (error) {
+                console.error('Error parsing markdown:', error);
+                Object.keys(mathPlaceholders).forEach(placeholder => {
+                    markdownToParse = markdownToParse.replace(placeholder, mathPlaceholders[placeholder]);
+                });
+                formattedAnswer = `<pre>${markdownToParse}</pre>`;
+            }
+
+            // Restore MathJax placeholders in the HTML
+            Object.keys(mathPlaceholders).forEach(placeholder => {
+                const regex = new RegExp(placeholder.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\\\$&'), 'g');
+                formattedAnswer = formattedAnswer.replace(regex, () => mathPlaceholders[placeholder]);
+            });
+
+            // Update modal DOM elements
             const modalTitle = document.querySelector('.modal-title h3');
             const answerMeta = document.querySelector('.answer-meta');
             const questionSection = document.querySelector('.question-section h4');
-            const answerText = document.querySelector('.answer-text');
+            const answerTextElement = document.querySelector('.answer-text'); // Renamed from answerText
             const saveBtn = document.querySelector('.save-btn');
 
             if (modalTitle) modalTitle.textContent = 'Saved Answer';
             if (answerMeta) answerMeta.textContent = `${subject} > ${chapter}`;
             if (questionSection) questionSection.textContent = question;
-            if (answerText) {
-                answerText.innerHTML = `
-            <div class="formatted-content">
-                ${fullAnswer}
-            </div>
-        `;
-            }
 
-        // Set the answer ID in the save button for the save type handler
+            // Set the final HTML content
+            if (answerTextElement) {
+                answerTextElement.innerHTML = `
+                    <div class="formatted-content">
+                        ${formattedAnswer}
+                    </div>
+                `;
+
+                // Store chart data in the element's dataset if available
+                if (chartData && chartData.length > 0) {
+                    answerTextElement.dataset.chartData = JSON.stringify(chartData);
+                }
+
+                // Enhance code blocks and render charts (MathJax removed from here)
+                enhanceCodeBlocks(answerTextElement, chartData);
+
+                // Render LaTeX expressions with MathJax and wrap if necessary
+                if (typeof MathJax !== 'undefined') {
+                    try {
+                        MathJax.typesetPromise([answerTextElement]).then(() => {
+                            console.log("MathJax typesetting complete for modal.");
+                            const displayMath = answerTextElement.querySelectorAll('.MathJax, mjx-container[display="true"]');
+                            console.log(`Found ${displayMath.length} MathJax elements to check for wrapping.`);
+                            displayMath.forEach((mathElement, index) => {
+                                if (mathElement.closest('.scrollable-wrapper')) {
+                                    console.log(`Skipping MathJax element ${index + 1} (already wrapped).`);
+                                    return;
+                                }
+                                const isDisplayEquation = mathElement.tagName === 'MJX-CONTAINER' && mathElement.getAttribute('display') === 'true';
+                                const clientWidth = answerTextElement.clientWidth;
+                                const mathWidth = mathElement.offsetWidth;
+                                console.log(`Checking MathJax element ${index + 1}: Display=${isDisplayEquation}, Width=${mathWidth}, ContainerWidth=${clientWidth}`);
+                                if (isDisplayEquation || mathWidth > clientWidth * 0.9) {
+                                    console.log(`Wrapping MathJax element ${index + 1}.`);
+                                    const wrapper = document.createElement('div');
+                                    wrapper.classList.add('scrollable-wrapper');
+                                    mathElement.parentNode.insertBefore(wrapper, mathElement);
+                                    wrapper.appendChild(mathElement);
+                                    mathElement.style.maxWidth = '100%';
+                                    mathElement.style.overflowX = 'auto';
+                                } else {
+                                    console.log(`Skipping MathJax element ${index + 1} (inline or not wide enough).`);
+                                }
+                            });
+                        }).catch((err) => {
+                            console.error('MathJax typesetting error in modal:', err);
+                        });
+                    } catch (error) {
+                        console.error('Error initiating MathJax typesetting or wrapping in modal:', error);
+                    }
+                }
+            }
+            // === END CONSOLIDATED PROCESSING LOGIC ===
+
+            // Set the answer ID in the save button for the save type handler
             if (saveBtn) {
-        saveBtn.setAttribute('data-answer-id', answerId);
+                saveBtn.setAttribute('data-answer-id', answerId);
                 console.log('Set data-answer-id attribute on save button:', saveBtn.getAttribute('data-answer-id'));
             } else {
                 console.error('Save button not found in the modal');
             }
-        
-        // Update the save type handler with the current answer ID
-        if (window.saveTypeHandler) {
-            console.log('Setting current answer ID in save type handler:', answerId);
-            window.saveTypeHandler.setCurrentAnswerId(answerId);
-            window.saveTypeHandler.updateButtonText(saveType || 'Question Related');
-                
-                // Verify the answer ID was set correctly
-                console.log('Verifying save type handler has correct answer ID:', 
-                    window.saveTypeHandler.currentAnswerId === answerId ? 'OK' : 'FAILED');
-        } else {
-                console.error('Save type handler not found. The page may be missing required JavaScript.');
-                showToast('Error: Save type handler not initialized. Please refresh the page.', true);
-        }
 
-        // Update navigation buttons state
+            // Update the save type handler with the current answer ID
+            if (window.saveTypeHandler) {
+                console.log('Setting current answer ID in save type handler:', answerId);
+                window.saveTypeHandler.setCurrentAnswerId(answerId);
+                window.saveTypeHandler.updateButtonText(saveType || 'Question Related');
+                console.log('Verifying save type handler has correct answer ID:',
+                    window.saveTypeHandler.currentAnswerId === answerId ? 'OK' : 'FAILED');
+            } else {
+                console.error('Save type handler not found.');
+                showToast('Error: Save type handler not initialized.', true);
+            }
+
+            // Update navigation buttons state
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
-            
+
             if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
             if (nextBtn) nextBtn.disabled = this.currentIndex === this.currentAnswers.length - 1;
 
-        // Show modal and prevent body scroll
-        this.modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+            // Show modal and prevent body scroll
+            this.modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
         } catch (error) {
             console.error('Error opening modal:', error);
             showToast('Error opening answer details. Please try again.', true);
+            // Ensure modal is hidden and scrolling restored on error
+             if (this.modal) this.modal.style.display = 'none';
+             document.body.style.overflow = 'auto';
         }
     }
 
     updateModalContent() {
+        // This function now correctly calls openModal which contains the full logic
         const answerItem = this.currentAnswers[this.currentIndex];
-        this.openModal(answerItem);
+        if (answerItem) {
+            this.openModal(answerItem);
+        } else {
+             console.error("Cannot update modal content: current answer item not found at index", this.currentIndex);
+             showToast("Error navigating answers. Please close and reopen.", true);
+        }
     }
 
     openModalFromData(answer) {
@@ -1557,14 +2322,37 @@ class SavedAnswersManager {
         document.querySelector('.question-section h4').textContent = 
             answer.question_identifier || '';
         
-        // Safely parse the answer text
-        // const answerText = answer.answer_text || '';
-        // const formattedAnswer = marked.parse(answerText);
+        // Process markdown content first
+        const answerText = answer.answer_text || '';
+        const processedMarkdown = preprocessMarkdown(answerText);
         
-        document.querySelector('.answer-text').innerHTML = `            <div class="formatted-content">
-                ${answer.answer_text || ''}
+        // Convert Markdown to HTML using marked.js with failsafe
+        let formattedAnswer = '';
+        try {
+            if (typeof marked !== 'undefined' && marked) {
+                formattedAnswer = marked.parse(processedMarkdown.markdown);
+            } else {
+                console.warn('Marked library not fully loaded, displaying raw text');
+                formattedAnswer = `<pre>${processedMarkdown.markdown}</pre>`;
+            }
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+            formattedAnswer = `<pre>${processedMarkdown.markdown}</pre>`;
+        }
+        
+        const answerTextElement = document.querySelector('.answer-text');
+        answerTextElement.innerHTML = `            <div class="formatted-content">
+                ${formattedAnswer}
             </div>
         `;
+        
+        // Store chart data in the element's dataset if available
+        if (processedMarkdown.chartData && processedMarkdown.chartData.length > 0) {
+            answerTextElement.dataset.chartData = JSON.stringify(processedMarkdown.chartData);
+        }
+        
+        // Enhance code blocks and render charts
+        enhanceCodeBlocks(answerTextElement, processedMarkdown.chartData);
 
         // Update save type and navigation buttons
         const saveBtn = document.querySelector('.save-btn');
@@ -1574,6 +2362,12 @@ class SavedAnswersManager {
         document.querySelector('.nav-btn:first-child').disabled = this.currentIndex === 0;
         document.querySelector('.nav-btn:last-child').disabled = 
             this.currentIndex === this.currentAnswers.length - 1;
+            
+        // Show modal
+        if (this.modal) {
+            this.modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
     }
 
     // Add this new method to the SavedAnswersManager class

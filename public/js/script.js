@@ -6,30 +6,6 @@ function clearInput() {
     document.getElementById('commandPanel').classList.remove('active');
 }
 
-// Function to check if chat is empty and show instructions
-function checkEmptyChatAndShowInstructions() {
-    const chatMessages = document.querySelector('.chat-messages');
-    
-    // If there are no messages in the chat area
-    if (chatMessages && chatMessages.children.length === 0) {
-        const instructionBox = document.createElement('div');
-        instructionBox.className = 'empty-chat-instructions';
-        instructionBox.innerHTML = `
-            <div class="instruction-content">
-                <i class="fas fa-keyboard"></i>
-                <p>Type "/" in from your keyboard to see the questions and further type question name after "/" to find the question you want to study</p>
-            </div>
-        `;
-        chatMessages.appendChild(instructionBox);
-    } else if (chatMessages && chatMessages.querySelector('.empty-chat-instructions') && chatMessages.children.length > 1) {
-        // Remove the instruction box if there are other messages
-        const instructionBox = chatMessages.querySelector('.empty-chat-instructions');
-        if (instructionBox) {
-            instructionBox.remove();
-        }
-    }
-}
-
 // Show toast notification, withAction is optional, if true, show the action button, if false, show the message (Little pop up notification at the top of the page)
 function showToast(message, withAction = false) {
     const toast = document.getElementById('toastNotification');
@@ -102,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const commandPanel = document.getElementById('commandPanel');
     const dropdownTrigger = document.getElementById('dropdownTrigger');
     const dropdownPanel = document.getElementById('dropdownPanel');
+    const topicSelectionContainer = document.getElementById('topicSelectionContainer');
+    const topicButtonsContainer = document.getElementById('topicButtonsContainer');
     let isDragging = false;
     let startY = 0;
     let userGrade = localStorage.getItem('userGrade');
@@ -122,12 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log("Server detection in script.js:", isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
     
-    // Set API base path based on environment
-    const apiBasePath = isLocalServer ? '/main' : '';
+    // Use window.apiBasePath if it's already defined, otherwise set it based on environment
+    if (typeof window.apiBasePath === 'undefined') {
+        window.apiBasePath = isLocalServer ? '/main' : '';
+    }
+    
+    // Always use window.apiBasePath for all API calls
+    const apiBasePath = window.apiBasePath;
     console.log("API base path in script.js:", apiBasePath);
-
-    // Check if chat is empty and show instructions
-    checkEmptyChatAndShowInstructions();
 
     // -----------------------------------------------Variables--------------------------------------------------------------
     //  Define userGrade once
@@ -189,7 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add these functions after DOMContentLoaded
     function loadSubjects(grade) {
         console.log('Loading subjects for grade:', grade);
-        fetch(`${apiBasePath}/api/navigation/subjects.php?grade=${grade}`)
+        fetch(`${window.apiBasePath}/api/navigation/subjects.php?grade=${grade}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -219,14 +203,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadChapters(grade, subject) {
-        return fetch(`${apiBasePath}/api/navigation/chapters.php?grade=${grade}&subject=${subject}`)
+        return fetch(`${window.apiBasePath}/api/navigation/chapters.php?grade=${grade}&subject=${subject}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 return response.json();
             })
-            .then(data => data.chapters)
+            .then(data => {
+                // Ensure chapters are formatted as objects with name and subject properties
+                if (data.chapters && Array.isArray(data.chapters)) {
+                    return data.chapters.map(chapter => {
+                        // If chapter is already an object with the right properties, return it
+                        if (typeof chapter === 'object' && chapter.name && chapter.subject) {
+                            return chapter;
+                        }
+                        // If chapter is a string, convert to object with subject
+                        return {
+                            name: typeof chapter === 'string' ? chapter : chapter.toString(),
+                            subject: subject
+                        };
+                    });
+                }
+                return [];
+            })
             .catch(error => {
                 console.error('Error loading chapters:', error);
                 return [];
@@ -237,32 +241,63 @@ document.addEventListener('DOMContentLoaded', () => {
         const chapterList = document.querySelector('.chapter-list');
         const searchTerm = document.querySelector('.search-input').value.trim();
         
-        chapterList.innerHTML = chapters
-            .map(chapter => `
-                <div class="dropdown-item" 
-                     data-type="chapter" 
-                     data-value="${chapter.name}"
-                     data-subject="${chapter.subject}"
-                     style="padding: 10px 15px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column;">
-                    <div style="font-size: 0.95em; white-space: normal; word-wrap: break-word; line-height: 1.2;">${chapter.name}</div>
-                    ${searchTerm ? `
-                        <div style="
-                            font-size: 0.75em;
-                            color: #4166d5;
-                            margin-top: 4px;
-                            white-space: normal;
-                            word-wrap: break-word;
-                            line-height: 1.2;
-                        ">${chapter.subject}</div>
-                    ` : ''}
-                </div>
-            `).join('');
+        chapterList.innerHTML = '';
+        
+        if (chapters && chapters.length > 0) {
+            chapters.forEach(chapter => {
+                const chapterItem = document.createElement('div');
+                chapterItem.className = 'dropdown-item';
+                chapterItem.dataset.type = 'chapter';
+                chapterItem.dataset.value = chapter.name;
+                chapterItem.dataset.subject = chapter.subject;
+                chapterItem.style.padding = '10px 15px';
+                chapterItem.style.width = '100%';
+                chapterItem.style.boxSizing = 'border-box';
+                chapterItem.style.display = 'flex';
+                chapterItem.style.flexDirection = 'column';
+                
+                // Create a wrapper for the chapter name with proper wrapping
+                const nameWrapper = document.createElement('div');
+                nameWrapper.style.fontSize = '0.95em';
+                nameWrapper.style.whiteSpace = 'normal';
+                nameWrapper.style.wordWrap = 'break-word';
+                nameWrapper.style.lineHeight = '1.2';
+                nameWrapper.textContent = chapter.name;
+                chapterItem.appendChild(nameWrapper);
+                
+                // Add subject info if we're searching
+                if (searchTerm) {
+                    const subjectInfo = document.createElement('div');
+                    subjectInfo.style.fontSize = '0.75em';
+                    subjectInfo.style.color = '#4166d5';
+                    subjectInfo.style.marginTop = '4px';
+                    subjectInfo.style.whiteSpace = 'normal';
+                    subjectInfo.style.wordWrap = 'break-word';
+                    subjectInfo.style.lineHeight = '1.2';
+                    subjectInfo.textContent = chapter.subject;
+                    chapterItem.appendChild(subjectInfo);
+                }
+                
+                chapterList.appendChild(chapterItem);
+            });
+        } else {
+            const noChapters = document.createElement('div');
+            noChapters.className = 'no-data';
+            noChapters.textContent = 'No chapters found';
+            chapterList.appendChild(noChapters);
+        }
     }
 
     // After DOMContentLoaded, add this:
     if (userGrade) {
         loadSubjects(userGrade);
-        loadAllChapters(userGrade);
+        // Load all chapters and show them initially
+        loadAllChapters(userGrade).then(() => {
+            // Display all chapters in the dropdown initially
+            renderChapters(allChapters);
+            // Update item count
+            document.querySelector('.dropdown-section .item-count:nth-of-type(2)').textContent = allChapters.length || '0';
+        });
     } else {
         console.error('No grade found in localStorage');
     }
@@ -273,10 +308,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add subject selection handler
     const subjectSelect = document.querySelector('.subject-list'); // find the div with subject-list class
     if (subjectSelect) {
-        subjectSelect.addEventListener('click', (e) => {
-            const subject = e.target.textContent;
+        subjectSelect.addEventListener('click', async (e) => {
+            const subjectItem = e.target.closest('.dropdown-item');
+            if (!subjectItem || subjectItem.dataset.type !== 'subject') return;
+            
+            const subject = subjectItem.textContent;
+            
+            // Check if we need to confirm changes
+            if (!(await confirmChangeIfNeeded())) {
+                return; // User cancelled the change
+            }
+            
+            // Update UI
+            document.getElementById('selectedSubject').textContent = subject;
+            document.getElementById('selectedChapter').textContent = 'Select Chapter';
+            
+            // Update current state
             currentSubject = subject;
-            console.log('Subject selected:', currentSubject); // Debug log
+            currentChapter = '';
+            
+            // Filter chapters for selected subject from allChapters
+            const filteredChapters = allChapters.filter(chapter => chapter.subject === subject);
+            console.log('Filtered chapters for subject:', subject, filteredChapters);
+            
+            // Render the filtered chapters in the dropdown
+            renderChapters(filteredChapters);
+            
+            // Update item count
+            document.querySelector('.dropdown-section .item-count:nth-of-type(2)').textContent = 
+                filteredChapters.length || '0';
+            
+            // Clear cached questions and selected questions
+            cachedQuestions = [];
+            window.selectedQuestions.clear();
+            updateSelectedQuestionsUI();
+            
+            // Hide topic selection container
+            topicSelectionContainer.classList.remove('active');
         });
     }
 
@@ -336,17 +404,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modify the handleSend function
     async function handleSend(e) {
         e.preventDefault();
-        const message = userInput.value.trim();
-
-        // Check if it's the first message in a new chat session
-        const isFirstMessage = chatHistory.currentSessionId === null;
-
-        // Allow submission without input if it's the first message
-        if (!message && !isFirstMessage) return;
+        const userInput = document.getElementById('userInput');
+        const userMessage = userInput.value.trim();
+        
+        // Clear the command panel if it's open
+        commandPanel.classList.remove('active');
+        
+        // Ignore empty messages, but keep previous behavior if we have a selected question
+        if (userMessage === '' && window.selectedQuestions.size === 0) {
+            return;
+        }
+        
+        // Also, hide topic selection container when sending a message
+        topicSelectionContainer.classList.remove('active');
+        
+        // Clear the message from the input area
+        userInput.value = '';
+        autoResizeTextarea();
+        
+        // Check if a topic is selected
+        if (window.selectedQuestions.size === 0) {
+            showError('Please select a topic by typing "/" or clicking a topic button before sending a message.');
+            return;
+        }
 
         try {
             // If it's a new chat command, clear everything
-            if (message === '/') {
+            if (userMessage === '/') {
                 chatHistory.currentSessionId = null;
                 window.selectedQuestions.clear();  // Use window.selectedQuestions
                 const chatMessages = document.querySelector('.chat-messages');
@@ -355,14 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (questionDisplay) questionDisplay.innerHTML = '';
                 userInput.value = '';
                 
-                // Show the instruction box when clearing the chat
+                // Show instruction box when clearing the chat
                 checkEmptyChatAndShowInstructions();
-                return;
-            }
-
-            // Add alert if no question is selected
-            if (window.selectedQuestions.size === 0) {  // Use window.selectedQuestions
-                showError('Please select a topic by typing "/" before sending a message.');
                 return;
             }
 
@@ -371,11 +449,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let answerType = chatHistory.getAnswerType(currentQuestion);
             let isNewSession = false; // Add this flag
 
-            // Clear input but keep the question selected
-            userInput.value = '';
-
             // Display user message with animation
-            const userMessageResult = addMessage('user', message);
+            const userMessageResult = addMessage('user', userMessage);
             
             // Show a temporary "loading" message with improved animation
             const loadingMessageResult = addMessage('bot', '', true);
@@ -410,22 +485,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Send to query.php
             const userGrade = localStorage.getItem('userGrade');
-            const queryResponse = await fetch(`${apiBasePath}/api/ai/query.php`, {
+            
+            // Build full API URL with proper encoding
+            const apiUrl = `${window.apiBasePath}/api/ai/query.php`;
+            console.log("Sending request to:", apiUrl);
+            
+            // Build request data
+            const requestData = {
+                grade: userGrade,
+                subject: selectedSubjectText,
+                chapter: selectedChapterText,
+                questions: [currentQuestion],
+                answerType: answerType,
+                userPrompt: userMessage,
+                session_id: chatHistory.currentSessionId,
+                isFirstMessage: isNewSession
+            };
+            
+            console.log("Request data:", JSON.stringify(requestData));
+            
+            // Make the API call
+            const queryResponse = await fetch(apiUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    grade: userGrade,
-                    subject: selectedSubjectText,
-                    chapter: selectedChapterText,
-                    questions: [currentQuestion],
-                    answerType: answerType,
-                    userPrompt: message,
-                    session_id: chatHistory.currentSessionId,
-                    isFirstMessage: isNewSession  // Use the flag here
-                })
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(requestData)
             });
             
-            const queryData = await queryResponse.json();
+            console.log("Response status:", queryResponse.status);
+            
+            // Check for HTTP errors first
+            if (!queryResponse.ok) {
+                const errorText = await queryResponse.text();
+                console.error("API error response:", errorText);
+                throw new Error(`API request failed with status ${queryResponse.status}: ${errorText}`);
+            }
+            
+            // Parse JSON response
+            let queryData;
+            try {
+                queryData = await queryResponse.json();
+                console.log("Response data:", queryData);
+            } catch (jsonError) {
+                console.error("JSON parse error:", jsonError);
+                const responseText = await queryResponse.text();
+                console.error("Raw response:", responseText);
+                throw new Error(`Failed to parse API response: ${jsonError.message}`);
+            }
+            
+            // Check for API-level errors
             if (!queryData.success) {
                 throw new Error(queryData.error || 'Failed to get AI response');
             }
@@ -468,33 +578,323 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add this new function after the existing functions
+    // Function to preprocess markdown content
     function preprocessMarkdown(markdown) {
         // Ensure input is a string
-        if (!markdown) return '';
+        if (!markdown) return { markdown: '', chartData: [] };
         if (typeof markdown !== 'string') {
             try {
-                markdown = String(markdown);
+                // Handle special case for objects
+                if (typeof markdown === 'object') {
+                    // Check for OpenAI-like response format
+                    if (markdown.choices && Array.isArray(markdown.choices) && markdown.choices.length > 0) {
+                        if (markdown.choices[0].message && markdown.choices[0].message.content) {
+                            markdown = markdown.choices[0].message.content;
+                        } else if (markdown.choices[0].text) {
+                            markdown = markdown.choices[0].text;
+                        }
+                    } 
+                    // Check for common completion formats
+                    else if (markdown.completion) {
+                        markdown = markdown.completion;
+                    } else if (markdown.answer) {
+                        markdown = markdown.answer;
+                    } 
+                    // Try to extract text from known object formats
+                    else if (markdown.text) {
+                        markdown = markdown.text;
+                    } else if (markdown.message) {
+                        markdown = markdown.message;
+                    } else if (markdown.content) {
+                        markdown = markdown.content;
+                    } else if (markdown.response) {
+                        markdown = markdown.response;
+                    } else if (markdown.data && typeof markdown.data === 'object') {
+                        // Try nested data object
+                        if (markdown.data.text) {
+                            markdown = markdown.data.text;
+                        } else if (markdown.data.message) {
+                            markdown = markdown.data.message;
+                        } else if (markdown.data.content) {
+                            markdown = markdown.data.content;
+                        } else if (markdown.data.response) {
+                            markdown = markdown.data.response;
+                        } else {
+                            // Stringify entire data object if no text fields found
+                            markdown = JSON.stringify(markdown.data, null, 2);
+                        }
+                    } else {
+                        // Check if object has toString method that returns something useful
+                        if (typeof markdown.toString === 'function' && markdown.toString() !== '[object Object]') {
+                            markdown = markdown.toString();
+                        } else {
+                            // Last resort - stringify the entire object
+                            markdown = JSON.stringify(markdown, null, 2);
+                        }
+                    }
+                } else {
+                    // For other non-string types
+                    markdown = String(markdown);
+                }
             } catch (e) {
                 console.error('Failed to convert markdown to string:', e);
-                return '';
+                return { markdown: 'Error rendering content', chartData: [] };
             }
         }
         
-        // If the content starts with triple backticks followed by markdown, remove them
-        let processed = markdown;
+        // Handle the case where markdown might be a stringified JSON object
+        if (markdown.startsWith('{') && markdown.endsWith('}')) {
+            try {
+                const parsedObj = JSON.parse(markdown);
+                // Check for OpenAI-like format in stringified JSON
+                if (parsedObj.choices && Array.isArray(parsedObj.choices) && parsedObj.choices.length > 0) {
+                    if (parsedObj.choices[0].message && parsedObj.choices[0].message.content) {
+                        markdown = parsedObj.choices[0].message.content;
+                    } else if (parsedObj.choices[0].text) {
+                        markdown = parsedObj.choices[0].text;
+                    }
+                }
+                // Check for other response formats
+                else if (parsedObj.completion) {
+                    markdown = parsedObj.completion;
+                } else if (parsedObj.answer) {
+                    markdown = parsedObj.answer;
+                } 
+                // Extract text from known object formats
+                else if (parsedObj.text) {
+                    markdown = parsedObj.text;
+                } else if (parsedObj.message) {
+                    markdown = parsedObj.message;
+                } else if (parsedObj.content) {
+                    markdown = parsedObj.content;
+                } else if (parsedObj.response) {
+                    markdown = parsedObj.response;
+                } else if (parsedObj.data && typeof parsedObj.data === 'object') {
+                    // Try nested data object
+                    if (parsedObj.data.text) {
+                        markdown = parsedObj.data.text;
+                    } else if (parsedObj.data.message) {
+                        markdown = parsedObj.data.message;
+                    } else if (parsedObj.data.content) {
+                        markdown = parsedObj.data.content;
+                    } else if (parsedObj.data.response) {
+                        markdown = parsedObj.data.response;
+                    } else {
+                        // If no text fields found in data, keep original stringified
+                        // Likely it's intended to be displayed as JSON
+                    }
+                }
+                // If no recognized property was found, keep the original JSON string
+                // This ensures JSON intended for display stays as is
+            } catch (e) {
+                // If it couldn't be parsed as JSON, keep it as is
+                console.log('String looks like JSON but cannot be parsed:', e);
+            }
+        }
         
-        // Handle the case where the entire content is a fenced code block
+        // Handle the case where the input is the literal string "[object Object]"
+        if (markdown === '[object Object]') {
+            markdown = "Error: Response was incorrectly serialized to [object Object]";
+        }
+
+        // Handle markdown code blocks
+        if (markdown.startsWith('```markdown')) {
+            // Remove the ```markdown and ``` wrapper
+            markdown = markdown.replace(/^```markdown\n?/, '').replace(/```$/, '');
+        }
+        
+        let processed = markdown;
+        const chartData = [];
+        
+        // Process LaTeX expressions before other Markdown processing
         try {
-            const fullBlockMatch = processed.match(/^```(\w+)?\n([\s\S]*?)```\s*$/);
-            if (fullBlockMatch && (fullBlockMatch[1] === 'markdown' || !fullBlockMatch[1])) {
-                return fullBlockMatch[2];
+            // Process block math expressions
+            // Look for $$...$$, but avoid replacing if it's already inside a code block
+            const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
+            
+            // Replace with MathJax-friendly syntax for block math
+            processed = processed.replace(blockMathPattern, function(match, fullMatch, equation) {
+                // Keep existing $$ syntax as MathJax will handle it natively
+                return fullMatch;
+            });
+            
+            // Process inline math expressions
+            // Look for $...$ but avoid $$ (block math) and ensure it's not inside a code block
+            const inlineMathPattern = /(?<!`|\$)((?<!`)\$([^\$\n]+?)\$(?![\$`]))/g;
+            
+            // Replace with MathJax-friendly syntax for inline math
+            processed = processed.replace(inlineMathPattern, function(match, fullMatch, equation) {
+                // Keep existing $ syntax as MathJax will handle it natively
+                return fullMatch;
+            });
+        } catch (e) {
+            console.error('Error processing LaTeX expressions:', e);
+        }
+        
+        try {
+            // Find and process all chart blocks - updated regex to handle both inline and multi-line formats
+            const chartBlockRegex = /```chart\s*([\s\S]*?)```/g;
+            let match;
+            let placeholderIndex = 0;
+            
+            while ((match = chartBlockRegex.exec(processed)) !== null) {
+                console.log("Chart detected:", match[1].trim());
+                
+                try {
+                    const chartJson = JSON.parse(match[1].trim());
+                    console.log("Parsed chart JSON:", chartJson);
+                    
+                    // Transform the data into Chart.js format based on chart type
+                    let chartConfig;
+                    const chartType = chartJson.type;
+                    
+                    if (!chartType) {
+                        throw new Error('Chart type is required');
+                    }
+                    
+                    switch (chartType.toLowerCase()) {
+                        case 'bar':
+                        case 'line':
+                        case 'pie':
+                        case 'doughnut':
+                        case 'polararea':
+                        case 'radar':
+                            // For basic charts
+                            if (!chartJson.labels || !chartJson.values) {
+                                throw new Error(`${chartType} chart requires labels and values`);
+                            }
+                            
+                            chartConfig = {
+                                type: chartType.toLowerCase(),
+                                data: {
+                                    labels: chartJson.labels,
+                                    datasets: [{
+                                        label: chartJson.title || 'Data',
+                                        data: chartJson.values,
+                                        backgroundColor: chartJson.colors || [
+                                            'rgba(255, 99, 132, 0.5)',
+                                            'rgba(54, 162, 235, 0.5)',
+                                            'rgba(255, 206, 86, 0.5)',
+                                            'rgba(75, 192, 192, 0.5)',
+                                            'rgba(153, 102, 255, 0.5)',
+                                            'rgba(255, 159, 64, 0.5)'
+                                        ],
+                                        borderColor: chartJson.borderColors || [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)',
+                                            'rgba(75, 192, 192, 1)',
+                                            'rgba(153, 102, 255, 1)',
+                                            'rgba(255, 159, 64, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    aspectRatio: 2,
+                                    plugins: {
+                                        legend: {
+                                            position: 'right'
+                                        }
+                                    }
+                                }
+                            };
+                            break;
+                        
+                        // Special case for multiple datasets
+                        case 'multibar':
+                        case 'multiline':
+                            if (!chartJson.labels || !chartJson.datasets) {
+                                throw new Error(`${chartType} chart requires labels and datasets`);
+                            }
+                            
+                            // Set the appropriate chart type
+                            const actualChartType = chartType.toLowerCase() === 'multibar' ? 'bar' : 'line';
+                            
+                            chartConfig = {
+                                type: actualChartType,
+                                data: {
+                                    labels: chartJson.labels,
+                                    datasets: chartJson.datasets
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    aspectRatio: 2
+                                }
+                            };
+                            break;
+                        
+                        case 'bubble':
+                        case 'scatter':
+                            // For bubble and scatter charts
+                            if (!chartJson.datasets) {
+                                throw new Error(`${chartType} chart requires datasets with x,y coordinates`);
+                            }
+                            
+                            chartConfig = {
+                                type: chartType.toLowerCase(),
+                                data: {
+                                    datasets: chartJson.datasets
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    aspectRatio: 2
+                                }
+                            };
+                            break;
+                            
+                        default:
+                            throw new Error(`Unsupported chart type: ${chartType}`);
+                    }
+                    
+                    // Apply any custom options
+                    if (chartJson.options) {
+                        chartConfig.options = {
+                            ...chartConfig.options,
+                            ...chartJson.options
+                        };
+                    }
+                    
+                    console.log("Transformed chart config:", chartConfig);
+                    
+                    // Validate chart configuration
+                    if (!chartConfig.type || !chartConfig.data) {
+                        console.error('Invalid chart configuration:', chartConfig);
+                        throw new Error('Chart configuration missing required properties');
+                    }
+                    
+                    chartData.push(chartConfig);
+                    
+                    // Replace the chart block with a placeholder div
+                    const placeholder = `<div class="chart-placeholder" data-chart-index="${placeholderIndex}"></div>`;
+                    processed = processed.replace(match[0], placeholder);
+                    console.log("Chart successfully replaced at index:", placeholderIndex);
+                    placeholderIndex++;
+                } catch (e) {
+                    console.error('Invalid chart data:', match[1].trim(), e);
+                    // Push null to maintain index alignment
+                    chartData.push(null);
+                    
+                    // Replace with error placeholder
+                    const errorPlaceholder = `<div class="chart-placeholder error" data-chart-index="${placeholderIndex}">
+                        <div class="chart-error">Invalid chart data: ${e.message}</div>
+                    </div>`;
+                    processed = processed.replace(match[0], errorPlaceholder);
+                    placeholderIndex++;
+                }
             }
         } catch (e) {
             console.error('Error processing markdown:', e);
         }
         
-        return processed;
+        return {
+            markdown: processed,
+            chartData: chartData
+        };
     }
 
     // Function to update an existing message
@@ -510,32 +910,45 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Process markdown content to clean up any issues before rendering
             const processedMarkdown = preprocessMarkdown(newText);
+            console.log('Processed markdown:', processedMarkdown);
             
             // Convert markdown to HTML with failsafe
             let formattedContent = '';
             try {
                 if (typeof marked !== 'undefined' && marked) {
-                    formattedContent = marked.parse(processedMarkdown);
+                    formattedContent = marked.parse(processedMarkdown.markdown);
                 } else {
                     console.warn('Marked library not fully loaded, displaying raw text');
-                    formattedContent = `<pre>${processedMarkdown}</pre>`;
+                    formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
                 }
             } catch (error) {
                 console.error('Error parsing markdown:', error);
-                formattedContent = `<pre>${processedMarkdown}</pre>`;
+                formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
             }
             
             // Update the content
-            messageElement.querySelector('.chat-content').innerHTML = formattedContent;
+            const contentContainer = messageElement.querySelector('.chat-content');
+            contentContainer.innerHTML = formattedContent;
             
             // Ensure message has proper classes
             messageElement.classList.add('bot-message');
             
-            // Find the content container and ensure it has the formatted-content class
-            const contentContainer = messageElement.querySelector('.chat-content');
-            if (contentContainer) {
-                contentContainer.classList.add('formatted-content');
+            // Ensure content container has the formatted-content class
+            contentContainer.classList.add('formatted-content');
+            
+            // Always store the original markdown for saving/exporting
+            messageElement.dataset.originalMarkdown = newText;
+            
+            // Store chart data in the message element's dataset if available
+            if (processedMarkdown.chartData && processedMarkdown.chartData.length > 0) {
+                // Convert chart data to a string and store it
+                const chartDataString = JSON.stringify(processedMarkdown.chartData);
+                messageElement.dataset.chartData = chartDataString;
+                console.log('Stored chart data:', processedMarkdown.chartData);
             }
+            
+            // Enhance code blocks and render charts
+            enhanceCodeBlocks(messageElement);
         }
     }
     //--------------------------------------------------------------------------------------------------------------
@@ -587,22 +1000,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 let formattedContent = '';
                 try {
                     if (typeof marked !== 'undefined' && marked) {
-                        formattedContent = marked.parse(processedMarkdown);
+                        formattedContent = marked.parse(processedMarkdown.markdown);
                     } else {
                         console.warn('Marked library not fully loaded, displaying raw text');
-                        formattedContent = `<pre>${processedMarkdown}</pre>`;
+                        formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
                     }
                 } catch (error) {
                     console.error('Error parsing markdown:', error);
-                    formattedContent = `<pre>${processedMarkdown}</pre>`;
+                    formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
                 }
                 
                 messageDiv.innerHTML = `
                     <div class="bot-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <div class="chat-content formatted-content">${formattedContent}</div>
+                    <div class="chat-content">
+                        <div class="formatted-content">${formattedContent}</div>
+                    </div>
                 `;
+                
+                // Always store the original markdown for saving/exporting
+                messageDiv.dataset.originalMarkdown = content;
+                
+                // Store chart data in the message element's dataset if available
+                if (processedMarkdown.chartData && processedMarkdown.chartData.length > 0) {
+                    messageDiv.dataset.chartData = JSON.stringify(processedMarkdown.chartData);
+                }
             }
         } else {
             messageDiv.innerHTML = `
@@ -631,7 +1054,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Funtion to load the question dynamically based on selected grade, subject and chapter
     async function loadQuestions(grade, subject, chapter, searchTerm = '') {
         try {
-            const response = await fetch(`${apiBasePath}/api/navigation/questions.php?grade=${grade}&subject=${subject}&chapter=${chapter}&search=${searchTerm}`);
+            const response = await fetch(`${window.apiBasePath}/api/navigation/questions.php?grade=${grade}&subject=${subject}&chapter=${chapter}&search=${searchTerm}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             const data = await response.json();
             return data.questions || [];
         } catch (error) {
@@ -643,7 +1070,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to load all questions for a grade regardless of subject and chapter
     async function loadAllQuestions(grade, searchTerm = '') {
         try {
-            const response = await fetch(`${apiBasePath}/api/navigation/questions.php?grade=${grade}&search=${searchTerm}`);
+            const response = await fetch(`${window.apiBasePath}/api/navigation/questions.php?grade=${grade}&search=${searchTerm}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             const data = await response.json();
             return data.all_questions || [];
         } catch (error) {
@@ -663,92 +1094,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // - Hides suggestions if no valid question is found  
     // - Uses cached questions to reduce API calls  
 
-    // Helper function to show question scope selection dialog
-    function showQuestionScopeDialog() {
-        return new Promise((resolve) => {
-            // Store input field reference 
-            const inputField = document.getElementById('userInput');
-            // Save the current selection range before showing dialog
-            const selectionStart = inputField.selectionStart;
-            const selectionEnd = inputField.selectionEnd;
-            
-            // Create the dialog as a floating element above the keyboard
-            const scopeDialog = document.createElement('div');
-            scopeDialog.className = 'answer-type-popup active';
-            scopeDialog.style.position = 'fixed';
-            scopeDialog.style.bottom = '100px'; // Position lower than before (was 160px)
-            scopeDialog.style.left = '0';
-            scopeDialog.style.right = '0';
-            scopeDialog.style.zIndex = '1000';
-            scopeDialog.innerHTML = `
-                <div class="popup-content" style="background-color: #1c1c1c; border-radius: 8px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); max-width: 320px; width: 90%; margin: 0 auto;">
-                    <h3 style="color: #fff; margin-top: 0; margin-bottom: 16px; font-size: 16px; text-align: center;">Which questions would you like to see?</h3>
-                    <button class="scope-button" data-scope="chapter">Only from current chapter</button>
-                    <button class="scope-button" data-scope="all">All questions</button>
-                </div>
-            `;
-            document.body.appendChild(scopeDialog);
-
-            const buttons = scopeDialog.querySelectorAll('.scope-button');
-            buttons.forEach(button => {
-                button.onclick = () => {
-                    const scope = button.dataset.scope;
-                    
-                    // Remove the dialog without affecting focus
-                    document.body.removeChild(scopeDialog);
-                    
-                    // Ensure input still has focus without refocusing
-                    if (document.activeElement !== inputField) {
-                        // Only refocus if necessary (avoid unnecessary focus changes)
-                        inputField.focus();
-                        
-                        // Restore selection position
-                        try {
-                            inputField.setSelectionRange(selectionStart, selectionEnd);
-                        } catch (e) {
-                            // Handle any errors silently
-                            console.log("Error restoring selection", e);
-                        }
-                    }
-                    
-                    resolve(scope);
-                };
-            });
-
-            // Add click outside to close but preserve focus
-            scopeDialog.addEventListener('click', (e) => {
-                if (e.target === scopeDialog) {
-                    // Remove dialog without disturbing focus
-                    document.body.removeChild(scopeDialog);
-                    
-                    // Only refocus if necessary
-                    if (document.activeElement !== inputField) {
-                        inputField.focus();
-                        try {
-                            inputField.setSelectionRange(selectionStart, selectionEnd);
-                        } catch (e) {
-                            console.log("Error restoring selection", e);
-                        }
-                    }
-                    
-                    resolve('all'); // Default to all questions if closed without selection
-                }
-            });
-        });
-    }
-
-    // Update command panel event listener
+    // Handle user typing a slash to see commands
     userInput.addEventListener('input', async (e) => {
         const value = e.target.value;
         const cursorPosition = e.target.selectionStart;
-        
-        // Find the last slash before cursor position
         const lastSlashIndex = value.lastIndexOf('/', cursorPosition);
         
-        if (lastSlashIndex === -1 || lastSlashIndex >= cursorPosition) {
+        // If there's no slash, hide command panel
+        if (lastSlashIndex === -1 || lastSlashIndex !== 0) {
             commandPanel.classList.remove('active');
             return;
         }
+        
+        // Hide topic selection container when typing slash commands
+        topicSelectionContainer.classList.remove('active');
         
         // Get current selections
         const selectedSubject = document.getElementById('selectedSubject').textContent;
@@ -757,47 +1116,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Get the search text after slash
         const searchText = value.slice(lastSlashIndex, cursorPosition).slice(1).toLowerCase();
         
-        // Check if we need to load questions for specific subject/chapter or all questions
+        // Always show topics from all chapters/subjects (no popup)
         let questionsToDisplay = [];
         
-        // Only show the scope selection dialog when:
-        // 1. User has just typed "/" (no additional text after slash)
-        // 2. Subject and chapter have already been selected
-        // 3. Command panel is not already active
-        
-        // First check if we already have a scope set in the data attribute
-        let questionScope = commandPanel.dataset.currentScope || 'all'; 
-        
-        // Only prompt for scope if this is a fresh "/" with nothing after it
-        if (value === '/' && 
-            selectedSubject !== 'Select Subject' && 
-            selectedChapter !== 'Select Chapter' && 
-            !commandPanel.classList.contains('active')) {
-            questionScope = await showQuestionScopeDialog();
-            // Save the user's choice in the data attribute for persistence during typing
-            commandPanel.dataset.currentScope = questionScope;
+        // Default to showing all questions
+        if (allGradeQuestions.length === 0) {
+            showLoadingIndicator();
+            allGradeQuestions = await loadAllQuestions(userGrade);
+            hideLoadingIndicator();
         }
-        
-        // Now, use the scope to determine which questions to display
-        if (questionScope === 'chapter' && selectedSubject !== 'Select Subject' && selectedChapter !== 'Select Chapter') {
-            // Show only current chapter questions
-            if (cachedQuestions.length === 0) {
-                showLoadingIndicator();
-                cachedQuestions = await loadQuestions(userGrade, selectedSubject, selectedChapter);
-                hideLoadingIndicator();
-            }
-            questionsToDisplay = cachedQuestions;
-            commandPanel.classList.add('chapter-specific'); // Add class for chapter-specific height
-        } else {
-            // Default to showing all questions
-            if (allGradeQuestions.length === 0) {
-                showLoadingIndicator();
-                allGradeQuestions = await loadAllQuestions(userGrade);
-                hideLoadingIndicator();
-            }
-            questionsToDisplay = allGradeQuestions;
-            commandPanel.classList.remove('chapter-specific'); // Use default height for global questions
-        }
+        questionsToDisplay = allGradeQuestions;
+        commandPanel.classList.remove('chapter-specific'); // Use default height for global questions
+        commandPanel.dataset.currentScope = 'all'; // Set scope to 'all'
         
         // Real-time filtering based on what user types
         let filteredQuestions = [];
@@ -814,29 +1144,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         const subjectText = item.subject.toLowerCase();
                         const chapterText = item.chapter.toLowerCase();
                         
-                        // For chapter-specific scope, only show questions from current chapter
-                        if (commandPanel.dataset.currentScope === 'chapter') {
-                            return item.subject === selectedSubject && 
-                                   item.chapter === selectedChapter && 
-                                   questionText.includes(searchText) && 
-                                   !window.selectedQuestions.has(item.question);
-                        }
-                        
                         // For global scope, show all matching questions
                         return (questionText.includes(searchText) || 
                                 subjectText.includes(searchText) || 
                                 chapterText.includes(searchText)) && 
                                 !window.selectedQuestions.has(item.question);
                     })
-                    : questionsToDisplay.filter(item => {
-                        // Apply the same scope filtering even without search text
-                        if (commandPanel.dataset.currentScope === 'chapter') {
-                            return item.subject === selectedSubject && 
-                                   item.chapter === selectedChapter && 
-                                   !window.selectedQuestions.has(item.question);
-                        }
-                        return !window.selectedQuestions.has(item.question);
-                    });
+                    : questionsToDisplay.filter(item => !window.selectedQuestions.has(item.question));
             } else {
                 // Regular format (just question strings)
                 filteredQuestions = searchText 
@@ -969,6 +1283,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the input including the '/' character
         userInput.value = '';
         
+        // Hide the command panel immediately
+        commandPanel.classList.remove('active');
+        
         // Get subject and chapter from the data attributes
         const subject = commandItem.dataset.subject;
         const chapter = commandItem.dataset.chapter;
@@ -998,22 +1315,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('User ID not found');
             }
             
+            // Build API URL
+            const apiUrl = `${window.apiBasePath}/api/chat/check_existing.php`;
+            console.log("Checking for existing chat at URL:", apiUrl);
+            
+            // Build request payload
+            const requestData = {
+                user_id: userId,
+                question: cleanCommand
+            };
+            console.log("Check existing chat request data:", JSON.stringify(requestData));
+            
             // Make API call to check for existing chat session
-            const response = await fetch(`${apiBasePath}/api/chat/check_existing.php`, {
+            const response = await fetch(`${window.apiBasePath}/api/chat/check_existing.php`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({
                     user_id: userId,
                     question: cleanCommand
                 })
             });
             
+            console.log("Check existing response status:", response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Error response from check_existing.php:", errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log("Check existing response data:", data);
             
             if (data.success && data.exists && data.session_id) {
-                // Close the command panel before redirecting
-                commandPanel.classList.remove('active');
-                // Session exists - load the existing chat
+                console.log('Existing chat found, redirecting to session:', data.session_id);
+                // Hide the topic selection container
+                topicSelectionContainer.classList.remove('active');
+                document.querySelector('.mobile-header').classList.remove('with-topics');
+                
+                // Reset chat messages position
+                adjustChatMessagesPosition();
+                
+                // Load the existing chat session
                 await chatHistory.loadChatSession(data.session_id);
                 return; // Exit early since we've redirected to existing chat
             }
@@ -1040,10 +1386,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add click handler for removing questions
     document.getElementById('selectedQuestionsContainer').addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-question')) {
-            const questionText = e.target.previousElementSibling.textContent;
-            window.selectedQuestions.delete(questionText);
-            updateSelectedQuestionsUI(); // Each selected question are added into container as a tag with cross to remove them
+        const removeButton = e.target.closest('.remove-question');
+        if (removeButton) {
+            e.stopPropagation(); // Stop the event from bubbling up
+            const questionTag = removeButton.closest('.question-tag');
+            const questionText = questionTag.querySelector('span').title; // Using title which holds the full question
+            removeQuestion(questionText);
         }
     });
     //--------------------------------------------------------------------------------------------------------------
@@ -1077,62 +1425,6 @@ document.addEventListener('DOMContentLoaded', () => {
             display: block;
         }
         
-        /* Scope selection dialog buttons */
-        .scope-button {
-            background-color: #252525;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 16px;
-            margin: 8px 0;
-            width: 100%;
-            text-align: left;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        
-        .scope-button:hover {
-            background-color: #2d2d2d;
-        }
-        
-        .scope-button:before {
-            content: '';
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            margin-right: 10px;
-            background-color: #333;
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
-        
-        .scope-button[data-scope="chapter"]:before {
-            background-color: #4166d5;
-            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"/></svg>');
-            -webkit-mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-        }
-        
-        .scope-button[data-scope="all"]:before {
-            background-color: #4166d5;
-            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>');
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>');
-            -webkit-mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-        }
-        
         /* Command panel styling - updated for mobile */
         .command-panel {
             overflow-y: auto;
@@ -1155,7 +1447,6 @@ document.addEventListener('DOMContentLoaded', () => {
             max-height: 48vh;
         }
         
-        /* Specific height for chapter questions to not overlap selection panel */
         .command-panel.chapter-specific {
             max-height: calc(100vh - 280px);
         }
@@ -1353,43 +1644,318 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    // Modify subject selection handler
-    document.querySelector('.subject-list').addEventListener('click', async e => {
-        const subjectItem = e.target.closest('.dropdown-item[data-type="subject"]');
-        if (!subjectItem) return;
-        
-        if (!await confirmChangeIfNeeded()) return; // Checks if selected questions exist and asks for confirmation before clearing them when switching subjects/chapters.
-        
-        const subjectValue = subjectItem.dataset.value;
-        currentSubject = subjectValue;
-        document.getElementById('selectedSubject').textContent = subjectValue;
-        document.getElementById('selectedChapter').textContent = 'Select Chapter';
-        cachedQuestions = [];
-        const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
-        renderChapters(filteredChapters);
+    // Event listeners for handling dropdown items click
+    document.addEventListener('click', async (e) => {
+        const dropdownItem = e.target.closest('.dropdown-item');
+        if (!dropdownItem) return;
+
+        const type = dropdownItem.dataset.type;
+        const value = dropdownItem.dataset.value;
+
+        if (type === 'subject') {
+            // Subject clicks are now handled by the subject-list click handler
+            // This avoids duplicate handling that could cause conflicts
+            return;
+        } else if (type === 'chapter') {
+            // Clear any selected questions before changing chapter
+            if (await confirmChangeIfNeeded()) {
+                // Update the chapter display
+                document.getElementById('selectedChapter').textContent = value;
+                
+                // Get the subject from the dataset
+                const subjectFromChapter = dropdownItem.dataset.subject;
+                
+                // If chapter has a subject in its dataset, update the subject display
+                if (subjectFromChapter) {
+                    document.getElementById('selectedSubject').textContent = subjectFromChapter;
+                    currentSubject = subjectFromChapter;
+                } else {
+                    // Fallback to existing subject
+                    currentSubject = dropdownItem.dataset.subject || currentSubject;
+                }
+                
+                currentChapter = value;
+                
+                // Close the dropdown
+                dropdownPanel.classList.remove('active');
+                
+                // Clear previous selection and clear cached questions
+                window.selectedQuestions.clear();
+                updateSelectedQuestionsUI();
+                cachedQuestions = [];
+                
+                // Load topics for this chapter
+                await loadAndDisplayTopics(userGrade, currentSubject, currentChapter);
+            }
+        }
     });
 
-    // Modify chapter selection handler
-    document.querySelector('.chapter-list').addEventListener('click', async e => {
-        const chapterItem = e.target.closest('.dropdown-item[data-type="chapter"]');
-        if (!chapterItem) return;
+    // Add these functions to handle the topic selection
+    async function loadAndDisplayTopics(grade, subject, chapter) {
+        // Show loading indicator
+        showLoadingInTopicContainer();
         
-        if (!await confirmChangeIfNeeded()) return; // Checks if selected questions exist and asks for confirmation before clearing them when switching subjects/chapters.
+        // Load questions for the selected chapter
+        if (cachedQuestions.length === 0) {
+            cachedQuestions = await loadQuestions(grade, subject, chapter);
+        }
         
-        const chapterValue = chapterItem.dataset.value;
-        currentChapter = chapterValue;
-        document.getElementById('selectedChapter').textContent = chapterValue;
-        const subjectValue = chapterItem.dataset.subject;
-        currentSubject = subjectValue;
-        document.getElementById('selectedSubject').textContent = subjectValue;
-        cachedQuestions = [];
-        const filteredChapters = allChapters.filter(chapter => chapter.subject === subjectValue);
-        renderChapters(filteredChapters);
-        dropdownPanel.classList.remove('active');
+        // Load the topic list data with headers from each markdown file
+        let topicListData = { found: false, topics: [] };
+        if (window.topicList && typeof window.topicList.loadTopicList === 'function') {
+            topicListData = await window.topicList.loadTopicList(grade, subject, chapter);
+        }
+        
+        hideLoadingInTopicContainer();
+        
+        // Use the new renderTopicList function if available
+        let hasTopics = false;
+        if (window.topicList && typeof window.topicList.renderTopicList === 'function') {
+            hasTopics = window.topicList.renderTopicList(topicButtonsContainer, cachedQuestions, topicListData);
+        } else {
+            // Fallback to simple buttons if the new function isn't available
+            // Sort questions alphabetically
+            cachedQuestions.sort((a, b) => {
+                // Remove leading slash if present for sorting
+                const textA = a.startsWith('/') ? a.substring(1).trim() : a;
+                const textB = b.startsWith('/') ? b.substring(1).trim() : b;
+                return textA.localeCompare(textB);
+            });
+            
+            // Create topic buttons
+            if (cachedQuestions.length > 0) {
+                hasTopics = true;
+                cachedQuestions.forEach(question => {
+                    // Clean up question text - remove leading slash if present
+                    let displayText = question;
+                    
+                    if (displayText.startsWith('/')) {
+                        displayText = displayText.substring(1).trim();
+                    }
+                    
+                    const topicButton = document.createElement('button');
+                    topicButton.className = 'topic-button';
+                    topicButton.textContent = displayText;
+                    topicButton.dataset.question = question;
+                    topicButton.setAttribute('type', 'button'); // Ensure it's a button type
+                    
+                    topicButtonsContainer.appendChild(topicButton);
+                });
+            } else {
+                // Show a message if no topics are found
+                const noTopics = document.createElement('div');
+                noTopics.style.padding = '15px';
+                noTopics.style.color = '#aaa';
+                noTopics.style.textAlign = 'center';
+                noTopics.textContent = 'No topics available for this chapter';
+                topicButtonsContainer.appendChild(noTopics);
+            }
+        }
+        
+        // Show the topic selection container
+        topicSelectionContainer.classList.add('active');
+        document.querySelector('.mobile-header').classList.add('with-topics');
+        
+        // Adjust chat messages position
+        adjustChatMessagesPosition();
+        
+        return hasTopics;
+    }
+    
+    function showLoadingInTopicContainer() {
+        topicButtonsContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; padding: 20px; color: #aaa;">
+                <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Loading topics...
+            </div>
+        `;
+        topicSelectionContainer.classList.add('active');
+        document.querySelector('.mobile-header').classList.add('with-topics');
+        
+        // Adjust chat messages position
+        adjustChatMessagesPosition();
+    }
+    
+    function hideLoadingInTopicContainer() {
+        topicButtonsContainer.innerHTML = '';
+    }
+    
+    // Function to adjust chat messages position when topic container is shown/hidden
+    function adjustChatMessagesPosition() {
+        const mobileHeader = document.querySelector('.mobile-header');
+        const topicContainer = document.querySelector('.topic-selection-container');
+        const chatMessages = document.querySelector('.chat-messages');
+        
+        if (topicContainer.classList.contains('active')) {
+            // Calculate the combined height of mobile header and topic container
+            const mobileHeaderHeight = mobileHeader.offsetHeight;
+            const topicContainerHeight = Math.min(topicContainer.scrollHeight, window.innerHeight * 0.75);
+            const totalHeight = mobileHeaderHeight + topicContainerHeight;
+            
+            // Update chat messages top position
+            chatMessages.style.top = `${totalHeight}px`;
+            
+            // Ensure topic container doesn't exceed reasonable screen height
+            topicContainer.style.maxHeight = `${window.innerHeight * 0.75}px`;
+        } else {
+            // Reset to default
+            chatMessages.style.top = '130px';
+        }
+    }
+
+    // Add event listener for topic button clicks
+    document.addEventListener('click', async function(e) {
+        // Fix for the closest error - check if the target or any parent is a topic button
+        let topicButton = null;
+        
+        // First check if the clicked element itself is a topic button
+        if (e.target.classList && e.target.classList.contains('topic-button')) {
+            topicButton = e.target;
+        } 
+        // Try closest() if the browser supports it
+        else if (e.target.closest && typeof e.target.closest === 'function') {
+            topicButton = e.target.closest('.topic-button');
+        }
+        // Fallback for browsers that don't support closest()
+        else {
+            // Check parent nodes manually
+            let element = e.target;
+            while (element) {
+                if (element.classList && element.classList.contains('topic-button')) {
+                    topicButton = element;
+                    break;
+                }
+                element = element.parentElement;
+            }
+        }
+        
+        // If no topic button was found, return
+        if (!topicButton) return;
+        
+        e.preventDefault(); // Prevent any default behavior
+        e.stopPropagation(); // Stop event from bubbling
+        
+        const question = topicButton.dataset.question;
+        console.log('Topic selected:', question); // Debug log
+        
+        // Check if there's an existing chat session for this question
+        try {
+            const userId = localStorage.getItem('user_id');
+            if (!userId) {
+                throw new Error('User ID not found');
+            }
+            
+            // Build API URL
+            const apiUrl = `${window.apiBasePath}/api/chat/check_existing.php`;
+            console.log("Checking for existing chat at URL:", apiUrl);
+            
+            // Build request payload
+            const requestData = {
+                user_id: userId,
+                question: question
+            };
+            console.log("Check existing chat request data:", JSON.stringify(requestData));
+            
+            // Make API call to check for existing chat session
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            console.log("Check existing response status:", response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Error response from check_existing.php:", errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log("Check existing response data:", data);
+            
+            if (data.success && data.exists && data.session_id) {
+                console.log('Existing chat found, redirecting to session:', data.session_id);
+                // Hide the topic selection container
+                topicSelectionContainer.classList.remove('active');
+                document.querySelector('.mobile-header').classList.remove('with-topics');
+                
+                // Reset chat messages position
+                adjustChatMessagesPosition();
+                
+                // Load the existing chat session
+                await chatHistory.loadChatSession(data.session_id);
+                return; // Exit early since we've redirected to existing chat
+            }
+        } catch (error) {
+            console.error('Error checking for existing chat:', error);
+            // Continue with normal flow if there's an error
+        }
+        
+        // Normal flow - no existing chat or error checking
+        // Clear previous selections
+        window.selectedQuestions.clear();
+        
+        // Clear chat history session ID to ensure we start a new chat
+        if (chatHistory) {
+            chatHistory.currentSessionId = null;
+        }
+        
+        // Clear existing chat messages
+        const chatMessages = document.querySelector('.chat-messages');
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+        }
+        
+        // Add the selected question
+        window.selectedQuestions.add(question);
+        
+        // Update the UI
+        updateSelectedQuestionsUI();
+        
+        // Focus on the input field for typing
+        setTimeout(() => {
+            document.getElementById('userInput').focus();
+        }, 10);
     });
 
-    //---------------------------------------------------------------------------------------------------------------------------------------------------
+    // Add event listener for preview area to prevent clicking in the preview from triggering the button
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.topic-preview')) {
+            e.stopPropagation(); // Stop event from bubbling to the button
+        }
+    });
 
+    // Modify the removeQuestion function to show topic selection again when a question is removed
+    function removeQuestion(question) {
+        // Remove from the selected questions set
+        window.selectedQuestions.delete(question);
+        updateSelectedQuestionsUI();
+        
+        // If there are no more selected questions and we have a current chapter or selectedChapter in UI,
+        // show the topic selection container again
+        if (window.selectedQuestions.size === 0) {
+            // When loading from history, we need to ensure the currentSubject and currentChapter
+            // values are correct by reading them from the UI
+            const selectedSubjectText = document.getElementById('selectedSubject').textContent;
+            const selectedChapterText = document.getElementById('selectedChapter').textContent;
+            
+            // Only proceed if we have valid subject and chapter
+            if (selectedSubjectText !== 'Select Subject' && selectedChapterText !== 'Select Chapter') {
+                // Update the current state variables
+                currentSubject = selectedSubjectText;
+                currentChapter = selectedChapterText;
+                
+                // Load topics for this chapter
+                loadAndDisplayTopics(userGrade, currentSubject, currentChapter);
+                
+                // The existing document-level event listener for topic buttons will handle
+                // checking for existing chat sessions when a new topic is clicked
+            }
+        }
+    }
 
     //------------------------ Filters subjects and chapters dynamically as the user types in the search box.--------------------------------------------
     document.querySelector('.search-input').addEventListener('input', function(e) {
@@ -1397,24 +1963,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Show all chapters for searching without clearing selections
         if (term) {
-            renderChapters(allChapters); // Show all chapters for searching
+            // Show all chapters when searching
+            renderChapters(allChapters);
         } else {
-            // When search is cleared, show chapters based on current selection
+            // When search is cleared, filter chapters based on current subject selection
             const selectedSubject = document.getElementById('selectedSubject').textContent;
             if (selectedSubject !== 'Select Subject') {
+                // Only show chapters for the selected subject
                 const filteredChapters = allChapters.filter(chapter => chapter.subject === selectedSubject);
                 renderChapters(filteredChapters);
             } else {
+                // If no subject selected, show all chapters
                 renderChapters(allChapters);
             }
         }
         
-        // Filter visible items based on search term
+        // Filter visible dropdown items based on search term (both subjects and chapters)
         document.querySelectorAll('.dropdown-item').forEach(item => {
-            const isSubject = item.dataset.type === 'subject';
             const itemText = item.textContent.toLowerCase();
             const chapterSubject = item.dataset.subject?.toLowerCase() || '';
             
+            // Match on item text or chapter's subject
             const match = itemText.includes(term) || chapterSubject.includes(term);
             item.style.display = match ? 'flex' : 'none';
         });
@@ -1438,7 +2007,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //--------------------------------------Load all the chanpters existing inside the selected grade and subject--------------------------------------
     async function loadAllChapters(grade) {
         try {
-            const response = await fetch(`${apiBasePath}/api/navigation/subjects.php?grade=${grade}`);
+            const response = await fetch(`${window.apiBasePath}/api/navigation/subjects.php?grade=${grade}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1447,17 +2020,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             const subjects = data.subjects || [];
             
+            // Clear the array before loading new data
+            allChapters = [];
+            
+            // Load chapters for each subject sequentially
             for (const subject of subjects) {
                 const chapters = await loadChapters(grade, subject);
-                allChapters.push(...chapters.map(chapter => ({
-                    name: chapter,
-                    subject: subject
-                })));
+                
+                // Add properly formatted chapters to allChapters
+                if (Array.isArray(chapters)) {
+                    chapters.forEach(chapter => {
+                        if (typeof chapter === 'object' && chapter.name && chapter.subject) {
+                            allChapters.push(chapter);
+                        } else {
+                            // Handle the case where chapter might be a string
+                            allChapters.push({
+                                name: typeof chapter === 'string' ? chapter : chapter.toString(),
+                                subject: subject
+                            });
+                        }
+                    });
+                }
             }
             
-            renderChapters(allChapters);
+            console.log(`Loaded ${allChapters.length} chapters for all subjects`);
+            return allChapters;
         } catch (error) {
             console.error('Error loading all chapters:', error);
+            return [];
         }
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -1467,6 +2057,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSelectedQuestionsUI() {
         const container = document.getElementById('selectedQuestionsContainer');
         container.innerHTML = '';
+        
+        // If we have selected questions, hide both panels
+        if (window.selectedQuestions.size > 0) {
+            // Hide the topic selection container
+            topicSelectionContainer.classList.remove('active');
+            document.querySelector('.mobile-header').classList.remove('with-topics');
+            
+            // Hide the command panel 
+            commandPanel.classList.remove('active');
+            
+            // Reset chat messages position
+            adjustChatMessagesPosition();
+        }
         
         window.selectedQuestions.forEach(question => {
             // Remove leading slash if present
@@ -1506,13 +2109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             toast.remove();
         }, 3000);
-    }
-
-    // Add to your question removal handler
-    function removeQuestion(question) {
-        window.selectedQuestions.delete(question);
-        chatHistory.removeQuestion(question);
-        updateSelectedQuestionsDisplay();
     }
 
     // Helper function to show answer type popup
@@ -1563,55 +2159,296 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to enhance code blocks
+    // Function to enhance code blocks and render charts
     function enhanceCodeBlocks(messageElement) {
-        // Get all code blocks
+        console.log('Enhancing code blocks for message:', messageElement);
+        
+        // Process code blocks if needed
         const codeBlocks = messageElement.querySelectorAll('pre code');
         codeBlocks.forEach(codeBlock => {
-            // Add language class if not present
-            if (!codeBlock.className.includes('language-')) {
-                codeBlock.classList.add('language-plaintext');
+            // Process code blocks if needed
+        });
+
+        // Get content container
+        const contentContainer = messageElement.querySelector('.chat-content');
+        if (!contentContainer) return;
+        
+        // Add formatted-content wrapper if it doesn't exist
+        let formattedContent = contentContainer.querySelector('.formatted-content');
+        if (!formattedContent) {
+            // Create a formatted-content wrapper to match saved-answers.js styling
+            formattedContent = document.createElement('div');
+            formattedContent.classList.add('formatted-content');
+            
+            // Move all content into the formatted-content wrapper
+            while (contentContainer.firstChild) {
+                formattedContent.appendChild(contentContainer.firstChild);
             }
             
-            // Apply syntax highlighting
-            if (typeof hljs !== 'undefined') {
-                hljs.highlightElement(codeBlock);
-            }
-            
-            // Add copy button container if not already wrapped
-            const preElement = codeBlock.parentElement;
-            if (preElement.parentElement.classList.contains('code-block-container')) {
+            contentContainer.appendChild(formattedContent);
+        }
+
+        // Wrap tables in scrollable wrapper
+        const tables = formattedContent.querySelectorAll('table');
+        tables.forEach(table => {
+            // Skip if already wrapped
+            if (table.closest('.scrollable-wrapper')) {
                 return;
             }
             
-            // Create container
-            const container = document.createElement('div');
-            container.classList.add('code-block-container');
+            // Create scrollable wrapper
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('scrollable-wrapper');
             
-            // Create header with language and copy button
-            const header = document.createElement('div');
-            header.classList.add('code-block-header');
-            
-            // Get language from class
-            let language = 'Code';
-            codeBlock.classList.forEach(cls => {
-                if (cls.startsWith('language-')) {
-                    language = cls.replace('language-', '').toUpperCase();
-                }
-            });
-            
-            header.innerHTML = `
-                <span>${language}</span>
-                <button class="copy-code-button" onclick="copyCode(this)">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            `;
-            
-            // Insert elements
-            preElement.parentNode.insertBefore(container, preElement);
-            container.appendChild(header);
-            container.appendChild(preElement);
+            // Replace table with wrapper containing table
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
         });
+        
+        // Process chart placeholders
+        const chartPlaceholders = messageElement.querySelectorAll('.chart-placeholder');
+        console.log('Found chart placeholders:', chartPlaceholders.length);
+        
+        // Get chart data from the message element
+        let chartData;
+        try {
+            // First try to get chart data from dataset
+            const chartDataString = messageElement.dataset.chartData;
+            console.log('Chart data string from dataset:', chartDataString);
+            
+            if (chartDataString) {
+                chartData = JSON.parse(chartDataString);
+                console.log('Parsed chart data:', chartData);
+            } else {
+                // If no chart data in dataset, try to get original markdown and process it
+                const originalMarkdown = messageElement.dataset.originalMarkdown;
+                console.log('Original markdown from dataset:', originalMarkdown);
+                
+                if (originalMarkdown) {
+                    const processedMarkdown = preprocessMarkdown(originalMarkdown);
+                    chartData = processedMarkdown.chartData;
+                    console.log('Processed chart data from markdown:', chartData);
+                    // Store the processed chart data for future use
+                    messageElement.dataset.chartData = JSON.stringify(chartData);
+                } else {
+                    chartData = [];
+                    console.log('No chart data available');
+                }
+            }
+        } catch (error) {
+            console.error('Error parsing chart data:', error);
+            chartData = [];
+        }
+        
+        console.log('Final chart data:', chartData);
+        
+        chartPlaceholders.forEach(placeholder => {
+            // Clear any existing content to prevent duplicates
+            placeholder.innerHTML = '';
+            
+            const chartIndex = parseInt(placeholder.getAttribute('data-chart-index'));
+            console.log('Processing chart at index:', chartIndex);
+            
+            if (!chartData || !chartData[chartIndex]) {
+                console.log('No chart data available at index:', chartIndex);
+                placeholder.innerHTML = '<div class="chart-error">No chart data available</div>';
+                return;
+            }
+            
+            const chartConfig = chartData[chartIndex];
+            console.log('Chart config:', chartConfig);
+            
+            // Verify Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded');
+                placeholder.innerHTML = '<div class="chart-error">Chart.js library not loaded</div>';
+                return;
+            }
+            
+            // Create container for the chart
+            const chartContainer = document.createElement('div');
+            chartContainer.style.position = 'relative';
+            chartContainer.style.height = window.innerWidth < 768 ? '200px' : '300px'; // Smaller height on mobile
+            chartContainer.style.width = '100%';
+            chartContainer.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px'; // Full width on mobile
+            chartContainer.style.margin = '0 auto'; // Center the chart
+            placeholder.appendChild(chartContainer);
+            
+            // Create canvas element
+            const canvas = document.createElement('canvas');
+            chartContainer.appendChild(canvas);
+            
+            // Initialize chart with error handling
+            try {
+                // Ensure chartConfig has required properties
+                if (!chartConfig || typeof chartConfig !== 'object') {
+                    throw new Error('Invalid chart configuration: not an object');
+                }
+                
+                if (!chartConfig.type) {
+                    throw new Error('Invalid chart configuration: missing type property');
+                }
+                
+                if (!chartConfig.data) {
+                    throw new Error('Invalid chart configuration: missing data property');
+                }
+                
+                // Set default options if not provided
+                chartConfig.options = {
+                    ...chartConfig.options,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        ...chartConfig.options?.plugins,
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 20,
+                                padding: 15
+                            }
+                        }
+                    }
+                };
+                
+                // Create the chart
+                const chart = new Chart(canvas, chartConfig);
+                console.log('Chart successfully rendered at index:', chartIndex);
+                
+                // Store the chart instance in the placeholder for later access
+                placeholder.dataset.chartInstance = chart;
+                
+                // Add resize handler if ResizeObserver is available
+                if (typeof ResizeObserver !== 'undefined') {
+                    const resizeObserver = new ResizeObserver(() => {
+                        chart.resize();
+                    });
+                    resizeObserver.observe(chartContainer);
+                }
+            } catch (error) {
+                console.error('Failed to render chart at index:', chartIndex, error);
+                placeholder.innerHTML = `
+                    <div class="chart-error">
+                        Failed to render chart: ${error.message}
+                        <div class="chart-error-details">${JSON.stringify(chartConfig, null, 2) || 'No configuration available'}</div>
+                    </div>
+                `;
+            }
+        });
+        
+        // Render LaTeX expressions with MathJax for this specific message
+        if (typeof MathJax !== 'undefined') {
+            try {
+                // Use the formatted-content container for MathJax rendering
+                if (formattedContent) {
+                    // Use typesetPromise for better performance and to handle async properly
+                    MathJax.typesetPromise([formattedContent]).catch((err) => {
+                        console.error('MathJax typesetting error in message:', err);
+                    });
+                    
+                    // After MathJax has rendered, wrap equation blocks in scrollable container
+                    MathJax.typesetPromise([formattedContent])
+                        .then(() => {
+                            // Find displayed math equations that are rendered by MathJax
+                            const displayMath = formattedContent.querySelectorAll('.MathJax');
+                            displayMath.forEach(mathElement => {
+                                // Skip if already wrapped
+                                if (mathElement.closest('.scrollable-wrapper')) {
+                                    return;
+                                }
+                                
+                                // Check if it's a display equation (block equation)
+                                const rect = mathElement.getBoundingClientRect();
+                                const isDisplayEquation = rect.width > 200 || mathElement.getAttribute('display') === 'block';
+                                
+                                if (isDisplayEquation || rect.width > formattedContent.clientWidth * 0.7) {
+                                    // Create scrollable wrapper
+                                    const wrapper = document.createElement('div');
+                                    wrapper.classList.add('scrollable-wrapper');
+                                    wrapper.style.overflowY = 'hidden'; // Force horizontal scrolling only
+                                    
+                                    // Replace equation with wrapper containing equation
+                                    mathElement.parentNode.insertBefore(wrapper, mathElement);
+                                    wrapper.appendChild(mathElement);
+                                    
+                                    // Set explicit styles on MathJax element to ensure horizontal scrolling
+                                    mathElement.style.display = 'inline-block';
+                                    mathElement.style.width = 'auto';
+                                    mathElement.style.maxWidth = 'none';
+                                }
+                            });
+                        })
+                        .catch((err) => {
+                            console.error('Error wrapping MathJax elements:', err);
+                        });
+                }
+            } catch (error) {
+                console.error('Error rendering LaTeX with MathJax for message:', error);
+            }
+        }
     }
 
+    // Add resize event listener to adjust positions on window resize
+    window.addEventListener('resize', () => {
+        if (topicSelectionContainer.classList.contains('active')) {
+            // Update the position with a small delay to ensure measurements are accurate
+            setTimeout(adjustChatMessagesPosition, 100);
+        }
+    });
+    
+    // Add this at the end of the DOMContentLoaded event listener to set the initial positions
+    // Initial check for viewport size to adjust message container position
+    adjustChatMessagesPosition();
+
+    // Check if chat is empty and show instructions when page loads
+    checkEmptyChatAndShowInstructions();
+
+    // Add window resize handler for responsive charts
+    window.addEventListener('resize', () => {
+        const chartContainers = document.querySelectorAll('.chart-placeholder > div');
+        chartContainers.forEach(container => {
+            // Update container size based on screen width
+            container.style.height = window.innerWidth < 768 ? '200px' : '300px';
+            container.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px';
+            
+            // Find the Chart instance and update it
+            const placeholder = container.closest('.chart-placeholder');
+            if (placeholder && placeholder.dataset.chartInstance) {
+                try {
+                    const chart = Chart.getChart(container.querySelector('canvas'));
+                    if (chart) {
+                        chart.resize();
+                    }
+                } catch (e) {
+                    console.error('Error resizing chart:', e);
+                }
+            }
+        });
+    });
+
 });
+
+function checkEmptyChatAndShowInstructions() {
+    const chatMessages = document.querySelector('.chat-messages');
+    
+    // If there are no messages in the chat area
+    if (chatMessages && chatMessages.children.length === 0) {
+        // Check if instruction box already exists
+        if (!chatMessages.querySelector('.empty-chat-instructions')) {
+            const instructionBox = document.createElement('div');
+            instructionBox.className = 'empty-chat-instructions';
+            instructionBox.innerHTML = `
+                <div class="instruction-content">
+                    <i class="fas fa-keyboard"></i>
+                    <p>Type "/" in from your keyboard to filter the topics from any chapter</p>
+                </div>
+            `;
+            chatMessages.appendChild(instructionBox);
+        }
+    } else if (chatMessages) {
+        // Remove instruction box if there are messages
+        const instructionBox = chatMessages.querySelector('.empty-chat-instructions');
+        if (instructionBox) {
+            instructionBox.remove();
+        }
+    }
+}

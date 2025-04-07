@@ -1,10 +1,10 @@
-# MEANING OF CONTROLLING
+# Meaning
 
 Controlling refers to comparison of actual performance with the planned performance and taking corrective actions, in case of deviations between actual and planned performance. Controlling cannot prevent deviations. But, it can minimise them by taking actions and decisions that reduce their recurrence.
 In the words of Koontz and O' Donnel, Managerial Control implies the measurement of accomplishment against the standard \& the correction of deviations to assure attainment of objectives according to plans.
 In the words of Dale Henning, Control is the process of bringing about conformity of performance with planned action.
 
-## Nature or Features or Characteristics of Controlling 
+# Nature or Features or Characteristics of Controlling 
 
 - Controlling is a goal-oriented function as it aims to ensure that resources are used effectively and efficiently to achieve predetermined goals.
 - Controlling is a pervasive function as control is exercised at all levels of management. The nature and extent of control may differ from level to level. Moreover, controlling is required in both business and non-business organisations.
@@ -14,7 +14,7 @@ In the words of Dale Henning, Control is the process of bringing about conformit
 - Controlling is a continuous function as it involves continuous review of performance and revision of standards.
 
 
-## Do not consider Controlling as the Last Function of Management
+# Do not consider Controlling as the Last Function of Management
 
 Controlling should not be misunderstood as the last function of management. It is a function that brings back the management cycle back to the planning function.
 

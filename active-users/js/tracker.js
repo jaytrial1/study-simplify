@@ -83,7 +83,7 @@
     // Debug logger
     const log = (message) => {
         if (config.debug) {
-            console.log(`[UserTracker] ${message}`);
+            // console.log(`[UserTracker] ${message}`);
         }
     };
 

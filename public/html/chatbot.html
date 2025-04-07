@@ -24,6 +24,7 @@
         const chatCssPath = _isLocalServer ? "../css/chat.css" : "/public/css/chat.css?v=<?php echo time(); ?>";
         const mobileSidebarPath = _isLocalServer ? "../css/mobile-sidebar.css" : "/public/css/mobile-sidebar.css?v=<?php echo time(); ?>";
         const followUpCssPath = _isLocalServer ? "../css/follow-up.css" : "/public/css/follow-up.css?v=<?php echo time(); ?>";
+        const topicListCssPath = _isLocalServer ? "../css/topic-list.css" : "/public/css/topic-list.css?v=<?php echo time(); ?>";
         
         // JavaScript paths
         const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js?v=<?php echo time(); ?>";
@@ -32,12 +33,15 @@
         const chatHistoryPath = _isLocalServer ? "../js/chat-history.js" : "/public/js/chat-history.js?v=<?php echo time(); ?>";
         const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js?v=<?php echo time(); ?>";
         const followUpJsPath = _isLocalServer ? "../js/follow-up-prompts.js" : "/public/js/follow-up-prompts.js?v=<?php echo time(); ?>";
+        const topicListJsPath = _isLocalServer ? "../js/topic-list.js" : "/public/js/topic-list.js?v=<?php echo time(); ?>";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>ChatBot UI</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- PWA Support -->
     <script>document.write(`<link rel="manifest" href="${manifestPath}">`)</script>
     <meta name="theme-color" content="#4166d5">
@@ -53,6 +57,7 @@
         document.write(`<link rel="stylesheet" href="${chatCssPath}">`);
         document.write(`<link rel="stylesheet" href="${mobileSidebarPath}">`);
         document.write(`<link rel="stylesheet" href="${followUpCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${topicListCssPath}">`);
     </script>
     <!-- Highlight.js for code syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
@@ -143,6 +148,27 @@
             
             // Service worker is now handled in base-url.js
         });
+    </script>
+    
+    <!-- MathJax for LaTeX Support -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        // MathJax configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
     </script>
 </head>
 <body>
@@ -261,7 +287,18 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- New Topic Selection Container - moved inside mobile-header for proper positioning -->
+                <div class="topic-selection-container" id="topicSelectionContainer">
+                    <div class="topic-selection-header">
+                        <h4>Select topic:</h4>
+                    </div>
+                    <div class="topic-buttons-container" id="topicButtonsContainer">
+                        <!-- Topic buttons will be added here dynamically -->
+                    </div>
+                </div>
             </div>
+            
             <div class="chat-messages" id="chatMessages">
                 <!-- Messages will be added here dynamically -->
             </div>
@@ -296,6 +333,7 @@
         document.write(`<script src="${chatHistoryPath}"><\/script>`);
         document.write(`<script src="${answerActionPath}"><\/script>`);
         document.write(`<script src="${followUpJsPath}"><\/script>`);
+        document.write(`<script src="${topicListJsPath}"><\/script>`);
     </script>
     <script>
         // Handle splash screen

@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject = $input['subject'] ?? null;
     $chapter = $input['chapter'] ?? null;
     $question = $input['question'] ?? null;
-    $aiResponse = $input['aiResponse'] ?? null;
+    $markdown = $input['aiResponse'] ?? null; // This keeps the same parameter name for backward compatibility
     $saveType = $input['saveType'] ?? null;
     $grade = $input['grade'] ?? null;
     
     // Generate a hash of the answer text to use as part of uniqueness check
     // This allows multiple different answers to the same question
-    $answerHash = substr(md5($aiResponse), 0, 10); // Short hash of the answer text
+    $answerHash = substr(md5($markdown), 0, 10); // Short hash of the answer text
     
     // For debugging
     error_log("Input data: " . json_encode([
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]));
     
     // Validate required parameters
-    if (!$userId || !$subject || !$chapter || !$question || !$aiResponse || !$saveType || !$grade) {
+    if (!$userId || !$subject || !$chapter || !$question || !$markdown || !$saveType || !$grade) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing required parameters']);
         exit;
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      WHERE user_id = ? AND subject = ? AND chapter = ? AND question_identifier = ? AND grade = ? 
                      AND answer_text = ?";
         $checkStmt = $conn->prepare($checkSql);
-        $checkStmt->bind_param("isssss", $userId, $subject, $chapter, $question, $grade, $aiResponse);
+        $checkStmt->bind_param("isssss", $userId, $subject, $chapter, $question, $grade, $markdown);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertSql = "INSERT INTO saved_answers (user_id, subject, chapter, question_identifier, answer_text, save_type, grade) 
                      VALUES (?, ?, ?, ?, ?, ?, ?)";
         $insertStmt = $conn->prepare($insertSql);
-        $insertStmt->bind_param("issssss", $userId, $subject, $chapter, $question, $aiResponse, $saveType, $grade);
+        $insertStmt->bind_param("issssss", $userId, $subject, $chapter, $question, $markdown, $saveType, $grade);
         $insertStmt->execute();
         
         if ($insertStmt->affected_rows > 0) {

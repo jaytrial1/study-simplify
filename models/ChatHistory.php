@@ -80,10 +80,28 @@ class ChatHistory {
                 $conversation = [];
             }
             
+            // Ensure the message is in the correct format
+            $messageToStore = $message;
+            
+            // If message is not a string, try to stringify it
+            if (!is_string($messageToStore)) {
+                error_log("Message is not a string, type: " . gettype($messageToStore));
+                
+                // Handle object messages (ensure proper JSON)
+                if (is_object($messageToStore) || is_array($messageToStore)) {
+                    $messageToStore = json_encode($messageToStore, JSON_UNESCAPED_UNICODE);
+                    error_log("Converted object/array message to JSON string");
+                } else {
+                    // Convert other types to string
+                    $messageToStore = (string)$messageToStore;
+                    error_log("Converted " . gettype($message) . " message to string");
+                }
+            }
+            
             // Check for duplicate message
             $isDuplicate = false;
             foreach ($conversation as $existingMsg) {
-                if ($existingMsg['sender'] === $sender && $existingMsg['message'] === $message) {
+                if ($existingMsg['sender'] === $sender && $existingMsg['message'] === $messageToStore) {
                     $isDuplicate = true;
                     break;
                 }
@@ -92,14 +110,14 @@ class ChatHistory {
             // Only add if not a duplicate
             if (!$isDuplicate) {
                 // Ensure the message is valid UTF-8
-                if (!mb_check_encoding($message, 'UTF-8')) {
-                    $message = mb_convert_encoding($message, 'UTF-8', 'auto');
+                if (!mb_check_encoding($messageToStore, 'UTF-8')) {
+                    $messageToStore = mb_convert_encoding($messageToStore, 'UTF-8', 'auto');
                     error_log("Converted message to UTF-8");
                 }
                 
                 $conversation[] = [
                     'sender' => $sender,
-                    'message' => $message,
+                    'message' => $messageToStore,
                     'timestamp' => date('Y-m-d H:i:s')
                 ];
                 
