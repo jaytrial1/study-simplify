@@ -4,6 +4,7 @@
    #chatMessages {
     overflow-y: auto; /* Allow vertical scrolling */
     scroll-behavior: smooth;
+    width: 100%; /* Ensure full width */
 }
 
 /* Auto-scroll behavior, preventing unwanted jumps */
@@ -36,14 +37,22 @@
     background: transparent; /* Remove background bubble */
     color: white; /* Ensure white text */
     padding: 0;
-    max-width: 100%; /* Take full width of screen */
+    width: 100%; /* Take full width */
+    max-width: 100%; /* Ensure no overflow */
     margin: 16px 0; /* Increased space */
+}
+
+.bot-response .chat-content {
+    flex: 1;
+    min-width: 0;
+    position: relative;
 }
 
 .formatted-content {
     width: 100%;
-    /* Allow horizontal scroll for tables while preventing overall container overflow */
-    overflow-x: visible; /* Changed from hidden to visible */
+    max-width: 100%;
+    overflow-x: auto; /* Allow horizontal scroll for wide content */
+    padding-right: 10px; /* Add padding for scrollbar */
 }
 
 /* =============================
@@ -54,6 +63,8 @@
     line-height: 1.7; /* Increased from 1.5 to 1.7 for better readability */
     padding-bottom: 0.2rem; /* Add a little padding at bottom of paragraphs */
     font-size: 1rem; /* Ensure consistent font size */
+    max-width: 100%; /* Prevent text overflow */
+    word-wrap: break-word; /* Allow text to wrap */
 }
 
 /* Add more space between paragraphs */
@@ -65,11 +76,13 @@
 .formatted-content ol {
     padding-left: 24px; /* Increased from 20px */
     margin: 14px 0; /* Add margin around lists */
+    max-width: 100%; /* Prevent list overflow */
 }
 
 .formatted-content li {
     margin-bottom: 8px; /* Increased from 5px */
     line-height: 1.7; /* Match paragraph line height */
+    word-wrap: break-word; /* Allow text to wrap */
 }
 
 .formatted-content blockquote {
@@ -111,6 +124,7 @@
    ============================= */
 .scrollable-wrapper {
     width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     padding-bottom: 10px; /* Add padding at bottom for better UX */
     margin-bottom: 10px;
@@ -121,8 +135,9 @@
 /* Modified table display to ensure tables can be fully scrolled */
 .scrollable-wrapper table {
     display: table;
-    margin-right: 50px; /* Add right margin to the table itself for buffer space */
+    margin-right: 0; /* Remove right margin */
     white-space: nowrap; /* Prevent text wrapping in tables */
+    min-width: 100%; /* Ensure table takes at least full width */
 }
 
 /* =============================
@@ -139,6 +154,8 @@
 .formatted-content td, 
 .formatted-content th {
     white-space: normal;
+    max-width: 300px; /* Limit cell width */
+    word-wrap: break-word; /* Allow text to wrap */
 }
 
 .formatted-content th, 
@@ -157,23 +174,23 @@
    MathJax Equations
    ============================= */
 .scrollable-wrapper .MathJax {
-    max-width: none !important;
-    overflow: visible !important;
-    margin-right: 50px !important; /* Add right margin to MathJax elements */
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    margin-right: 0 !important; /* Remove right margin */
     display: inline-block !important; /* Ensure block display for horizontal layout */
 }
 
 /* Ensure the MathJax container spans full width for proper scrolling */
 .scrollable-wrapper .MJX-TEX {
     width: auto !important;
-    max-width: none !important;
+    max-width: 100% !important;
 }
 
 /* Improve large display equations for better horizontal scrolling */
 .mjx-chtml {
-    overflow-x: visible !important;
+    overflow-x: auto !important;
     overflow-y: hidden !important;
-    max-width: none !important;
+    max-width: 100% !important;
 }
 
 /* =============================
@@ -211,22 +228,35 @@
     .chart-placeholder {
         margin: 10px 0;
         width: 100%;
+        max-width: 100%;
         overflow-x: auto;
     }
     
     .formatted-content {
         overflow-x: auto;
+        max-width: 100%;
     }
     
     .chart-placeholder canvas {
         width: 100% !important;
+        max-width: 100% !important;
     }
 
     /* Increase specificity and ensure overflow applies directly */
-    .bot-response .formatted-content { /* Changed selector */
+    .bot-response .formatted-content {
         overflow-x: auto;
-        /* Add explicit max-width just in case */
         max-width: 100%;
+        width: 100%;
+    }
+    
+    /* Ensure tables are properly contained */
+    .scrollable-wrapper {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    
+    .scrollable-wrapper table {
+        min-width: 100%;
     }
 }
 

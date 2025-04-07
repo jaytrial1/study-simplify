@@ -362,7 +362,6 @@ body {
     left: 0;
     right: 0;
     overflow-y: auto;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
     -webkit-overflow-scrolling: touch;
     padding: 1rem;
     scrollbar-width: none; /* Firefox */

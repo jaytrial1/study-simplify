@@ -601,15 +601,15 @@ class ChatHistoryManager {
         }
         
         try {
-            this.isLoadingSession = true; // Set loading state to true
-            
+            this.isLoadingSession = true;
             // Close the menu/sidebar using the same implementation as script.js
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.getElementById('menuToggle');
             if (sidebar && menuToggle) {
                 sidebar.classList.remove('active');
                 // Dispatch a click event on the document to ensure proper cleanup
-                document.dispatchEvent(new MouseEvent('click'));
+                // COMMENTED OUT: This causes side effects with other document listeners
+                // document.dispatchEvent(new MouseEvent('click')); 
             }
 
             const response = await fetch(`${window.apiBasePath}/api/chat/history.php?session_id=${sessionId}`, {
@@ -625,16 +625,8 @@ class ChatHistoryManager {
             const data = await response.json();
             if (data.success && Array.isArray(data.conversation)) {
                 this.currentSessionId = sessionId;
-                
-                // Clear existing chat messages
                 const chatMessages = document.querySelector('.chat-messages');
                 chatMessages.innerHTML = '';
-                
-                // Remove the instruction box if it exists
-                const instructionBox = chatMessages?.querySelector('.empty-chat-instructions');
-                if (instructionBox) {
-                    instructionBox.remove();
-                }
                 
                 // Auto-select the subject and chapter from history item
                 const historyItem = document.querySelector(`.history-item[data-session-id="${sessionId}"]`);
@@ -700,21 +692,10 @@ class ChatHistoryManager {
                     }
                 }
 
-                // Keep track of processed messages to avoid duplicates
                 const processedMessages = new Set();
 
-                // Add all messages since system messages are already filtered out on the server
-                let msgIndex = 0;
+                // 1. Build basic message structure
                 data.conversation.forEach(msg => {
-                    // Debug: Print exact message format for each message
-                    console.log(`Message #${msgIndex++}:`, {
-                        raw: msg.message,
-                        type: typeof msg.message,
-                        isString: typeof msg.message === 'string',
-                        isObject: typeof msg.message === 'object',
-                        stringifiedMsg: JSON.stringify(msg.message),
-                    });
-                    
                     if (!msg || typeof msg.sender !== 'string') {
                         console.warn('Invalid message format:', msg);
                         return;
@@ -858,8 +839,6 @@ class ChatHistoryManager {
                         }
                     }
                     
-                    console.log(`After processing, message #${msgIndex-1} content:`, messageContent);
-                    
                     // Create a unique key for each message
                     const messageKey = JSON.stringify({
                         sender: sender,
@@ -867,49 +846,35 @@ class ChatHistoryManager {
                         timestamp: msg.timestamp || ''
                     });
 
-                    if (processedMessages.has(messageKey)) {
-                        console.log('Skipping duplicate message:', msg);
-                        return; // Skip duplicate messages
-                    }
+                    if (processedMessages.has(messageKey)) return;
                     processedMessages.add(messageKey);
 
                     const messageDiv = document.createElement('div');
                     messageDiv.className = `response ${sender}-response`;
                     
                     if (sender === 'bot') {
-                        // Process markdown content
                         const processedMarkdown = preprocessMarkdown(messageContent);
-                        console.log('Processed markdown:', processedMarkdown);
-
-                        // Store the original markdown content before rendering
                         messageDiv.dataset.originalMarkdown = messageContent;
-
-                        // Store chart data in the message element's dataset
                         if (processedMarkdown.chartData && processedMarkdown.chartData.length > 0) {
                             messageDiv.dataset.chartData = JSON.stringify(processedMarkdown.chartData);
-                            console.log('Stored chart data for history:', processedMarkdown.chartData);
                         }
-                        
-                        // Convert Markdown to HTML using marked.js with failsafe
-                        let formattedContent = '';
+
+                        let formattedHtml = '';
                         try {
                             if (typeof marked !== 'undefined' && marked) {
-                                formattedContent = marked.parse(processedMarkdown.markdown);
+                                formattedHtml = marked.parse(processedMarkdown.markdown);
                             } else {
-                                console.warn('Marked library not fully loaded, displaying raw text');
-                                formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
+                                formattedHtml = `<pre>${processedMarkdown.markdown}</pre>`;
                             }
                         } catch (error) {
                             console.error('Error parsing markdown:', error);
-                            formattedContent = `<pre>${processedMarkdown.markdown}</pre>`;
+                            formattedHtml = `<pre>${processedMarkdown.markdown}</pre>`;
                         }
 
                         messageDiv.innerHTML = `
-                            <div class="bot-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
+                            <div class="bot-icon"><i class="fas fa-robot"></i></div>
                             <div class="chat-content">
-                                <div class="formatted-content">${formattedContent}</div>
+                                <div class="formatted-content">${formattedHtml}</div>
                             </div>
                         `;
                     } else {
@@ -920,30 +885,37 @@ class ChatHistoryManager {
                     
                     chatMessages.appendChild(messageDiv);
                 });
-                
-                // After all messages are loaded, enhance code blocks and render charts
+
+                // 2. Enhance all bot messages (code blocks, charts, wrappers)
                 console.log('Enhancing code blocks and rendering charts...');
                 const botMessages = chatMessages.querySelectorAll('.bot-response');
                 botMessages.forEach(message => {
-                    console.log('Processing message:', message);
-                    console.log('Message dataset:', message.dataset);
+                    // enhanceCodeBlocks now primarily focuses on charts and structure
                     enhanceCodeBlocks(message);
                 });
-                
-                // Process MathJax rendering for all bot messages if MathJax is available
-                if (typeof MathJax !== 'undefined') {
+
+                // 3. Process MathJax for *all* relevant content *once*
+                const mathJaxElements = Array.from(chatMessages.querySelectorAll('.bot-response .formatted-content'));
+                if (typeof MathJax !== 'undefined' && mathJaxElements.length > 0) {
+                    console.log('Starting MathJax typesetting...');
                     try {
-                        // Use typesetPromise for better performance on multiple messages
-                        const botMessageContainers = chatMessages.querySelectorAll('.bot-response .chat-content');
-                        MathJax.typesetPromise(Array.from(botMessageContainers)).catch((err) => {
-                            console.error('MathJax typesetting error:', err);
+                        await MathJax.typesetPromise(mathJaxElements);
+                        console.log('MathJax typesetting finished.');
+
+                        // 4. Wrap MathJax elements *after* typesetting is complete
+                        console.log('Wrapping MathJax elements...');
+                        mathJaxElements.forEach(contentElement => {
+                            wrapMathJaxElements(contentElement);
                         });
+                        console.log('MathJax wrapping finished.');
+
                     } catch (error) {
-                        console.error('Error rendering LaTeX with MathJax:', error);
+                        console.error('Error during MathJax processing or wrapping:', error);
                     }
                 }
-                
-                // Scroll to bottom
+
+                // 5. Scroll to bottom *after* all rendering and processing
+                console.log('Scrolling to bottom...');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             } else {
                 throw new Error('Invalid or empty conversation data received');
@@ -958,7 +930,7 @@ class ChatHistoryManager {
             `;
             document.querySelector('.chat-messages')?.appendChild(errorDiv);
         } finally {
-            this.isLoadingSession = false; // Reset loading state
+            this.isLoadingSession = false;
         }
     }
 
@@ -1158,254 +1130,209 @@ window.chatHistory = new ChatHistoryManager();
 
 // Function to enhance code blocks and render charts
 function enhanceCodeBlocks(messageElement) {
-    console.log('Enhancing code blocks for message:', messageElement);
-    
-    // Process code blocks
+    console.log('Enhancing message structure and rendering charts for:', messageElement);
+
+    // Process code blocks (assume existing logic is okay)
     const codeBlocks = messageElement.querySelectorAll('pre code');
     codeBlocks.forEach(codeBlock => {
         // ... existing code block handling ...
     });
 
-    // Get content container
     const contentContainer = messageElement.querySelector('.chat-content');
     if (!contentContainer) return;
-    
-    // Add formatted-content wrapper if it doesn't exist
+
     let formattedContent = contentContainer.querySelector('.formatted-content');
     if (!formattedContent) {
-        // Create a formatted-content wrapper to match saved-answers.js styling
         formattedContent = document.createElement('div');
         formattedContent.classList.add('formatted-content');
-        
-        // Move all content into the formatted-content wrapper
         while (contentContainer.firstChild) {
             formattedContent.appendChild(contentContainer.firstChild);
         }
-        
         contentContainer.appendChild(formattedContent);
     }
 
     // Wrap tables in scrollable wrapper
     const tables = formattedContent.querySelectorAll('table');
     tables.forEach(table => {
-        // Skip if already wrapped
-        if (table.closest('.scrollable-wrapper')) {
-            return;
-        }
-        
-        // Create scrollable wrapper
+        if (table.closest('.scrollable-wrapper')) return;
         const wrapper = document.createElement('div');
         wrapper.classList.add('scrollable-wrapper');
-        
-        // Replace table with wrapper containing table
         table.parentNode.insertBefore(wrapper, table);
         wrapper.appendChild(table);
     });
-    
+
     // Process chart placeholders
-    const chartPlaceholders = messageElement.querySelectorAll('.chart-placeholder');
+    const chartPlaceholders = formattedContent.querySelectorAll('.chart-placeholder'); // Search within formattedContent
+    if (chartPlaceholders.length === 0) return; // No charts to render
+
     console.log('Found chart placeholders:', chartPlaceholders.length);
-    
-    // Get chart data from the message element
+
     let chartData;
     try {
-        // First try to get chart data from dataset
         const chartDataString = messageElement.dataset.chartData;
-        console.log('Chart data string from dataset:', chartDataString);
-        
         if (chartDataString) {
             chartData = JSON.parse(chartDataString);
-            console.log('Parsed chart data:', chartData);
         } else {
-            // If no chart data in dataset, try to get original markdown and process it
-            const originalMarkdown = messageElement.dataset.originalMarkdown;
-            console.log('Original markdown from dataset:', originalMarkdown);
-            
-            if (originalMarkdown) {
-                const processedMarkdown = preprocessMarkdown(originalMarkdown);
-                chartData = processedMarkdown.chartData;
-                console.log('Processed chart data from markdown:', chartData);
-                // Store the processed chart data for future use
-                messageElement.dataset.chartData = JSON.stringify(chartData);
-            } else {
-                chartData = [];
-                console.log('No chart data available');
-            }
+            chartData = [];
         }
     } catch (error) {
-        console.error('Error parsing chart data:', error);
+        console.error('Error parsing chart data from dataset:', error);
         chartData = [];
     }
-    
-    console.log('Final chart data:', chartData);
-    
+
     chartPlaceholders.forEach(placeholder => {
-        // Clear any existing content to prevent duplicates
-        placeholder.innerHTML = '';
-        
+        placeholder.innerHTML = ''; // Clear placeholder
         const chartIndex = parseInt(placeholder.getAttribute('data-chart-index'));
-        console.log('Processing chart at index:', chartIndex);
-        
-        if (!chartData || !chartData[chartIndex]) {
-            console.log('No chart data available at index:', chartIndex);
+
+        if (placeholder.classList.contains('error')) {
+             console.log('Skipping render for chart placeholder with error:', chartIndex);
+             // Keep the error message already added during preprocessMarkdown
+             return; 
+        }
+
+        if (!chartData || chartIndex >= chartData.length || !chartData[chartIndex]) {
+            console.log('No valid chart data available at index:', chartIndex);
             placeholder.innerHTML = '<div class="chart-error">No chart data available</div>';
             return;
         }
-        
+
         const chartConfig = chartData[chartIndex];
-        console.log('Chart config:', chartConfig);
-        
-        // Verify Chart.js is loaded
+        console.log('Rendering chart at index:', chartIndex, 'Config:', chartConfig);
+
         if (typeof Chart === 'undefined') {
             console.error('Chart.js is not loaded');
             placeholder.innerHTML = '<div class="chart-error">Chart.js library not loaded</div>';
             return;
         }
-        
-        // Create container for the chart
+
         const chartContainer = document.createElement('div');
+        // ... set chartContainer styles ...
         chartContainer.style.position = 'relative';
-        chartContainer.style.height = window.innerWidth < 768 ? '200px' : '300px'; // Smaller height on mobile
+        chartContainer.style.height = window.innerWidth < 768 ? '200px' : '300px';
         chartContainer.style.width = '100%';
-        chartContainer.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px'; // Full width on mobile
-        chartContainer.style.margin = '0 auto'; // Center the chart
+        chartContainer.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px';
+        chartContainer.style.margin = '0 auto';
         placeholder.appendChild(chartContainer);
-        
-        // Create canvas element
+
         const canvas = document.createElement('canvas');
         chartContainer.appendChild(canvas);
-        
-        // Initialize chart with error handling
+
         try {
-            // Ensure chartConfig has required properties
-            if (!chartConfig || typeof chartConfig !== 'object') {
-                throw new Error('Invalid chart configuration: not an object');
+            if (!chartConfig || typeof chartConfig !== 'object' || !chartConfig.type || !chartConfig.data) {
+                throw new Error('Invalid chart configuration object');
             }
-            
-            if (!chartConfig.type) {
-                throw new Error('Invalid chart configuration: missing type property');
-            }
-            
-            if (!chartConfig.data) {
-                throw new Error('Invalid chart configuration: missing data property');
-            }
-            
-            // Set default options if not provided
-            chartConfig.options = {
-                ...chartConfig.options,
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2, // Match saved_answers.js
-                plugins: {
-                    ...chartConfig.options?.plugins,
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            boxWidth: 20,
-                            padding: 15
-                        }
-                    }
-                }
+
+            chartConfig.options = { /* ... set default options ... */
+                 responsive: true,
+                 maintainAspectRatio: true, // Keep true for correct sizing initially
+                 aspectRatio: window.innerWidth < 768 ? 1.5 : 2, // Adjust aspect ratio based on screen
+                 plugins: {
+                     ...chartConfig.options?.plugins,
+                     legend: {
+                         position: 'right',
+                         labels: {
+                             boxWidth: 20,
+                             padding: 15
+                         }
+                     }
+                 }
             };
-            
-            // Create the chart
+
             const chart = new Chart(canvas, chartConfig);
-            console.log('Chart successfully rendered at index:', chartIndex);
-            
-            // Store the chart instance in the placeholder for later access
-            placeholder.dataset.chartInstance = chart;
-            
-            // Add resize handler if ResizeObserver is available
+            placeholder.dataset.chartInstance = chart; // Store instance if needed
+
+            // Add ResizeObserver for dynamic resizing
             if (typeof ResizeObserver !== 'undefined') {
                 const resizeObserver = new ResizeObserver(() => {
-                    chart.resize();
-                });
-                resizeObserver.observe(chartContainer);
-            }
-            
+                     if (chart.ctx) { // Check if chart context exists
+                          chart.resize();
+                     } else {
+                           console.warn("Attempted to resize destroyed chart");
+                           resizeObserver.unobserve(chartContainer); // Stop observing
+                     }
+                 });
+                 resizeObserver.observe(chartContainer);
+                 // Also store observer to disconnect later if needed
+                 placeholder.dataset.resizeObserver = resizeObserver;
+             }
+
         } catch (error) {
             console.error('Failed to render chart at index:', chartIndex, error);
             placeholder.innerHTML = `
-                <div class="chart-error">
-                    Failed to render chart: ${error.message}
-                    <div class="chart-error-details">${JSON.stringify(chartConfig, null, 2) || 'No configuration available'}</div>
-                </div>
-            `;
+                 <div class="chart-error">
+                     Failed to render chart: ${error.message}
+                     <div class="chart-error-details">${JSON.stringify(chartConfig, null, 2) || 'No configuration available'}</div>
+                 </div>
+             `;
         }
     });
-    
-    // Render LaTeX expressions with MathJax for this specific message
-    if (typeof MathJax !== 'undefined') {
-        try {
-            // Use the formatted-content container for MathJax rendering
-            if (formattedContent) {
-                // Use typesetPromise for better performance and to handle async properly
-                MathJax.typesetPromise([formattedContent]).catch((err) => {
-                    console.error('MathJax typesetting error in message:', err);
-                });
-                
-                // After MathJax has rendered, wrap equation blocks in scrollable container
-                MathJax.typesetPromise([formattedContent])
-                    .then(() => {
-                        // Find displayed math equations that are rendered by MathJax
-                        const displayMath = formattedContent.querySelectorAll('.MathJax');
-                        displayMath.forEach(mathElement => {
-                            // Skip if already wrapped
-                            if (mathElement.closest('.scrollable-wrapper')) {
-                                return;
-                            }
-                            
-                            // Check if it's a display equation (block equation)
-                            // We should wrap all display math elements to ensure proper scrolling
-                            const rect = mathElement.getBoundingClientRect();
-                            const isDisplayEquation = rect.width > 200 || mathElement.getAttribute('display') === 'block';
-                            
-                            if (isDisplayEquation || rect.width > formattedContent.clientWidth * 0.7) {
-                                // Create scrollable wrapper
-                                const wrapper = document.createElement('div');
-                                wrapper.classList.add('scrollable-wrapper');
-                                wrapper.style.overflowY = 'hidden'; // Force horizontal scrolling only
-                                
-                                // Replace equation with wrapper containing equation
-                                mathElement.parentNode.insertBefore(wrapper, mathElement);
-                                wrapper.appendChild(mathElement);
-                                
-                                // Set explicit styles on MathJax element to ensure horizontal scrolling
-                                mathElement.style.display = 'inline-block';
-                                mathElement.style.width = 'auto';
-                                mathElement.style.maxWidth = 'none';
-                            }
-                        });
-                    })
-                    .catch((err) => {
-                        console.error('Error wrapping MathJax elements:', err);
-                    });
-            }
-        } catch (error) {
-            console.error('Error rendering LaTeX with MathJax for message:', error);
-        }
-    }
+
+    // REMOVED MathJax call from here
 }
 
-// Add window resize handler for responsive charts
-window.addEventListener('resize', () => {
-    const chartContainers = document.querySelectorAll('.chart-placeholder > div');
-    chartContainers.forEach(container => {
-        // Update container size based on screen width
-        container.style.height = window.innerWidth < 768 ? '200px' : '300px';
-        container.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px';
-        
-        // Find the Chart instance and update it
-        const placeholder = container.closest('.chart-placeholder');
-        if (placeholder && placeholder.dataset.chartInstance) {
-            try {
-                const chart = Chart.getChart(container.querySelector('canvas'));
-                if (chart) {
-                    chart.resize();
-                }
-            } catch (e) {
-                console.error('Error resizing chart:', e);
-            }
+// NEW Helper function to wrap MathJax elements after typesetting
+function wrapMathJaxElements(contentElement) {
+    if (!contentElement) return;
+    const displayMath = contentElement.querySelectorAll('.MathJax');
+    console.log(`Found ${displayMath.length} MathJax elements in:`, contentElement);
+
+    displayMath.forEach(mathElement => {
+        if (mathElement.closest('.scrollable-wrapper')) {
+            console.log('Skipping already wrapped MathJax element.');
+            return;
+        }
+
+        // Check if the element is wider than its container or is explicitly display math
+        const containerWidth = contentElement.clientWidth;
+        const mathWidth = mathElement.getBoundingClientRect().width;
+        // Heuristic: Wrap if wider than 80% of container or explicitly display block
+        const isWide = mathWidth > containerWidth * 0.8;
+        const isDisplay = mathElement.getAttribute('display') === 'block'; 
+
+        if (isDisplay || isWide) {
+            console.log('Wrapping MathJax element:', mathElement);
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('scrollable-wrapper');
+            wrapper.style.overflowY = 'hidden'; // Ensure only horizontal scroll
+
+            mathElement.parentNode.insertBefore(wrapper, mathElement);
+            wrapper.appendChild(mathElement);
+
+            // Ensure MathJax element allows scrolling within wrapper
+            mathElement.style.display = 'inline-block';
+            mathElement.style.maxWidth = 'none'; 
+            mathElement.style.width = 'auto';
+        } else {
+             console.log('Skipping wrapping for non-wide/inline MathJax element.');
         }
     });
-}); 
+}
+
+// Existing window resize handler (ensure it targets correct charts)
+window.addEventListener('resize', debounce(() => { // Added debounce
+    console.log("Window resize detected, adjusting charts...");
+    const chartPlaceholders = document.querySelectorAll('.chart-placeholder');
+    chartPlaceholders.forEach(placeholder => {
+        const chartContainer = placeholder.querySelector('div[style*="position: relative"]'); // More specific selector
+        const canvas = placeholder.querySelector('canvas');
+        if (chartContainer && canvas) {
+            chartContainer.style.height = window.innerWidth < 768 ? '200px' : '300px';
+            chartContainer.style.maxWidth = window.innerWidth < 768 ? '100%' : '600px';
+
+            try {
+                 // Get chart instance using Chart.getChart(canvas)
+                 const chart = Chart.getChart(canvas);
+                 if (chart) {
+                     console.log("Resizing chart...");
+                     // Update aspect ratio on resize if needed
+                     chart.options.aspectRatio = window.innerWidth < 768 ? 1.5 : 2;
+                     chart.resize();
+                 } else {
+                      console.warn("Could not find chart instance for resize on placeholder:", placeholder);
+                 }
+             } catch (e) {
+                 console.error('Error resizing chart:', e);
+             }
+        }
+    });
+}, 250)); // Debounce resize handler 
