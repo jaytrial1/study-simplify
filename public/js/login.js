@@ -66,15 +66,17 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('tuitionClass', data.tuition_class);
             
             // Handle "Remember me" by saving credentials securely if checked
-            if (rememberMeCheckbox.checked) {
-                saveCredentials(formData.email, data.token, true);
-            } else {
-                // If not checked, clear any previously saved credentials
-                clearSavedCredentials();
-            }
+            handleRememberMe(formData.email, formData.password, formData.rememberMe);
 
-            // Success - redirect to chatbot.html
-            window.location.href = 'chatbot.html';
+            // Conditional redirect based on tuition class
+            const tuitionClass = localStorage.getItem('tuitionClass');
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                // User belongs to a tuition class, redirect to intermediate page
+                window.location.href = 'tuition_home.html';
+            } else {
+                // Main domain user, redirect to chatbot
+                window.location.href = 'chatbot.html';
+            }
 
         } catch (error) {
             console.error('Error:', error);
@@ -93,12 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Function to handle the "Remember me" logic
+function handleRememberMe(email, password, rememberMe) {
+    if (rememberMe) {
+        // Important: Don't save the raw password. 
+        // We'll save the email and the rememberMe preference.
+        // The token is already saved separately.
+        saveCredentials(email, rememberMe);
+    } else {
+        clearSavedCredentials();
+    }
+}
+
 // Function to save credentials to localStorage
-function saveCredentials(email, token, rememberMe) {
+function saveCredentials(email, rememberMe) {
     try {
         const credentials = {
             email: email,
-            token: token,
             rememberMe: rememberMe,
             timestamp: new Date().getTime()
         };

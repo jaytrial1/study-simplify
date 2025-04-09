@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <script src="../js/base-url.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/intermediate.css">
+    <style>
+        /* Toast message styles */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+        }
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+    <div class="intermediate-container">
+        <div class="intermediate-box">
+            <div class="header">
+                <img id="tuition-logo" src="" alt="Tuition Logo" class="logo-img">
+                <h1 id="tuition-name">Welcome</h1>
+                <p>Choose where you want to go:</p>
+            </div>
+            <div class="options">
+                <button id="chatbot-btn" class="option-button">
+                    <i class="fas fa-comments"></i>
+                    <span>Go to Chatbot</span>
+                </button>
+                <button id="broadcast-btn" class="option-button">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Go to Broadcast</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Broadcast feature is under construction.</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tuitionClass = localStorage.getItem('tuitionClass');
+            const tuitionName = document.getElementById('tuition-name');
+            const tuitionLogo = document.getElementById('tuition-logo');
+            
+            // --- Branding Logic (similar to index.html but for PHP config) ---
+            const logoUrl = `/subdomain/${tuitionClass}/logo.png`; // Assuming logo.png exists
+            tuitionLogo.src = logoUrl;
+            tuitionLogo.alt = `${tuitionClass} Logo`; // Improve alt text
+            
+            // You might want to fetch the actual tuition name from a config file later
+            // For now, use the tuitionClass value
+            tuitionName.textContent = `Welcome to ${tuitionClass.charAt(0).toUpperCase() + tuitionClass.slice(1)}`;
+
+            // --- Button Actions ---
+            document.getElementById('chatbot-btn').addEventListener('click', () => {
+                window.location.href = 'chatbot.html';
+            });
+
+            document.getElementById('broadcast-btn').addEventListener('click', () => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 3000);
+            });
+        });
+    </script>
+</body>
+</html> 

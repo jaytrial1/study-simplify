@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #17181c;
+    color: #ececec;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.intermediate-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem;
+}
+
+.intermediate-box {
+    background-color: #1e1f24;
+    border-radius: 12px;
+    padding: 2.5rem;
+    border: 1px solid #2a2b30;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.logo-img {
+    max-height: 80px;
+    margin-bottom: 1rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: #8e8e8e;
+    margin-bottom: 2rem;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option-button {
+    padding: 1rem;
+    background-color: #4166d5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* For links styled as buttons */
+    text-align: center;
+}
+
+.option-button i {
+    font-size: 1.2rem;
+}
+
+.option-button:hover {
+    background-color: #3555b8;
+}
+
+/* Add styles for toast messages if needed */ 

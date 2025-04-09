@@ -181,25 +181,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
+            // Optional: Check response status, but proceed with cleanup regardless
             if (!response.ok) {
-                throw new Error('Logout failed');
+                console.warn('Server logout request failed, but proceeding with client-side cleanup.');
             }
 
-            // Clear all authentication data
+            // --- Comprehensive Client-Side Cleanup ---
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
             localStorage.removeItem('userGrade');
+            localStorage.removeItem('tuitionClass'); // Added this line
             localStorage.removeItem('savedCredentials'); // Clear saved credentials
+            localStorage.removeItem('userName'); // Added this line (if you store username)
+            // Add any other relevant localStorage keys here
+            // -------------------------------------------
 
+            // Redirect to login page
             window.location.href = 'login.html';
+
         } catch (error) {
-            console.error('Error:', error);
-            // Still redirect to login even if server logout fails
+            console.error('Error during logout:', error);
+            
+            // --- Comprehensive Client-Side Cleanup (Even on Error) ---
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
             localStorage.removeItem('userGrade');
+            localStorage.removeItem('tuitionClass'); // Added this line
             localStorage.removeItem('savedCredentials'); // Clear saved credentials
+            localStorage.removeItem('userName'); // Added this line
+            // Add any other relevant localStorage keys here
+            // -------------------------------------------------------
             
+            // Still redirect to login even if server logout fails
             window.location.href = 'login.html';
         }
     });
