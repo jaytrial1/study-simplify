@@ -3,10 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <script src="public/js/base-url.js"></script>
-    <meta http-equiv="refresh" content="0;url=public/html/index.html">
     <title>Redirecting...</title>
     <script>
-        window.location.href = "public/html/index.html";
+        // Function to normalize string (remove spaces, convert to lowercase)
+        function normalizeString(str) {
+            return str.toLowerCase().replace(/\s+/g, '');
+        }
+
+        // Function to get subdomain
+        function getSubdomain() {
+            const hostname = window.location.hostname;
+            const parts = hostname.split('.');
+            
+            // Check if we're on localhost
+            if (hostname === 'localhost' || hostname === 'www.localhost') {
+                return null;
+            }
+            
+            // For local development subdomains (classA.localhost)
+            if (parts.length >= 2 && parts[1] === 'localhost') {
+                return parts[0];
+            }
+            
+            // For production domain (proficientacademy.studysimplify.in)
+            if (hostname.includes('studysimplify.in')) {
+                // If it's the main domain
+                if (hostname === 'studysimplify.in' || hostname === 'www.studysimplify.in') {
+                    return null;
+                }
+                // Extract subdomain (e.g., 'proficientacademy' from 'proficientacademy.studysimplify.in')
+                return parts[0];
+            }
+            
+            return null;
+        }
+
+        // Function to get list of available subdomain folders
+        async function getSubdomainFolders() {
+            try {
+                const response = await fetch('subdomain/');
+                if (!response.ok) return [];
+                
+                const text = await response.text();
+                // Create a temporary div to parse the directory listing
+                const div = document.createElement('div');
+                div.innerHTML = text;
+                
+                // Find all links in the directory listing
+                const links = div.getElementsByTagName('a');
+                const folders = [];
+                
+                for (let link of links) {
+                    const href = link.getAttribute('href');
+                    // Skip parent directory and non-directory entries
+                    if (href && href !== '../' && href.endsWith('/')) {
+                        folders.push(href.replace('/', ''));
+                    }
+                }
+                
+                return folders;
+            } catch (error) {
+                console.error('Error getting subdomain folders:', error);
+                return [];
+            }
+        }
+
+        // Function to find matching folder
+        async function findMatchingFolder(subdomain) {
+            try {
+                // First try exact match
+                const response = await fetch(`subdomain/${subdomain}/index.html`);
+                if (response.ok) {
+                    return subdomain;
+                }
+
+                // If exact match fails, try case-insensitive match
+                const subdomainNormalized = normalizeString(subdomain);
+                const folders = await getSubdomainFolders();
+                
+                for (const folder of folders) {
+                    if (normalizeString(folder) === subdomainNormalized) {
+                        return folder;
+                    }
+                }
+
+                return null;
+            } catch (error) {
+                console.error('Error checking folder:', error);
+                return null;
+            }
+        }
+
+        // Function to handle redirection
+        async function handleRedirect() {
+            const subdomain = getSubdomain();
+            
+            if (subdomain) {
+                // If subdomain exists, find matching folder and redirect
+                const matchingFolder = await findMatchingFolder(subdomain);
+                if (matchingFolder) {
+                    window.location.href = `subdomain/${matchingFolder}/index.html`;
+                } else {
+                    // If no matching folder found, redirect to main application
+                    window.location.href = "public/html/index.html";
+                }
+            } else {
+                // If no subdomain, redirect to main application
+                window.location.href = "public/html/index.html";
+            }
+        }
+
+        // Execute redirect
+        handleRedirect();
     </script>
 </head>
 <body>

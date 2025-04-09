@@ -42,12 +42,28 @@ if ($stmt->num_rows > 0) {
     exit;
 }
 
+// Get tuition class from subdomain
+$host = $_SERVER['HTTP_HOST'];
+$parts = explode('.', $host);
+$tuition_class = null;
+
+// Check if we're on a subdomain
+if (count($parts) >= 2) {
+    if ($parts[1] === 'localhost') {
+        // Local development
+        $tuition_class = strtolower(str_replace(' ', '', $parts[0]));
+    } elseif (strpos($host, 'studysimplify.in') !== false) {
+        // Production
+        $tuition_class = strtolower(str_replace(' ', '', $parts[0]));
+    }
+}
+
 // Hash password
 $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-// Insert user
-$stmt = $conn->prepare("INSERT INTO users (name, email, password, grade_level) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $data['name'], $data['email'], $hashed_password, $data['grade']);
+// Insert user with tuition class
+$stmt = $conn->prepare("INSERT INTO users (name, email, password, grade_level, tuition_class) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("sssss", $data['name'], $data['email'], $hashed_password, $data['grade'], $tuition_class);
 
 if ($stmt->execute()) {
     http_response_code(201);
@@ -59,4 +75,4 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
-?> 
+?>

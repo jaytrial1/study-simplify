@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('token', data.token);
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('userGrade', data.grade);
+            localStorage.setItem('tuitionClass', data.tuition_class);
             
             // Handle "Remember me" by saving credentials securely if checked
             if (rememberMeCheckbox.checked) {

@@ -22,7 +22,7 @@ if (!validateEmail($data['email'])) {
 }
 
 // Check user credentials
-$stmt = $conn->prepare("SELECT id, password, name, grade_level FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password, name, grade_level, tuition_class FROM users WHERE email = ?");
 $stmt->bind_param("s", $data['email']);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -31,6 +31,33 @@ $user = $result->fetch_assoc();
 if (!$user || !password_verify($data['password'], $user['password'])) {
     http_response_code(401);
     echo json_encode(['error' => 'Invalid email or password']);
+    exit;
+}
+
+// Check if user is allowed to access from this subdomain
+$host = $_SERVER['HTTP_HOST'];
+$parts = explode('.', $host);
+$current_subdomain = null;
+
+// Determine current subdomain
+if (count($parts) >= 2) {
+    if ($parts[1] === 'localhost' || strpos($host, 'studysimplify.in') !== false) {
+        $current_subdomain = strtolower(str_replace(' ', '', $parts[0]));
+    }
+}
+
+// If user has a tuition_class, they must access from that subdomain
+if ($user['tuition_class'] !== null) {
+    if ($user['tuition_class'] !== $current_subdomain) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Access restricted. Please log in from your assigned class portal.']);
+        exit;
+    }
+}
+// If user has no tuition_class (main domain user), they can only access from main domain
+else if ($current_subdomain !== null) {
+    http_response_code(403);
+    echo json_encode(['error' => 'This account can only be accessed from the main website.']);
     exit;
 }
 
@@ -43,7 +70,8 @@ echo json_encode([
     'token' => $token,
     'user_id' => $user['id'],
     'name' => $user['name'],
-    'grade' => $user['grade_level']
+    'grade' => $user['grade_level'],
+    'tuition_class' => $user['tuition_class']
 ]);
 
 $stmt->close();
