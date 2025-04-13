@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard | StudySimplify</title>
+    <link rel="stylesheet" href="../../css/owner/dashboard.css">
+    <link rel="stylesheet" href="../../css/owner/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../js/base-url.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="logo">
+                <h1>StudySimplify</h1>
+            </div>
+            <div class="user-info">
+                <span id="ownerName">Loading...</span>
+                <div class="dropdown">
+                    <button class="dropdown-button"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main class="dashboard-main">
+            <div class="welcome-section">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Manage your tuition class students and plan details</p>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Tuition Class Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Class Name:</div>
+                        <div class="info-value" id="className">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Subdomain:</div>
+                        <div class="info-value" id="subdomainValue">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Portal URL:</div>
+                        <div class="info-value" id="portalUrl">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Plan Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Plan Status:</div>
+                        <div class="info-value" id="planStatus">
+                            <span class="status-badge pending">Pending Initialization</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Plan Type:</div>
+                        <div class="info-value" id="planType">Not set</div>
+                    </div>
+                    <div class="plan-message">
+                        Your plan is currently in pending initialization status. An administrator will contact you to set up your plan details.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Students</h3>
+                    <div class="student-count" id="studentCount">Loading...</div>
+                </div>
+                <div class="card-body">
+                    <div class="empty-state" id="emptyStudentState">
+                        <i class="fas fa-users"></i>
+                        <p>No students have signed up for your class yet.</p>
+                        <p>Share your portal URL with your students to get started.</p>
+                    </div>
+                    
+                    <table class="students-table" id="studentsTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Student rows will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="dashboard-footer">
+            <p>&copy; 2024 StudySimplify. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="../../js/owner/toast.js"></script>
+    <script src="../../js/owner/dashboard.js"></script>
+    
+    <script>
+        // Update toast functions to use the toast manager
+        function showSuccessToast(message) {
+            window.toastManager.success(message);
+        }
+        
+        function showErrorToast(message) {
+            window.toastManager.error(message);
+        }
+        
+        function showInfoToast(message) {
+            window.toastManager.info(message);
+        }
+    </script>
+</body>
+</html> 

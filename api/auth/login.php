@@ -22,7 +22,7 @@ if (!validateEmail($data['email'])) {
 }
 
 // Check user credentials
-$stmt = $conn->prepare("SELECT id, password, name, grade_level, tuition_class FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, password, name, grade_level, subdomain_identifier FROM users WHERE email = ?");
 $stmt->bind_param("s", $data['email']);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -47,8 +47,8 @@ if (count($parts) >= 2) {
 }
 
 // If user has a tuition_class, they must access from that subdomain
-if ($user['tuition_class'] !== null) {
-    if ($user['tuition_class'] !== $current_subdomain) {
+if ($user['subdomain_identifier'] !== null) {
+    if ($user['subdomain_identifier'] !== $current_subdomain) {
         http_response_code(403);
         echo json_encode(['error' => 'Access restricted. Please log in from your assigned class portal.']);
         exit;
@@ -71,7 +71,7 @@ echo json_encode([
     'user_id' => $user['id'],
     'name' => $user['name'],
     'grade' => $user['grade_level'],
-    'tuition_class' => $user['tuition_class']
+    'tuition_class' => $user['subdomain_identifier']
 ]);
 
 $stmt->close();

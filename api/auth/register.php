@@ -45,16 +45,16 @@ if ($stmt->num_rows > 0) {
 // Get tuition class from subdomain
 $host = $_SERVER['HTTP_HOST'];
 $parts = explode('.', $host);
-$tuition_class = null;
+$subdomain_identifier = null;
 
 // Check if we're on a subdomain
 if (count($parts) >= 2) {
     if ($parts[1] === 'localhost') {
         // Local development
-        $tuition_class = strtolower(str_replace(' ', '', $parts[0]));
+        $subdomain_identifier = strtolower(str_replace(' ', '', $parts[0]));
     } elseif (strpos($host, 'studysimplify.in') !== false) {
         // Production
-        $tuition_class = strtolower(str_replace(' ', '', $parts[0]));
+        $subdomain_identifier = strtolower(str_replace(' ', '', $parts[0]));
     }
 }
 
@@ -62,8 +62,8 @@ if (count($parts) >= 2) {
 $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
 // Insert user with tuition class
-$stmt = $conn->prepare("INSERT INTO users (name, email, password, grade_level, tuition_class) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $data['name'], $data['email'], $hashed_password, $data['grade'], $tuition_class);
+$stmt = $conn->prepare("INSERT INTO users (name, email, password, grade_level, subdomain_identifier) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("sssss", $data['name'], $data['email'], $hashed_password, $data['grade'], $subdomain_identifier);
 
 if ($stmt->execute()) {
     http_response_code(201);

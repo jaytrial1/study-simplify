@@ -13,7 +13,7 @@
     Header set Access-Control-Allow-Credentials "true"
 </IfModule>
 
-# Pass Authorization header to PHP
+# Pass Authorization header to PHP - multiple methods to ensure it works
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -21,6 +21,16 @@
 
 # Pass Authorization header to PHP without mod_rewrite
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+SetEnvIf Authorization "(.*)" REDIRECT_HTTP_AUTHORIZATION=$1
+
+# Try additional methods to preserve Authorization header
+<IfModule mod_headers.c>
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+</IfModule>
+
+# For some Apache versions
+CGIPassAuth On
 
 # Compress text files for faster downloads
 <IfModule mod_deflate.c>
@@ -37,3 +47,16 @@ SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 # RewriteEngine On
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Allow cross-origin requests (for local development)
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header set Access-Control-Allow-Credentials "true"
+    
+    # Handle preflight OPTIONS requests
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>

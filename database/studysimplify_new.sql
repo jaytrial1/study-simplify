@@ -36,3 +36,5 @@ CREATE TABLE saved_answers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_answer (user_id, subject, question_identifier, chapter, answer_text(255))
 );
+
+ALTER TABLE users ADD COLUMN tuition_class VARCHAR(50) NOT NULL AFTER id;
