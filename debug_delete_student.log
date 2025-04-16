@@ -13,4 +13,4 @@
 [2025-04-16 16:59:30] Student deleted successfully
 [2025-04-16 16:59:30] Transaction committed
 [2025-04-16 16:59:30] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
-[2025-04-16 16:59:30] Request completed
+[2025-04-16 16:59:30] Request completed 
