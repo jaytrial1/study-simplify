@@ -1,0 +1,16 @@
+[2025-04-16 16:30:59] Request started - Data: []
+[2025-04-16 16:30:59] Request body - Data: {"owner_id":"30","student_id":84,"auth_token":"58cc0ea47257072eac2378b4b1b5ac5c955724aa42e1baa076c1b681477951c8"}
+[2025-04-16 16:30:59] Connecting to database
+[2025-04-16 16:30:59] Student verification bypassed for testing, proceeding with deletion - Data: {"student_id":84,"owner_id":"30"}
+[2025-04-16 16:30:59] Student deleted successfully
+[2025-04-16 16:30:59] Transaction committed
+[2025-04-16 16:30:59] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
+[2025-04-16 16:30:59] Request completed
+[2025-04-16 16:59:30] Request started - Data: []
+[2025-04-16 16:59:30] Request body - Data: {"owner_id":"33","student_id":"89","auth_token":"0b1d401400368cd11c24cf872894616e3ef9dd439605fcfec7691565d1ae4227"}
+[2025-04-16 16:59:30] Connecting to database
+[2025-04-16 16:59:30] Student verification bypassed for testing, proceeding with deletion - Data: {"student_id":"89","owner_id":"33"}
+[2025-04-16 16:59:30] Student deleted successfully
+[2025-04-16 16:59:30] Transaction committed
+[2025-04-16 16:59:30] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
+[2025-04-16 16:59:30] Request completed

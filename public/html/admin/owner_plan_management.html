@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Plan Management | StudySimplify Admin</title>
+    <link rel="stylesheet" href="../../css/admin/styles.css">
+    <link rel="stylesheet" href="../../css/owner/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../js/base-url.js"></script>
+    <script>
+        // Authentication check - redirect to login if not authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('adminToken') || !localStorage.getItem('admin_id')) {
+                window.location.href = 'login.html';
+            } else {
+                // Set admin name in header
+                const adminNameElement = document.getElementById('adminName');
+                if (adminNameElement) {
+                    adminNameElement.textContent = localStorage.getItem('adminName') || 'Admin';
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="logo">
+                <h1>StudySimplify Admin</h1>
+            </div>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <div class="dropdown">
+                    <button class="dropdown-button"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="owners.html"><i class="fas fa-users"></i> Owners</a></li>
+                    <li class="active"><a href="owner_plan_management.html"><i class="fas fa-file-invoice-dollar"></i> Owner Plans</a></li>
+                    <li><a href="payments.html"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <main class="admin-main">
+            <div class="page-header">
+                <h2>Owner Plan Management</h2>
+                <div class="page-actions">
+                    <button id="refreshButton" class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+            </div>
+            
+            <div class="admin-card" id="createPlanCard">
+                <div class="card-header">
+                    <h3>Create New Plan</h3>
+                </div>
+                <div class="card-body">
+                    <form id="createPlanForm">
+                        <div class="form-group">
+                            <label for="ownerSelect">Select Owner:</label>
+                            <select id="ownerSelect" name="owner_id" required>
+                                <option value="">-- Select Owner --</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="planType">Plan Type:</label>
+                            <select id="planType" name="plan_type" required>
+                                <option value="">-- Select Plan Type --</option>
+                                <option value="semester">Semester</option>
+                                <option value="full_year">Full Year</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pricePerStudent">Price Per Student (₹):</label>
+                            <input type="number" id="pricePerStudent" name="price_per_student" min="0" step="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="installmentCount">Installment Count:</label>
+                            <input type="number" id="installmentCount" name="installment_count" min="1" value="1" required>
+                        </div>
+                        
+                        <div class="form-group" id="installmentIntervalContainer" style="display: none;">
+                            <label for="installmentInterval">Interval Between Installments (Days):</label>
+                            <input type="number" id="installmentInterval" name="installment_interval_days" min="1" value="30">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary-btn">Create Plan</button>
+                            <button type="reset" class="btn secondary-btn">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3>Current Plans</h3>
+                    <div class="filter-controls">
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="pending_initialization">Pending Initialization</option>
+                            <option value="pending_payment">Pending Payment</option>
+                            <option value="active">Active</option>
+                            <option value="payment_due">Payment Due</option>
+                            <option value="grace_period">Grace Period</option>
+                            <option value="fully_paid">Fully Paid</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="empty-state" id="emptyPlansState">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <p>No owner plans found.</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="plansTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Owner</th>
+                                    <th>Plan Type</th>
+                                    <th>Status</th>
+                                    <th>Students</th>
+                                    <th>Start Date</th>
+                                    <th>Amount</th>
+                                    <th>Paid</th>
+                                    <th>Due</th>
+                                    <th>Next Inst. Amount</th>
+                                    <th>Next Inst. Date</th>
+                                    <th>Expiry</th>
+                                    <th class="action-column">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="plansTableBody">
+                                <!-- Plans will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Modal -->
+            <div class="modal" id="paymentModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Record Payment</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="recordPaymentForm">
+                            <input type="hidden" id="paymentPlanId" name="plan_id">
+                            
+                            <div class="form-group">
+                                <label for="paymentAmount">Payment Amount (₹):</label>
+                                <input type="number" id="paymentAmount" name="payment_amount" min="0" step="0.01" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paymentDate">Payment Date:</label>
+                                <input type="date" id="paymentDate" name="payment_date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paymentNotes">Notes:</label>
+                                <textarea id="paymentNotes" name="payment_notes" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="submit" class="btn primary-btn">Record Payment</button>
+                                <button type="button" class="btn secondary-btn close-modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Finalize Roster Modal -->
+            <div class="modal" id="finalizeRosterModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Finalize Initial Roster</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="finalizeRosterForm">
+                            <input type="hidden" id="finalizeRosterPlanId" name="plan_id">
+                            
+                            <p>This will finalize the initial student roster for the plan and set the status to "Pending Payment".</p>
+                            <p>Current active students: <span id="currentActiveStudents">0</span></p>
+                            
+                            <div class="modal-actions">
+                                <button type="submit" class="btn primary-btn">Confirm Finalization</button>
+                                <button type="button" class="btn secondary-btn close-modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="admin-footer">
+            <p>&copy; 2025 StudySimplify. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="../../js/owner/toast.js"></script>
+    <script src="../../js/admin/owner_plan_management.js"></script>
+    <script>
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Clear admin session
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('admin_id');
+            localStorage.removeItem('adminName');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html> 

@@ -1,6 +1,26 @@
 <?php
+// Turn off PHP error output that might interfere with JSON response
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+
+// Setup debug logging - create a log file in a known location
+function debug_log($message, $data = null) {
+    $log_file = '../../debug_toggle_student.log';
+    $timestamp = date('Y-m-d H:i:s');
+    $log_message = "[{$timestamp}] {$message}";
+    
+    if ($data !== null) {
+        $log_message .= " - Data: " . json_encode($data);
+    }
+    
+    file_put_contents($log_file, $log_message . PHP_EOL, FILE_APPEND);
+}
+
 header("Content-Type: application/json");
 require_once '../../config/database.php';
+
+// Start logging the request
+debug_log("Request started", $_REQUEST);
 
 // Simple token-based authentication check
 $authHeader = null;
@@ -74,87 +94,369 @@ if (empty($data['owner_id']) || empty($data['student_id']) || !isset($data['acti
 $owner_id = $data['owner_id'];
 $student_id = $data['student_id'];
 $activate = (bool)$data['activate'];
+$is_first_approval = isset($data['is_first_approval']) ? (bool)$data['is_first_approval'] : false;
 
-$conn = getConnection();
+// Start a transaction to ensure all operations are atomic
+$conn->begin_transaction();
 
-// Step 1: Verify the owner
-$stmt = $conn->prepare("SELECT subdomain_identifier FROM owners WHERE owner_id = ?");
-$stmt->bind_param("i", $owner_id);
-$stmt->execute();
-$result = $stmt->get_result();
+try {
+    // Add transaction debugging
+    $debug_info = [];
+    $debug_info['action'] = 'toggle_student_status';
+    $debug_info['student_id'] = $student_id;
+    $debug_info['owner_id'] = $owner_id;
+    $debug_info['is_first_approval'] = $is_first_approval;
+    $debug_info['activate'] = $activate;
+    
+    debug_log("Transaction started", $debug_info);
+    
+    // Step 1: Verify the owner
+    debug_log("Verifying owner", ['owner_id' => $owner_id]);
+    $stmt = $conn->prepare("SELECT subdomain_identifier FROM owners WHERE owner_id = ?");
+    $stmt->bind_param("i", $owner_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-if ($result->num_rows === 0) {
-    http_response_code(404);
-    echo json_encode(['error' => 'Owner not found']);
-    exit;
-}
-
-$owner = $result->fetch_assoc();
-$subdomain = $owner['subdomain_identifier'];
-
-// Step 2: Verify the student belongs to this owner's class
-$stmt = $conn->prepare("SELECT id, name, subdomain_identifier, is_active_by_owner 
-                         FROM users 
-                         WHERE id = ?");
-$stmt->bind_param("i", $student_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    http_response_code(404);
-    echo json_encode(['error' => 'Student not found']);
-    exit;
-}
-
-$student = $result->fetch_assoc();
-
-// Verify student belongs to this subdomain
-if ($student['subdomain_identifier'] !== $subdomain) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Student is not part of this class']);
-    exit;
-}
-
-// Step 3: Update the student's status
-$stmt = $conn->prepare("UPDATE users SET is_active_by_owner = ? WHERE id = ?");
-$activateVal = $activate ? 1 : 0;
-$stmt->bind_param("ii", $activateVal, $student_id);
-$stmt->execute();
-
-if ($stmt->affected_rows > 0) {
-    // Step 4: Update the owner_plans counts if needed
-    // For feature 2, we'll just update the active_student_count
-    if ($activate) {
-        // Increment active_student_count for this owner
-        $planStmt = $conn->prepare("UPDATE owner_plans 
-                                    SET active_student_count = active_student_count + 1 
-                                    WHERE owner_id = ?");
-        $planStmt->bind_param("i", $owner_id);
-        $planStmt->execute();
-    } else {
-        // Decrement active_student_count for this owner
-        $planStmt = $conn->prepare("UPDATE owner_plans 
-                                    SET active_student_count = GREATEST(0, active_student_count - 1) 
-                                    WHERE owner_id = ?");
-        $planStmt->bind_param("i", $owner_id);
-        $planStmt->execute();
+    if ($result->num_rows === 0) {
+        throw new Exception("Owner not found");
     }
+
+    $owner = $result->fetch_assoc();
+    $subdomain = $owner['subdomain_identifier'];
+
+    // Step 2: Verify the student belongs to this owner's class
+    $stmt = $conn->prepare("SELECT id, name, subdomain_identifier, is_active_by_owner, is_approved_by_owner 
+                            FROM users 
+                            WHERE id = ?");
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        throw new Exception("Student not found");
+    }
+
+    $student = $result->fetch_assoc();
+
+    // Verify student belongs to this subdomain
+    if ($student['subdomain_identifier'] !== $subdomain) {
+        throw new Exception("Student is not part of this class");
+    }
+    
+    // Check if we already have the is_approved_by_owner column
+    // If not, add it
+    $has_columns_check = $conn->query("SHOW COLUMNS FROM users LIKE 'is_approved_by_owner'");
+    if ($has_columns_check->num_rows === 0) {
+        $conn->query("ALTER TABLE users ADD COLUMN is_approved_by_owner BOOLEAN DEFAULT FALSE AFTER is_active_by_owner");
+        $student['is_approved_by_owner'] = false;
+    }
+    
+    // Create student_approval_history table if it doesn't exist
+    $conn->query("CREATE TABLE IF NOT EXISTS student_approval_history (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id INT NOT NULL,
+        owner_id INT NOT NULL,
+        first_approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_approval (student_id, owner_id)
+    )");
+    
+    // Step 3: Get the owner's current plan details
+    $plan_stmt = $conn->prepare("SELECT * FROM owner_plans WHERE owner_id = ? ORDER BY created_at DESC LIMIT 1");
+    $plan_stmt->bind_param("i", $owner_id);
+    $plan_stmt->execute();
+    $plan_result = $plan_stmt->get_result();
+    
+    // Check if the owner has an active plan
+    if ($plan_result->num_rows === 0) {
+        throw new Exception("Owner does not have an active plan");
+    }
+    
+    $plan = $plan_result->fetch_assoc();
+    $previous_status = $plan['payment_status'];
+    
+    debug_log("Student data", $student);
+    debug_log("Plan data before update", $plan);
+    
+    // Step 4: Handle student activation and approval
+    if ($is_first_approval) {
+        // This is a first-time approval - will affect billing and cannot be reversed
+        
+        // Check if student was already approved (prevent duplicate approvals)
+        if ($student['is_approved_by_owner']) {
+            echo json_encode([
+                'status' => 'info',
+                'message' => 'Student is already approved',
+                'student_id' => $student_id,
+                'is_active' => (bool)$student['is_active_by_owner'],
+                'is_approved' => true
+            ]);
+            $conn->commit();
+            exit;
+        }
+        
+        // Update both approval and activation status
+        $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = ? WHERE id = ?");
+        $activateVal = $activate ? 1 : 0;
+        $stmt->bind_param("ii", $activateVal, $student_id);
+        $stmt->execute();
+        
+        if ($stmt->affected_rows <= 0) {
+            throw new Exception("Failed to update student status");
+        }
+        
+        // Record this approval in history to prevent future double-counting
+        $record_stmt = $conn->prepare("INSERT IGNORE INTO student_approval_history 
+                                      (student_id, owner_id) VALUES (?, ?)");
+        $record_stmt->bind_param("ii", $student_id, $owner_id);
+        $record_stmt->execute();
+        
+        // Increment the student counts
+        $current_stmt = $conn->prepare("UPDATE owner_plans 
+                                       SET current_total_students = current_total_students + 1,
+                                          inactive_approved_student_count = CASE WHEN ? = 0 THEN inactive_approved_student_count + 1 ELSE inactive_approved_student_count END,
+                                          active_student_count = CASE WHEN ? = 1 THEN active_student_count + 1 ELSE active_student_count END
+                                       WHERE owner_id = ?");
+        $current_stmt->bind_param("iii", $activateVal, $activateVal, $owner_id);
+        $current_stmt->execute();
+        
+        // Get the updated plan values
+        $plan_stmt->execute();
+        $updated_plan = $plan_stmt->get_result()->fetch_assoc();
+        
+        // Recalculate total amount based on ALL approved students (current_total_students)
+        $new_total_amount = $updated_plan['price_per_student'] * $updated_plan['current_total_students'];
+        $new_total_due_amount = $new_total_amount - $updated_plan['payment_done'];
+        
+        // Check if we need to set a 5-day payment deadline for addition
+        $payment_deadline_for_addition = null;
+        $new_payment_status = $updated_plan['payment_status'];
+        
+        if ($previous_status === 'fully_paid' && $new_total_due_amount > 0) {
+            // Plan was fully paid before, but now there's a balance due to new student
+            debug_log("CRITICAL SECTION: Handling fully_paid to payment_due transition", [
+                'previous_status' => $previous_status,
+                'new_total_due_amount' => $new_total_due_amount
+            ]);
+            
+            try {
+                // Create a separate try/catch for this critical section
+                $payment_deadline_for_addition = date('Y-m-d', strtotime('+5 days'));
+                debug_log("Payment deadline set", ['deadline' => $payment_deadline_for_addition]);
+                
+                $new_payment_status = 'payment_due';
+                
+                // Force numeric format for monetary values to avoid type issues
+                $new_total_amount = floatval($new_total_amount);
+                $new_total_due_amount = floatval($new_total_due_amount);
+                $next_installment_amount = floatval($new_total_due_amount);
+                
+                debug_log("Values prepared for update", [
+                    'new_total_amount' => $new_total_amount,
+                    'new_total_due_amount' => $new_total_due_amount,
+                    'next_installment_amount' => $next_installment_amount,
+                    'owner_id' => $owner_id
+                ]);
+                
+                // Skip all binding issues with a very simple approach - direct SQL
+                // Use sprintf to safely format the numbers
+                $sql = sprintf(
+                    "UPDATE owner_plans 
+                     SET total_amount = %.2f,
+                         total_due_amount = %.2f,
+                         payment_status = 'payment_due',
+                         payment_deadline_for_addition = '%s',
+                         next_installment_amount = %.2f,
+                         next_installment_due_date = NULL
+                     WHERE owner_id = %d",
+                    $new_total_amount,
+                    $new_total_due_amount,
+                    $conn->real_escape_string($payment_deadline_for_addition),
+                    $next_installment_amount,
+                    $owner_id
+                );
+                
+                debug_log("Executing direct SQL", ['sql' => $sql]);
+                
+                if (!$conn->query($sql)) {
+                    debug_log("SQL execution failed", ['error' => $conn->error]);
+                    throw new Exception("SQL error: " . $conn->error);
+                }
+                
+                debug_log("Update successful");
+                
+                // Critical: Commit transaction immediately to avoid any issues
+                $conn->commit();
+                debug_log("Transaction committed early due to critical section");
+                
+                // Student was already approved in the section above, just return success
+                debug_log("Sending success response for fully_paid transition");
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Student approved and activated successfully',
+                    'student_id' => $student_id,
+                    'is_active' => $activate,
+                    'is_approved' => true,
+                    'is_first_approval' => $is_first_approval
+                ]);
+                debug_log("Request completed for fully_paid transition");
+                $conn->close();
+                exit(); // Critical: Exit to prevent further processing
+                
+            } catch (Exception $inner_e) {
+                // Log this specific error
+                debug_log("Critical error in fully_paid section", ['error' => $inner_e->getMessage()]);
+                throw $inner_e; // Re-throw to outer catch
+            }
+            
+            // Track values for debugging
+            $debug_info['case'] = 'fully_paid_to_payment_due';
+            $debug_info['new_total_amount'] = $new_total_amount;
+            $debug_info['new_total_due_amount'] = $new_total_due_amount;
+            $debug_info['next_installment_amount'] = $next_installment_amount;
+            
+        } else {
+            // Plan wasn't fully paid, update the amounts and recalculate installment if applicable
+            
+            // Check if using installments
+            if ($updated_plan['installment_count'] > 1) {
+                // Calculate already completed installments based on the original plan's amounts
+                // This prevents miscounting when new students join
+                $original_installment_size = $updated_plan['total_amount'] / $updated_plan['installment_count'];
+                $original_total_installments = $updated_plan['installment_count'];
+                
+                // How many complete installments have been paid?
+                $current_position = $updated_plan['payment_done'] / $original_installment_size;
+                $installments_completed = floor($current_position);
+                
+                // How many installments are left in the original plan?
+                $original_remaining = $original_total_installments - $installments_completed;
+                
+                // For new student addition, we need the extra amount to be distributed across remaining installments
+                $additional_due = $new_total_due_amount - ($original_remaining * $original_installment_size);
+                
+                // Each remaining installment will be original size + additional portion
+                $next_installment_amount = $original_installment_size;
+                if ($additional_due > 0 && $original_remaining > 0) {
+                    $next_installment_amount += ($additional_due / $original_remaining);
+                }
+                
+                // Get next installment due date (from existing or calculate new one)
+                $next_installment_due_date = $updated_plan['next_installment_due_date'];
+                if (!$next_installment_due_date && $original_remaining > 0) {
+                    $interval_days = $updated_plan['installment_interval_days'] ?? 30;
+                    $next_installment_due_date = date('Y-m-d', strtotime(date('Y-m-d') . ' + ' . $interval_days . ' days'));
+                }
+                
+                $update_stmt = $conn->prepare("UPDATE owner_plans 
+                                              SET total_amount = ?,
+                                                  total_due_amount = ?,
+                                                  next_installment_amount = ?,
+                                                  next_installment_due_date = ?
+                                              WHERE owner_id = ?");
+                $update_stmt->bind_param("dddsi", 
+                                       $new_total_amount,
+                                       $new_total_due_amount,
+                                       $next_installment_amount,
+                                       $next_installment_due_date,
+                                       $owner_id);
+            } else {
+                // Not using installments, just update the amounts
+                $update_stmt = $conn->prepare("UPDATE owner_plans 
+                                              SET total_amount = ?,
+                                                  total_due_amount = ?
+                                              WHERE owner_id = ?");
+                $update_stmt->bind_param("ddi", 
+                                       $new_total_amount,
+                                       $new_total_due_amount,
+                                       $owner_id);
+            }
+        }
+        
+        $update_stmt->execute();
+        
+        $action_performed = "approved and " . ($activate ? "activated" : "deactivated");
+        
+    } else {
+        // This is just toggling activation for an already-approved student
+        
+        // Verify student is already approved
+        if (!$student['is_approved_by_owner']) {
+            throw new Exception("Student must be approved before they can be activated/deactivated");
+        }
+        
+        // Check if student's status is already what we're trying to set it to
+        if ((bool)$student['is_active_by_owner'] === $activate) {
+            echo json_encode([
+                'status' => 'info',
+                'message' => 'No changes needed, student status already set',
+                'student_id' => $student_id,
+                'is_active' => $activate,
+                'is_approved' => true
+            ]);
+            $conn->commit();
+            exit;
+        }
+        
+        // Just update the activation status (not the approval status)
+        $stmt = $conn->prepare("UPDATE users SET is_active_by_owner = ? WHERE id = ?");
+        $activateVal = $activate ? 1 : 0;
+        $stmt->bind_param("ii", $activateVal, $student_id);
+        $stmt->execute();
+        
+        if ($stmt->affected_rows <= 0) {
+            throw new Exception("Failed to update student activation status");
+        }
+        
+        // Update active/inactive counts, but don't change total count
+        if ($activate) {
+            $update_count_stmt = $conn->prepare("UPDATE owner_plans 
+                                               SET active_student_count = active_student_count + 1,
+                                                  inactive_approved_student_count = inactive_approved_student_count - 1
+                                               WHERE owner_id = ?");
+        } else {
+            $update_count_stmt = $conn->prepare("UPDATE owner_plans 
+                                               SET active_student_count = active_student_count - 1,
+                                                  inactive_approved_student_count = inactive_approved_student_count + 1
+                                               WHERE owner_id = ?");
+        }
+        
+        $update_count_stmt->bind_param("i", $owner_id);
+        $update_count_stmt->execute();
+        
+        $action_performed = $activate ? "activated" : "deactivated";
+    }
+    
+    // If everything succeeded, commit the transaction
+    $conn->commit();
+    debug_log("Transaction committed successfully");
+    
+    debug_log("Sending success response", [
+        'status' => 'success',
+        'message' => 'Student ' . $action_performed . ' successfully',
+        'student_id' => $student_id
+    ]);
     
     echo json_encode([
         'status' => 'success',
-        'message' => 'Student status updated successfully',
+        'message' => 'Student ' . $action_performed . ' successfully',
         'student_id' => $student_id,
-        'is_active' => $activate
+        'is_active' => $activate,
+        'is_approved' => true,
+        'is_first_approval' => $is_first_approval
     ]);
-} else {
+    
+} catch (Exception $e) {
+    // If anything failed, roll back the transaction
+    $conn->rollback();
+    debug_log("Transaction rolled back due to error", ['error' => $e->getMessage()]);
+    
+    http_response_code(500);
     echo json_encode([
-        'status' => 'info',
-        'message' => 'No changes made',
-        'student_id' => $student_id,
-        'is_active' => (bool)$student['is_active_by_owner']
+        'error' => $e->getMessage(),
+        'mysql_error' => $conn->error
     ]);
 }
 
-$stmt->close();
+debug_log("Request completed");
 $conn->close();
 ?> 

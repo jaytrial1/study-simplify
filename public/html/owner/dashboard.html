@@ -67,7 +67,66 @@
                         <div class="info-label">Plan Type:</div>
                         <div class="info-value" id="planType">Not set</div>
                     </div>
-                    <div class="plan-message">
+                    <div class="info-row">
+                        <div class="info-label">Active Since:</div>
+                        <div class="info-value" id="startDate">Not set</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Expires On:</div>
+                        <div class="info-value" id="expiryDate">Not set</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Price Per Student:</div>
+                        <div class="info-value" id="pricePerStudent">Not set</div>
+                    </div>
+                    
+                    <div class="plan-section-divider">Student Counts</div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Initial Students:</div>
+                        <div class="info-value" id="initialStudentCount">0</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Currently Active:</div>
+                        <div class="info-value" id="activeStudentCount">0</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Total on Plan:</div>
+                        <div class="info-value" id="totalStudentCount">0</div>
+                    </div>
+                    
+                    <div class="plan-section-divider">Billing Status</div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Total Plan Cost:</div>
+                        <div class="info-value" id="totalAmount">₹0.00</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Amount Paid:</div>
+                        <div class="info-value" id="paymentDone">₹0.00</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Amount Due:</div>
+                        <div class="info-value" id="totalDueAmount">₹0.00</div>
+                    </div>
+                    
+                    <!-- Only shown when applicable -->
+                    <div class="info-row installment-row" style="display: none;">
+                        <div class="info-label">Next Installment Due:</div>
+                        <div class="info-value" id="nextInstallmentDate">Not set</div>
+                    </div>
+                    <div class="info-row installment-row" style="display: none;">
+                        <div class="info-label">Next Installment Amount:</div>
+                        <div class="info-value" id="nextInstallmentAmount">₹0.00</div>
+                    </div>
+                    
+                    <!-- Only shown when payment deadline is set -->
+                    <div class="info-row payment-deadline-row" style="display: none;">
+                        <div class="info-label">Payment Due By:</div>
+                        <div class="info-value" id="paymentDeadline">Not set</div>
+                    </div>
+                    
+                    <div class="plan-message" id="planMessage">
                         Your plan is currently in pending initialization status. An administrator will contact you to set up your plan details.
                     </div>
                 </div>
@@ -91,8 +150,50 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Grade</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>
+                                    <div class="column-header">
+                                        <span>Approval Status</span>
+                                        <div class="column-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <div class="tooltip">
+                                                Shows whether the student is approved or pending approval.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        <span>Approval Action</span>
+                                        <div class="column-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <div class="tooltip">
+                                                One-time decision. Approved students count toward billing. Denied students are deleted.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        <span>Access Status</span>
+                                        <div class="column-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <div class="tooltip">
+                                                Shows whether the student can currently access the platform.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        <span>Access Action</span>
+                                        <div class="column-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <div class="tooltip">
+                                                Can be toggled any time. Controls student's ability to login.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="studentsTableBody">
@@ -110,6 +211,66 @@
     
     <script src="../../js/owner/toast.js"></script>
     <script src="../../js/owner/dashboard.js"></script>
+    
+    <!-- Approval Confirmation Modal -->
+    <div class="modal" id="approvalConfirmationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Student Approval</h3>
+                <span class="close-modal" id="closeApprovalModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>You are about to make a decision for <span id="studentNameToApprove">this student</span>.</p>
+                
+                <div class="approval-options">
+                    <div class="approval-option">
+                        <h4>Approve Student</h4>
+                        <p class="warning-text">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Warning:</strong> Approving a student is permanent and will affect billing.
+                        </p>
+                        <p>Once approved:</p>
+                        <ul>
+                            <li>The student will be counted in your billing</li>
+                            <li>You cannot remove the student from billing later</li>
+                            <li>You can still toggle their access on/off</li>
+                        </ul>
+                        
+                        <div class="activation-option">
+                            <label>
+                                <input type="checkbox" id="activateOnApproval" checked>
+                                Also activate this student (grant immediate access)
+                            </label>
+                        </div>
+                        
+                        <button type="button" class="btn primary-btn" id="confirmApprovalBtn">Approve Student</button>
+                    </div>
+                    
+                    <div class="approval-option deny-option">
+                        <h4>Deny Student</h4>
+                        <p class="warning-text">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Warning:</strong> Denying a student will delete their account.
+                        </p>
+                        <p>Once denied:</p>
+                        <ul>
+                            <li>The student's account will be permanently deleted</li>
+                            <li>They will not be counted in your billing</li>
+                            <li>This action cannot be undone</li>
+                        </ul>
+                        
+                        <button type="button" class="btn danger-btn" id="denyStudentBtn">Deny Student</button>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="studentIdToApprove">
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary-btn" id="cancelApprovalBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script>
         // Update toast functions to use the toast manager

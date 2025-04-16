@@ -1,17 +1,15 @@
 /* Owner Dashboard Styles */
 :root {
     --primary-color: #4a6cf7;
-    --secondary-color: #0d1c5c;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
+    --secondary-color: #0e1133;
+    --success-color: #33c758;
     --warning-color: #ffc107;
-    --info-color: #17a2b8;
-    --gray-light: #f8f9fa;
-    --gray-medium: #e9ecef;
-    --gray-dark: #495057;
-    --border-radius: 8px;
-    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --danger-color: #e74c3c;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #e0e0e0;
+    --text-color: #4d4d4d;
+    --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -21,10 +19,10 @@
 }
 
 body {
-    font-family: var(--font-sans);
-    background-color: var(--gray-light);
-    color: var(--gray-dark);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f9f9f9;
 }
 
 .dashboard-container {
@@ -35,28 +33,27 @@ body {
 
 /* Header Styles */
 .dashboard-header {
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo h1 {
-    color: var(--secondary-color);
+    color: var(--primary-color);
+    margin: 0;
     font-size: 1.5rem;
-    font-weight: 700;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.user-info span {
-    font-weight: 500;
+    gap: 0.5rem;
 }
 
 .dropdown {
@@ -68,32 +65,31 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--gray-dark);
-    padding: 5px;
+    padding: 0.25rem 0.5rem;
+    color: var(--secondary-color);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
     right: 0;
+    background-color: #fff;
     min-width: 160px;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--shadow);
     z-index: 1;
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 8px 0;
+    border-radius: 4px;
 }
 
 .dropdown-content a {
-    color: var(--gray-dark);
-    padding: 10px 15px;
+    color: var(--text-color);
+    padding: 0.75rem 1rem;
     text-decoration: none;
     display: block;
     transition: background-color 0.2s;
 }
 
 .dropdown-content a:hover {
-    background-color: var(--gray-light);
+    background-color: #f1f5ff;
     color: var(--primary-color);
 }
 
@@ -101,58 +97,65 @@ body {
     display: block;
 }
 
-/* Main Content */
+/* Main Content Styles */
 .dashboard-main {
     flex: 1;
-    padding: 25px;
+    padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
 }
 
 .welcome-section {
-    margin-bottom: 25px;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .welcome-section h2 {
     color: var(--secondary-color);
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+    color: #6c757d;
 }
 
 .dashboard-card {
     background-color: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
     overflow: hidden;
 }
 
 .card-header {
-    padding: 15px 20px;
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #f8f9fa;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .card-header h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 1.25rem;
 }
 
 .card-body {
-    padding: 20px;
+    padding: 1.5rem;
 }
 
 .info-row {
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom: 1rem;
+    align-items: center;
 }
 
 .info-label {
+    width: 140px;
     font-weight: 600;
-    min-width: 150px;
 }
 
 .info-value {
@@ -160,137 +163,535 @@ body {
 }
 
 .plan-message {
-    background-color: var(--gray-light);
+    margin-top: 20px;
     padding: 15px;
-    border-radius: var(--border-radius);
-    margin-top: 15px;
-    font-size: 0.9rem;
+    background-color: #f7f9ff;
+    border-radius: 5px;
+    border-left: 4px solid #4a6cf7;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-/* Status Badges */
+/* Plan section styling */
+.plan-section-divider {
+    font-weight: 600;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.installment-row,
+.payment-deadline-row {
+    background-color: #f7f9ff;
+    border-left: 3px solid #4a6cf7;
+    padding-left: 5px;
+    margin-top: 5px;
+}
+
+.payment-deadline-row {
+    background-color: #fff6f6;
+    border-left: 3px solid #ff5252;
+}
+
+/* Status badge enhancements */
 .status-badge {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
     font-weight: 500;
-}
-
-.status-badge.pending {
-    background-color: #fff3cd;
-    color: #856404;
+    display: inline-block;
 }
 
 .status-badge.active {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #e6f7ee;
+    color: #33c758;
+}
+
+.status-badge.pending {
+    background-color: #fff8e6;
+    color: #ffa800;
 }
 
 .status-badge.expired {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #ffebee;
+    color: #f44336;
 }
 
-/* Students Table */
-.student-count {
-    background-color: white;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--primary-color);
+.status-badge.payment-due {
+    background-color: #ffebee;
+    color: #f44336;
 }
 
+.status-badge.grace-period {
+    background-color: #ffecb3;
+    color: #ff8f00;
+}
+
+.status-badge.inactive {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+/* Badge Styling - Enhanced for clearer distinction */
+.status-badge.approval-badge {
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1px solid;
+}
+
+.status-badge.approval-badge.pending {
+    border-color: #ffa800;
+}
+
+.status-badge.approval-badge:not(.pending) {
+    background-color: #edf7ff;
+    color: #0077cc;
+    border-color: #0077cc;
+}
+
+.status-badge.access-badge {
+    border-radius: 12px;
+}
+
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Added styles for the table columns */
+.students-table th:nth-child(4), /* Approval column */
+.students-table td:nth-child(4) {
+    width: 100px;
+    text-align: center;
+}
+
+.students-table th:nth-child(5), /* Access column */
+.students-table td:nth-child(5) {
+    width: 100px;
+    text-align: center;
+}
+
+/* Disabled button styles */
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Students Table Styles */
 .students-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
 }
 
-.students-table th,
+.students-table th, 
 .students-table td {
-    padding: 12px 15px;
+    padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid var(--gray-medium);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .students-table th {
-    background-color: var(--gray-light);
     font-weight: 600;
+    color: var(--secondary-color);
 }
 
 .students-table tbody tr:hover {
-    background-color: var(--gray-light);
+    background-color: #f8f9fa;
 }
 
+.student-count {
+    font-size: 0.875rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+}
+
+/* Action Button Styles */
 .action-btn {
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    font-size: 0.8rem;
     border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .approve-btn {
-    background-color: var(--success-color);
-    color: white;
+    background-color: rgba(51, 199, 88, 0.15);
+    color: var(--success-color);
 }
 
 .approve-btn:hover {
-    background-color: #218838;
+    background-color: rgba(51, 199, 88, 0.25);
 }
 
 .remove-btn {
-    background-color: var(--danger-color);
-    color: white;
+    background-color: rgba(231, 76, 60, 0.15);
+    color: var(--danger-color);
 }
 
 .remove-btn:hover {
-    background-color: #c82333;
+    background-color: rgba(231, 76, 60, 0.25);
 }
 
-/* Empty State */
+.action-btn.reactivate-btn {
+    background-color: #e6f7ee;
+    color: #33c758;
+    border: 1px solid #b9e6cc;
+}
+
+.action-btn.reactivate-btn:hover {
+    background-color: #d1f1e0;
+}
+
+/* Empty State Styles */
 .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
     text-align: center;
-    padding: 40px 20px;
-    color: var(--gray-dark);
 }
 
 .empty-state i {
     font-size: 3rem;
-    color: var(--gray-medium);
-    margin-bottom: 15px;
+    color: #d1d5db;
+    margin-bottom: 1rem;
 }
 
-/* Footer */
+.empty-state p {
+    color: #6c757d;
+    max-width: 400px;
+}
+
+/* Footer Styles */
 .dashboard-footer {
-    padding: 15px 25px;
-    background-color: var(--secondary-color);
-    color: white;
     text-align: center;
-    font-size: 0.9rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-top: 1px solid var(--border-color);
+    color: #6c757d;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
     .dashboard-header {
-        padding: 15px;
+        padding: 1rem;
     }
     
     .dashboard-main {
-        padding: 15px;
+        padding: 1rem;
     }
     
     .info-row {
         flex-direction: column;
+        align-items: flex-start;
     }
     
     .info-label {
-        margin-bottom: 5px;
+        width: 100%;
+        margin-bottom: 0.25rem;
     }
     
-    .students-table {
-        display: block;
+    .students-table th, 
+    .students-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    /* Make the table scrollable horizontally on small screens */
+    .card-body {
         overflow-x: auto;
     }
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.close-modal {
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.warning-text {
+    background-color: #fff8e6;
+    border-left: 4px solid #ffa800;
+    padding: 0.75rem;
+    margin-bottom: 1.25rem;
+    border-radius: 4px;
+}
+
+.warning-text i {
+    color: #ffa800;
+    margin-right: 0.5rem;
+}
+
+.activation-option {
+    margin: 1.5rem 0;
+    padding: 0.75rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* Add styles for approval modal options */
+.approval-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.approval-option {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.approval-option h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.deny-option {
+    border-color: #ffdddd;
+    background-color: #fff8f8;
+}
+
+.approval-option .btn {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.danger-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+}
+
+/* Make status badges more distinct */
+.status-badge.approval-badge {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    border: 1px solid #bbdefb;
+}
+
+.status-badge.approval-badge.pending {
+    background-color: #fff8e1;
+    color: #ff8f00;
+    border: 1px solid #ffe082;
+}
+
+.status-badge.access-badge {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.status-badge.access-badge.inactive {
+    background-color: #f5f5f5;
+    color: #757575;
+    border: 1px solid #e0e0e0;
+}
+
+/* Adjust table column widths */
+.students-table th:nth-child(4), /* Approval column */
+.students-table th:nth-child(5) { /* Access column */
+    width: 120px;
+}
+
+.students-table th:nth-child(6) { /* Actions column */
+    width: 150px;
+}
+
+/* Action buttons styles */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.approve-btn {
+    background-color: #4a6cf7;
+    color: white;
+}
+
+.approve-btn:hover {
+    background-color: #3a5ce5;
+}
+
+.remove-btn, .deactivate-btn {
+    background-color: #ff8f00;
+    color: white;
+}
+
+.remove-btn:hover, .deactivate-btn:hover {
+    background-color: #f57c00;
+}
+
+.reactivate-btn, .activate-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.reactivate-btn:hover, .activate-btn:hover {
+    background-color: #43a047;
+}
+
+.deny-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.deny-btn:hover {
+    background-color: #e53935;
+}
+
+/* Column headers with tooltips */
+.column-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.column-info {
+    margin-left: 5px;
+    position: relative;
+    cursor: help;
+}
+
+.column-info .fas {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.column-info .tooltip {
+    visibility: hidden;
+    position: absolute;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    z-index: 100;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    font-weight: normal;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.column-info:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Status text styling */
+.status-text {
+    display: inline-block;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    color: #767676;
+}
+
+.status-text.disabled {
+    font-style: italic;
+    color: #9e9e9e;
+}
+
+/* Adjust table layout for 4 columns */
+.students-table th:nth-child(4), /* Approval status column */
+.students-table th:nth-child(6) { /* Access status column */
+    width: 100px;
+    text-align: center;
+}
+
+.students-table th:nth-child(5), /* Approval action column */
+.students-table th:nth-child(7) { /* Access action column */
+    width: 160px;
+    text-align: center;
+}
+
+.students-table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.students-table td:nth-child(1),
+.students-table td:nth-child(2),
+.students-table td:nth-child(3) {
+    text-align: left;
+}
+
+/* Make sure buttons have space when side by side */
+.action-buttons button {
+    margin: 0 3px;
 } 

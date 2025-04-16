@@ -95,7 +95,7 @@ $owner = $result->fetch_assoc();
 $subdomain = $owner['subdomain_identifier'];
 
 // Get students associated with this subdomain
-$stmt = $conn->prepare("SELECT id, name, email, grade_level, is_active_by_owner, created_at 
+$stmt = $conn->prepare("SELECT id, name, email, grade_level, is_active_by_owner, is_approved_by_owner, created_at 
                         FROM users 
                         WHERE subdomain_identifier = ? 
                         ORDER BY created_at DESC");
@@ -110,7 +110,8 @@ while ($row = $result->fetch_assoc()) {
         'name' => $row['name'],
         'email' => $row['email'],
         'grade' => $row['grade_level'],
-        'is_active' => (bool)$row['is_active_by_owner'],
+        'active' => $row['is_active_by_owner'],
+        'approved' => $row['is_approved_by_owner'],
         'joined_date' => $row['created_at']
     ];
 }
@@ -119,7 +120,7 @@ while ($row = $result->fetch_assoc()) {
 $activeCount = 0;
 $inactiveCount = 0;
 foreach ($students as $student) {
-    if ($student['is_active']) {
+    if ($student['active']) {
         $activeCount++;
     } else {
         $inactiveCount++;
