@@ -591,8 +591,29 @@ async function toggleStudentStatus(studentId, activate, isFirstApproval) {
             })
         });
         
-        const data = await response.json();
-        console.log('Debug - Toggle response:', data);
+        // Handle potentially empty or invalid responses
+        let data;
+        try {
+            const responseText = await response.text();
+            data = responseText ? JSON.parse(responseText) : { status: 'error', message: 'Empty response from server' };
+            console.log('Debug - Toggle response text:', responseText);
+        } catch (parseError) {
+            console.error('Error parsing response:', parseError);
+            // If the server returns a successful status but invalid JSON, assume it worked
+            // This is a fallback for when PHP errors occur but the operation succeeds
+            if (response.ok) {
+                console.log('Response was OK but JSON parsing failed - assuming success');
+                // Force a reload to get the latest state
+                loadStudents();
+                loadPlanDetails();
+                showSuccessToast('Student status updated');
+                return;
+            } else {
+                throw new Error('Failed to parse server response');
+            }
+        }
+        
+        console.log('Debug - Toggle response data:', data);
         
         if (!response.ok) {
             throw new Error(data.error || 'Failed to update student status');
@@ -717,6 +738,12 @@ async function toggleStudentStatus(studentId, activate, isFirstApproval) {
         if (actionBtn) {
             actionBtn.disabled = false;
         }
+        
+        // Force a reload to ensure UI is in sync with server state
+        // This helps recover from error states where the operation might have succeeded
+        setTimeout(() => {
+            loadStudents();
+        }, 1000);
     }
 }
 

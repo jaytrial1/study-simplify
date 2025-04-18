@@ -14,3 +14,27 @@
 [2025-04-16 16:59:30] Transaction committed
 [2025-04-16 16:59:30] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
 [2025-04-16 16:59:30] Request completed 
+[2025-04-17 15:37:43] Request started - Data: []
+[2025-04-17 15:37:43] Request body - Data: {"owner_id":"37","student_id":"96","auth_token":"c0c9f2dae0daf5bdea2216801da29518b5e54a2d4a6313543ea89fb1c44e22de"}
+[2025-04-17 15:37:43] Connecting to database
+[2025-04-17 15:37:43] Student verification bypassed for testing, proceeding with deletion - Data: {"student_id":"96","owner_id":"37"}
+[2025-04-17 15:37:43] Student deleted successfully
+[2025-04-17 15:37:43] Transaction committed
+[2025-04-17 15:37:43] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
+[2025-04-17 15:37:43] Request completed
+[2025-04-18 05:42:10] Request started - Data: []
+[2025-04-18 05:42:10] Request body - Data: {"owner_id":"38","student_id":101,"auth_token":"3b2a50b611b81ff1340ee361187b1240d49bc870f22f43f33d41c509ddf3f0cb"}
+[2025-04-18 05:42:10] Connecting to database
+[2025-04-18 05:42:10] Student verification bypassed for testing, proceeding with deletion - Data: {"student_id":101,"owner_id":"38"}
+[2025-04-18 05:42:10] Student deleted successfully
+[2025-04-18 05:42:10] Transaction committed
+[2025-04-18 05:42:10] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
+[2025-04-18 05:42:10] Request completed
+[2025-04-18 07:12:58] Request started - Data: []
+[2025-04-18 07:12:58] Request body - Data: {"owner_id":"43","student_id":125,"auth_token":"1eabf3f402196fc732b55f1fb98dd418dea192bc4ef2e980d43637986df235eb"}
+[2025-04-18 07:12:58] Connecting to database
+[2025-04-18 07:12:58] Student verification bypassed for testing, proceeding with deletion - Data: {"student_id":125,"owner_id":"43"}
+[2025-04-18 07:12:58] Student deleted successfully
+[2025-04-18 07:12:58] Transaction committed
+[2025-04-18 07:12:58] Sending success response - Data: {"status":"success","message":"Student deleted successfully"}
+[2025-04-18 07:12:58] Request completed

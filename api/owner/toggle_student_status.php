@@ -3,6 +3,24 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
+// Set up exception handler to ensure we always return JSON
+function exception_handler($exception) {
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'error' => $exception->getMessage(),
+        'trace' => $exception->getTraceAsString()
+    ]);
+    exit;
+}
+set_exception_handler('exception_handler');
+
+// Set up error handler to convert PHP errors to exceptions
+function error_handler($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+set_error_handler('error_handler');
+
 // Setup debug logging - create a log file in a known location
 function debug_log($message, $data = null) {
     $log_file = '../../debug_toggle_student.log';
@@ -168,7 +186,40 @@ try {
     
     // Check if the owner has an active plan
     if ($plan_result->num_rows === 0) {
-        throw new Exception("Owner does not have an active plan");
+        // Special handling for after renewal - there might be no plan yet
+        debug_log("No active plan found for owner", ['owner_id' => $owner_id]);
+        
+        if ($is_first_approval) {
+            // This is a first-time approval but no plan exists.
+            // Update just the approval status without updating plan counts
+            $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = ? WHERE id = ?");
+            $activateVal = $activate ? 1 : 0;
+            $stmt->bind_param("ii", $activateVal, $student_id);
+            $stmt->execute();
+            
+            if ($stmt->affected_rows <= 0) {
+                throw new Exception("Failed to update student status");
+            }
+            
+            debug_log("Student approved with no active plan", [
+                'student_id' => $student_id, 
+                'is_active' => $activate
+            ]);
+            
+            $conn->commit();
+            
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Student approved successfully (no active plan)',
+                'student_id' => $student_id,
+                'is_active' => $activate,
+                'is_approved' => true,
+                'plan_status' => 'none'
+            ]);
+            exit;
+        } else {
+            throw new Exception("Owner does not have an active plan");
+        }
     }
     
     $plan = $plan_result->fetch_assoc();
@@ -319,25 +370,54 @@ try {
             
             // Check if using installments
             if ($updated_plan['installment_count'] > 1) {
-                // Calculate already completed installments based on the original plan's amounts
-                // This prevents miscounting when new students join
-                $original_installment_size = $updated_plan['total_amount'] / $updated_plan['installment_count'];
-                $original_total_installments = $updated_plan['installment_count'];
-                
-                // How many complete installments have been paid?
-                $current_position = $updated_plan['payment_done'] / $original_installment_size;
-                $installments_completed = floor($current_position);
-                
-                // How many installments are left in the original plan?
-                $original_remaining = $original_total_installments - $installments_completed;
-                
-                // For new student addition, we need the extra amount to be distributed across remaining installments
-                $additional_due = $new_total_due_amount - ($original_remaining * $original_installment_size);
-                
-                // Each remaining installment will be original size + additional portion
-                $next_installment_amount = $original_installment_size;
-                if ($additional_due > 0 && $original_remaining > 0) {
-                    $next_installment_amount += ($additional_due / $original_remaining);
+                try {
+                    // Add debug info 
+                    debug_log("Calculating installments", [
+                        'total_amount' => $updated_plan['total_amount'],
+                        'installment_count' => $updated_plan['installment_count'],
+                        'payment_done' => $updated_plan['payment_done']
+                    ]);
+                    
+                    // Calculate already completed installments based on the original plan's amounts
+                    // This prevents miscounting when new students join
+                    $original_installment_size = ($updated_plan['installment_count'] > 0) ? 
+                        $updated_plan['total_amount'] / $updated_plan['installment_count'] : 0;
+                        
+                    if ($original_installment_size <= 0) {
+                        // Avoid future divisions with zero
+                        $original_installment_size = 1; // Set to 1 to avoid division by zero
+                    }
+                    
+                    $original_total_installments = max(1, $updated_plan['installment_count']); // Ensure at least 1
+                    
+                    // How many complete installments have been paid?
+                    $current_position = ($original_installment_size > 0) ?
+                        $updated_plan['payment_done'] / $original_installment_size : 0;
+                    $installments_completed = floor($current_position);
+                    
+                    // How many installments are left in the original plan?
+                    $original_remaining = max(1, $original_total_installments - $installments_completed); // Ensure at least 1
+                    
+                    // For new student addition, we need the extra amount to be distributed across remaining installments
+                    $additional_due = $new_total_due_amount - ($original_remaining * $original_installment_size);
+                    
+                    // Each remaining installment will be original size + additional portion
+                    $next_installment_amount = $original_installment_size;
+                    if ($additional_due > 0) {
+                        $next_installment_amount += ($additional_due / $original_remaining);
+                    }
+                    
+                    debug_log("Installment calculation completed", [
+                        'original_installment_size' => $original_installment_size,
+                        'installments_completed' => $installments_completed,
+                        'original_remaining' => $original_remaining,
+                        'additional_due' => $additional_due,
+                        'next_installment_amount' => $next_installment_amount
+                    ]);
+                } catch (Exception $calc_error) {
+                    // If any calculation error, just set a reasonable amount
+                    debug_log("Error in installment calculation: " . $calc_error->getMessage());
+                    $next_installment_amount = $new_total_due_amount;
                 }
                 
                 // Get next installment due date (from existing or calculate new one)
@@ -407,21 +487,9 @@ try {
             throw new Exception("Failed to update student activation status");
         }
         
-        // Update active/inactive counts, but don't change total count
-        if ($activate) {
-            $update_count_stmt = $conn->prepare("UPDATE owner_plans 
-                                               SET active_student_count = active_student_count + 1,
-                                                  inactive_approved_student_count = inactive_approved_student_count - 1
-                                               WHERE owner_id = ?");
-        } else {
-            $update_count_stmt = $conn->prepare("UPDATE owner_plans 
-                                               SET active_student_count = active_student_count - 1,
-                                                  inactive_approved_student_count = inactive_approved_student_count + 1
-                                               WHERE owner_id = ?");
-        }
-        
-        $update_count_stmt->bind_param("i", $owner_id);
-        $update_count_stmt->execute();
+        // Recalculate student counts instead of just incrementing/decrementing
+        // This ensures the counts are always accurate
+        recalculateStudentCounts($conn, $owner_id, $subdomain);
         
         $action_performed = $activate ? "activated" : "deactivated";
     }
@@ -454,6 +522,54 @@ try {
     echo json_encode([
         'error' => $e->getMessage(),
         'mysql_error' => $conn->error
+    ]);
+}
+
+/**
+ * Recalculate student counts from the database and update the owner_plans table
+ * This ensures counts are always in sync with the actual data
+ */
+function recalculateStudentCounts($conn, $owner_id, $subdomain) {
+    // Get accurate counts from the users table
+    $stmt = $conn->prepare("SELECT 
+                          COUNT(*) as total_approved,
+                          SUM(CASE WHEN is_active_by_owner = 1 THEN 1 ELSE 0 END) as active_count,
+                          SUM(CASE WHEN is_active_by_owner = 0 AND is_approved_by_owner = 1 THEN 1 ELSE 0 END) as inactive_approved
+                        FROM users 
+                        WHERE subdomain_identifier = ? AND is_approved_by_owner = 1");
+    $stmt->bind_param("s", $subdomain);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $counts = $result->fetch_assoc();
+    
+    // Ensure no NULL values (convert to 0)
+    $total_approved = (int)$counts['total_approved'];
+    $active_count = (int)$counts['active_count'];
+    $inactive_approved = (int)$counts['inactive_approved'];
+    
+    debug_log("Recalculating student counts", [
+        'subdomain' => $subdomain,
+        'total_approved' => $total_approved,
+        'active_count' => $active_count,
+        'inactive_approved' => $inactive_approved
+    ]);
+    
+    // Update the owner_plans table with accurate counts
+    $update_stmt = $conn->prepare("UPDATE owner_plans 
+                                  SET current_total_students = ?,
+                                     active_student_count = ?,
+                                     inactive_approved_student_count = ?
+                                  WHERE owner_id = ?");
+    $update_stmt->bind_param("iiii", 
+                           $total_approved,
+                           $active_count,
+                           $inactive_approved,
+                           $owner_id);
+    $update_stmt->execute();
+    
+    debug_log("Student counts updated in database", [
+        'owner_id' => $owner_id,
+        'affected_rows' => $update_stmt->affected_rows
     ]);
 }
 

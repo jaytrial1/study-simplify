@@ -58,6 +58,21 @@ function setupEventListeners() {
         loadPlans(this.value);
     });
     
+    // New Owner Plan button
+    document.getElementById('newPlanButton').addEventListener('click', function() {
+        // Reset the form
+        document.getElementById('createPlanForm').reset();
+        
+        // Show the owner dropdown
+        document.getElementById('ownerSelectGroup').style.display = 'block';
+        
+        // Clear the owner ID
+        document.getElementById('ownerIdForPlan').value = '';
+        
+        // Open the modal
+        document.getElementById('setPlanDetailsModal').style.display = 'flex';
+    });
+    
     // Modal close buttons
     document.querySelectorAll('.close-modal').forEach(button => {
         button.addEventListener('click', function() {
@@ -83,6 +98,13 @@ function setupFormHandlers() {
     document.getElementById('finalizeRosterForm').addEventListener('submit', function(e) {
         e.preventDefault();
         finalizeRoster(this);
+    });
+    
+    // Renew plan form submission
+    document.getElementById('renewPlanForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const planId = document.getElementById('renewPlanId').value;
+        renewPlan(planId);
     });
 }
 
@@ -152,7 +174,12 @@ async function loadPlans(statusFilter = '') {
         const data = await response.json();
         
         if (data.status === 'success') {
-            displayPlans(data.plans);
+            // If no status filter is applied, also fetch owners without plans
+            if (!statusFilter) {
+                await loadOwnersWithoutPlans(data.plans);
+            } else {
+                displayPlans(data.plans);
+            }
         }
     } catch (error) {
         console.error('Error loading plans:', error);
@@ -160,50 +187,131 @@ async function loadPlans(statusFilter = '') {
     }
 }
 
+async function loadOwnersWithoutPlans(existingPlans) {
+    try {
+        const endpoint = getApiEndpoint('/api/admin/get_owners.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load owners');
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            // Create a set of owner IDs that already have plans
+            const ownersWithPlans = new Set(existingPlans.map(plan => plan.owner_id));
+            
+            // Filter owners without plans
+            const ownersWithoutPlans = data.owners.filter(owner => 
+                !ownersWithPlans.has(parseInt(owner.owner_id))
+            );
+            
+            // Create plan placeholder objects for these owners
+            const placeholderPlans = ownersWithoutPlans.map(owner => ({
+                plan_id: null,
+                owner_id: owner.owner_id,
+                owner_name: owner.full_name,
+                subdomain_identifier: owner.subdomain_identifier,
+                payment_status: 'no_plan',
+                current_total_students: 0,
+                active_student_count: 0,
+                plan_type: 'N/A',
+                total_amount: 0,
+                payment_done: 0,
+                total_due_amount: 0,
+                next_installment_amount: null,
+                created_at: owner.created_at
+            }));
+            
+            // Combine existing plans with placeholders and display
+            displayPlans([...existingPlans, ...placeholderPlans]);
+        }
+    } catch (error) {
+        console.error('Error loading owners without plans:', error);
+        showErrorToast(error.message);
+        
+        // Still display existing plans if we have them
+        displayPlans(existingPlans);
+    }
+}
+
 function displayPlans(plans) {
     const emptyState = document.getElementById('emptyPlansState');
-    const plansTable = document.getElementById('plansTable');
+    const table = document.getElementById('plansTable');
     const tableBody = document.getElementById('plansTableBody');
     
-    // Clear existing table content
+    // Clear the table body
     tableBody.innerHTML = '';
     
-    if (!plans || plans.length === 0) {
-        // Show empty state
-        emptyState.style.display = 'block';
-        plansTable.style.display = 'none';
+    if (plans.length === 0) {
+        emptyState.style.display = 'flex';
+        table.style.display = 'none';
         return;
     }
     
     // Hide empty state and show table
     emptyState.style.display = 'none';
-    plansTable.style.display = 'table';
+    table.style.display = 'table';
     
-    // Populate the table
     plans.forEach(plan => {
+        // Debug log to check payment deadline date
+        if (plan.payment_deadline_for_addition) {
+            console.log("DEBUG - Plan ID: " + plan.plan_id + 
+                        " has payment_deadline_for_addition: " + plan.payment_deadline_for_addition + 
+                        " - Type: " + typeof plan.payment_deadline_for_addition);
+        }
+        
         const row = document.createElement('tr');
         
         // Create status badge
         const statusBadge = document.createElement('span');
-        statusBadge.className = `status-badge ${getPlanStatusClass(plan.payment_status)}`;
+        statusBadge.classList.add('status-badge');
+        statusBadge.classList.add(getPlanStatusClass(plan.payment_status));
         statusBadge.textContent = formatPlanStatus(plan.payment_status);
         
-        // Create action buttons
-        const actionButtons = createActionButtons(plan);
+        // Show proper start date or appropriate message based on payment status
+        let startDate;
+        if (plan.payment_status === 'no_plan') {
+            startDate = 'N/A';
+        } else if (plan.start_date) {
+            // Use actual start date if set
+            startDate = new Date(plan.start_date).toLocaleDateString();
+        } else if (plan.payment_status === 'pending_initialization') {
+            startDate = 'Pending plan setup';
+        } else if (plan.payment_status === 'pending_payment') {
+            startDate = 'Pending first payment';
+        } else {
+            startDate = 'Not set';
+        }
         
-        // Format expiry date
-        const expiryDate = plan.expiry_date ? new Date(plan.expiry_date).toLocaleDateString() : 'Not set';
+        const expiryDate = plan.payment_status === 'no_plan' ? 'N/A' : 
+            plan.expiry_date ? new Date(plan.expiry_date).toLocaleDateString() : 'Will be set after payment';
         
-        // Format start date
-        const startDate = plan.start_date ? new Date(plan.start_date).toLocaleDateString() : 'Not set';
-        
-        // Determine which date to show for payment deadline/next installment
-        let paymentDueDate = 'Not set';
+        let paymentDueDate = 'N/A';
         let dueDateLabel = '';
         
         if (plan.payment_deadline_for_addition) {
             // This is for additional students payment
-            paymentDueDate = new Date(plan.payment_deadline_for_addition).toLocaleDateString();
+            try {
+                // Log the raw date and the parsed date to see any issues
+                console.log("DEBUG - Parsing payment_deadline_for_addition: " + plan.payment_deadline_for_addition);
+                const parsedDate = new Date(plan.payment_deadline_for_addition);
+                console.log("DEBUG - Parsed to: " + parsedDate.toISOString());
+                
+                paymentDueDate = parsedDate.toLocaleDateString();
+                console.log("DEBUG - Formatted for UI as: " + paymentDueDate);
+            } catch (e) {
+                console.error("Error parsing payment deadline date:", e);
+                paymentDueDate = plan.payment_deadline_for_addition + " (Error parsing)";
+            }
             dueDateLabel = ' (Due for additional students)';
         } else if (plan.next_installment_due_date) {
             // This is for next regular installment
@@ -215,19 +323,24 @@ function displayPlans(plans) {
         const nextInstallmentAmount = plan.next_installment_amount ? 
             `₹${parseFloat(plan.next_installment_amount).toFixed(2)}` : 'N/A';
         
+        // Generate action buttons based on status
+        const actionButtons = plan.payment_status === 'no_plan' ?
+            `<button class="btn small-btn primary-btn set-details-btn" data-owner-id="${plan.owner_id}">Set Details</button>` :
+            createActionButtons(plan);
+            
         // Add all columns to the row
         row.innerHTML = `
-            <td>${plan.plan_id}</td>
+            <td>${plan.plan_id || 'N/A'}</td>
             <td>${plan.owner_name} (${plan.subdomain_identifier})</td>
-            <td>${formatPlanType(plan.plan_type)}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : formatPlanType(plan.plan_type)}</td>
             <td>${statusBadge.outerHTML}</td>
             <td>${plan.current_total_students} (${plan.active_student_count} active)</td>
             <td>${startDate}</td>
-            <td>₹${parseFloat(plan.total_amount).toFixed(2)}</td>
-            <td>₹${parseFloat(plan.payment_done).toFixed(2)}</td>
-            <td>₹${parseFloat(plan.total_due_amount).toFixed(2)}</td>
-            <td>${nextInstallmentAmount}</td>
-            <td>${paymentDueDate}${dueDateLabel}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : `₹${parseFloat(plan.total_amount).toFixed(2)}`}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : `₹${parseFloat(plan.payment_done).toFixed(2)}`}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : `₹${parseFloat(plan.total_due_amount).toFixed(2)}`}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : nextInstallmentAmount}</td>
+            <td>${plan.payment_status === 'no_plan' ? 'N/A' : paymentDueDate}${dueDateLabel}</td>
             <td>${expiryDate}</td>
             <td>${actionButtons}</td>
         `;
@@ -245,7 +358,14 @@ function createActionButtons(plan) {
     // Different actions based on plan status
     switch (plan.payment_status) {
         case 'pending_initialization':
-            buttons += `<button class="btn small-btn primary-btn finalize-roster-btn" data-plan-id="${plan.plan_id}" data-active-count="${plan.active_student_count}">Finalize Roster</button>`;
+            // Only show "Set Details" or "Finalize Roster" based on whether plan details are set
+            if (!plan.price_per_student || parseFloat(plan.price_per_student) <= 0) {
+                // Plan details not set - show Set Details button
+                buttons += `<button class="btn small-btn primary-btn set-details-btn" data-owner-id="${plan.owner_id}">Set Details</button>`;
+            } else {
+                // Plan details are set - show Finalize Roster button
+                buttons += `<button class="btn small-btn primary-btn finalize-roster-btn" data-plan-id="${plan.plan_id}" data-active-count="${plan.active_student_count}">Finalize Roster</button>`;
+            }
             break;
             
         case 'pending_payment':
@@ -258,10 +378,15 @@ function createActionButtons(plan) {
                 data-next-installment="${plan.next_installment_amount || ''}"
                 data-installment-count="${plan.installment_count || 1}">Record Payment</button>`;
             break;
+            
+        case 'expired':
+            // Only show Renew Plan button for expired plans
+            buttons += `<button class="btn small-btn primary-btn renew-plan-btn" data-plan-id="${plan.plan_id}">Renew Plan</button>`;
+            break;
     }
     
     // All plans can be viewed in detail
-    buttons += `<button class="btn small-btn secondary-btn view-plan-btn" data-plan-id="${plan.plan_id}">View Details</button>`;
+    buttons += ` <button class="btn small-btn secondary-btn view-plan-btn" data-plan-id="${plan.plan_id}">View Details</button>`;
     
     return buttons;
 }
@@ -310,6 +435,50 @@ function addActionButtonListeners() {
         });
     });
     
+    // Renew plan buttons
+    document.querySelectorAll('.renew-plan-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const planId = this.getAttribute('data-plan-id');
+            
+            // Set plan ID in modal
+            document.getElementById('renewPlanId').value = planId;
+            
+            // Open modal
+            document.getElementById('renewPlanModal').style.display = 'flex';
+        });
+    });
+    
+    // Set Details buttons 
+    document.querySelectorAll('.set-details-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const ownerId = this.getAttribute('data-owner-id');
+            
+            // Set owner ID in hidden field
+            document.getElementById('ownerIdForPlan').value = ownerId;
+            
+            // Hide or show the owner select dropdown based on whether we have an ownerId
+            const ownerSelectGroup = document.getElementById('ownerSelectGroup');
+            if (ownerId) {
+                ownerSelectGroup.style.display = 'none';
+                // Pre-select the owner in the dropdown (for form submission)
+                const ownerSelect = document.getElementById('ownerSelect');
+                if (ownerSelect) {
+                    for (let i = 0; i < ownerSelect.options.length; i++) {
+                        if (ownerSelect.options[i].value == ownerId) {
+                            ownerSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                ownerSelectGroup.style.display = 'block';
+            }
+            
+            // Open modal
+            document.getElementById('setPlanDetailsModal').style.display = 'flex';
+        });
+    });
+    
     // View plan details buttons
     document.querySelectorAll('.view-plan-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -321,26 +490,46 @@ function addActionButtonListeners() {
 }
 
 function formatPlanStatus(status) {
-    // Convert snake_case to Title Case with spaces
-    const words = status.split('_');
-    return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    switch (status) {
+        case 'pending_initialization':
+            return 'Pending Initialization';
+        case 'pending_payment':
+            return 'Pending Payment';
+        case 'payment_due':
+            return 'Payment Due';
+        case 'grace_period':
+            return 'Grace Period';
+        case 'active':
+            return 'Active';
+        case 'fully_paid':
+            return 'Fully Paid';
+        case 'expired':
+            return 'Expired';
+        case 'no_plan':
+            return 'No Plan';
+        default:
+            return status || 'Unknown';
+    }
 }
 
 function getPlanStatusClass(status) {
     switch (status) {
-        case 'active':
-        case 'fully_paid':
-            return 'success';
-        case 'expired':
-            return 'danger';
         case 'pending_initialization':
         case 'pending_payment':
-            return 'warning';
+            return 'status-pending';
         case 'payment_due':
+            return 'status-warning';
         case 'grace_period':
-            return 'alert';
+            return 'status-danger';
+        case 'active':
+        case 'fully_paid':
+            return 'status-success';
+        case 'expired':
+            return 'status-expired';
+        case 'no_plan':
+            return 'status-no-plan';
         default:
-            return 'neutral';
+            return 'status-default';
     }
 }
 
@@ -397,6 +586,7 @@ async function createPlan(form) {
         if (data.status === 'success') {
             showSuccessToast('Plan created successfully');
             form.reset();
+            closeAllModals(); // Close the modal after successful plan creation
             loadPlans(); // Refresh the plans table
         }
     } catch (error) {
@@ -418,9 +608,14 @@ async function recordPayment(form) {
         paymentData.plan_id = parseInt(paymentData.plan_id);
         paymentData.payment_amount = parseFloat(paymentData.payment_amount);
         
-        const endpoint = getApiEndpoint('/api/admin/record_payment.php');
+        // Get auto-activation preference
+        const autoActivate = document.getElementById('autoActivateStudents').checked;
         
-        const response = await fetch(endpoint, {
+        const endpoint = getApiEndpoint('/api/admin/record_payment.php');
+        // Add auto_activate parameter to URL
+        const finalEndpoint = endpoint + `&auto_activate=${autoActivate ? '1' : '0'}`;
+        
+        const response = await fetch(finalEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -436,7 +631,20 @@ async function recordPayment(form) {
         }
         
         if (data.status === 'success') {
-            showSuccessToast('Payment recorded successfully');
+            // Base success message
+            let successMessage = 'Payment recorded successfully';
+            
+            // Add activation info if this is first payment for the plan
+            const isPendingPayment = document.querySelector(`button[data-plan-id="${paymentData.plan_id}"]`)
+                ?.closest('tr')?.querySelector('td:nth-child(4)')?.textContent.trim() === 'Pending Payment';
+                
+            if (isPendingPayment) {
+                successMessage += autoActivate ? 
+                    '. Approved students have been activated.' : 
+                    '. Students need to be manually activated.';
+            }
+            
+            showSuccessToast(successMessage);
             closeAllModals();
             loadPlans(); // Refresh the plans table
         }
@@ -515,5 +723,81 @@ function showInfoToast(message) {
         window.toastManager.info(message);
     } else {
         alert('Info: ' + message);
+    }
+}
+
+async function renewPlan(planId) {
+    try {
+        const endpoint = getApiEndpoint('/api/admin/renew_plan.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify({ plan_id: planId })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to renew plan');
+        }
+        
+        if (data.status === 'success') {
+            showSuccessToast('Plan archived successfully. Please create a new plan for this owner.');
+            
+            // Close any open modals
+            closeAllModals();
+            
+            // Pre-select the owner
+            const ownerId = data.owner_id;
+            
+            // Set owner ID in hidden field
+            document.getElementById('ownerIdForPlan').value = ownerId;
+            
+            // Hide the owner select dropdown since we know the owner
+            const ownerSelectGroup = document.getElementById('ownerSelectGroup');
+            ownerSelectGroup.style.display = 'none';
+            
+            // Pre-select the owner in the dropdown (for form submission)
+            const ownerSelect = document.getElementById('ownerSelect');
+            if (ownerSelect) {
+                for (let i = 0; i < ownerSelect.options.length; i++) {
+                    if (ownerSelect.options[i].value == ownerId) {
+                        ownerSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            
+            // Pre-fill plan type and price if available
+            if (data.plan_details) {
+                const planTypeSelect = document.getElementById('planType');
+                if (planTypeSelect && data.plan_details.previous_plan_type) {
+                    for (let i = 0; i < planTypeSelect.options.length; i++) {
+                        if (planTypeSelect.options[i].value === data.plan_details.previous_plan_type) {
+                            planTypeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                
+                const pricePerStudent = document.getElementById('pricePerStudent');
+                if (pricePerStudent && data.plan_details.previous_price_per_student) {
+                    pricePerStudent.value = data.plan_details.previous_price_per_student;
+                }
+            }
+            
+            // Open the Set Plan Details modal
+            document.getElementById('setPlanDetailsModal').style.display = 'flex';
+            
+            // Refresh plans table
+            loadPlans();
+        }
+    } catch (error) {
+        console.error('Error renewing plan:', error);
+        showErrorToast(error.message);
     }
 } 

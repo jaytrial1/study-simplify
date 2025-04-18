@@ -217,6 +217,19 @@ body {
     box-shadow: var(--shadow);
     margin-bottom: 2rem;
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Highlight effect for cards */
+@keyframes highlightPulse {
+    0% { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); }
+    50% { box-shadow: 0 0 20px rgba(74, 108, 247, 0.6); }
+    100% { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); }
+}
+
+.highlight-card {
+    animation: highlightPulse 1.5s ease-in-out;
+    border: 2px solid var(--primary-color);
 }
 
 .card-header {
@@ -333,6 +346,43 @@ body {
     font-weight: 500;
 }
 
+.status-badge.status-success {
+    background-color: rgba(51, 199, 88, 0.15);
+    color: var(--success-color);
+}
+
+.status-badge.status-danger {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: var(--danger-color);
+}
+
+.status-badge.status-warning {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #d39e00;
+}
+
+.status-badge.status-pending {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #6c757d;
+}
+
+.status-badge.status-expired {
+    background-color: rgba(231, 76, 60, 0.10);
+    color: #a94442;
+}
+
+.status-badge.status-no-plan {
+    background-color: rgba(0, 123, 255, 0.10);
+    color: #0069d9;
+    border: 1px dashed #0069d9;
+}
+
+.status-badge.status-default {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #6c757d;
+}
+
+/* Keep old class names for backward compatibility */
 .status-badge.success {
     background-color: rgba(51, 199, 88, 0.15);
     color: var(--success-color);
@@ -377,7 +427,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3rem 1.5rem;
+    padding: 3rem 1rem;
     text-align: center;
 }
 
@@ -388,8 +438,30 @@ body {
 }
 
 .empty-state p {
-    color: #6c757d;
+    color: #6b7280;
     max-width: 400px;
+}
+
+/* Alert Styles */
+.info-alert {
+    background-color: #e6f7ff;
+    border-left: 4px solid #1890ff;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+}
+
+.info-alert p {
+    margin: 0.5rem 0;
+}
+
+.info-alert ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.info-alert strong {
+    color: #1890ff;
 }
 
 /* Modal Styles */
@@ -398,12 +470,12 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
+    z-index: 200;
     align-items: center;
+    justify-content: center;
 }
 
 .modal-content {

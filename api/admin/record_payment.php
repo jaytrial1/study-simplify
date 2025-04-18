@@ -169,14 +169,36 @@ try {
     $payment_deadline_for_addition = $plan['payment_deadline_for_addition'];
     $inactive_approved_student_count = $plan['inactive_approved_student_count'];
     
+    // Log the initial values for debugging
+    error_log("PAYMENT DEBUG - Initial values: payment_deadline_for_addition=" . 
+        ($payment_deadline_for_addition ?? 'NULL') . 
+        ", inactive_count=" . $inactive_approved_student_count . 
+        ", new_payment_status=" . $new_payment_status . 
+        ", total_due_amount=" . $new_total_due_amount);
+    
     if ($new_payment_status === 'fully_paid') {
         // Only clear these fields if fully paid
         $payment_deadline_for_addition = null;
         $inactive_approved_student_count = 0;
+        error_log("PAYMENT DEBUG - Fully paid: Cleared payment deadline and inactive count");
     } else if ($payment_deadline_for_addition) {
-        // If there's still an amount due for additional students, maintain the existing deadline
-        // Don't modify the payment_deadline_for_addition unless fully paid
-        // This ensures the original 5-day window is maintained for the remainder
+        // Validate the date is valid
+        if ($payment_deadline_for_addition == '0000-00-00' || !strtotime($payment_deadline_for_addition)) {
+            // Invalid date - reset it to a valid date (5 days from now)
+            $payment_deadline_for_addition = date('Y-m-d', strtotime('+5 days'));
+            error_log("PAYMENT DEBUG - Found invalid date, reset to: " . $payment_deadline_for_addition);
+        } else {
+            // Valid date - ensure it's formatted correctly
+            $formatted_date = date('Y-m-d', strtotime($payment_deadline_for_addition));
+            
+            // If the formatted date doesn't match the original, use the formatted one
+            if ($formatted_date != $payment_deadline_for_addition) {
+                error_log("PAYMENT DEBUG - Date format mismatch, original: " . $payment_deadline_for_addition . ", formatted: " . $formatted_date);
+                $payment_deadline_for_addition = $formatted_date;
+            } else {
+                error_log("PAYMENT DEBUG - Keeping valid deadline: " . $payment_deadline_for_addition);
+            }
+        }
     }
     
     // Update plan with new values
@@ -214,15 +236,26 @@ try {
     
     // If this is the first payment and there are students waiting to be activated, activate them now
     if ($is_first_payment && $plan['payment_status'] === 'pending_payment') {
-        // FIXED: Only activate students that are approved but not yet active
-        // This ensures we don't change any manual activation decisions by the owner
-        $activate_stmt = $conn->prepare("UPDATE users 
-                                        SET is_active_by_owner = 1 
-                                        WHERE subdomain_identifier = ? 
-                                        AND is_approved_by_owner = 1
-                                        AND is_active_by_owner = 0");
-        $activate_stmt->bind_param("s", $plan['subdomain_identifier']);
-        $activate_stmt->execute();
+        // Check if auto-activation is requested (default is true for backward compatibility)
+        $auto_activate = isset($_GET['auto_activate']) ? ($_GET['auto_activate'] === '1' || $_GET['auto_activate'] === 'true') : true;
+        
+        if ($auto_activate) {
+            // Only activate students that are approved but not yet active
+            // This ensures we don't change any manual activation decisions by the owner
+            $activate_stmt = $conn->prepare("UPDATE users 
+                                          SET is_active_by_owner = 1 
+                                          WHERE subdomain_identifier = ? 
+                                          AND is_approved_by_owner = 1
+                                          AND is_active_by_owner = 0");
+            $activate_stmt->bind_param("s", $plan['subdomain_identifier']);
+            $activate_stmt->execute();
+            
+            // Log the number of students activated
+            $activated_count = $activate_stmt->affected_rows;
+            error_log("Auto-activated {$activated_count} students after payment for plan {$plan_id}");
+        } else {
+            error_log("Auto-activation skipped for plan {$plan_id} - auto_activate parameter is false");
+        }
     }
     
     // Insert into payment history table (if you decide to add one)

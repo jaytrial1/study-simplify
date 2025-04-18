@@ -56,54 +56,8 @@
             <div class="page-header">
                 <h2>Owner Plan Management</h2>
                 <div class="page-actions">
+                    <button id="newPlanButton" class="btn primary-btn"><i class="fas fa-plus"></i> New Owner Plan</button>
                     <button id="refreshButton" class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
-                </div>
-            </div>
-            
-            <div class="admin-card" id="createPlanCard">
-                <div class="card-header">
-                    <h3>Create New Plan</h3>
-                </div>
-                <div class="card-body">
-                    <form id="createPlanForm">
-                        <div class="form-group">
-                            <label for="ownerSelect">Select Owner:</label>
-                            <select id="ownerSelect" name="owner_id" required>
-                                <option value="">-- Select Owner --</option>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="planType">Plan Type:</label>
-                            <select id="planType" name="plan_type" required>
-                                <option value="">-- Select Plan Type --</option>
-                                <option value="semester">Semester</option>
-                                <option value="full_year">Full Year</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="pricePerStudent">Price Per Student (₹):</label>
-                            <input type="number" id="pricePerStudent" name="price_per_student" min="0" step="0.01" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="installmentCount">Installment Count:</label>
-                            <input type="number" id="installmentCount" name="installment_count" min="1" value="1" required>
-                        </div>
-                        
-                        <div class="form-group" id="installmentIntervalContainer" style="display: none;">
-                            <label for="installmentInterval">Interval Between Installments (Days):</label>
-                            <input type="number" id="installmentInterval" name="installment_interval_days" min="1" value="30">
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="submit" class="btn primary-btn">Create Plan</button>
-                            <button type="reset" class="btn secondary-btn">Reset</button>
-                        </div>
-                    </form>
                 </div>
             </div>
             
@@ -156,6 +110,59 @@
                 </div>
             </div>
             
+            <!-- Set Details (Create Plan) Modal -->
+            <div class="modal" id="setPlanDetailsModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Set Plan Details</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createPlanForm">
+                            <input type="hidden" id="ownerIdForPlan" name="owner_id">
+                            
+                            <div class="form-group" id="ownerSelectGroup">
+                                <label for="ownerSelect">Select Owner:</label>
+                                <select id="ownerSelect" name="owner_id" required>
+                                    <option value="">-- Select Owner --</option>
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="planType">Plan Type:</label>
+                                <select id="planType" name="plan_type" required>
+                                    <option value="">-- Select Plan Type --</option>
+                                    <option value="semester">Semester</option>
+                                    <option value="full_year">Full Year</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pricePerStudent">Price Per Student (₹):</label>
+                                <input type="number" id="pricePerStudent" name="price_per_student" min="0" step="0.01" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="installmentCount">Installment Count:</label>
+                                <input type="number" id="installmentCount" name="installment_count" min="1" value="1" required>
+                            </div>
+                            
+                            <div class="form-group" id="installmentIntervalContainer" style="display: none;">
+                                <label for="installmentInterval">Interval Between Installments (Days):</label>
+                                <input type="number" id="installmentInterval" name="installment_interval_days" min="1" value="30">
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="submit" class="btn primary-btn">Set Plan Details</button>
+                                <button type="button" class="btn secondary-btn close-modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Payment Modal -->
             <div class="modal" id="paymentModal">
                 <div class="modal-content">
@@ -180,6 +187,12 @@
                             <div class="form-group">
                                 <label for="paymentNotes">Notes:</label>
                                 <textarea id="paymentNotes" name="payment_notes" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="autoActivateStudents" name="auto_activate">
+                                <label for="autoActivateStudents">Auto-activate approved students</label>
+                                <div class="hint-text">If checked, all approved students will be automatically activated after the first payment.</div>
                             </div>
                             
                             <div class="modal-actions">
@@ -207,6 +220,36 @@
                             
                             <div class="modal-actions">
                                 <button type="submit" class="btn primary-btn">Confirm Finalization</button>
+                                <button type="button" class="btn secondary-btn close-modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Renew Plan Modal -->
+            <div class="modal" id="renewPlanModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Renew Plan</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="renewPlanForm">
+                            <input type="hidden" id="renewPlanId" name="plan_id">
+                            
+                            <div class="info-alert">
+                                <p><strong>Important:</strong> This will perform the following actions:</p>
+                                <ul>
+                                    <li>Archive the current plan to history</li>
+                                    <li>Create a new plan with the same settings</li>
+                                    <li>Reset all student approval statuses</li>
+                                </ul>
+                                <p>After renewal, you will need to approve all students again.</p>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="submit" class="btn primary-btn">Confirm Renewal</button>
                                 <button type="button" class="btn secondary-btn close-modal">Cancel</button>
                             </div>
                         </form>
