@@ -105,4 +105,4 @@ Yes, this is a good and workable approach. It keeps customization assets and con
     *   Create this new page.
     *   Display branding using `$current_config`.
     *   Add buttons: "Go to Chatbot" (links to `chatbot.php`) and "Go to Broadcast" (links to `#` or placeholder for now).
-8.  **Chatbot Page:** Ensure it also uses `$current_config` for consistent branding.
+8.  **Chatbot Page:** Ensure it also uses `$current_config` for a consistent branding. 
