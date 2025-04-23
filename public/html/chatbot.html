@@ -63,6 +63,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Custom styles for tuition classes button -->
+    <style>
+        /* Styling for the tuition classes button */
+        #tuitionClassesBtn {
+            align-items: center;
+            justify-content: space-between;
+            color: inherit;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        #tuitionClassesBtn:hover {
+            background-color: rgba(65, 102, 245, 0.1);
+        }
+        
+        #tuitionClassesBtn i.fas.fa-school {
+            font-size: 18px;
+            margin-right: 12px;
+            color: #4166f5;
+        }
+    </style>
     <script>
         // Configure marked.js with proper settings
         document.addEventListener('DOMContentLoaded', function() {
@@ -159,6 +183,12 @@
                     window.location.href = 'tuition_home.html';
                     return;
                 }
+                
+                // Show the tuition classes button for subdomain users
+                const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
+                if (tuitionClassesBtn) {
+                    tuitionClassesBtn.style.display = 'flex';
+                }
             }
             
             // Service worker is now handled in base-url.js
@@ -214,7 +244,11 @@
                         <span>Saved Answers</span>
                         <i class="fas fa-chevron-right arrow-icon"></i>
                     </a>
-
+                    <a href="tuition_home.html" class="nav-button" id="tuitionClassesBtn" style="display:none;">
+                        <i class="fas fa-school"></i>
+                        <span>Tuition Classes</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
                 </nav>
                 
                 <div class="chat-history">
