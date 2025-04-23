@@ -158,6 +158,11 @@
                         <span>Saved Answers</span>
                         <i class="fas fa-chevron-right arrow-icon"></i>
                     </a>
+                    <a href="tuition_home.html" class="nav-button" id="tuitionClassesBtn" style="display:none;">
+                        <i class="fas fa-school"></i>
+                        <span>Tuition Classes</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
                 </nav>
                 
                 <div class="chat-history">
@@ -291,6 +296,19 @@
         document.write(`<script src="${savedAnswersJsPath}"><\/script>`);
         document.write(`<script src="${saveTypeHandlerPath}"><\/script>`);
         document.write(`<script src="${historySearchPath}"><\/script>`);
+        
+        // Check for tuition class to show the tuition classes button
+        document.addEventListener('DOMContentLoaded', function() {
+            const tuitionClass = localStorage.getItem('tuitionClass');
+            
+            // If user belongs to a tuition class, show the tuition classes button
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
+                if (tuitionClassesBtn) {
+                    tuitionClassesBtn.style.display = 'flex';
+                }
+            }
+        });
     </script>
     
     <!-- Active User Tracking Script -->
@@ -330,5 +348,29 @@
     })();
     </script>
     <!-- End Active User Tracking Script -->
+    
+    <!-- Styles for tuition classes button -->
+    <style>
+        /* Styling for the tuition classes button */
+        #tuitionClassesBtn {
+            align-items: center;
+            justify-content: space-between;
+            color: inherit;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        #tuitionClassesBtn:hover {
+            background-color: rgba(65, 102, 245, 0.1);
+        }
+        
+        #tuitionClassesBtn i.fas.fa-school {
+            font-size: 18px;
+            margin-right: 12px;
+            color: #4166f5;
+        }
+    </style>
 </body>
 </html>
