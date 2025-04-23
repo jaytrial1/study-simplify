@@ -1,0 +1,13 @@
+---
+description: task when i ask to do any modification or ask to add any featue rin my project
+globs: 
+alwaysApply: false
+---
+when i told you to add any fetauer or do any modification in my project then you need to follow below step by step instruction for that
+
+1. firstly you must be veyr clear about vision of this project its strcuer and specificlly structuer which is related to makking modification for taht you cna use this files in which is besigally explanation of what is my app is aboutànd coding logic [1_context.md](mdc:1_context.md) [2_markdown_content_guid.md](mdc:2_markdown_content_guid.md) [3_user_workflow.md](mdc:3_user_workflow.md) [4_owner_workflow.md](mdc:4_owner_workflow.md) [README.md](mdc:README.md)
+
+2. then you nee dto brain strome about all teh possible way to achiev our goal or all the approch that we can do that task
+
+
+3. then you need to selct best approch which is proffesional , simple , sustainable, easy to impliment and require minimum chnage and if possible then change shoudle be safe like it should not damage any other exsiting code ,featuer, logic, functinality and ui and evrything but taht does not means taht you need to ignor origin request from me.

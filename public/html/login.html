@@ -37,11 +37,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('user_id');
+            const tuitionClass = localStorage.getItem('tuitionClass');
             
-            // If valid token exists, redirect to chatbot
+            // If valid token exists, redirect to appropriate page
             if (token && userId) {
-                // Optional: You could add a server validation step here
-                window.location.href = 'chatbot.html';
+                // Check if user belongs to a tuition class
+                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                    // User belongs to a tuition class, redirect to tuition home page
+                    window.location.href = 'tuition_home.html';
+                } else {
+                    // Main domain user, redirect to chatbot
+                    window.location.href = 'chatbot.html';
+                }
             }
             
             // Service worker is now handled in base-url.js

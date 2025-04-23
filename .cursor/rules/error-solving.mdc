@@ -1,0 +1,17 @@
+---
+description: Task when any error arise in my project while doing coding and all stuff
+globs: 
+alwaysApply: false
+---
+when any error appear in the project dont directly jump to solving it here is the proper step by step instruction that you need to follow for debuging
+
+1. firstly you need to find all teh possible cause related to this issue by analyzing all eixixting files related to this stuff
+2. then you need to find tahtexact cause whcih is arising thsi issue (it might be 1 or more thna one)
+3. then try to solve it 
+and during thsi entire procees don't make any assumption or specicfation for solving problem you need to work smartly and only solve it you are 100 % sure about this.
+4. and after solving that you need to epxlain me in non tehc work taht what was the issue and hoe you ahve fix it
+5. if during analyzing if you don't found exact cause then you need to go for adding deguding to relevnt file and add it in such a way taht out put fo taht debuging helps yopu to find exact cause (debuging method cna be anything wether it is error.log or consel taht i need to give you) and again explain me that what you have done
+5. if possible then change shoudle be safe like it should not damage any other exsiting code ,featuer, logic, functinality and ui.
+6. let say there might be a few error or issue that can not even detect by debuging then you nee dto tell me very clearly not try to make guesses and also tell me that hwo i cna find excat cause . look that means error only you nee dto solve thsi si the case where i are not abel to do debuging liek for exmaple let say i am using xampp and if my xampp is not started then project might not work whcih i manully need to check (this is just an exmaple )
+
+

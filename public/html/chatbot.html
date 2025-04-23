@@ -140,10 +140,25 @@
         document.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('user_id');
+            const tuitionClass = localStorage.getItem('tuitionClass');
+            const isApproved = localStorage.getItem('is_approved_by_owner');
+            const isActive = localStorage.getItem('is_active_by_owner');
             
             // If no token or user ID exists, redirect to login page
             if (!token || !userId) {
                 window.location.href = 'login.html';
+                return;
+            }
+            
+            // If user belongs to a tuition class but has NOT been approved yet,
+            // redirect to tuition home page where approval status is checked
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                // Only redirect if we don't know if they're approved yet
+                // This allows approved users to access the chatbot
+                if (isApproved !== '1' || isActive !== '1') {
+                    window.location.href = 'tuition_home.html';
+                    return;
+                }
             }
             
             // Service worker is now handled in base-url.js

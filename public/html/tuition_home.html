@@ -45,6 +45,31 @@
             from {bottom: 30px; opacity: 1;} 
             to {bottom: 0; opacity: 0;}
         }
+        
+        /* Logout button styles */
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .logout-btn i {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +89,10 @@
                     <i class="fas fa-bullhorn"></i>
                     <span>Go to Broadcast</span>
                 </button>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
             </div>
         </div>
     </div>
@@ -73,6 +102,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const tuitionClass = localStorage.getItem('tuitionClass');
+            const userId = localStorage.getItem('user_id');
+            const token = localStorage.getItem('token');
             const tuitionName = document.getElementById('tuition-name');
             const tuitionLogo = document.getElementById('tuition-logo');
             
@@ -86,14 +117,150 @@
             tuitionName.textContent = `Welcome to ${tuitionClass.charAt(0).toUpperCase() + tuitionClass.slice(1)}`;
 
             // --- Button Actions ---
-            document.getElementById('chatbot-btn').addEventListener('click', () => {
-                window.location.href = 'chatbot.html';
+            document.getElementById('chatbot-btn').addEventListener('click', async () => {
+                // Only check approval status if user is logged in via subdomain
+                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                    try {
+                        // Get the same base path we use elsewhere
+                        const host = window.location.hostname;
+                        const currentPath = window.location.pathname;
+                        let basePath = '/main'; // Default subfolder
+                        
+                        // Try to extract the base path from the current URL
+                        const pathMatch = currentPath.match(/^\/([^\/]+)/);
+                        if (pathMatch && pathMatch[1]) {
+                            basePath = '/' + pathMatch[1];
+                        }
+                        
+                        // Construct the API endpoint to check user status
+                        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
+                        const endpoint = `${protocol}//${host}/api/user/check_status.php`;
+                        
+                        console.log("Sending request to:", endpoint);
+                        console.log("Request data:", JSON.stringify({
+                            user_id: userId,
+                            tuition_class: tuitionClass
+                        }));
+                        
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                user_id: userId,
+                                tuition_class: tuitionClass
+                            })
+                        });
+                        
+                        console.log("Response status:", response.status);
+                        
+                        if (response.ok) {
+                            const responseText = await response.text();
+                            console.log("Raw response:", responseText);
+                            
+                            // Try to parse as JSON
+                            let data;
+                            try {
+                                data = JSON.parse(responseText);
+                                console.log("Parsed response data:", data);
+                                console.log("is_approved_by_owner value:", data.is_approved_by_owner, "type:", typeof data.is_approved_by_owner);
+                                console.log("is_active_by_owner value:", data.is_active_by_owner, "type:", typeof data.is_active_by_owner);
+                                
+                                // Check if both approved and active (using integer '1' comparison)
+                                if (data.is_approved_by_owner == 1 && data.is_active_by_owner == 1) {
+                                    // Store approval status in localStorage for chatbot.html to check
+                                    localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
+                                    localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
+                                    
+                                    window.location.href = 'chatbot.html';
+                                } else {
+                                    // Clear any previous approval status
+                                    localStorage.removeItem('is_approved_by_owner');
+                                    localStorage.removeItem('is_active_by_owner');
+                                    
+                                    const toast = document.getElementById('toast');
+                                    toast.textContent = "Please contact your class teacher to activate your plan.";
+                                    toast.classList.add('show');
+                                    setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                                }
+                            } catch (e) {
+                                console.error("Error parsing JSON:", e);
+                                const toast = document.getElementById('toast');
+                                toast.textContent = "Error processing server response. Please try again.";
+                                toast.classList.add('show');
+                                setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                            }
+                        } else {
+                            // If API request fails, show error message instead of redirecting
+                            console.error('Failed to check user status. Status code:', response.status);
+                            const toast = document.getElementById('toast');
+                            toast.textContent = "Unable to verify your access. Please try again or contact support.";
+                            toast.classList.add('show');
+                            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                        }
+                    } catch (error) {
+                        console.error('Error checking user status:', error);
+                        const toast = document.getElementById('toast');
+                        toast.textContent = "An error occurred. Please try again or contact support.";
+                        toast.classList.add('show');
+                        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                    }
+                } else {
+                    // Main domain user, directly go to chatbot
+                    window.location.href = 'chatbot.html';
+                }
             });
 
             document.getElementById('broadcast-btn').addEventListener('click', () => {
                 const toast = document.getElementById('toast');
+                toast.textContent = "Broadcast feature is under construction.";
                 toast.classList.add('show');
                 setTimeout(() => { toast.classList.remove('show'); }, 3000);
+            });
+
+            // Add logout functionality
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    // Call the logout API (optional - continue with client-side logout even if this fails)
+                    try {
+                        const response = await fetch(`${protocol}//${host}/api/auth/logout.php`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                    } catch (apiError) {
+                        console.warn('Server logout request failed, proceeding with client-side cleanup.');
+                    }
+                    
+                    // Clear all user-related data from localStorage
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user_id');
+                    localStorage.removeItem('userGrade');
+                    localStorage.removeItem('tuitionClass');
+                    localStorage.removeItem('savedCredentials');
+                    localStorage.removeItem('is_approved_by_owner');
+                    localStorage.removeItem('is_active_by_owner');
+                    
+                    // Redirect to login page
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Error during logout:', error);
+                    
+                    // Still clear localStorage and redirect even if there's an error
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user_id');
+                    localStorage.removeItem('userGrade');
+                    localStorage.removeItem('tuitionClass');
+                    localStorage.removeItem('savedCredentials');
+                    localStorage.removeItem('is_approved_by_owner');
+                    localStorage.removeItem('is_active_by_owner');
+                    
+                    window.location.href = 'login.html';
+                }
             });
         });
     </script>

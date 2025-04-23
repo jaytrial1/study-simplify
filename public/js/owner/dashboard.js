@@ -67,36 +67,36 @@ async function validateTokenAndLoadInitialData(ownerId, ownerToken) {
         console.log('Initial Validation: Token appears valid. Proceeding with setup.');
         
         // Populate owner information (moved from original DOMContentLoaded)
-        const ownerName = localStorage.getItem('ownerName');
-        const className = localStorage.getItem('className');
-        const subdomain = localStorage.getItem('subdomain');
-        
-        document.getElementById('ownerName').textContent = ownerName || 'Owner';
-        document.getElementById('className').textContent = className || 'Not set';
-        document.getElementById('subdomainValue').textContent = subdomain || 'Not set';
-        
-        const isLocalEnvironment = window.location.hostname.includes('localhost');
-        const domain = isLocalEnvironment ? 'localhost' : 'studysimplify.in';
-        const portalUrl = document.getElementById('portalUrl');
-        if (subdomain) {
-            portalUrl.textContent = `${subdomain}.${domain}`;
-            portalUrl.style.color = '#4a6cf7';
-        } else {
-            portalUrl.textContent = 'Not set';
-        }
-
+    const ownerName = localStorage.getItem('ownerName');
+    const className = localStorage.getItem('className');
+    const subdomain = localStorage.getItem('subdomain');
+    
+    document.getElementById('ownerName').textContent = ownerName || 'Owner';
+    document.getElementById('className').textContent = className || 'Not set';
+    document.getElementById('subdomainValue').textContent = subdomain || 'Not set';
+    
+    const isLocalEnvironment = window.location.hostname.includes('localhost');
+    const domain = isLocalEnvironment ? 'localhost' : 'studysimplify.in';
+    const portalUrl = document.getElementById('portalUrl');
+    if (subdomain) {
+        portalUrl.textContent = `${subdomain}.${domain}`;
+        portalUrl.style.color = '#4a6cf7';
+    } else {
+        portalUrl.textContent = 'Not set';
+    }
+    
         // Set up UI elements (moved from original DOMContentLoaded)
         document.getElementById('logoutBtn').addEventListener('click', function(e) { e.preventDefault(); logout(); });
-        setupApprovalModal();
-        setupBulkConfirmModal();
+    setupApprovalModal();
+    setupBulkConfirmModal();
         if (document.getElementById('studentSearchInput')) {
              document.getElementById('studentSearchInput').addEventListener('input', handleStudentSearch);
         }
-        document.getElementById('approveAllBtn')?.addEventListener('click', approveAllPending);
-        document.getElementById('denyAllBtn')?.addEventListener('click', denyAllPending);
-        document.getElementById('activateAllBtn')?.addEventListener('click', activateAllApproved);
-        document.getElementById('deactivateAllBtn')?.addEventListener('click', deactivateAllApproved);
-        document.getElementById('filterPendingBtn')?.addEventListener('click', togglePendingFilter);
+    document.getElementById('approveAllBtn')?.addEventListener('click', approveAllPending);
+    document.getElementById('denyAllBtn')?.addEventListener('click', denyAllPending);
+    document.getElementById('activateAllBtn')?.addEventListener('click', activateAllApproved);
+    document.getElementById('deactivateAllBtn')?.addEventListener('click', deactivateAllApproved);
+    document.getElementById('filterPendingBtn')?.addEventListener('click', togglePendingFilter);
         
         // Load remaining data (plan details already loaded partially by validation)
         const data = await response.json();
@@ -352,7 +352,7 @@ async function loadPlanDetails() {
                  console.warn('Plan Details: Received 401 Unauthorized. Logging out.');
                  logout(); 
                  throw new Error('Unauthorized - Logging out'); 
-            }
+        }
              // Handle other non-OK statuses
             const errorData = await response.json().catch(() => ({ error: 'Failed to load plan details' }));
             throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
@@ -1306,7 +1306,7 @@ async function loadPlanHistory() {
         const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_history.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
         
         console.log(`Loading plan history from: ${endpoint}`); // Debugging endpoint
-
+        
         const response = await fetch(endpoint, {
             method: 'GET',
             headers: {
@@ -1321,7 +1321,7 @@ async function loadPlanHistory() {
                  console.warn('Load Plan History: Received 401 Unauthorized. Logging out.');
                  logout(); 
                  throw new Error('Unauthorized - Logging out'); 
-            }
+        }
              // Handle other non-OK statuses
             const errorData = await response.json().catch(() => ({ error: 'Failed to load plan history' }));
             throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
