@@ -208,3 +208,11 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Styling for optional fields */
+.optional {
+    font-size: 0.8em;
+    color: #666;
+    font-weight: normal;
+    margin-left: 5px;
+}

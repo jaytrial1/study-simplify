@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = {
                 name: document.getElementById('name').value.trim(),
                 email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
                 password: document.getElementById('password').value,
                 confirm_password: document.getElementById('confirm_password').value,
                 grade: document.getElementById('grade-level').value

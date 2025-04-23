@@ -9,7 +9,7 @@ $conn = getConnection();
 $data = json_decode(file_get_contents("php://input"), true);
 
 // Validate inputs
-$required = ['name', 'email', 'password', 'confirm_password', 'grade'];
+$required = ['name', 'email', 'phone', 'password', 'confirm_password', 'grade'];
 foreach ($required as $field) {
     if (empty($data[$field])) {
         http_response_code(400);
@@ -61,9 +61,9 @@ if (count($parts) >= 2) {
 // Hash password
 $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-// Insert user with tuition class
-$stmt = $conn->prepare("INSERT INTO users (name, email, password, grade_level, subdomain_identifier) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $data['name'], $data['email'], $hashed_password, $data['grade'], $subdomain_identifier);
+// Insert user with tuition class and phone number
+$stmt = $conn->prepare("INSERT INTO users (name, email, phone_number, password, grade_level, subdomain_identifier) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssss", $data['name'], $data['email'], $data['phone'], $hashed_password, $data['grade'], $subdomain_identifier);
 
 if ($stmt->execute()) {
     http_response_code(201);
