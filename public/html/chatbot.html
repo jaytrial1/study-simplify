@@ -175,12 +175,21 @@
                 return;
             }
             
-            // If user belongs to a tuition class but has NOT been approved yet,
-            // redirect to tuition home page where approval status is checked
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+            // Check if we're on a subdomain before doing tuition class redirects
+            const currentHostname = window.location.hostname;
+            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                currentHostname !== 'studysimplify.in';
+            
+            console.log("Chatbot page - Current hostname:", currentHostname);
+            console.log("Chatbot page - Is subdomain:", isSubdomain);
+            console.log("Chatbot page - tuitionClass:", tuitionClass);
+            
+            // Only do tuition class checks if we're actually on a subdomain
+            if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
                 // Only redirect if we don't know if they're approved yet
                 // This allows approved users to access the chatbot
                 if (isApproved !== '1' || isActive !== '1' || isActiveByAdmin !== '1') {
+                    console.log("Redirecting to tuition_home.html - Not approved");
                     window.location.href = 'tuition_home.html';
                     return;
                 }
@@ -190,10 +199,105 @@
                 if (tuitionClassesBtn) {
                     tuitionClassesBtn.style.display = 'flex';
                 }
+                
+                // Set up periodic access check for subdomain users
+                setupPeriodicAccessCheck(userId, tuitionClass, token);
+            } else if (!isSubdomain) {
+                // If we're on main domain, just show the chatbot
+                console.log("Main domain - showing chatbot");
+                
+                // Show tuition button only if user has a tuition class
+                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                    const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
+                    if (tuitionClassesBtn) {
+                        tuitionClassesBtn.style.display = 'flex';
+                    }
+                }
             }
             
             // Service worker is now handled in base-url.js
         });
+        
+        // Function to periodically check if the user still has access rights
+        function setupPeriodicAccessCheck(userId, tuitionClass, token) {
+            // First check after 2 minutes, then every 5 minutes after that
+            setTimeout(() => {
+                checkUserAccess(userId, tuitionClass, token);
+                
+                // Then set up recurring checks every 5 minutes
+                setInterval(() => {
+                    checkUserAccess(userId, tuitionClass, token);
+                }, 5 * 60 * 1000); // 5 minutes
+            }, 2 * 60 * 1000); // 2 minutes
+        }
+        
+        // Function to check if user still has access
+        async function checkUserAccess(userId, tuitionClass, token) {
+            console.log("Performing periodic access check...");
+            
+            try {
+                const currentHostname = window.location.hostname;
+                const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                   currentHostname !== 'studysimplify.in';
+                
+                // Skip check if not on a subdomain
+                if (!isSubdomain) return;
+                
+                // Determine API endpoint
+                const protocol = window.location.protocol;
+                const apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
+                
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        tuition_class: tuitionClass
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Periodic access check result:", data);
+                    
+                    // Check if user has lost access
+                    if (data.is_approved_by_owner != 1 || data.is_active_by_owner != 1 || data.is_active_by_admin != 1) {
+                        console.log("Access has been revoked. Redirecting to tuition home page...");
+                        
+                        // Update localStorage with current status
+                        localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
+                        localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
+                        localStorage.setItem('is_active_by_admin', data.is_active_by_admin);
+                        
+                        // Show a message to the user
+                        const toastMessage = document.getElementById('toastMessage');
+                        const toastNotification = document.getElementById('toastNotification');
+                        
+                        if (toastMessage && toastNotification) {
+                            toastMessage.textContent = "Your access has been deactivated. Redirecting...";
+                            toastNotification.classList.add('show');
+                            
+                            // Redirect after showing toast
+                            setTimeout(() => {
+                                window.location.href = 'tuition_home.html';
+                            }, 3000);
+                        } else {
+                            // If toast elements not found, redirect immediately
+                            window.location.href = 'tuition_home.html';
+                        }
+                    }
+                } else {
+                    console.log("Periodic access check failed with status:", response.status);
+                    // Don't redirect on failed checks - might be temporary network issues
+                }
+            } catch (error) {
+                console.error("Error in periodic access check:", error);
+                // Don't redirect on failed checks - might be temporary network issues
+            }
+        }
     </script>
     
     <!-- MathJax for LaTeX Support -->

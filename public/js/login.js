@@ -65,16 +65,38 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('userGrade', data.grade);
             localStorage.setItem('tuitionClass', data.tuition_class);
             
+            // Store approval status information
+            if (data.is_approved_by_owner !== undefined) {
+                localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
+            }
+            if (data.is_active_by_owner !== undefined) {
+                localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
+            }
+            if (data.is_active_by_admin !== undefined) {
+                localStorage.setItem('is_active_by_admin', data.is_active_by_admin);
+            }
+            
             // Handle "Remember me" by saving credentials securely if checked
             handleRememberMe(formData.email, formData.password, formData.rememberMe);
 
-            // Conditional redirect based on tuition class
+            // Get the current hostname to check if we're on a subdomain
+            const currentHostname = window.location.hostname;
+            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                               currentHostname !== 'studysimplify.in';
+            
+            console.log("Login.js - Current hostname:", currentHostname);
+            console.log("Login.js - Is subdomain:", isSubdomain);
+            console.log("Login.js - tuitionClass:", data.tuition_class);
+
+            // Conditional redirect based on tuition class AND subdomain status
             const tuitionClass = localStorage.getItem('tuitionClass');
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
-                // User belongs to a tuition class, redirect to intermediate page
+            if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                console.log("Login.js - Redirecting to tuition_home.html - subdomain user");
+                // User belongs to a tuition class and is on a subdomain, redirect to intermediate page
                 window.location.href = 'tuition_home.html';
             } else {
-                // Main domain user, redirect to chatbot
+                console.log("Login.js - Redirecting to chatbot.html - main domain or no tuition class");
+                // Main domain user or not on a subdomain, redirect to chatbot
                 window.location.href = 'chatbot.html';
             }
 

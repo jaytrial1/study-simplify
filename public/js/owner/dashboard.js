@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
 async function validateTokenAndLoadInitialData(ownerId, ownerToken) {
     try {
         // We use loadPlanDetails for validation as it fetches core owner info
-        // Make the API call (copy relevant parts from loadPlanDetails)
+        // Make the API call with the correct path format
         const host = window.location.hostname;
-        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
-        let basePath = window.apiBasePath || '/main';
-        const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_details.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}&testing=1`;
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '';
+        const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_details.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
         
-        console.log(`Initial Validation using endpoint: ${endpoint}`); // Debugging endpoint
+        console.log('Debug - Initial Validation Endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -91,7 +91,7 @@ async function validateTokenAndLoadInitialData(ownerId, ownerToken) {
     setupBulkConfirmModal();
         if (document.getElementById('studentSearchInput')) {
              document.getElementById('studentSearchInput').addEventListener('input', handleStudentSearch);
-        }
+    }
     document.getElementById('approveAllBtn')?.addEventListener('click', approveAllPending);
     document.getElementById('denyAllBtn')?.addEventListener('click', denyAllPending);
     document.getElementById('activateAllBtn')?.addEventListener('click', activateAllApproved);
@@ -335,10 +335,12 @@ async function loadPlanDetails() {
         // Get the base path for API calls
         const host = window.location.hostname;
         const protocol = window.location.protocol;
-        let basePath = window.apiBasePath || '/main';
+        let basePath = window.apiBasePath || '';
         
-        // Construct the full endpoint URL with token as parameter for better compatibility
-        const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_details.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}&testing=1`;
+        // Construct the full endpoint URL without the testing parameter
+        const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_details.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
+        
+        console.log('Debug - API Endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -398,10 +400,12 @@ async function checkAdminSuspensionStatus(subdomain) {
         
         const host = window.location.hostname;
         const protocol = window.location.protocol;
-        let basePath = window.apiBasePath || '/main';
+        let basePath = window.apiBasePath || '';
         
         // Create an endpoint to check suspension status
         const endpoint = `${protocol}//${host}${basePath}/api/owner/check_admin_suspension.php?subdomain=${encodeURIComponent(subdomain)}`;
+        
+        console.log('Debug - Admin Suspension Check Endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -632,32 +636,22 @@ async function loadStudents() {
             return;
         }
         
-        // Fix the URL path by including the subfolder
+        // Use the same API path format used in other functions
         const host = window.location.hostname;
-        const currentPath = window.location.pathname;
-        let basePath = '/main'; // Default subfolder
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '';
         
-        // Try to extract the base path from the current URL
-        const pathMatch = currentPath.match(/^\/([^\/]+)/);
-        if (pathMatch && pathMatch[1]) {
-            basePath = '/' + pathMatch[1];
-        }
+        // Construct the full endpoint URL
+        const endpoint = `${protocol}//${host}${basePath}/api/owner/get_students.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
         
-        // Construct the full endpoint URL with the correct base path
-        // Try passing token as query param instead of header
-        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
-        let endpoint = `${protocol}//${host}${basePath}/api/owner/get_students.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
-        
-        console.log('Debug - Using endpoint:', endpoint);
+        console.log('Debug - Students API Endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // Also still sending as header for redundancy
                 'Authorization': `Bearer ${ownerToken}`
             },
-            // Add credentials to ensure cookies are sent
             credentials: 'include'
         });
         
@@ -952,22 +946,16 @@ async function toggleStudentStatus(studentId, activate, isFirstApproval, isBulkA
             actionBtn.disabled = true;
         }
         
-        // Get the same base path we calculated in loadStudents
+        // Use the same consistent path format as other functions
         const host = window.location.hostname;
-        const currentPath = window.location.pathname;
-        let basePath = '/main'; // Default subfolder
-        
-        // Try to extract the base path from the current URL
-        const pathMatch = currentPath.match(/^\/([^\/]+)/);
-        if (pathMatch && pathMatch[1]) {
-            basePath = '/' + pathMatch[1];
-        }
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '';
         
         // Construct the full endpoint URL
-        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
         const endpoint = `${protocol}//${host}${basePath}/api/owner/toggle_student_status.php`;
         
-        console.log('Debug - Toggling student status:', studentId, 'with action:', isFirstApproval ? 'approve' : (activate ? 'activate' : 'deactivate'), `at endpoint: ${endpoint}`);
+        console.log('Debug - Toggle Student Status Endpoint:', endpoint);
+        console.log('Debug - Action:', isFirstApproval ? 'approve' : (activate ? 'activate' : 'deactivate'), 'Student ID:', studentId);
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -1170,22 +1158,16 @@ async function deleteStudent(studentId, isBulkAction = false) {
             actionBtn.disabled = true;
         }
         
-        // Get the base path
+        // Use the consistent path format
         const host = window.location.hostname;
-        const currentPath = window.location.pathname;
-        let basePath = '/main'; // Default subfolder
-        
-        // Try to extract the base path from the current URL
-        const pathMatch = currentPath.match(/^\/([^\/]+)/);
-        if (pathMatch && pathMatch[1]) {
-            basePath = '/' + pathMatch[1];
-        }
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '';
         
         // Construct the full endpoint URL
-        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
         const endpoint = `${protocol}//${host}${basePath}/api/owner/delete_student.php`;
         
-        console.log('Debug - Deleting student:', studentId, `at endpoint: ${endpoint}`);
+        console.log('Debug - Delete Student Endpoint:', endpoint);
+        console.log('Debug - Deleting Student ID:', studentId);
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -1276,20 +1258,15 @@ function showInfoToast(message) {
 }
 
 function logout() {
-    // Get the base path for consistent API calls
+    // Use the consistent path format for API calls
     const host = window.location.hostname;
-    const currentPath = window.location.pathname;
-    let basePath = '/main'; // Default subfolder
-    
-    // Try to extract the base path from the current URL
-    const pathMatch = currentPath.match(/^\/([^\/]+)/);
-    if (pathMatch && pathMatch[1]) {
-        basePath = '/' + pathMatch[1];
-    }
+    const protocol = window.location.protocol;
+    let basePath = window.apiBasePath || '';
     
     // Construct the full endpoint URL
-    const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
     const endpoint = `${protocol}//${host}${basePath}/api/owner/logout.php`;
+    
+    console.log('Debug - Logout Endpoint:', endpoint);
     
     // Call the logout API (not required to wait for response)
     fetch(endpoint, {
@@ -1352,12 +1329,12 @@ async function loadPlanHistory() {
         }
         
         const host = window.location.hostname;
-        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
-        let basePath = window.apiBasePath || '/main';
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '';
         
         const endpoint = `${protocol}//${host}${basePath}/api/owner/plans/get_plan_history.php?owner_id=${ownerId}&auth_token=${encodeURIComponent(ownerToken)}`;
         
-        console.log(`Loading plan history from: ${endpoint}`); // Debugging endpoint
+        console.log('Debug - Plan History Endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
             method: 'GET',

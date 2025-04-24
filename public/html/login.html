@@ -39,15 +39,26 @@
             const userId = localStorage.getItem('user_id');
             const tuitionClass = localStorage.getItem('tuitionClass');
             
+            // Check if we're on a subdomain
+            const currentHostname = window.location.hostname;
+            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                currentHostname !== 'studysimplify.in';
+            
+            console.log("Login page - Current hostname:", currentHostname);
+            console.log("Login page - Is subdomain:", isSubdomain);
+            console.log("Login page - tuitionClass:", tuitionClass);
+            
             // If valid token exists, redirect to appropriate page
             if (token && userId) {
-                // Check if user belongs to a tuition class
-                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
-                    // User belongs to a tuition class, redirect to tuition home page
+                // Only check tuition class AND we're on a subdomain
+                if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                    console.log("Redirecting to tuition_home.html from login - subdomain user");
+                    // User belongs to a tuition class on subdomain, redirect to tuition home page
                     window.location.href = 'tuition_home.html';
                 } else {
-                    // Main domain user, redirect to chatbot
-                window.location.href = 'chatbot.html';
+                    console.log("Redirecting to chatbot.html from login - main domain or no tuition class");
+                    // Main domain user or no tuition class, redirect to chatbot
+                    window.location.href = 'chatbot.html';
                 }
             }
             

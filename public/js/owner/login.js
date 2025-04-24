@@ -54,7 +54,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Email and password are required');
             }
 
-            const response = await fetch(`${window.apiBasePath}/api/owner/login.php`, {
+            const host = window.location.hostname;
+            const protocol = window.location.protocol;
+            let basePath = window.apiBasePath || '';
+            
+            const endpoint = `${protocol}//${host}${basePath}/api/owner/login.php`;
+            
+            console.log('Debug - Login Endpoint:', endpoint);
+
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

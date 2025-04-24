@@ -89,7 +89,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('All fields except phone number are required');
             }
 
-            const response = await fetch(`${window.apiBasePath}/api/owner/register.php`, {
+            const host = window.location.hostname;
+            const protocol = window.location.protocol;
+            let basePath = window.apiBasePath || '';
+            
+            const endpoint = `${protocol}//${host}${basePath}/api/owner/register.php`;
+            
+            console.log('Debug - Registration Endpoint:', endpoint);
+
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -19,6 +19,16 @@ console.log("Path check - in /main/ directory:", isInMainDirectory);
 const apiBasePath = isLocalServer && isInMainDirectory ? '/main' : '';
 console.log("API base path in base-url.js:", apiBasePath);
 
+// Log full page URL data for debugging
+console.log("DEBUG URL info:", {
+    fullURL: window.location.href,
+    protocol: window.location.protocol,
+    hostname: window.location.hostname,
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash
+});
+
 // Make these available globally
 window.isLocalServer = isLocalServer;
 window.apiBasePath = apiBasePath;

@@ -75,17 +75,6 @@ function initializePage() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('paymentDate').value = today;
     
-    // Get the base path for API calls if not already set by base-url.js
-    if (typeof window.apiBasePath === 'undefined' || !window.apiBasePath) {
-        const currentPath = window.location.pathname;
-        const pathMatch = currentPath.match(/^\/([^\/]+)/);
-        if (pathMatch && pathMatch[1]) {
-            window.apiBasePath = '/' + pathMatch[1];
-        } else {
-            window.apiBasePath = '/main'; // Default subfolder
-        }
-    }
-    
     // Set up installment count change event
     document.getElementById('installmentCount').addEventListener('change', function() {
         const installmentCount = parseInt(this.value);
@@ -188,7 +177,8 @@ function setupFormHandlers() {
 
 async function loadOwners() {
     try {
-        const endpoint = getApiEndpoint('/api/admin/get_owners.php');
+        // Add testing parameter for development until proper auth is implemented
+        const endpoint = getApiEndpoint('/api/admin/get_owners.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -232,9 +222,14 @@ function populateOwnerDropdown(owners) {
 
 async function loadPlans(statusFilter = '') {
     try {
+        // Add testing parameter for development until proper auth is implemented
         let endpoint = getApiEndpoint('/api/admin/get_plans.php');
+        
+        // Add testing parameter and handle existing status filter
         if (statusFilter) {
-            endpoint += `?status=${encodeURIComponent(statusFilter)}`;
+            endpoint += `?status=${encodeURIComponent(statusFilter)}&testing=1`;
+        } else {
+            endpoint += '?testing=1';
         }
         
         const response = await fetch(endpoint, {
@@ -267,7 +262,8 @@ async function loadPlans(statusFilter = '') {
 
 async function loadOwnersWithoutPlans(existingPlans) {
     try {
-        const endpoint = getApiEndpoint('/api/admin/get_owners.php');
+        // Add testing parameter for development until proper auth is implemented
+        const endpoint = getApiEndpoint('/api/admin/get_owners.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -644,7 +640,7 @@ async function createPlan(form) {
             delete planData.installment_interval_days;
         }
         
-        const endpoint = getApiEndpoint('/api/admin/create_plan.php');
+        const endpoint = getApiEndpoint('/api/admin/create_plan.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -691,7 +687,7 @@ async function recordPayment(form) {
         
         const endpoint = getApiEndpoint('/api/admin/record_payment.php');
         // Add auto_activate parameter to URL
-        const finalEndpoint = endpoint + `&auto_activate=${autoActivate ? '1' : '0'}`;
+        const finalEndpoint = endpoint + `?auto_activate=${autoActivate ? '1' : '0'}&testing=1`;
         
         const response = await fetch(finalEndpoint, {
             method: 'POST',
@@ -736,7 +732,7 @@ async function finalizeRoster(form) {
     try {
         const planId = parseInt(document.getElementById('finalizeRosterPlanId').value);
         
-        const endpoint = getApiEndpoint('/api/admin/finalize_roster.php');
+        const endpoint = getApiEndpoint('/api/admin/finalize_roster.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -775,9 +771,30 @@ function getApiEndpoint(path) {
     const host = window.location.hostname;
     const protocol = window.location.protocol;
     
-    // Add testing=1 parameter to bypass auth for development
-    const endpoint = `${protocol}//${host}${window.apiBasePath}${path}`;
-    return endpoint + (endpoint.includes('?') ? '&testing=1' : '?testing=1');
+    // Use apiBasePath as is (it's either '' or '/main')
+    const basePath = window.apiBasePath;
+    
+    // Debug logging for troubleshooting
+    console.log('Debug - API path input:', path);
+    console.log('Debug - apiBasePath:', window.apiBasePath);
+    console.log('Debug - host:', host);
+    console.log('Debug - protocol:', protocol);
+    
+    // Ensure the path starts with /api/ and remove any leading slashes from the input path
+    let apiSpecificPath = path.startsWith('/') ? path.substring(1) : path;
+    if (apiSpecificPath.startsWith('api/')) {
+        apiSpecificPath = apiSpecificPath.substring(4); // Remove 'api/' prefix if present
+    }
+    if (apiSpecificPath.startsWith('/')) {
+        apiSpecificPath = apiSpecificPath.substring(1); // Remove leading slash again if necessary
+    }
+    
+    // Construct the final endpoint URL correctly joining basePath and the rest
+    // Example: http://host/main/api/admin/get_owners.php or http://host/api/admin/get_owners.php
+    const endpoint = `${protocol}//${host}${basePath}/api/${apiSpecificPath}`;
+    
+    console.log('Debug - Final API Endpoint (Corrected):', endpoint);
+    return endpoint;
 }
 
 function showSuccessToast(message) {
@@ -806,7 +823,7 @@ function showInfoToast(message) {
 
 async function renewPlan(planId) {
     try {
-        const endpoint = getApiEndpoint('/api/admin/renew_plan.php');
+        const endpoint = getApiEndpoint('/api/admin/renew_plan.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -894,7 +911,7 @@ async function loadExpiryStatus() {
         document.getElementById('expiryCheckResultsContainer').style.display = 'none';
         
         // Fetch plan expiry data
-        const endpoint = getApiEndpoint('/api/admin/get_plan_expiry_status.php');
+        const endpoint = getApiEndpoint('/api/admin/get_plan_expiry_status.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -991,7 +1008,7 @@ async function runExpiryCheck() {
         resultsContainer.style.display = 'block';
         
         // Call the API to run the expiry check
-        const endpoint = getApiEndpoint('/api/admin/run_plan_expiry_check.php');
+        const endpoint = getApiEndpoint('/api/admin/run_plan_expiry_check.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -1044,7 +1061,7 @@ async function loadOverduePlans() {
         tableContainer.style.display = 'none';
         
         // Fetch overdue plans data
-        const endpoint = getApiEndpoint('/api/admin/get_overdue_plans.php');
+        const endpoint = getApiEndpoint('/api/admin/get_overdue_plans.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'GET',
@@ -1170,7 +1187,7 @@ async function toggleOwnerService(subdomain, action) {
         });
         
         // Call API to toggle service
-        const endpoint = getApiEndpoint('/api/admin/toggle_owner_service.php');
+        const endpoint = getApiEndpoint('/api/admin/toggle_owner_service.php') + '?testing=1';
         
         const response = await fetch(endpoint, {
             method: 'POST',

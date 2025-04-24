@@ -107,6 +107,12 @@
             const tuitionName = document.getElementById('tuition-name');
             const tuitionLogo = document.getElementById('tuition-logo');
             
+            // --- DEBUG LOGGING ---
+            console.log("Current hostname:", window.location.hostname);
+            console.log("Current pathname:", window.location.pathname);
+            console.log("localStorage tuitionClass:", tuitionClass);
+            console.log("localStorage userId:", userId);
+            
             // --- Branding Logic (similar to index.html but for PHP config) ---
             const logoUrl = `/subdomain/${tuitionClass}/logo.png`; // Assuming logo.png exists
             tuitionLogo.src = logoUrl;
@@ -118,31 +124,63 @@
 
             // --- Button Actions ---
             document.getElementById('chatbot-btn').addEventListener('click', async () => {
-                // Only check approval status if user is logged in via subdomain
-                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                // Get the current hostname
+                const currentHostname = window.location.hostname;
+                
+                // Check if we're on a subdomain of studysimplify.in
+                const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                   currentHostname !== 'studysimplify.in';
+                
+                console.log("Current hostname:", currentHostname);
+                console.log("Is actual subdomain:", isSubdomain);
+                
+                // Only check approval status if we're actually on a subdomain
+                if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
                     try {
                         // Get the same base path we use elsewhere
                         const host = window.location.hostname;
                         const currentPath = window.location.pathname;
-                        let basePath = '/main'; // Default subfolder
                         
-                        // Try to extract the base path from the current URL
-                        const pathMatch = currentPath.match(/^\/([^\/]+)/);
-                        if (pathMatch && pathMatch[1]) {
-                            basePath = '/' + pathMatch[1];
+                        // Determine if we're on a subdomain
+                        console.log("Is subdomain?", isSubdomain);
+                        
+                        // For subdomains, we need a different path construction
+                        let apiEndpoint;
+                        
+                        if (isSubdomain) {
+                            // Check if the URL structure indicates we're in the main directory or not
+                            const inMainDir = currentPath.startsWith('/main/');
+                            console.log("In /main/ directory?", inMainDir);
+                            
+                            // Try different path constructions for subdomains
+                            const protocol = window.location.protocol;
+                            
+                            // Option 1: Direct to root
+                            apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
+                            console.log("Using main domain API endpoint:", apiEndpoint);
+                        } else {
+                            // Regular domain path construction
+                            let basePath = '/main'; // Default subfolder
+                            
+                            // Try to extract the base path from the current URL
+                            const pathMatch = currentPath.match(/^\/([^\/]+)/);
+                            if (pathMatch && pathMatch[1]) {
+                                basePath = '/' + pathMatch[1];
+                            }
+                            
+                            // Construct the API endpoint to check user status
+                            const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
+                            apiEndpoint = `${protocol}//${host}${basePath}/api/user/check_status.php`;
+                            console.log("Using regular API endpoint:", apiEndpoint);
                         }
                         
-                        // Construct the API endpoint to check user status
-                        const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
-                        const endpoint = `${protocol}//${host}/api/user/check_status.php`;
-                        
-                        console.log("Sending request to:", endpoint);
+                        console.log("Sending request to:", apiEndpoint);
                         console.log("Request data:", JSON.stringify({
                             user_id: userId,
                             tuition_class: tuitionClass
                         }));
                         
-                        const response = await fetch(endpoint, {
+                        const response = await fetch(apiEndpoint, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -206,9 +244,37 @@
                             // If API request fails, show error message instead of redirecting
                             console.error('Failed to check user status. Status code:', response.status);
                             const toast = document.getElementById('toast');
-                            toast.textContent = "Unable to verify your access. Please try again or contact support.";
+                            
+                            // Try to get error details from response
+                            try {
+                                const errorText = await response.text();
+                                console.log("Error response:", errorText);
+                                
+                                let errorMessage = "Unable to verify your access. Please try again or contact support.";
+                                
+                                // Try to parse the error response
+                                try {
+                                    const errorData = JSON.parse(errorText);
+                                    if (errorData.error) {
+                                        console.log("Server error message:", errorData.error);
+                                        
+                                        if (response.status === 404) {
+                                            errorMessage = "Your account was not found in this tuition class. Please contact your teacher.";
+                                        } else if (response.status === 500) {
+                                            errorMessage = "The server encountered an error. Please try again later.";
+                                        }
+                                    }
+                                } catch(e) {
+                                    console.error("Error parsing error response:", e);
+                                }
+                                
+                                toast.textContent = errorMessage;
+                            } catch(e) {
+                                toast.textContent = "Unable to verify your access. Status: " + response.status;
+                            }
+                            
                             toast.classList.add('show');
-                            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                            setTimeout(() => { toast.classList.remove('show'); }, 5000); // Show for longer time
                         }
                     } catch (error) {
                         console.error('Error checking user status:', error);
@@ -218,7 +284,7 @@
                         setTimeout(() => { toast.classList.remove('show'); }, 3000);
                     }
                 } else {
-                    // Main domain user, directly go to chatbot
+                    // Main domain user (or no tuition class), directly go to chatbot
                 window.location.href = 'chatbot.html';
                 }
             });
@@ -236,7 +302,21 @@
                     const token = localStorage.getItem('token');
                     // Call the logout API (optional - continue with client-side logout even if this fails)
                     try {
-                        const response = await fetch(`${protocol}//${host}/api/auth/logout.php`, {
+                        const host = window.location.hostname;
+                        const isSubdomain = host.includes('.studysimplify.in');
+                        const protocol = window.location.protocol;
+                        
+                        let logoutEndpoint;
+                        
+                        if (isSubdomain) {
+                            // Use main domain for API endpoint
+                            logoutEndpoint = `${protocol}//studysimplify.in/api/auth/logout.php`;
+                        } else {
+                            // Regular domain path construction
+                            logoutEndpoint = `${protocol}//${host}${basePath}/api/auth/logout.php`;
+                        }
+                        
+                        const response = await fetch(logoutEndpoint, {
                             method: 'POST',
                             headers: {
                                 'Authorization': `Bearer ${token}`

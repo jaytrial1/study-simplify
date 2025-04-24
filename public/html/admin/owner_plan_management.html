@@ -2,12 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Check if we're on a local server (using a different variable name than base-url.js)
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../../js/base-url.js" : "/public/js/base-url.js";
+        const cssStylesPath = _isLocalServer ? "../../css/admin/styles.css" : "/public/css/admin/styles.css";
+        const toastCssPath = _isLocalServer ? "../../css/owner/toast.css" : "/public/css/owner/toast.css";
+        const toastJsPath = _isLocalServer ? "../../js/owner/toast.js" : "/public/js/owner/toast.js";
+        const planManagementJsPath = _isLocalServer ? "../../js/admin/owner_plan_management.js" : "/public/js/admin/owner_plan_management.js";
+        
+        // Debugging - show paths to console
+        console.log("baseUrlJsPath:", baseUrlJsPath);
+        console.log("cssStylesPath:", cssStylesPath);
+        console.log("toastCssPath:", toastCssPath);
+        console.log("toastJsPath:", toastJsPath);
+        console.log("planManagementJsPath:", planManagementJsPath);
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owner Plan Management | StudySimplify Admin</title>
-    <link rel="stylesheet" href="../../css/admin/styles.css">
-    <link rel="stylesheet" href="../../css/owner/toast.css">
+    <script>
+        document.write(`<link rel="stylesheet" href="${cssStylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${toastCssPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../../js/base-url.js"></script>
     <script>
         // Authentication check - redirect to login if not authenticated
         document.addEventListener('DOMContentLoaded', function() {
@@ -160,51 +187,51 @@
             
             <!-- Current Plans Tab -->
             <div class="tab-pane active" id="current-plans-tab">
-                <div class="admin-card">
-                    <div class="card-header">
-                        <h3>Current Plans</h3>
-                        <div class="filter-controls">
-                            <select id="statusFilter">
-                                <option value="">All Statuses</option>
-                                <option value="pending_initialization">Pending Initialization</option>
-                                <option value="pending_payment">Pending Payment</option>
-                                <option value="active">Active</option>
-                                <option value="payment_due">Payment Due</option>
-                                <option value="grace_period">Grace Period</option>
-                                <option value="fully_paid">Fully Paid</option>
-                                <option value="expired">Expired</option>
-                            </select>
-                        </div>
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3>Current Plans</h3>
+                    <div class="filter-controls">
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="pending_initialization">Pending Initialization</option>
+                            <option value="pending_payment">Pending Payment</option>
+                            <option value="active">Active</option>
+                            <option value="payment_due">Payment Due</option>
+                            <option value="grace_period">Grace Period</option>
+                            <option value="fully_paid">Fully Paid</option>
+                            <option value="expired">Expired</option>
+                        </select>
                     </div>
-                    <div class="card-body">
-                        <div class="empty-state" id="emptyPlansState">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                            <p>No owner plans found.</p>
-                        </div>
-                        
-                        <div class="table-container">
-                            <table class="data-table" id="plansTable" style="display: none;">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Owner</th>
-                                        <th>Plan Type</th>
-                                        <th>Status</th>
-                                        <th>Students</th>
-                                        <th>Start Date</th>
-                                        <th>Amount</th>
-                                        <th>Paid</th>
-                                        <th>Due</th>
-                                        <th>Next Inst. Amount</th>
-                                        <th>Next Inst. Date</th>
-                                        <th>Expiry</th>
-                                        <th class="action-column">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="plansTableBody">
-                                    <!-- Plans will be populated dynamically -->
-                                </tbody>
-                            </table>
+                </div>
+                <div class="card-body">
+                    <div class="empty-state" id="emptyPlansState">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <p>No owner plans found.</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="plansTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Owner</th>
+                                    <th>Plan Type</th>
+                                    <th>Status</th>
+                                    <th>Students</th>
+                                    <th>Start Date</th>
+                                    <th>Amount</th>
+                                    <th>Paid</th>
+                                    <th>Due</th>
+                                    <th>Next Inst. Amount</th>
+                                    <th>Next Inst. Date</th>
+                                    <th>Expiry</th>
+                                    <th class="action-column">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="plansTableBody">
+                                <!-- Plans will be populated dynamically -->
+                            </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
@@ -447,8 +474,10 @@
         </footer>
     </div>
     
-    <script src="../../js/owner/toast.js"></script>
-    <script src="../../js/admin/owner_plan_management.js"></script>
+    <script>
+        document.write(`<script src="${toastJsPath}"><\/script>`);
+        document.write(`<script src="${planManagementJsPath}"><\/script>`);
+    </script>
     <script>
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function(e) {

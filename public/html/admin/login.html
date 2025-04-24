@@ -2,12 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Check if we're on a local server (using a different variable name than base-url.js)
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../../js/base-url.js" : "/public/js/base-url.js";
+        const cssStylesPath = _isLocalServer ? "../../css/admin/styles.css" : "/public/css/admin/styles.css";
+        const toastCssPath = _isLocalServer ? "../../css/owner/toast.css" : "/public/css/owner/toast.css";
+        const toastJsPath = _isLocalServer ? "../../js/owner/toast.js" : "/public/js/owner/toast.js";
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | StudySimplify</title>
-    <link rel="stylesheet" href="../../css/admin/styles.css">
-    <link rel="stylesheet" href="../../css/owner/toast.css">
+    <script>
+        document.write(`<link rel="stylesheet" href="${cssStylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${toastCssPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../../js/base-url.js"></script>
     <style>
         .login-container {
             min-height: 100vh;
@@ -116,7 +135,9 @@
         </div>
     </div>
     
-    <script src="../../js/owner/toast.js"></script>
+    <script>
+        document.write(`<script src="${toastJsPath}"><\/script>`);
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');

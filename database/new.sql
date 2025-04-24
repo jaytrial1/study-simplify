@@ -11,3 +11,7 @@ CREATE TABLE student_approval_history (
 ALTER TABLE users 
 ADD COLUMN is_approved_by_owner BOOLEAN DEFAULT FALSE 
 AFTER is_active_by_owner;
+
+
+
+ALTER TABLE `users` ADD COLUMN `is_active_by_admin` TINYINT(1) NOT NULL DEFAULT 1 AFTER `is_active_by_owner`
