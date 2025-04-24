@@ -11,9 +11,61 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add event listeners
     setupEventListeners();
+    
+    // Set up tab navigation functionality
+    setupTabNavigation();
 });
 
 // Using the existing apiBasePath from base-url.js if available, not redeclaring it
+
+function setupTabNavigation() {
+    // Get all tab navigation items
+    const tabNavItems = document.querySelectorAll('.tab-nav-item');
+    
+    // Add click event listeners to each tab item
+    tabNavItems.forEach(tabItem => {
+        tabItem.addEventListener('click', function() {
+            // Get the target tab ID
+            const targetTabId = this.getAttribute('data-tab');
+            
+            // Switch to the selected tab
+            switchToTab(targetTabId);
+        });
+    });
+}
+
+function switchToTab(tabId) {
+    // Remove active class from all tab navigation items
+    document.querySelectorAll('.tab-nav-item').forEach(tabItem => {
+        tabItem.classList.remove('active');
+    });
+    
+    // Add active class to the selected tab navigation item
+    const selectedTabNav = document.querySelector(`.tab-nav-item[data-tab="${tabId}"]`);
+    if (selectedTabNav) {
+        selectedTabNav.classList.add('active');
+    }
+    
+    // Hide all tab panes
+    document.querySelectorAll('.tab-pane').forEach(tabPane => {
+        tabPane.classList.remove('active');
+    });
+    
+    // Show the selected tab pane
+    const selectedTabPane = document.getElementById(tabId);
+    if (selectedTabPane) {
+        selectedTabPane.classList.add('active');
+    }
+    
+    // Special handling for specific tabs
+    if (tabId === 'plan-expiry-tab') {
+        // Load plan expiry status data when tab is selected
+        loadExpiryStatus();
+    } else if (tabId === 'current-plans-tab') {
+        // Refresh current plans data
+        loadPlans(document.getElementById('statusFilter').value);
+    }
+}
 
 function initializePage() {
     // Initialize date pickers with current date
@@ -79,6 +131,21 @@ function setupEventListeners() {
             closeAllModals();
         });
     });
+    
+    // Plan Expiry tab buttons
+    const refreshExpiryButton = document.getElementById('refreshExpiryButton');
+    if (refreshExpiryButton) {
+        refreshExpiryButton.addEventListener('click', function() {
+            loadExpiryStatus();
+        });
+    }
+    
+    const runExpiryCheckButton = document.getElementById('runExpiryCheckButton');
+    if (runExpiryCheckButton) {
+        runExpiryCheckButton.addEventListener('click', function() {
+            runExpiryCheck();
+        });
+    }
 }
 
 function setupFormHandlers() {
@@ -799,5 +866,158 @@ async function renewPlan(planId) {
     } catch (error) {
         console.error('Error renewing plan:', error);
         showErrorToast(error.message);
+    }
+}
+
+// Load plan expiry status data
+async function loadExpiryStatus() {
+    try {
+        // Show loading state
+        const emptyState = document.getElementById('emptyExpiryState');
+        const tableContainer = document.getElementById('expiryTableContainer');
+        
+        emptyState.style.display = 'flex';
+        tableContainer.style.display = 'none';
+        
+        // Hide any previous check results
+        document.getElementById('expiryCheckResultsContainer').style.display = 'none';
+        
+        // Fetch plan expiry data
+        const endpoint = getApiEndpoint('/api/admin/get_plan_expiry_status.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load plan expiry status');
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            displayExpiryStatus(data.plans);
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error loading plan expiry status:', error);
+        showErrorToast(error.message);
+        
+        // Show error state
+        const emptyState = document.getElementById('emptyExpiryState');
+        emptyState.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load plan expiry status: ${error.message}</p>
+        `;
+        emptyState.style.display = 'flex';
+    }
+}
+
+// Display plan expiry status in the table
+function displayExpiryStatus(plans) {
+    const emptyState = document.getElementById('emptyExpiryState');
+    const tableContainer = document.getElementById('expiryTableContainer');
+    const tableBody = document.getElementById('expiryTableBody');
+    
+    // Clear the table body
+    tableBody.innerHTML = '';
+    
+    if (!plans || plans.length === 0) {
+        emptyState.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <p>No expired plans found. All plans are current.</p>
+        `;
+        emptyState.style.display = 'flex';
+        tableContainer.style.display = 'none';
+        return;
+    }
+    
+    // Hide empty state and show table
+    emptyState.style.display = 'none';
+    tableContainer.style.display = 'block';
+    
+    // Populate the table with plan data
+    plans.forEach(plan => {
+        const row = document.createElement('tr');
+        
+        // Format the expiry date
+        const expiryDate = plan.expiry_date ? new Date(plan.expiry_date).toLocaleDateString() : 'Not set';
+        
+        // Determine if status should be highlighted
+        const statusClass = plan.payment_status === 'expired' ? 'status-expired' : '';
+        
+        // Create the row HTML
+        row.innerHTML = `
+            <td>${plan.plan_id}</td>
+            <td>${plan.full_name}</td>
+            <td class="${statusClass}">${formatPlanStatus(plan.payment_status)}</td>
+            <td>${expiryDate}</td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Run the expiry check
+async function runExpiryCheck() {
+    try {
+        // Show loading state
+        const runButton = document.getElementById('runExpiryCheckButton');
+        const originalText = runButton.innerHTML;
+        runButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running Check...';
+        runButton.disabled = true;
+        
+        // Clear previous results
+        const resultsContainer = document.getElementById('expiryCheckResultsContainer');
+        const resultsPreElement = document.getElementById('expiryCheckResults');
+        
+        resultsPreElement.textContent = 'Running check...';
+        resultsContainer.style.display = 'block';
+        
+        // Call the API to run the expiry check
+        const endpoint = getApiEndpoint('/api/admin/run_plan_expiry_check.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to run expiry check');
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            // Show the results
+            resultsPreElement.textContent = data.output || 'Check completed. No output returned.';
+            
+            // Refresh the expiry status table
+            loadExpiryStatus();
+            
+            showSuccessToast('Plan expiry check completed successfully');
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error running plan expiry check:', error);
+        showErrorToast(error.message);
+        
+        // Show error in results
+        const resultsPreElement = document.getElementById('expiryCheckResults');
+        resultsPreElement.textContent = `Error: ${error.message}`;
+    } finally {
+        // Restore button state
+        const runButton = document.getElementById('runExpiryCheckButton');
+        runButton.innerHTML = '<i class="fas fa-play"></i> Run Expiry Check';
+        runButton.disabled = false;
     }
 } 
