@@ -101,6 +101,9 @@ async function validateTokenAndLoadInitialData(ownerId, ownerToken) {
         // Load remaining data (plan details already loaded partially by validation)
         const data = await response.json();
         if (data.status === 'success' && data.plan) {
+            // Check if service is suspended by admin
+            await checkAdminSuspensionStatus(data.plan.subdomain_identifier);
+            
             updatePlanDetails(data.plan); // Update UI with fetched plan details
         } else {
             showDefaultPlanMessage(); // Handle case where plan might not exist yet
@@ -362,7 +365,7 @@ async function loadPlanDetails() {
         const data = await response.json();
         
         // --- DEBUGGING START ---
-        console.log('[DEBUG] API Response (Stringified):', JSON.stringify(data, null, 2)); // Log as string
+        console.log('[DEBUG] API Response (Stringified):', JSON.stringify(data, null, 2));
         if(data && data.plan) {
              console.log(`[DEBUG] API Plan Status: ${data.plan.payment_status}, Deadline: ${data.plan.payment_deadline}`);
         }
@@ -370,6 +373,9 @@ async function loadPlanDetails() {
         
         if (data.status === 'success') {
             if (data.plan) {
+                // Check if service is suspended by admin
+                await checkAdminSuspensionStatus(data.plan.subdomain_identifier);
+                
                 updatePlanDetails(data.plan);
             } else {
                 // Handle case where no plan exists
@@ -379,6 +385,52 @@ async function loadPlanDetails() {
     } catch (error) {
         console.error('Error loading plan details:', error);
         showErrorToast(error.message || 'Failed to load plan details');
+    }
+}
+
+// Check if owner's service is suspended by admin
+async function checkAdminSuspensionStatus(subdomain) {
+    try {
+        if (!subdomain) {
+            console.warn('Cannot check admin suspension: Missing subdomain');
+            return false;
+        }
+        
+        const host = window.location.hostname;
+        const protocol = window.location.protocol;
+        let basePath = window.apiBasePath || '/main';
+        
+        // Create an endpoint to check suspension status
+        const endpoint = `${protocol}//${host}${basePath}/api/owner/check_admin_suspension.php?subdomain=${encodeURIComponent(subdomain)}`;
+        
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('ownerToken')}`
+            }
+        });
+        
+        if (!response.ok) {
+            console.error('Error checking admin suspension status:', response.status);
+            return false;
+        }
+        
+        const data = await response.json();
+        
+        // If service is suspended, show the admin suspension notice
+        if (data.is_suspended) {
+            document.getElementById('adminSuspensionNotice').style.display = 'block';
+            document.getElementById('adminSuspensionNoticeOverview').style.display = 'block';
+            return true;
+        } else {
+            document.getElementById('adminSuspensionNotice').style.display = 'none';
+            document.getElementById('adminSuspensionNoticeOverview').style.display = 'none';
+            return false;
+        }
+    } catch (error) {
+        console.error('Error checking admin suspension status:', error);
+        return false;
     }
 }
 

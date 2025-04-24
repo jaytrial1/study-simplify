@@ -79,6 +79,35 @@
             max-height: 300px;
             overflow-y: auto;
         }
+        
+        /* Service Status Styles */
+        .service-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .service-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .service-stopped {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .stop-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .resume-button {
+            background-color: #28a745;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -123,6 +152,9 @@
                 </div>
                 <div class="tab-nav-item" data-tab="plan-expiry-tab">
                     <i class="fas fa-clock"></i> Expired Plans
+                </div>
+                <div class="tab-nav-item" data-tab="owner-overdue-tab">
+                    <i class="fas fa-exclamation-circle"></i> Owner Overdue
                 </div>
             </div>
             
@@ -218,6 +250,45 @@
                                 <pre id="expiryCheckResults"></pre>
                             </div>
                             <p>Updated plan statuses are reflected in the table above.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Owner Overdue Tab -->
+            <div class="tab-pane" id="owner-overdue-tab">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3>Overdue Payments</h3>
+                        <div class="page-actions">
+                            <button id="refreshOverdueButton" class="btn"><i class="fas fa-sync-alt"></i> Refresh List</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="overdueStatusContainer">
+                            <div class="empty-state" id="emptyOverdueState">
+                                <i class="fas fa-check-circle"></i>
+                                <p>No overdue payments found. All plans are current.</p>
+                            </div>
+                            
+                            <div class="table-container" id="overdueTableContainer" style="display: none;">
+                                <table class="data-table" id="overdueTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Plan ID</th>
+                                            <th>Owner</th>
+                                            <th>Status</th>
+                                            <th>Due Date</th>
+                                            <th>Due Amount</th>
+                                            <th>Service Status</th>
+                                            <th class="action-column">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="overdueTableBody">
+                                        <!-- Overdue data will be populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -167,21 +167,31 @@
                                 console.log("Parsed response data:", data);
                                 console.log("is_approved_by_owner value:", data.is_approved_by_owner, "type:", typeof data.is_approved_by_owner);
                                 console.log("is_active_by_owner value:", data.is_active_by_owner, "type:", typeof data.is_active_by_owner);
+                                console.log("is_active_by_admin value:", data.is_active_by_admin, "type:", typeof data.is_active_by_admin);
                                 
-                                // Check if both approved and active (using integer '1' comparison)
-                                if (data.is_approved_by_owner == 1 && data.is_active_by_owner == 1) {
+                                // Check if approved and active by both owner and admin (using integer '1' comparison)
+                                if (data.is_approved_by_owner == 1 && data.is_active_by_owner == 1 && data.is_active_by_admin == 1) {
                                     // Store approval status in localStorage for chatbot.html to check
                                     localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
                                     localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
+                                    localStorage.setItem('is_active_by_admin', data.is_active_by_admin);
                                     
                                     window.location.href = 'chatbot.html';
                                 } else {
                                     // Clear any previous approval status
                                     localStorage.removeItem('is_approved_by_owner');
                                     localStorage.removeItem('is_active_by_owner');
+                                    localStorage.removeItem('is_active_by_admin');
                                     
                                     const toast = document.getElementById('toast');
-                                    toast.textContent = "Please contact your class teacher to activate your plan.";
+                                    
+                                    // Customize error message based on what failed
+                                    if (data.is_active_by_admin != 1) {
+                                        toast.textContent = "Access to this service has been temporarily suspended by the administrator. Please contact your class teacher.";
+                                    } else {
+                                        toast.textContent = "Please contact your class teacher to activate your plan.";
+                                    }
+                                    
                                     toast.classList.add('show');
                                     setTimeout(() => { toast.classList.remove('show'); }, 3000);
                                 }
@@ -244,6 +254,7 @@
                     localStorage.removeItem('savedCredentials');
                     localStorage.removeItem('is_approved_by_owner');
                     localStorage.removeItem('is_active_by_owner');
+                    localStorage.removeItem('is_active_by_admin');
                     
                     // Redirect to login page
                     window.location.href = 'login.html';
@@ -258,6 +269,7 @@
                     localStorage.removeItem('savedCredentials');
                     localStorage.removeItem('is_approved_by_owner');
                     localStorage.removeItem('is_active_by_owner');
+                    localStorage.removeItem('is_active_by_admin');
                     
                     window.location.href = 'login.html';
                 }

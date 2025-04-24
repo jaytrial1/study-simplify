@@ -64,6 +64,9 @@ function switchToTab(tabId) {
     } else if (tabId === 'current-plans-tab') {
         // Refresh current plans data
         loadPlans(document.getElementById('statusFilter').value);
+    } else if (tabId === 'owner-overdue-tab') {
+        // Load overdue plans data when tab is selected
+        loadOverduePlans();
     }
 }
 
@@ -144,6 +147,14 @@ function setupEventListeners() {
     if (runExpiryCheckButton) {
         runExpiryCheckButton.addEventListener('click', function() {
             runExpiryCheck();
+        });
+    }
+    
+    // Owner Overdue tab buttons
+    const refreshOverdueButton = document.getElementById('refreshOverdueButton');
+    if (refreshOverdueButton) {
+        refreshOverdueButton.addEventListener('click', function() {
+            loadOverduePlans();
         });
     }
 }
@@ -1019,5 +1030,179 @@ async function runExpiryCheck() {
         const runButton = document.getElementById('runExpiryCheckButton');
         runButton.innerHTML = '<i class="fas fa-play"></i> Run Expiry Check';
         runButton.disabled = false;
+    }
+}
+
+// Load overdue plans data
+async function loadOverduePlans() {
+    try {
+        // Show loading state
+        const emptyState = document.getElementById('emptyOverdueState');
+        const tableContainer = document.getElementById('overdueTableContainer');
+        
+        emptyState.style.display = 'flex';
+        tableContainer.style.display = 'none';
+        
+        // Fetch overdue plans data
+        const endpoint = getApiEndpoint('/api/admin/get_overdue_plans.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load overdue plans');
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            displayOverduePlans(data.plans);
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error loading overdue plans:', error);
+        showErrorToast(error.message);
+        
+        // Show error state
+        const emptyState = document.getElementById('emptyOverdueState');
+        emptyState.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load overdue plans: ${error.message}</p>
+        `;
+        emptyState.style.display = 'flex';
+    }
+}
+
+// Display overdue plans in the table
+function displayOverduePlans(plans) {
+    const emptyState = document.getElementById('emptyOverdueState');
+    const tableContainer = document.getElementById('overdueTableContainer');
+    const tableBody = document.getElementById('overdueTableBody');
+    
+    // Clear the table body
+    tableBody.innerHTML = '';
+    
+    if (!plans || plans.length === 0) {
+        emptyState.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <p>No overdue payments found. All plans are current.</p>
+        `;
+        emptyState.style.display = 'flex';
+        tableContainer.style.display = 'none';
+        return;
+    }
+    
+    // Hide empty state and show table
+    emptyState.style.display = 'none';
+    tableContainer.style.display = 'block';
+    
+    // Populate the table with plan data
+    plans.forEach(plan => {
+        const row = document.createElement('tr');
+        
+        // Determine which due date to show
+        let dueDate = 'N/A';
+        let dueType = '';
+        
+        if (plan.next_installment_due_date && new Date(plan.next_installment_due_date) < new Date()) {
+            dueDate = new Date(plan.next_installment_due_date).toLocaleDateString();
+            dueType = ' (Installment)';
+        } else if (plan.payment_deadline_for_addition && new Date(plan.payment_deadline_for_addition) < new Date()) {
+            dueDate = new Date(plan.payment_deadline_for_addition).toLocaleDateString();
+            dueType = ' (Additional Students)';
+        }
+        
+        // Format due amount
+        const dueAmount = plan.next_installment_amount 
+            ? `₹${parseFloat(plan.next_installment_amount).toFixed(2)}`
+            : `₹${parseFloat(plan.total_due_amount).toFixed(2)}`;
+        
+        // Create service status indicator
+        const serviceStatus = plan.service_status === 'active' 
+            ? '<span class="service-status service-active">Active</span>' 
+            : '<span class="service-status service-stopped">Stopped</span>';
+        
+        // Create action button based on current service status
+        const actionButton = plan.service_status === 'active'
+            ? `<button class="btn small-btn stop-button toggle-service-btn" data-action="stop" data-subdomain="${plan.subdomain_identifier}">Stop Service</button>`
+            : `<button class="btn small-btn resume-button toggle-service-btn" data-action="resume" data-subdomain="${plan.subdomain_identifier}">Resume Service</button>`;
+        
+        // Create the row HTML
+        row.innerHTML = `
+            <td>${plan.plan_id}</td>
+            <td>${plan.full_name} (${plan.subdomain_identifier})</td>
+            <td>${formatPlanStatus(plan.payment_status)}</td>
+            <td>${dueDate}${dueType}</td>
+            <td>${dueAmount}</td>
+            <td>${serviceStatus}</td>
+            <td>${actionButton}</td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+    
+    // Add event listeners to toggle service buttons
+    document.querySelectorAll('.toggle-service-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const action = this.getAttribute('data-action');
+            const subdomain = this.getAttribute('data-subdomain');
+            toggleOwnerService(subdomain, action);
+        });
+    });
+}
+
+// Toggle owner service (stop/resume)
+async function toggleOwnerService(subdomain, action) {
+    try {
+        // Show loading state
+        const buttons = document.querySelectorAll(`.toggle-service-btn[data-subdomain="${subdomain}"]`);
+        const originalText = buttons[0].textContent;
+        
+        buttons.forEach(button => {
+            button.textContent = action === 'stop' ? 'Stopping...' : 'Resuming...';
+            button.disabled = true;
+        });
+        
+        // Call API to toggle service
+        const endpoint = getApiEndpoint('/api/admin/toggle_owner_service.php');
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify({
+                subdomain: subdomain,
+                action: action
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to toggle service');
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showSuccessToast(data.message);
+            
+            // Reload overdue plans to refresh the UI
+            loadOverduePlans();
+        } else {
+            throw new Error(data.error || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error toggling service:', error);
+        showErrorToast(error.message);
+        
+        // Restore button state
+        loadOverduePlans();
     }
 } 

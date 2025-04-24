@@ -34,8 +34,8 @@ try {
     // Debug output - output the input parameters
     error_log("Checking status for user_id: " . $requestData['user_id'] . ", tuition_class: " . $requestData['tuition_class']);
     
-    // Query to check if user is approved and active in the tuition class
-    $stmt = $conn->prepare("SELECT id, is_approved_by_owner, is_active_by_owner 
+    // Query to check if user is approved and active in the tuition class, including admin restriction check
+    $stmt = $conn->prepare("SELECT id, is_approved_by_owner, is_active_by_owner, is_active_by_admin 
                            FROM users 
                            WHERE id = ? AND subdomain_identifier = ?");
     
@@ -73,6 +73,7 @@ try {
         'success' => true,
         'is_approved_by_owner' => $user['is_approved_by_owner'],
         'is_active_by_owner' => $user['is_active_by_owner'],
+        'is_active_by_admin' => $user['is_active_by_admin'],
         'user_id' => $user['id']
     ]);
     
