@@ -1,0 +1,79 @@
+# StudySimplify Project Rules
+
+This document captures key patterns, preferences, and project insights to maintain consistency and best practices throughout the development process.
+
+## Code Structure
+
+### PHP Files
+- Use standard PHP tag `<?php` at the beginning of files
+- Include error reporting settings in API endpoints for debugging
+- Follow a consistent pattern for database access through `getConnection()`
+- Apply UTF-8 character set configuration for database connections
+
+### JavaScript Files
+- Store shared configuration in `base-url.js`
+- Use localStorage for persistent session data
+- Apply consistent token validation for protected pages
+- Follow the pattern of checking subdomain vs main domain access
+
+### HTML Structure
+- Maintain responsive design patterns
+- Include viewport meta tags for mobile compatibility
+- Follow consistent header/content/footer structure
+- Use consistent naming for CSS classes
+
+## Database Patterns
+
+### Connection Management
+- Always detect environment (local vs. production) before connecting
+- Apply UTF-8mb4 character set and collation for language support
+- Include comprehensive error logging for connection issues
+- Implement fallback mechanisms for connection failures
+
+### Data Organization
+- Use consistent naming conventions for tables (`users`, `chat_history`, etc.)
+- Apply foreign key relationships between related tables
+- Include created_at/updated_at timestamps in all tables
+- Follow the pattern of user-to-tuition association through `tuition_class`
+
+## Multi-Tenant Architecture
+
+### Subdomain Handling
+- Detect and validate subdomain in user authentication flows
+- Load subdomain-specific branding from `/subdomain/{identifier}/`
+- Apply consistent subdomain detection logic throughout the application
+- Enforce domain-restricted access for users
+
+### User Management
+- Associate users with their tuition class during registration
+- Validate tuition class access during login
+- Maintain distinct user flows for main domain vs. subdomain users
+- Apply consistent activation status checking for subdomain users
+
+## Error Handling
+
+### Database Errors
+- Log detailed error messages including line numbers and error codes
+- Implement try/catch blocks around database operations
+- Apply fallback mechanisms where appropriate
+- Log stack traces for debugging purposes
+
+### User-Facing Errors
+- Display appropriate error messages to users
+- Implement toast notifications for transient errors
+- Redirect to error pages for critical failures
+- Maintain consistent error styling
+
+## Workflow Preferences
+
+### Development Process
+- Test subdomain functionality in local environment before deployment
+- Use comprehensive logging during development
+- Test both local and production database connections
+- Verify multi-language content rendering
+
+### Code Organization
+- Group related functionality in dedicated folders
+- Apply consistent naming conventions for files
+- Document complex logic with clear comments
+- Maintain separation between UI and business logic 

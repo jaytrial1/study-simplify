@@ -197,4 +197,142 @@ body {
 
 .validation-feedback.show {
     display: block;
+}
+
+/* Add styles for forgot password steps */
+.step-form {
+    display: none; /* Hide inactive steps by default */
+    width: 100%; /* Ensure form takes full width */
+}
+
+.step-form.active-step {
+    display: block; /* Show the active step */
+}
+
+/* Optional: Add some transition for smoother step changes */
+/* 
+.step-form {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    display: none; 
+}
+.step-form.active-step {
+    display: block; 
+    opacity: 1;
+}
+*/
+
+.message-container {
+    display: none; /* Hidden by default */
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    /* Remove background and border for a cleaner look */
+    background-color: transparent;
+    color: #a94442; /* Keep a distinct error red color */
+    border: none;
+    padding: 0; /* Remove padding */
+    margin-bottom: 15px; /* Adjust spacing as needed */
+    font-weight: 500; /* Make text slightly bolder */
+}
+
+.message.error::before { /* Optional: Add a small icon */
+    content: "\f071"; /* FontAwesome warning icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+}
+
+/* Style for the general message container if needed */
+.message-container {
+    display: none; /* Hidden by default */
+    width: 100%;
+    /* margin-bottom: 15px; */ /* Spacing now handled by .message.error */
+    /* padding: 12px; */
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #aaa;
+}
+
+.toggle-password:hover {
+    color: #333;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+    color: #fff;
+    margin-top: 10px;
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.secondary-btn:disabled {
+     background-color: #a9aeb3;
+    border-color: #a9aeb3;
+    cursor: not-allowed;
+}
+
+/* Styles for Success Block */
+.success-message-block {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.success-icon {
+    font-size: 4rem; /* Make icon large */
+    color: var(--success-color);
+    margin-bottom: 20px;
+}
+
+.success-message-block h3 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.success-message-block p {
+    color: var(--gray-dark);
+    margin-bottom: 25px;
+}
+
+.success-message-block .btn.success-btn {
+    background-color: var(--success-color);
+    display: inline-block; /* Allow width to fit content or set max-width */
+    width: auto; 
+    padding: 10px 30px; /* Adjust padding */
+    text-decoration: none;
+}
+
+.success-message-block .btn.success-btn:hover {
+    background-color: #218838; 
 } 

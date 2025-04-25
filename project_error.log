@@ -1,0 +1,98 @@
+[25-Apr-2025 15:22:54 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:22:54 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:22:54 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:22:54 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:22:54 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:22:54 Europe/Berlin] Database connection successful
+[25-Apr-2025 13:22:54 UTC] Owner Send OTP: Attempting SMTP to: jariwalaj065@gmail.com with OTP: 250478
+[25-Apr-2025 13:22:56 UTC] Owner Send OTP: Email sent successfully via SMTP
+[25-Apr-2025 13:23:19 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:23:19 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:23:19 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:23:19 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/verify-otp.php
+[25-Apr-2025 13:23:19 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:23:19 UTC] Database connection successful
+[25-Apr-2025 13:23:19 UTC] Owner Verify OTP: Successful verification for email: jariwalaj065@gmail.com
+[25-Apr-2025 13:23:26 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:23:26 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:23:26 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:23:26 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/reset-password.php
+[25-Apr-2025 13:23:26 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:23:26 UTC] Database connection successful
+[25-Apr-2025 13:23:27 UTC] Owner Reset Password: Successfully reset password for email: jariwalaj065@gmail.com
+[25-Apr-2025 15:24:37 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:24:37 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:24:37 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:24:37 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:24:37 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:24:37 Europe/Berlin] Database connection successful
+[25-Apr-2025 13:24:37 UTC] Owner Send OTP: Attempting SMTP to: jariwalaj065@gmail.com with OTP: 671129
+[25-Apr-2025 13:24:40 UTC] Owner Send OTP: Email sent successfully via SMTP
+[25-Apr-2025 13:25:07 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:25:07 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:25:07 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:25:07 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/verify-otp.php
+[25-Apr-2025 13:25:07 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:25:07 UTC] Database connection successful
+[25-Apr-2025 13:25:07 UTC] Owner Verify OTP: Successful verification for email: jariwalaj065@gmail.com
+[25-Apr-2025 13:25:13 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:25:13 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:25:13 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:25:13 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/reset-password.php
+[25-Apr-2025 13:25:13 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:25:13 UTC] Database connection successful
+[25-Apr-2025 13:25:13 UTC] Owner Reset Password: Successfully reset password for email: jariwalaj065@gmail.com
+[25-Apr-2025 15:25:35 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:25:35 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:25:35 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:25:35 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:25:35 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:25:35 Europe/Berlin] Database connection successful
+[25-Apr-2025 15:25:51 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:25:51 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:25:51 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:25:51 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:25:51 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:25:51 Europe/Berlin] Database connection successful
+[25-Apr-2025 15:26:10 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:26:10 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:26:10 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:26:10 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:26:10 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:26:10 Europe/Berlin] Database connection successful
+[25-Apr-2025 15:27:02 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:27:02 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:27:02 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:27:02 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:27:02 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:27:02 Europe/Berlin] Database connection successful
+[25-Apr-2025 13:27:02 UTC] Owner Send OTP: Attempting SMTP to: j@gmail.com with OTP: 612096
+[25-Apr-2025 13:27:05 UTC] Owner Send OTP: Email sent successfully via SMTP
+[25-Apr-2025 15:27:14 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:27:14 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:27:14 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:27:14 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:27:14 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:27:14 Europe/Berlin] Database connection successful
+[25-Apr-2025 15:27:22 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 15:27:22 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 15:27:22 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 15:27:22 Europe/Berlin] Database connection - REQUEST_URI: /main/api/owner/auth/send-otp.php
+[25-Apr-2025 15:27:22 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 15:27:22 Europe/Berlin] Database connection successful
+[25-Apr-2025 13:27:23 UTC] Owner Send OTP: Attempting SMTP to: jariwalaj065@gmail.com with OTP: 393866
+[25-Apr-2025 13:27:25 UTC] Owner Send OTP: Email sent successfully via SMTP
+[25-Apr-2025 13:27:43 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:27:43 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:27:43 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:27:43 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/verify-otp.php
+[25-Apr-2025 13:27:43 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:27:43 UTC] Database connection successful
+[25-Apr-2025 13:27:43 UTC] Owner Verify OTP: Successful verification for email: jariwalaj065@gmail.com
+[25-Apr-2025 13:27:49 UTC] Database connection - HTTP_HOST: localhost
+[25-Apr-2025 13:27:49 UTC] Database connection - SERVER_ADDR: ::1
+[25-Apr-2025 13:27:49 UTC] Database connection - SERVER_NAME: localhost
+[25-Apr-2025 13:27:49 UTC] Database connection - REQUEST_URI: /main/api/owner/auth/reset-password.php
+[25-Apr-2025 13:27:49 UTC] Using local database connection: localhost, root, studysimplify_new
+[25-Apr-2025 13:27:49 UTC] Database connection successful
+[25-Apr-2025 13:27:49 UTC] Owner Reset Password: Successfully reset password for email: jariwalaj065@gmail.com
