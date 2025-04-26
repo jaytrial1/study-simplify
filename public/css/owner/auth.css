@@ -197,7 +197,7 @@ body {
 
 .validation-feedback.show {
     display: block;
-}
+} 
 
 /* Add styles for forgot password steps */
 .step-form {

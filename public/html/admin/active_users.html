@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Check if we're on a local server (using a different variable name than base-url.js)
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../../js/base-url.js" : "/public/js/base-url.js";
+        const cssStylesPath = _isLocalServer ? "../../css/admin/styles.css" : "/public/css/admin/styles.css";
+        const toastCssPath = _isLocalServer ? "../../css/owner/toast.css" : "/public/css/owner/toast.css";
+        const toastJsPath = _isLocalServer ? "../../js/owner/toast.js" : "/public/js/owner/toast.js";
+        
+        // Debugging - show paths to console
+        console.log("baseUrlJsPath:", baseUrlJsPath);
+        console.log("cssStylesPath:", cssStylesPath);
+        console.log("toastCssPath:", toastCssPath);
+        console.log("toastJsPath:", toastJsPath);
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Users | StudySimplify Admin</title>
+    <script>
+        document.write(`<link rel="stylesheet" href="${cssStylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${toastCssPath}">`);
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Authentication check - redirect to login if not authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('adminToken') || !localStorage.getItem('admin_id')) {
+                window.location.href = 'login.html';
+            } else {
+                // Set admin name in header
+                const adminNameElement = document.getElementById('adminName');
+                if (adminNameElement) {
+                    adminNameElement.textContent = localStorage.getItem('adminName') || 'Admin';
+                }
+                
+                // Load the dashboard content
+                loadDashboardContent();
+            }
+        });
+    </script>
+    <style>
+        #dashboardContent {
+            width: 100%;
+            min-height: 700px;
+            border: none;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+        
+        .loading-indicator {
+            text-align: center;
+            padding: 40px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .loading-indicator i {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        
+        #dashboardContainer {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="logo">
+                <h1>StudySimplify Admin</h1>
+            </div>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <div class="dropdown">
+                    <button class="dropdown-button"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li><a href="owner_plan_management.html"><i class="fas fa-file-invoice-dollar"></i> Owner Plans</a></li>
+                    <li class="active"><a href="active_users.html"><i class="fas fa-users"></i> Active Users</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <main class="admin-main">
+            <div class="page-header">
+                <h2>Active Users</h2>
+                <div class="page-actions">
+                    <button id="refreshButton" class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+            </div>
+            
+            <div id="loadingIndicator" class="loading-indicator">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading active users dashboard...</p>
+            </div>
+            
+            <div id="dashboardContainer" style="display: none;">
+                <iframe id="dashboardContent" title="Active Users Dashboard"></iframe>
+            </div>
+        </main>
+        
+        <footer class="admin-footer">
+            <p>&copy; 2025 StudySimplify. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.write(`<script src="${toastJsPath}"><\/script>`);
+    </script>
+    <script>
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Clear admin session
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('admin_id');
+            localStorage.removeItem('adminName');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+        
+        // Refresh button functionality
+        document.getElementById('refreshButton').addEventListener('click', function() {
+            loadDashboardContent();
+        });
+        
+        function loadDashboardContent() {
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            
+            // Get the path to the dashboard.php file
+            const basePath = window.apiBasePath || '';
+            // Add a parameter to indicate it's being loaded in an iframe to let the dashboard know not to show duplicate title
+            const dashboardPath = `${basePath}/active-users/admin/dashboard.php?admin_token=${localStorage.getItem('adminToken')}&embedded=true`;
+            
+            // Set the iframe source
+            const iframe = document.getElementById('dashboardContent');
+            
+            // When the iframe loads, hide the loading indicator
+            iframe.onload = function() {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('dashboardContainer').style.display = 'block';
+                
+                // Adjust iframe height to fit content
+                try {
+                    const iframeHeight = iframe.contentWindow.document.body.scrollHeight;
+                    iframe.style.height = (iframeHeight + 50) + 'px'; // Add some padding
+                    
+                    // Try to hide the header in the iframe content
+                    try {
+                        const iframeDoc = iframe.contentWindow.document;
+                        const headers = iframeDoc.querySelectorAll('header, .pb-3');
+                        headers.forEach(header => {
+                            if (header) header.style.display = 'none';
+                        });
+                    } catch (e) {
+                        console.error('Could not modify iframe content:', e);
+                    }
+                } catch (e) {
+                    console.error('Could not adjust iframe height:', e);
+                    iframe.style.height = '800px'; // Fallback height
+                }
+            };
+            
+            // Handle load errors
+            iframe.onerror = function() {
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                    <p>Error loading the dashboard. Please check if the active users module is properly installed.</p>
+                `;
+            };
+            
+            // Set the iframe source to load the dashboard
+            iframe.src = dashboardPath;
+        }
+    </script>
+</body>
+</html> 
