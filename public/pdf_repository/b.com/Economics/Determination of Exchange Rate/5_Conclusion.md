@@ -1,0 +1,11 @@
+5_Conclusion
+
+Inspite of all its limitations, the purchasing power parity theory, on the whole, provides a satisfactory explanation of long term changes in the exchange rates provided it is regarded in its proper perspective as an expression of a long run tendency and not as an explanation of shortterm fluctuations in exchange rates. It is the only theory which applies to all types of monetary standards - gold standard, paper standard, etc. The theory also explains what determines the balance of payments itself. It shows that balance of trade and balance of payments between the countries change mainly due to changes in the relative price levels of the countries concerned. The theory lays proper emphasis on the influence of price level on the determination of exchange rate.
+
+Besides, the theory is of particular importance in emphasizing the fact that it is futile for a country to attempt any scheme for stabilisation of its
+
+currency system, unless due attention is given to the internal and external price levels, In other words, the theory draws pointed attention to the fact that no country can maintain for long a disparity in its internal and external price levels without adversely affecting its international trade. If, for example, as a result of persistent inflationary situation in the country, the internal purchasing power of the currency falls, the country will have to make, sooner or later, necessary adjustments in its exchange rate. This has been borne out by the experience of a number of countries in the world, including India, in recent years.
+
+According to Keynes, although the purchasing power parity theory cannot provide any accurate measure of the true value of exchanges, even so the theory tells us an important fact about the relative changes in the purchasing power of money.
+
+Likewise, Crowther too remarks, "............. inspite of the deficiencies of the purchasing power parity theory, the recognition that there is a close connection between prices and exchange rates, has a certain practical importance from the point of view of currency policy, for it warns countries that there are certain things they cannot do."

@@ -1,0 +1,58 @@
+3_Process of Rural Development
+
+Rural development aims at comprehensive change and improvement of rural life in all aspects. Some of the areas which are challenging and need fresh initiatives for development in India include:
+
+# Development of Human Resources
+
+The quality of the human resource needs to be improved through the following measures:
+
+## Literacy, Education, and Skill Development
+
+- Proper attention to literacy (specifically on female literacy), education, and skill development.
+
+## Health and Sanitation
+
+- Better and more affordable health facilities for physical growth and sanitation facilities at workplaces and homes.
+
+# Development of Infrastructure
+
+It involves:
+
+## Electricity, Irrigation, Credit, Marketing, and Transport
+
+- Improvement in electricity, irrigation, credit, marketing, and transport facilities (including construction of village roads and feeder roads to nearby highways).
+
+## Agriculture Research and Extension
+
+- Better facilities for agriculture research and extension and information dissemination.
+
+# Land Reforms
+
+It includes the following objectives:
+
+## Elimination of Exploitation
+
+- Elimination of exploitation in land relations.
+
+## Land to the Tiller
+
+- Actualization of the goal of 'land to the tiller'.
+
+## Improvement of Socio-Economic Conditions
+
+- Improvement of socio-economic conditions of rural poor by widening their land bases.
+
+## Increasing Agricultural Productivity
+
+- Increasing agricultural productivity and production. Agricultural Productivity refers to output per hectare of land.
+
+# Alleviation of Poverty
+
+As stated earlier, around 22% of the total population is still below the poverty line. So, there is a serious need to take serious steps to alleviate poverty and significantly improve the living conditions of weaker sections.
+
+# Development of Productive Resources
+
+Development of the productive resources of each locality to enhance opportunities for employment (particularly other than farming).
+
+PROCESS OF RURAL DEVELOPMENT
+![img-0.jpeg](img-0.jpeg)

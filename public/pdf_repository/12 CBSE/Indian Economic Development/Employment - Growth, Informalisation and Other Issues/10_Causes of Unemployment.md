@@ -1,0 +1,41 @@
+10_Causes of Unemployment
+
+The reason for the existence of widespread unemployment in India is not due to any single factor. It is the cumulative result of many causes. The important causes of the unemployment problem in India are:
+
+# Slow Rate of Economic Growth
+
+The actual growth rate always lies far below the rate targeted in the five decades of planning. Employment opportunities created under the plans could not keep pace with the additions to the labour force.
+
+# Population Explosion
+
+The rapid rate of population growth has been another cause of increasing unemployment in the country. It has not been possible to generate many employment opportunities to absorb the large growing labour force.
+
+# Underdeveloped Agriculture
+
+Heavy pressure of the population on land and the primitive methods of agricultural operations are responsible for massive rural unemployment and underemployment in the country.
+
+# Defective Educational System
+
+The prevailing education system in India is full of defects. A large number of engineering, management, and other educational institutes provide numerous engineers, MBAs, etc. But due to a lack of technical and vocational training, such educated people are unable to meet the requirements of the firm and remain unemployed.
+
+![img-12.jpeg](img-12.jpeg)
+
+# Slow Growth of Industry
+
+Due to a shortage of capital and a lack of modern and advanced technology, the industrial sector could not gain its momentum and could not generate sufficient employment opportunities in the country.
+
+# Decline of Cottage and Small-scale Industries
+
+A number of traditional village and cottage industries have declined over the years due to changes in demand preferences and the emergence of more efficient modern industries. As a result, a large number of people have become unemployed.
+
+# Faulty Planning
+
+The plans could not stop the migration of the rural population into urban areas. They were unable to encourage the use of labour-intensive techniques of agricultural and industrial production. The plans have failed to put due emphasis on employment-generating programs like the development of dairies, fisheries, and poultry farming. Insufficient infrastructure facilities (power, transportation, communication, roads, etc.) have greatly hampered the expansion of work opportunities.
+
+# Inadequate Employment Planning
+
+Low priority has been given to employment objectives in the plans. There has been a complete absence of any legal provision to implement employment-generating schemes.
+
+# Low Capital Formation
+
+A low rate of capital formation has hampered the growth potential in the agricultural and industrial sectors. Consequently, job-creation capabilities of both sectors have been affected adversely.

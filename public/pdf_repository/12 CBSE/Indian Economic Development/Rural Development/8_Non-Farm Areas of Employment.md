@@ -1,0 +1,110 @@
+8_Non-Farm Areas of Employment
+
+Let us now discuss some of the important non-farm or non-agro areas of employment.
+![img-8.jpeg](img-8.jpeg)
+
+# Animal Husbandry
+
+Animal Husbandry (or Livestock farming) is that branch of agriculture, which is concerned with the breeding, rearing and caring of farm animals.
+
+*   Livestock is defined as domesticated animals raised (generally in an agricultural set-up) to produce labour and commodities such as cattle, goats, etc.
+*   Under livestock farming, cattle, goats and fowls (duck, goose, etc.) are the widely held species.
+*   India owns one of the largest livestock populations in the world.
+*   Livestock production provides increased stability in income, food security, transport, fuel and nutrition for the family without disrupting other food producing activities.
+*   Livestock sector provides alternate livelihood options to over 70 million small and marginal farmers, including landless labourers.
+*   A significant number of women also find employment in the livestock sector.
+*   In India, poultry accounts for the largest share of $61 \%$, followed by others (camels, asses, horses, ponies and mules). India had about 303 million cattle, including 110 million buffaloes, in the year 2019.
+*   Silver Revolution: The Silver Revolution is related to the immense growth of egg production in India by using advanced methods and technologies to enhance efficient growth in poultry farming. It started in 1969 and lasted for nine years, helping India become the world's third-largest
+    ![img-9.jpeg](img-9.jpeg)
+
+Poultry has the largest share of total livestock in India
+producer of eggs after China and the United States.
+![img-10.jpeg](img-10.jpeg)
+
+## Evaluation of Livestock Farming
+
+(i) In terms of numbers, our livestock population is quite impressive. However, its productivity is quite low as compared to other countries.
+(ii) There is a need for improved technology and promotion of good breeds of animals, to enhance productivity.
+(iii) Improved veterinary care and credit facilities to small and marginal farmers and landless labourers would enhance sustainable livelihood options through livestock production.
+
+# Dairying
+
+Dairying is that branch of agriculture which involves breeding, raising and utilisation of dairy animals for the production of milk and the various dairy products processed from it.
+
+*   Dairying is the business of producing, storing and distributing milk and its products.
+*   The performance of the Indian dairy sector over the last three decades has been quite impressive.
+*   Due to the successful implementation of 'Operation Flood', India ranks first in the world in milk production. India's milk production increased from 17 million tonnes in 1950-51 to 102.6 million tonnes in 2006-07 and increased to 165.4 million tonnes in 2016-17 and to 198.4 million tonnes in 2019-20.
+*   Operation Flood (or White Revolution) was started by National Dairy Development Board (NDDB) in 1970 under the expert guidance of then chairman, Dr. Verghese Kurien. The objective of this programme was to create a nationwide milk grid. The movement for a massive rise in milk production in India is termed as White Revolution.
+*   Under the Operation Flood system, all the farmers pool their milk produce according to different grades and same is processed and marketed to urban centres through cooperatives. The farmers are assured of a fair price and income.
+*   Gujarat state is considered a success story in the efficient implementation of milk cooperatives, which has been followed by many other states.
+*   Gujarat, Madhya Pradesh, Uttar Pradesh, Andhra Pradesh, Maharashtra, Punjab and Rajasthan are major milk producing states.
+*   Meat, eggs, wool and other by-products are also emerging as important productive sectors for diversification.
+
+# Fisheries
+
+Fisheries refer to the occupation devoted to the catching, processing or selling of fish and other aquatic animals. Fisheries sector plays an important role in the socio-economic development of the country. In India, after progressive increase in budgetary allocations and introduction of new technologies in fisheries and aquaculture, the development of fisheries has come a long way.
+
+## Important Points About Fishing
+
+1.  Fishing Community regards water body as 'Mother': The water bodies (sea, oceans, rivers, lakes, natural aquatic ponds, streams) are considered as 'mother' or 'provider' as they provide a life-giving source to the fishing community.
+
+2.  Volume of Fish Production: Presently, fish production from inland sources contributes about $65 \%$ to the total fish production and the balance $35 \%$ comes from the marine sector (sea and oceans).
+3.  Share of Fishing in GDP: The total fish production accounts for $0.9 \%$ of the total GDP. In India, West Bengal, Andhra Pradesh, Kerala, Gujarat, Maharashtra and Tamil Nadu are major fish producing states.
+4.  Women Participation in Fishing: Although women are not involved in active fishing, still, $60 \%$ of the workforce in export marketing and $40 \%$ in internal marketing are women. There is a need to increase credit facilities in the form of cooperatives and self-house groups (SHG) so that fisherwomen can meet their working capital requirements for marketing.
+5.  Problems faced in Fishing: A large share of fishworker families are poor. Some of the major problems faced by these communities include:
+    (i) Widespread Underemployment;
+    (ii) Low per capita earnings;
+    (iii) Absence of mobility of labour to other sectors;
+    (iv) High Illiteracy rate and indebtedness.
+6.  Blue Revolution: Blue Revolution also called as Neel Kranti Mission, was launched in India in 1985-1990 during the $7^{\text {th }}$ Five Year Plan. The main objective was to develop, manage and promote fisheries to double the income of farmers. Hiralal Chaudhuri is considered as the pioneer of Blue Revolution in the world.
+
+## Evaluation of Fishing
+
+(i) Problems like over-fishing and pollution need to be regulated and controlled.
+(ii) Welfare programmes for the fishing community have to be reoriented in a manner, that can provide long-term gains and sustenance of livelihoods.
+
+
+8_1
+
+# Horticulture
+
+Horticulture refers to the science or art of cultivating fruits, vegetables, tuber crops, flowers, medicinal and aromatic plants, spices, and plantation crops. Horticulture plays a vital role in providing food and nutrition to the rural population. It also addresses the problem of unemployment (particularly disguised and seasonal unemployment) in the villages.
+
+- India has adopted horticulture as it is blessed with varying climates and soil conditions.
+- It is an important sector for potential diversification and value addition in agriculture.
+![img-11.jpeg](img-11.jpeg)
+
+Emphasis on Horticulture is on a continuous increase in the country.
+
+## Important Points About Horticulture
+
+1.  **Contribution:** The Horticulture sector contributes nearly one-third of the value of agriculture output and 6% of the Gross Domestic Product of India.
+2.  **Share in World's Production:** India has emerged as a world leader in producing a variety of fruits, like mangoes, bananas, coconuts, cashew nuts, and a number of spices. Presently, India is the second largest producer of both fruits and vegetables in the world.
+3.  **Improvement in Economic Condition:** Horticulture has improved the economic condition of many farmers and has become a means of improving livelihood for many unprivileged classes too.
+4.  **Great Scope for Women Employment:** Flower harvesting, nursery maintenance, hybrid seed production and tissue culture, propagation of fruits and flowers, and food processing are highly remunerative employment options for women in rural areas.
+5.  **Golden Revolution:** The Golden Revolution refers to the period in which there was a tremendous rise in the production of horticultural products like fruits, vegetables, etc. The period between 1991 to 2003 is known as the period of the Golden Revolution in India. During the period of the Golden Revolution, there was rapid growth in the production of horticultural crops such as fruits, vegetables, flowers, etc. The Golden Revolution made India a world leader in the production of mangoes, bananas, coconut, and spices. Nirpakh Tutej is considered to be the Father of The Golden Revolution in India.
+
+## Evaluation of Horticulture
+
+Horticulture has emerged as a successful sustainable livelihood option and needs to be encouraged significantly. Enhancing its role requires investment in infrastructure, like electricity, cold storage systems, marketing linkages, small-scale processing units, and technology improvement and dissemination.
+
+# Information Technology
+
+Information Technology (IT) refers to that branch of engineering that deals with the use of computers and telecommunications to retrieve, store, and transmit information.
+Information Technology has revolutionized many sectors in the Indian economy. There is broad agreement that it will play a critical role in achieving sustainable development and food security in the 21st century.
+
+## Important points about Information Technology
+
+- Through appropriate information and software tools, the government has been able to predict areas of food insecurity and vulnerability, to prevent or reduce the likelihood of an emergency.
+- It also has a positive impact on the agriculture sector as it circulates information regarding emerging technologies and their applications, prices, weather, and soil conditions for growing different crops, etc.
+- It acts as a tool for releasing the creative potential and knowledge embedded in society. It also has the potential of employment generation in rural areas.
+The aim of increasing the role of Information Technology is to make every village a knowledge center, where it provides a sustainable option for employment and livelihood.
+
+# Adoption of Village by Parliamentarians (For Knowledge Enrichment)
+
+In October 2014, The Government of India introduced a new scheme called Saansad Adarsh Gram Yojana (SAGY).
+
+- Under this scheme, Members of India's Parliament must identify and develop one village from their constituencies.
+- To begin with, MPs can develop one village as a model village by 2016, and two more by 2019, covering over 2,500 villages in India.
+- According to the scheme, the village can have a population of 3,000-5,000 in the plains and 1,000-3,000 in the hills and should not be MPs' own or their spouse's village.
+- MPs are expected to facilitate a village development plan, motivate villagers to take up activities, and build infrastructure in the areas of health, nutrition, and education.

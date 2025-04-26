@@ -1,0 +1,96 @@
+6_Agricultural Market System
+
+Rural people not only face problems with regard to finance, but also encounter difficulties in marketing their goods. Thus, issue of 'Agricultural Marketing' needs urgent attention in the scheme of securing rapid rural development.
+
+# Meaning of Agricultural Marketing
+
+Agricultural marketing is a process that involves assembling, storage, processing, transportation, packaging, grading and distribution of different agricultural commodities across the country. Agricultural marketing system is an efficient way by which the farmers can dispose of their surplus produce at a fair and reasonable price. It involves different activities for the movement of farm produce from the producers to the ultimate consumers. In short, it includes all the activities from sowing till sale of the final produce in the market.
+
+# Problems Faced by Farmers
+
+- Manipulations by Big Traders: Prior to independence, farmers suffered from faulty weighing and manipulation of accounts while selling their produce to traders.
+- Lack of Market Information: Farmers were often forced to sell at low prices due to lack of required information on prices prevailing in markets.
+- Lack of Storage Facilities: They also did not have proper storage facilities to store their produce for later sale at a better price. Even today, more than $10 \%$ of goods produced in farms are wasted due to a lack of storage.
+Therefore, government intervention became necessary to regulate the activities of private traders.
+
+# Benefits of Organized Agricultural Marketing System
+
+An organized or well-structured agricultural marketing system helps the farmers to increase their income because of following reasons:
+
+- It gives more focus on those rural poor, who have no sustainable access to the formal banking system.
+- Orderly and transparent marketing conditions facilitate sale of farmers' produce.
+- Provision of better infrastructural facilities like roads, railways, warehouses, godowns, cold storages and processing units, etc., prevent distress sales.
+- It protects farmers from the exploitation of middlemen/intermediaries.
+
+# Measures to Improve Agricultural Marketing
+
+After Independence, the Government of India adopted the following measures to improve the system of agricultural marketing:
+![img-3.jpeg](img-3.jpeg)
+
+## Regulated Markets
+
+The first measure was regulation of markets, to create orderly and transparent marketing conditions. Regulated markets have been organised with a view to protect the farmers from the malpractices of sellers and brokers. This policy benefited farmers as well as consumers.
+However, there is still a need to develop about 27,000 rural periodic markets as regulated market places in order to realise the full
+![img-4.jpeg](img-4.jpeg)
+
+Regulated market yards benefit farmers as well as consumers
+potential of rural markets.
+
+## Infrastructural Facilities
+
+The Government aims to provide physical infrastructure facilities like roads, railways, warehouses, godowns, cold storages and processing units. The current infrastructure facilities are quite inadequate to meet the growing demand and need improvement.
+
+## Cooperative Marketing
+
+The aim of cooperative marketing is to realise fair prices for farmers' products. Cooperative Marketing is a system in which the farmers pool their marketable surplus of crops and distribute the sale proceeds on the basis of each individual share. Under this, marketing societies are formed by farmers to sell the output collectively and to take advantage of collective bargaining, in order to obtain better prices. Milk Cooperatives in Gujarat have been very successful in transforming the social and economic condition of Gujarat and some other parts of the country.
+Cooperative Marketing benefits the farmers in the following ways:
+(i) It improves the bargaining power of farmers as they sell their produce together through one agency.
+(ii) Cooperative marketing societies help farmers to satisfy their immediate cash requirements by providing them credit.
+(iii) Cooperative societies often have storage facilities. So, farmers are not in a hurry to sell their produce and they can wait for better prices.
+(iv) Facility of bulk transportation of agricultural produce of farmers is often cheaper and easier.
+However, cooperatives have received a setback during the recent past because of:
+
+- Inadequate coverage of farmer members;
+- Lack of appropriate link between marketing and processing cooperatives;
+- Inefficient financial management.
+
+## Different Policy Instruments
+
+In order to protect the farmers, the government has initiated the following policies:
+
+- Minimum Support Prices (MSP): To safeguard the interest of farmers, government fixes the minimum support prices of agricultural products, like wheat, rice, maize, cotton, sugarcane, pulses, etc. Such a price may be regarded as an offer price, at which the
+Government is willing to buy any amount of grains from the farmers.
+- Maintenance of Buffer Stocks: The Food Corporation of India (FCI) purchases wheat and rice at the procurement prices, to maintain buffer stock. Buffer stock is created in years of surplus production and used during shortages. It helps to ensure regularity in supply and stability in prices.
+- Public Distribution System (PDS): The public distribution system in our country operates through a network of ration shops and fair price shops. Fair price shops offer essential commodities like wheat, rice, kerosene, etc., at a price below the market price, to the weaker sections of the society.
+These instruments aim to protect the income of farmers and to provide food grains at a subsidised rate to the poor.
+
+# Conclusion
+
+Agricultural marketing has come a long way with the intervention of the government. However, despite of government intervention:
+
+- Agricultural markets are still dominated by private traders like moneylenders, rural political leaders, big merchants and rich farmers.
+- The quantity of agricultural products, handled by the government agencies and consumer cooperatives, constitutes only $10 \%$, while the rest is handled by the private sector.
+It is often argued by some scholars that the commercialisation of agriculture offers tremendous scope for farmers to earn higher incomes, provided the government intervention is restricted.
+For a detailed discussion on "Defects of Agricultural Marketing in India" and "Remedial Measures to Improve Agricultural Marketing", refer Power Booster Section.
+
+# Emerging Alternate Marketing Channels
+
+## Origin of Farmers Market
+
+Farmers can increase their incomes, if they directly sell their produce to consumers. As a result, the concept of "Farmers Market" was started to give a boost to the small farmers by providing them direct access to the consumers and eliminating the middlemen. Some examples of these channels are:
+
+- Apni Mandi in Punjab, Haryana and Rajasthan;
+- Hadaspar Mandi in Pune;
+- Rythu Bazars in Andhra Pradesh and Telangana; and
+- Uzhavar Sandies (farmers market in Tamil Nadu).
+
+## Alliance with National and Multinational Companies
+
+Several national and multinational fast food chains are increasingly entering into contracts/alliances with farmers.
+![img-5.jpeg](img-5.jpeg)
+"Apni Mandi" is an initiative to encourage farmers to directly market their produce without being exploited by middlemen or traders
+
+- They encourage the farmers to cultivate farm products (vegetables, fruits, etc.) of the desired quality.
+- They provide them with not only seeds and other inputs, but also assure procurement of the produce at pre-decided prices.
+- It is argued that such arrangements will help in reducing the price risk of farmers and expand the market for farm products.
+In 2020, the Indian Parliament passed three Agriculture Acts to reform agriculture marketing system. However, due to opposition by a section of farmers, these acts were taken back in 2021.

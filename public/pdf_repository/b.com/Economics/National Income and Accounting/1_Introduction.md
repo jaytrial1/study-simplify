@@ -1,0 +1,8 @@
+# 1. Introduction
+
+The concept of 'National Income' enjoys a very important place in Economics and it is also very important practically. Knowledge about economic condition of a country and the economic wellbeing of its people, can be ascertained from its National Income. It must be noted here that the concept of 'National Wealth' does not provide correct and real picture of the National Wealth, because there may be an abundant stock of natural resources in a country, but even then, due to absence of creative thrust.
+
+These two points are not included in the syllabus, but just for the sake of increase in Students' knowledge, they have been included here.
+National income may remain low. 'Wealth' is a stock, whereas 'income' is the flow of products and services flowing from the stock of wealth. Thus, it is possible that countries having large level of wealth may have low national income. e.g. Africa and some other countries of Asia have huge resources, but their level of National Income is found to be quite low.
+
+Thus, the idea about the actual and real economic growth can be realized, not from its national wealth but from its national income. Higher the level of national income the nation will be called to be a wealthy nation. USA, Britain, Germany, Sweden, France, Japan have income which is many times more than that of countries like India, Pakistan, Shri Lanka etc., and so they are prosperous nations from economic point of view. Thus, `high income is a sign of economic progress'. The economic problems of a country are directly or indirectly associated with its National Income, just as in case of a person his economic problem are associated with his income.

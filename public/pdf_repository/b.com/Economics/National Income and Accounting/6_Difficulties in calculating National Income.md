@@ -1,0 +1,16 @@
+
+Calculating and analyzing national income faces many theoretical and practical difficulties. Several important definitions and systematic studies have addressed some of these problems in recent years. In developed and industrialized countries like America, Britain, West Germany, France, Japan, the task of calculating national income is relatively easy because, on the one hand, the method of collecting statistical data is scientifically develo in these countries, on the other hand, the agricultural sector in these countries is relatively small. Also, most of the produce is sold by the farmers in market.
+Also, in the industrial sector, most of the production is done by industrial units: And hence production statistics can be easily obtained. Similarly, since the number of people paying income tax in these countries is also countable, it has become easy to know the income of most families.
+
+But in underdeveloped and agricultural countries like India, there are many difficulties in calculating national income.
+
+1. The non-financial sector occupies an important place in the
+economy of these countnes. In this section, the transactions ofgoods
+are not done wiffl the help of money but through the Sata system
+(Barter). This makes the task of calculating national income as
+well as estimating it a dificult.
+2. The main occupation of the people in these countries is agriculture, but as desiderable part of the farm produce is not sold in the market but goes to the farmers their own consumption. It is difficult to obtain estimates of how much and at what price farmers produced apicultural produce for self-consumption in order to calculate national income.
+3. It is easy to calculate the production in large units in the industrial sector, but Calculating the production of small scale and cottage becomes difficult.
+4. Also, in a country like India, it is very difficult to classify the population on occupational basis, as many individual earn more or less, income from several sectors. For example, a single person earns income by selling milk, ghee etc. in addition to farming. Similarly workers earn income by sitting at private shop or doing some other business in addition to their factory salary income. Thus, due to diversity and variation in people's means of income generation, the task of obtaining complete figures of people's income in calculating national income becomes very difficult.
+5. Similarly, due to the high level of illiteracy and ignorance in these countries, the accounts of income and expenditure cannot be kept systematically. 
+However, in recent years many countries including India are trying to wetcorne these difficulties. For example, the government has set up a Statistical Institute to calculate the national income annually in The organization today publishes estimates of national income and ecapita income every year. In addition, this organization also prepares rapid estimates of national income and per capita income to reduce the time it to prepare estimates.

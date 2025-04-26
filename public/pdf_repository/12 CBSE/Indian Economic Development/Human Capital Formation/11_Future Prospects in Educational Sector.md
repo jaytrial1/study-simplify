@@ -1,0 +1,40 @@
+11_Future Prospects in Educational Sector
+
+# Education for All: Still a Distant Dream
+
+- The literacy rates for both adults as well as youth have increased. However, the absolute number of illiterates is still as much as India's population was at the time of independence.
+- In 1950, it was noted in the Directives of the Constitution that the government should provide free and compulsory education for all children up to the age of 14 years. Had we done this, we would have achieved 100% literacy by now.
+
+# Gender Equity: Better than Before
+
+The differences in literacy rates between males and females are narrowing. It indicates a positive development in gender equity. However, women's education needs to be promoted:
+
+- To improve the economic independence and social status of women; and
+- Women's education makes a favorable impact on the fertility rate and health care of women and children.
+So, we cannot be satisfied with the upward movement in the literacy rates, until a 100% literacy rate is achieved.
+
+# Beti Bachao, Beti Padhao
+
+The campaign "Beti Bachao, Beti Padhao (Save the Girl Child, Educate the Girl Child)" was launched in 2015 by the Indian Government to generate awareness and improve the efficiency of welfare services intended for girls in India. The objectives of this initiative are:
+
+- Prevention of gender-biased sex-selective elimination;
+- Ensuring survival and protection of the girl child;
+- Ensuring education and participation of the girl child.
+![img-7.jpeg](img-7.jpeg)
+
+# Higher Education: A Few Takers
+
+- The Indian education pyramid is steep, indicating a lesser and lesser number of people are reaching the higher education level.
+- As per the National Sample Survey Office (NSSO) [NSSO now changed to National Statistical Office (NSO)] data, in the year 2011-12, the rate of unemployment among youth males who studied graduation and above in rural areas was 19%. Their urban counterparts had relatively lower levels of
+
+![img-8.jpeg](img-8.jpeg)
+
+## Higher Education: Few Taken
+
+unemployment at 16%. The most severely affected were young rural female graduates as nearly 30% of them are unemployed. In contrast to this, only about 3-6% of primary educated youth in rural and urban areas were unemployed. The situation is yet to improve as indicated by the Periodic Labour Force Survey 2017-18.
+Therefore, the government needs to increase allocations for higher education and also improve the standard of higher education institutions, so that students are imparted employable skills in such institutions.
+
+# Conclusion
+
+The economic and social benefits of human capital formation and human development are well known. The union and state governments have been allocating substantial amounts to develop the education and health sectors.
+The spread of education and health services across different sectors of society should be ensured to simultaneously attain economic growth and equity. India has a rich stock of scientific and technical manpower in the world. We need to improve it qualitatively and provide such conditions so that they are utilized in our own country.
