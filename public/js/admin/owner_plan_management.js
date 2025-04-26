@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
     loadOwners();
     loadPlans();
     
+    // Load overdue data for badge counter
+    loadOverduePlans();
+    
+    // Load expiry data for badge counter
+    loadExpiryStatus();
+    
     // Set up form submission handlers
     setupFormHandlers();
     
@@ -951,11 +957,16 @@ function displayExpiryStatus(plans) {
     const emptyState = document.getElementById('emptyExpiryState');
     const tableContainer = document.getElementById('expiryTableContainer');
     const tableBody = document.getElementById('expiryTableBody');
+    const expiryCountBadge = document.getElementById('expiryCountBadge');
     
     // Clear the table body
     tableBody.innerHTML = '';
     
+    // Update the count badge
     if (!plans || plans.length === 0) {
+        expiryCountBadge.textContent = '0';
+        expiryCountBadge.style.display = 'none'; // Hide badge when count is zero
+        
         emptyState.innerHTML = `
             <i class="fas fa-check-circle"></i>
             <p>No expired plans found. All plans are current.</p>
@@ -964,6 +975,10 @@ function displayExpiryStatus(plans) {
         tableContainer.style.display = 'none';
         return;
     }
+    
+    // Show count in the badge
+    expiryCountBadge.textContent = plans.length;
+    expiryCountBadge.style.display = 'inline-flex'; // Make badge visible
     
     // Hide empty state and show table
     emptyState.style.display = 'none';
@@ -1101,11 +1116,16 @@ function displayOverduePlans(plans) {
     const emptyState = document.getElementById('emptyOverdueState');
     const tableContainer = document.getElementById('overdueTableContainer');
     const tableBody = document.getElementById('overdueTableBody');
+    const overdueCountBadge = document.getElementById('overdueCountBadge');
     
     // Clear the table body
     tableBody.innerHTML = '';
     
+    // Update the count badge
     if (!plans || plans.length === 0) {
+        overdueCountBadge.textContent = '0';
+        overdueCountBadge.style.display = 'none'; // Hide badge when count is zero
+        
         emptyState.innerHTML = `
             <i class="fas fa-check-circle"></i>
             <p>No overdue payments found. All plans are current.</p>
@@ -1114,6 +1134,10 @@ function displayOverduePlans(plans) {
         tableContainer.style.display = 'none';
         return;
     }
+    
+    // Show count in the badge
+    overdueCountBadge.textContent = plans.length;
+    overdueCountBadge.style.display = 'inline-flex'; // Make badge visible
     
     // Hide empty state and show table
     emptyState.style.display = 'none';

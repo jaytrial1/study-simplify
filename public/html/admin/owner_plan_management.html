@@ -135,6 +135,34 @@
             background-color: #28a745;
             color: white;
         }
+
+        /* Count Badge Styles */
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+            color: #fff;
+            background-color: #dc3545; /* Red alert color */
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        /* Make badge more visible when count > 0 */
+        .count-badge:not(:empty) {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -178,10 +206,10 @@
                     <i class="fas fa-file-invoice-dollar"></i> Current Plans
                 </div>
                 <div class="tab-nav-item" data-tab="plan-expiry-tab">
-                    <i class="fas fa-clock"></i> Expired Plans
+                    <i class="fas fa-clock"></i> Expired Plans <span id="expiryCountBadge" class="count-badge">0</span>
                 </div>
                 <div class="tab-nav-item" data-tab="owner-overdue-tab">
-                    <i class="fas fa-exclamation-circle"></i> Owner Overdue
+                    <i class="fas fa-exclamation-circle"></i> Owner Overdue <span id="overdueCountBadge" class="count-badge">0</span>
                 </div>
             </div>
             
