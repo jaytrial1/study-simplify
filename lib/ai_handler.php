@@ -525,82 +525,84 @@ class AIHandler {
                 }
                 
                 // Prepare data for DeepSeek/OpenRouter
-            $data = [];
+                $data = [];
             
-            if (is_array($promptData) && isset($promptData['messages'])) {
-                // If it's already in DeepSeek format (from createContinuationPrompt)
-                $data = $promptData;
-            } else {
-                // For single prompts - this is the path for initial prompts with PDF context
-                $data = [
+                if (is_array($promptData) && isset($promptData['messages'])) {
+                    // If it's already in DeepSeek format (from createContinuationPrompt)
+                    $data = $promptData;
+                } else {
+                    // For single prompts - this is the path for initial prompts with PDF context
+                    $data = [
                             'model' => $this->modelName,
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => $this->generalInstructions
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => $promptData
+                        'messages' => [
+                            [
+                                'role' => 'system',
+                                'content' => $this->generalInstructions
+                            ],
+                            [
+                                'role' => 'user',
+                                'content' => $promptData
+                            ]
                         ]
-                    ]
-                ];
-            }
+                    ];
+                }
 
-            // Ensure model is specified for OpenRouter
-            if (!isset($data['model'])) {
+                // Ensure model is specified for OpenRouter
+                if (!isset($data['model'])) {
                      $data['model'] = $this->modelName;
                      $debugLog[] = "Model not set in prompt data, using default: " . $this->modelName;
-            }
+                }
             
                 // Add additional parameters required by OpenRouter
                 $data['stream'] = false;
                 
                 // Log the exact request data and headers (Optional for debug log, keep in server log)
-                // $debugLog[] = "Request URL: " . $this->apiUrl;
-                // $debugLog[] = "Request Model: " . $data['model'];
-                // $debugLog[] = "Auth Header Prefix: Bearer " . substr($apiKey, 0, 10) . "...";
                 error_log("DEBUG: OpenRouter Request to URL: " . $this->apiUrl);
                 error_log("DEBUG: OpenRouter Request Model: " . $data['model']);
                 error_log("DEBUG: OpenRouter Request Auth Header: Bearer " . substr($apiKey, 0, 10) . "...");
             
-                // Make the API request
-            $ch = curl_init($this->apiUrl);
+                // Create a URL that includes the API key as a query parameter (alternative authentication method)
+                $apiUrlWithKey = $this->apiUrl . "?api_key=" . urlencode($apiKey);
+                error_log("DEBUG: Trying with URL-based authentication as fallback");
                 
-                // Create headers array for better debugging
+                // Make the API request
+                $ch = curl_init($apiUrlWithKey);
+                
+                // Create headers array for better debugging - include multiple auth methods
                 $headers = [
                     'Content-Type: application/json',
                     'Authorization: Bearer ' . $apiKey,
-                    'HTTP-Referer: http://localhost:3000', // Replace with your actual site URL if needed
-                    'X-Title: StudySimplify' // Optional header
+                    'X-Authorization: Bearer ' . $apiKey, // Alternative header that might not be stripped
+                    'HTTP-Referer: https://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'), 
+                    'X-Title: StudySimplify',
+                    'X-API-KEY: ' . $apiKey // Another alternative that some servers don't strip
                 ];
                 
-                // error_log("DEBUG: Full OpenRouter headers: " . json_encode($headers)); // Keep in server log if needed
-                
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => json_encode($data),
                     CURLOPT_HTTPHEADER => $headers,
                     CURLOPT_TIMEOUT => 15, // Keep existing timeout
-                    CURLOPT_VERBOSE => false, // Keep VERBOSE for server logs if needed, not for client debug
-                    CURLOPT_HEADER => false // Don't need headers in the response body now
-            ]);
+                    CURLOPT_VERBOSE => false,
+                    CURLOPT_HEADER => false,
+                    // Make sure we're passing the full authorization value including in cookies
+                    CURLOPT_COOKIE => 'authorization=Bearer ' . $apiKey,
+                    // Make CURL follow redirects if the host service does that
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 3
+                ]);
             
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                // $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE); // Not needed
-                // $responseHeaders = substr($response, 0, $headerSize); // Not needed
-                // $responseBody = substr($response, $headerSize); // Response is now just the body
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 $responseBody = $response;
                 
                 // Log complete response data (Keep in server log if needed)
                 error_log("DEBUG: OpenRouter Response HTTP Code: " . $httpCode);
-                // error_log("DEBUG: OpenRouter Response Headers: " . $responseHeaders); // Not needed
                 error_log("DEBUG: OpenRouter Response Body (first 300 chars): " . substr($responseBody, 0, 300));
                 
                 $curlError = curl_error($ch);
-            curl_close($ch);
+                curl_close($ch);
 
                 // Check for CURL errors first
                 if (!empty($curlError)) {
@@ -609,19 +611,16 @@ class AIHandler {
                     throw new Exception("CURL Error: " . $curlError);
                 }
 
-            if ($httpCode !== 200) {
+                if ($httpCode !== 200) {
                     $responseData = json_decode($responseBody, true);
                     $errorMsg = isset($responseData['error']['message'])
                     ? $responseData['error']['message'] 
                         : (isset($responseData['message']) ? $responseData['message'] : "API request failed with HTTP $httpCode");
                      $debugLog[] = "Key {$currentIndex} {$keyType} failed: HTTP {$httpCode} - {$errorMsg}";
                     throw new Exception($errorMsg);
-            }
+                }
 
                 $responseData = json_decode($responseBody, true);
-                
-                // Debug the response structure (Keep in server log if needed)
-                // error_log("DEBUG: Response structure: " . json_encode(array_keys($responseData)));
                 
                 // Enhanced response format handling
                 $responseContent = null;
@@ -665,7 +664,7 @@ class AIHandler {
                  }
                  
                  return $response;
-        } catch (Exception $e) {
+            } catch (Exception $e) {
                  // Log the error message to the debug log (already done inside the catch block above)
                 $errorMsg = "Error with key index " . $currentIndex . ": " . $e->getMessage();
                 $errorMessages[] = $errorMsg; // Keep track for final error summary

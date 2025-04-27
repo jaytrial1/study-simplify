@@ -10,7 +10,7 @@ define('GEMINI_KEYS', [
         // Free tier keys
         'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
         'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj',
-        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IUjkbsdk',
+        'AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs',
         'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU',
         // Paid tier key (last resort)
         'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU'

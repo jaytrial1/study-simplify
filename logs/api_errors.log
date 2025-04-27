@@ -691,3 +691,153 @@
 [2025-04-27 17:06:52] [save_config.php] Updated GEMINI_MODEL
 [2025-04-27 17:06:52] [save_config.php] Successfully wrote updated config to file
 [2025-04-27 17:06:52] [save_config.php] Configuration saved successfully
+[2025-04-27 17:33:27] [get_config.php] Script started. Request: {"_v":"1.0.0"}
+[2025-04-27 17:33:27] [get_config.php] Authentication check passed (placeholder). 
+[2025-04-27 17:33:27] [get_config.php] Attempting to read config file: E:\jay\Xampp\htdocs\main\api\admin/../../lib/config.php
+[2025-04-27 17:33:27] [get_config.php] Config file read successfully.
+[2025-04-27 17:33:27] [get_config.php] Parsing AI_MODEL...
+[2025-04-27 17:33:27] [get_config.php] Found AI_MODEL: gemini
+[2025-04-27 17:33:27] [get_config.php] Parsing ENABLE_API_LOGGING...
+[2025-04-27 17:33:27] [get_config.php] Found ENABLE_API_LOGGING: true
+[2025-04-27 17:33:27] [get_config.php] Parsing GEMINI_KEYS...
+[2025-04-27 17:33:27] [get_config.php] GEMINI_KEYS raw match: [
+        // Free tier keys
+        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
+        'AIzaSyC3ytLD...
+[2025-04-27 17:33:27] [get_config.php] Found 5 Gemini key matches
+[2025-04-27 17:33:27] [get_config.php] Processing Gemini key: AIzaSyBZcY... with comment: Free tier keys
+[2025-04-27 17:33:27] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: Paid tier key (last resort)
+[2025-04-27 17:33:27] [get_config.php] Parsed GEMINI_KEYS: Free=4, Paid=1
+[2025-04-27 17:33:27] [get_config.php] Parsing DEEPSEEK_KEYS...
+[2025-04-27 17:33:27] [get_config.php] DEEPSEEK_KEYS raw match: [
+        // Free tier keys - Ensure the format is correct (should start with sk-or-v1-)
+        'sk...
+[2025-04-27 17:33:27] [get_config.php] Found 5 DeepSeek key matches
+[2025-04-27 17:33:27] [get_config.php] Processing DeepSeek key: sk-or-v1-5... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing DeepSeek key: sk-or-v1-b... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing DeepSeek key: sk-or-v1-7... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing DeepSeek key: sk-or-v1-d... with comment: 
+[2025-04-27 17:33:27] [get_config.php] Processing DeepSeek key: sk-or-v1-p... with comment: Paid tier key (last resort)
+[2025-04-27 17:33:27] [get_config.php] Parsed DEEPSEEK_KEYS: Free=4, Paid=1
+[2025-04-27 17:33:27] [get_config.php] Parsing GEMINI_API_URL...
+[2025-04-27 17:33:27] [get_config.php] Found GEMINI_API_URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent
+[2025-04-27 17:33:27] [get_config.php] Parsing GEMINI_MODEL...
+[2025-04-27 17:33:27] [get_config.php] Found GEMINI_MODEL: gemini-2.0-flash-lite
+[2025-04-27 17:33:27] [get_config.php] Parsing DEEPSEEK_API_URL...
+[2025-04-27 17:33:27] [get_config.php] Found DEEPSEEK_API_URL: https://openrouter.ai/api/v1/chat/completions
+[2025-04-27 17:33:27] [get_config.php] Parsing DEEPSEEK_MODEL...
+[2025-04-27 17:33:27] [get_config.php] Found DEEPSEEK_MODEL: deepseek/deepseek-chat-v3-0324:free
+[2025-04-27 17:33:27] [get_config.php] Parsing complete. Attempting JSON encode...
+[2025-04-27 17:33:27] [get_config.php] JSON encoded and echoed successfully.
+[2025-04-27 17:38:24] [save_config.php] Script started. Request method: POST
+[2025-04-27 17:38:24] [save_config.php] Authentication check passed
+[2025-04-27 17:38:24] [save_config.php] Received raw input: {"ai_model":"gemini","enable_logging":true,"gemini_keys":{"free":["AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8","AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj","AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU","AI...
+[2025-04-27 17:38:24] [save_config.php] Parsed input data: ["ai_model","enable_logging","gemini_keys","gemini_api_url","gemini_model_name","deepseek_keys","deepseek_api_url","deepseek_model_name"]
+[2025-04-27 17:38:24] [save_config.php] Extracted configuration values successfully
+[2025-04-27 17:38:24] [save_config.php] Config file path verified and writable: E:\jay\Xampp\htdocs\main\lib\config.php
+[2025-04-27 17:38:24] [save_config.php] Successfully read config file content
+[2025-04-27 17:38:24] [save_config.php] Updated AI_MODEL: gemini
+[2025-04-27 17:38:24] [save_config.php] Updated ENABLE_API_LOGGING: true
+[2025-04-27 17:38:24] [save_config.php] Updated GEMINI_KEYS: 4 free, 1 paid
+[2025-04-27 17:38:24] [save_config.php] Updated DEEPSEEK_KEYS: 4 free, 1 paid
+[2025-04-27 17:38:24] [save_config.php] Updated DEEPSEEK_API_URL
+[2025-04-27 17:38:24] [save_config.php] Updated DEEPSEEK_MODEL
+[2025-04-27 17:38:24] [save_config.php] Updated GEMINI_API_URL
+[2025-04-27 17:38:24] [save_config.php] Updated GEMINI_MODEL
+[2025-04-27 17:38:24] [save_config.php] Successfully wrote updated config to file
+[2025-04-27 17:38:24] [save_config.php] Configuration saved successfully
+[2025-04-27 17:41:48] [get_config.php] Script started. Request: {"_v":"1.0.0"}
+[2025-04-27 17:41:48] [get_config.php] Authentication check passed (placeholder). 
+[2025-04-27 17:41:48] [get_config.php] Attempting to read config file: E:\jay\Xampp\htdocs\main\api\admin/../../lib/config.php
+[2025-04-27 17:41:48] [get_config.php] Config file read successfully.
+[2025-04-27 17:41:48] [get_config.php] Parsing AI_MODEL...
+[2025-04-27 17:41:48] [get_config.php] Found AI_MODEL: gemini
+[2025-04-27 17:41:48] [get_config.php] Parsing ENABLE_API_LOGGING...
+[2025-04-27 17:41:48] [get_config.php] Found ENABLE_API_LOGGING: true
+[2025-04-27 17:41:48] [get_config.php] Parsing GEMINI_KEYS...
+[2025-04-27 17:41:48] [get_config.php] GEMINI_KEYS raw match: [
+        // Free tier keys
+        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
+        'AIzaSyC3ytLD...
+[2025-04-27 17:41:48] [get_config.php] Found 5 Gemini key matches
+[2025-04-27 17:41:48] [get_config.php] Processing Gemini key: AIzaSyBZcY... with comment: Free tier keys
+[2025-04-27 17:41:48] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing Gemini key: AIzaSyC3yt... with comment: Paid tier key (last resort)
+[2025-04-27 17:41:48] [get_config.php] Parsed GEMINI_KEYS: Free=4, Paid=1
+[2025-04-27 17:41:48] [get_config.php] Parsing DEEPSEEK_KEYS...
+[2025-04-27 17:41:48] [get_config.php] DEEPSEEK_KEYS raw match: [
+        // Free tier keys - Ensure the format is correct (should start with sk-or-v1-)
+        'sk...
+[2025-04-27 17:41:48] [get_config.php] Found 5 DeepSeek key matches
+[2025-04-27 17:41:48] [get_config.php] Processing DeepSeek key: sk-or-v1-5... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing DeepSeek key: sk-or-v1-b... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing DeepSeek key: sk-or-v1-7... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing DeepSeek key: sk-or-v1-d... with comment: 
+[2025-04-27 17:41:48] [get_config.php] Processing DeepSeek key: sk-or-v1-p... with comment: Paid tier key (last resort)
+[2025-04-27 17:41:48] [get_config.php] Parsed DEEPSEEK_KEYS: Free=4, Paid=1
+[2025-04-27 17:41:48] [get_config.php] Parsing GEMINI_API_URL...
+[2025-04-27 17:41:48] [get_config.php] Found GEMINI_API_URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent
+[2025-04-27 17:41:48] [get_config.php] Parsing GEMINI_MODEL...
+[2025-04-27 17:41:48] [get_config.php] Found GEMINI_MODEL: gemini-2.0-flash-lite
+[2025-04-27 17:41:48] [get_config.php] Parsing DEEPSEEK_API_URL...
+[2025-04-27 17:41:48] [get_config.php] Found DEEPSEEK_API_URL: https://openrouter.ai/api/v1/chat/completions
+[2025-04-27 17:41:48] [get_config.php] Parsing DEEPSEEK_MODEL...
+[2025-04-27 17:41:48] [get_config.php] Found DEEPSEEK_MODEL: deepseek/deepseek-chat-v3-0324:free
+[2025-04-27 17:41:48] [get_config.php] Parsing complete. Attempting JSON encode...
+[2025-04-27 17:41:48] [get_config.php] JSON encoded and echoed successfully.
+[2025-04-27 17:41:52] [save_config.php] Script started. Request method: POST
+[2025-04-27 17:41:52] [save_config.php] Authentication check passed
+[2025-04-27 17:41:52] [save_config.php] Received raw input: {"ai_model":"gemini","enable_logging":true,"gemini_keys":{"free":["AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8","AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj","AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs","AI...
+[2025-04-27 17:41:52] [save_config.php] Parsed input data: ["ai_model","enable_logging","gemini_keys","gemini_api_url","gemini_model_name","deepseek_keys","deepseek_api_url","deepseek_model_name"]
+[2025-04-27 17:41:52] [save_config.php] Extracted configuration values successfully
+[2025-04-27 17:41:52] [save_config.php] Config file path verified and writable: E:\jay\Xampp\htdocs\main\lib\config.php
+[2025-04-27 17:41:52] [save_config.php] Successfully read config file content
+[2025-04-27 17:41:52] [save_config.php] Updated AI_MODEL: gemini
+[2025-04-27 17:41:52] [save_config.php] Updated ENABLE_API_LOGGING: true
+[2025-04-27 17:41:52] [save_config.php] Updated GEMINI_KEYS: 4 free, 1 paid
+[2025-04-27 17:41:52] [save_config.php] Updated DEEPSEEK_KEYS: 4 free, 1 paid
+[2025-04-27 17:41:52] [save_config.php] Updated DEEPSEEK_API_URL
+[2025-04-27 17:41:52] [save_config.php] Updated DEEPSEEK_MODEL
+[2025-04-27 17:41:52] [save_config.php] Updated GEMINI_API_URL
+[2025-04-27 17:41:52] [save_config.php] Updated GEMINI_MODEL
+[2025-04-27 17:41:52] [save_config.php] Successfully wrote updated config to file
+[2025-04-27 17:41:52] [save_config.php] Configuration saved successfully
+[2025-04-27 17:43:15] [save_config.php] Script started. Request method: POST
+[2025-04-27 17:43:15] [save_config.php] Authentication check passed
+[2025-04-27 17:43:15] [save_config.php] Received raw input: {"ai_model":"gemini","enable_logging":true,"gemini_keys":{"free":["AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8","AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj","AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs","AI...
+[2025-04-27 17:43:15] [save_config.php] Parsed input data: ["ai_model","enable_logging","gemini_keys","gemini_api_url","gemini_model_name","deepseek_keys","deepseek_api_url","deepseek_model_name"]
+[2025-04-27 17:43:15] [save_config.php] Extracted configuration values successfully
+[2025-04-27 17:43:15] [save_config.php] Config file path verified and writable: E:\jay\Xampp\htdocs\main\lib\config.php
+[2025-04-27 17:43:15] [save_config.php] Successfully read config file content
+[2025-04-27 17:43:15] [save_config.php] Updated AI_MODEL: gemini
+[2025-04-27 17:43:15] [save_config.php] Updated ENABLE_API_LOGGING: true
+[2025-04-27 17:43:15] [save_config.php] Updated GEMINI_KEYS: 4 free, 1 paid
+[2025-04-27 17:43:15] [save_config.php] Updated DEEPSEEK_KEYS: 4 free, 1 paid
+[2025-04-27 17:43:15] [save_config.php] Updated DEEPSEEK_API_URL
+[2025-04-27 17:43:15] [save_config.php] Updated DEEPSEEK_MODEL
+[2025-04-27 17:43:15] [save_config.php] Updated GEMINI_API_URL
+[2025-04-27 17:43:15] [save_config.php] Updated GEMINI_MODEL
+[2025-04-27 17:43:15] [save_config.php] Successfully wrote updated config to file
+[2025-04-27 17:43:15] [save_config.php] Configuration saved successfully
+[2025-04-27 17:52:03] [save_config.php] Script started. Request method: POST
+[2025-04-27 17:52:03] [save_config.php] Authentication check passed
+[2025-04-27 17:52:03] [save_config.php] Received raw input: {"ai_model":"gemini","enable_logging":true,"gemini_keys":{"free":["AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8","AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj","AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs","AI...
+[2025-04-27 17:52:03] [save_config.php] Parsed input data: ["ai_model","enable_logging","gemini_keys","gemini_api_url","gemini_model_name","deepseek_keys","deepseek_api_url","deepseek_model_name"]
+[2025-04-27 17:52:03] [save_config.php] Extracted configuration values successfully
+[2025-04-27 17:52:03] [save_config.php] Config file path verified and writable: E:\jay\Xampp\htdocs\main\lib\config.php
+[2025-04-27 17:52:03] [save_config.php] Successfully read config file content
+[2025-04-27 17:52:03] [save_config.php] Updated AI_MODEL: gemini
+[2025-04-27 17:52:03] [save_config.php] Updated ENABLE_API_LOGGING: true
+[2025-04-27 17:52:03] [save_config.php] Updated GEMINI_KEYS: 4 free, 1 paid
+[2025-04-27 17:52:03] [save_config.php] Updated DEEPSEEK_KEYS: 4 free, 1 paid
+[2025-04-27 17:52:03] [save_config.php] Updated DEEPSEEK_API_URL
+[2025-04-27 17:52:03] [save_config.php] Updated DEEPSEEK_MODEL
+[2025-04-27 17:52:03] [save_config.php] Updated GEMINI_API_URL
+[2025-04-27 17:52:03] [save_config.php] Updated GEMINI_MODEL
+[2025-04-27 17:52:03] [save_config.php] Successfully wrote updated config to file
+[2025-04-27 17:52:03] [save_config.php] Configuration saved successfully

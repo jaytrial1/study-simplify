@@ -132,7 +132,7 @@ try {
         // Get AI response with chat history context
         $handlerResponse = $aiHandler->callGeminiAPI(
             $isFollowUp ? $prompt :
-            ($isNewSession ? $prompt :
+            ($isNewSession ? $prompt : 
             ($aiHandler->model === 'gemini' ? [
                 'messages' => array_merge(
                     array_map(function($msg) {
@@ -177,14 +177,14 @@ try {
             }
             $currentDebugLog[] = "Error: AI response text was null after processing.";
         }
-
+        
         // Save messages to chat history
         if (isset($data['session_id'])) {
             $chatHistory->addMessage($data['session_id'], 'user', $data['userPrompt']);
             // Save the actual AI response text (or the error message we constructed)
             $chatHistory->addMessage($data['session_id'], 'ai', $aiResponseText);
         }
-
+        
         // Add to the responses array, including the debug log only if it exists
         $responseItem = [
             'questionName' => $question,
