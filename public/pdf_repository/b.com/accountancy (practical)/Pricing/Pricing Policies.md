@@ -1,0 +1,31 @@
+4\. PRICING POLICIES:\*
+
+In order to know how prices are determined and whether to make frequent changes in the prices or not, let us, study some of the pricing policies:
+
+(1) High Pricing: Here, prices are determined at as high a level as the traffic can bear. This is generally possible under monopoly. Just as competitors start entering the market the prices have to be reduced. Till then maximum profit can be earned by high pricing.
+
+(2) Stable Pricing: The price once determined will have to be kept stable and not changed at least for a particular period. This policy is necessary to induce confidence among customers that the company is not exploiting them.
+
+(3) Skimming Pricing or Maximum-Profit Pricing: This policy involves setting a very high price for a new product in the beginning and reducing the price gradually as competitors enter the market. This will result in maximising the profit and recovering the cost of introducing new products within the shortest possible time.
+
+(4) Penetration Pricing: This is opposite to the above policy of skimming pricing. It is intended to help the product to penetrate into the market. This can be achieved by keeping the price very low in the initial stage or till such time the product is finally accepted by the customers.
+
+(5) Target Pricing: Some firms adopt a policy of fixing prices, so as to earn a particular percentage of profit on investment. The electricity companies have to adopt this policy by law. Some firms fix prices so as to earn a certain percentage of profit on selling price.
+
+(6) What the Customers Can Bear Pricing: This is a policy of charging prices according to the capacity of customers. Those who can pay high prices will be charged higher prices in the form of new packing or by some other mode.
+
+(7) Discouraging Competitor Pricing: This is a method of pricing which will not allow competitors to settle in the market. Whenever a new competitor enters a market, the price is immediately lowered to a very low level, which the competitor cannot afford. e.g. when Scindia Steam Navigation Co. started its operation in 1919, the British companies adopted this type of price strategy.
+
+(8) Prevailing Pricing: This kind of pricing is adopted to meet the competition. Whenever the competitors raise the prices, the company will also raise its price. This is treated as a safe pricing policy.
+
+(9) Price Discrimination: It refers to a practice of charging different prices for the same product to different groups of buyers. Different prices are fixed for different groups of customers. e.g. in railways, different freight rates are fixed for different types of goods. Sometimes, by making a slight change in the product, it is possible to charge high prices to rich customers. Secondly, the policy of charging lower prices for a large-scale buyer is perfectly justified. Some companies adopt different prices for individual customers and company customers. e.g. fans are available to educational institutions at concessional rates. Generally, a one-price policy is the best policy. This is because customers look at the company with suspicion when it follows discrimination price policy. But in certain circumstances, the policy of price discrimination becomes necessary. The main types of price discrimination are as follows:
+
+(i) Price Discrimination Among Customers: Sometimes, different prices are charged to different types of customers although the product is the same. For example, a motor-car company may sell its car to a person at a price stated in its price list and the same car may be sold at a discount to some other person who is clever enough to dictate his terms and conditions. Similarly, it is a matter of common experience that there is always some difference between the price charged for cash purchase and that charged for credit purchase.
+
+(ii) Product-wise Price Discrimination: The same product giving the same service to all customers, may be available in different forms or designs. And the utility or satisfaction derived by different customers may differ. For example, the hard bound copy of a book has greater utility than a paper back of the same book. Those buyers (i.e. libraries) who wish to preserve it for a long time prefer to pay a high price for the hard bound copy, while those buyers who want to use it for a short period prefer to purchase paper back edition at a lower price. The price difference between two forms of a product is not always equal to the difference in their costs: It is greater than the cost difference in most cases.
+
+(iii) Time-oriented Price Discrimination: The level of demand for a product is different at different points of time. For this reason, the market price of the same product differs at different points of time. For instance, the rates of trunkcalls during daytime are different from those during night time. The rental charges of halls are high during marriage season as compared to that during off season.
+
+(vi) Geographical Price Discrimination: Price of a product may differ at different places in the market. This is because the utility of a product is different at different places. The most popular example is the difference in charges for balcony, upper stall and lower stall in the theatres.
+
+Price discrimination is possible however, only when following conditions are fulfilled: (a) It should be possible to divide a market into different groups and price elasticity of demand for the product should be different in different groups. (b) Resale of the product should be impossible, that is, it should no. be possible to transfer a product from low priced market to high priced market for resale. (c) There should be no rival in the high priced market, otherwise, a possibility arises that the competitor may sell at a low price and capture the market. (d) The cost of dividing a market into different parts and controlling them should not be greater than the increase in profit resulting from price discrimination. (e) Price discrimination should not be so unreasonable as to cause resentment among the buyers and inducing them to turn to other firms.

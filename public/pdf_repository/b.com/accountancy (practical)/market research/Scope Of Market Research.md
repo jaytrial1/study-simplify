@@ -1,0 +1,15 @@
+5\. SCOPE OF MARKET RESEARCH:\*
+
+Initially, the scope of market research was confined to acquainting the advertisers with the peculiarities of the product market. At present the scope of market research has widened to encompass the information about customers, distribution systems, competition, publicity etc. In short, market research at present includes the following activities:
+
+(1) Product Research: If a producer has to survive in a competitive market, he must produce and sell a product which is liked by the buyers, useful and capable to satisfy their needs effectively. Customers' preferences, their likes and dislikes change continuously and therefore it is essential to make corresponding changes in the quality, size, appearance, packaging and branding of the product so that it becomes acceptable to the buyers in all circumstances. In a dynamic situation producers should develop new products for prospective buyers, they should improve the quality of their products; they should develop new uses of the existing products.
+
+(2) Consumer Research: Customers are at the centre of all businesses. Therefore complete data should be collected about customers. This research is also described as market research. The information is collected regarding, who are the buyers of a particular product, what is the objective behind their purchases, what is the magnitude of their purchases, whether their demand is seasonal or perennial. An attempt is made through market research to obtain answers to these questions in the context of buyers' sex, age, economic status etc.
+
+(3) Sales Research: If the term market research is interpreted broadly, it includes research on such matters as sales, efficiency level of marketing and distribution system etc. Information about existing sales as well as past sales can be very useful in resolving some intricate internal problems related to sales of the product. The classification of sales, whether product wise, salesmenwise or regionwise can be of much help for the purpose of controlling. Sometimes, research on the efficiency level of the existing marketing system indicates changes which are necessary in salesmanship or in the sales force etc. It also enables them to exert moral restraint on the sales personnel.
+
+Sometimes, research is necessary also to judge the efficiency of the distribution system and to introduce improvements in it. The selling costs can be considerably reduced if a thorough study is conducted to find out the optimum method of distribution.
+
+(4) Advertising Research: Credit for development of market research goes mainly to the advertisers of the products. Advertising research includes matters as to how buyers should be attracted, what are the best media to be adopted for it, which market or region should be accorded priority for advertisement etc. Advertising research provides valuable information for publicity campaigns.
+
+(5) Competition Research: A study of the sales strategy of the rival firms is definitely useful, though it may not always be inevitable. This study suggests how to cope with the aggressive sales strategy of the competitors.

@@ -1,0 +1,3 @@
+1\. MEANING AND DEFINITION:
+
+All those forces which affect sales of any product are called the Marketing Environment. The important job of each marketing manager is to continuously study the marketing environment and should be prepared to face the risk factors developed by environmental change. Or otherwise he should be prepared to take the advantages of the opportunities developed by the same. Then what is the Marketing Environment? "The Marketing Environment comprises the "non-controllable" factors and forces that impact on the company's markets and marketing".

@@ -104,8 +104,12 @@ try {
                 $question
             );
             
+            // Add debugging for subject
+            error_log("QUERY DEBUG - About to call getPromptTemplate");
+            error_log("QUERY DEBUG - Grade: '{$data['grade']}', Subject: '{$data['subject']}', Answer Type: '{$data['answerType']}'");
+            
             // Get template and create initial prompt
-            $template = $aiHandler->getPromptTemplate($data['answerType'], $data['grade']);
+            $template = $aiHandler->getPromptTemplate($data['answerType'], $data['grade'], $data['subject']);
             $initialPrompt = $aiHandler->createPrompt($template, [
                 'extracted_text' => $result['text'],
                 'user_prompt' => $data['userPrompt'],

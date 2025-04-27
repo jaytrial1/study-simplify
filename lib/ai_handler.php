@@ -14,25 +14,186 @@ class AIHandler {
         $this->generalInstructions = require __DIR__ . "/../api/ai/templates/general_instructions.php";
     }
     
-    public function getPromptTemplate($type = 'long', $grade = null) {
+    public function getPromptTemplate($type = 'long', $grade = null, $subject = null) {
+        // Super detailed debugging - start with printing the exact parameters received
+        error_log("=================== TEMPLATE SELECTION START ===================");
+        error_log("PARAMS - Type: '$type', Grade: '$grade', Subject: '$subject'");
+        
+        // Check if this is a practical subject
+        $isPractical = $subject && stripos($subject, '(practical)') !== false;
+        error_log("Is practical subject: " . ($isPractical ? "YES" : "NO"));
+        
+        // If it's a practical subject and we have specific templates for it
+        if ($isPractical) {
+            // Normalize grade format to match directory naming
+            $gradeDir = $grade ? strtolower(str_replace([' ', '.', '-'], '', $grade)) : null;
+            error_log("Grade directory: '$gradeDir'");
+            
+            // Keep the exact subject name for directory lookup
+            $exactSubjectFolder = $subject;
+            
+            // Also have a normalized version
+            $normalizedSubject = strtolower(trim(str_replace('(practical)', '', $subject)));
+            $normalizedSubject = str_replace([' ', '.', '-'], '', $normalizedSubject);
+            
+            error_log("Subject variations - Exact: '$exactSubjectFolder', Normalized: '$normalizedSubject'");
+            
+            // SUPER DETAILED PATH CHECKING
+            // Check practical template directory existence first
+            $baseDir = __DIR__ . "/../api/ai/practical subject template";
+            error_log("Base practical template directory: '$baseDir'");
+            error_log("Base directory exists? " . (is_dir($baseDir) ? "YES" : "NO"));
+            
+            if ($gradeDir) {
+                // First check if grade directory exists
+                $gradeFullPath = $baseDir . "/{$gradeDir}";
+                error_log("Grade directory full path: '$gradeFullPath'");
+                error_log("Grade directory exists? " . (is_dir($gradeFullPath) ? "YES" : "NO"));
+                
+                if (is_dir($gradeFullPath)) {
+                    // List all directories in the grade folder to see what's available
+                    error_log("LISTING DIRECTORIES IN GRADE FOLDER:");
+                    if ($handle = opendir($gradeFullPath)) {
+                        while (false !== ($entry = readdir($handle))) {
+                            if ($entry != "." && $entry != "..") {
+                                error_log("  - '$entry'");
+                            }
+                        }
+                        closedir($handle);
+                    }
+                    
+                    // Try the exact subject folder name first
+                    $exactSubjectPath = $gradeFullPath . "/{$exactSubjectFolder}";
+                    error_log("Exact subject path: '$exactSubjectPath'");
+                    error_log("Exact subject directory exists? " . (is_dir($exactSubjectPath) ? "YES" : "NO"));
+                    
+                    // If exact directory doesn't exist, try to find a case-insensitive match
+                    if (!is_dir($exactSubjectPath)) {
+                        error_log("Exact directory not found. Trying case-insensitive search...");
+                        $foundDir = false;
+                        
+                        if ($handle = opendir($gradeFullPath)) {
+                            while (false !== ($entry = readdir($handle))) {
+                                if ($entry != "." && $entry != ".." && is_dir($gradeFullPath . "/" . $entry)) {
+                                    error_log("Comparing: '" . strtolower($entry) . "' with '" . strtolower($exactSubjectFolder) . "'");
+                                    if (strtolower($entry) === strtolower($exactSubjectFolder)) {
+                                        error_log("FOUND case-insensitive match: '$entry'");
+                                        $exactSubjectPath = $gradeFullPath . "/{$entry}";
+                                        $foundDir = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            closedir($handle);
+                        }
+                        
+                        if ($foundDir) {
+                            error_log("Using case-insensitive matched directory: '$exactSubjectPath'");
+                        } else {
+                            error_log("No case-insensitive match found");
+                        }
+                    }
+                    
+                    if (is_dir($exactSubjectPath)) {
+                        $exactTemplatePath = $exactSubjectPath . "/{$type}.php";
+                        error_log("Exact template path: '$exactTemplatePath'");
+                        error_log("Exact template file exists? " . (file_exists($exactTemplatePath) ? "YES" : "NO"));
+                        
+                        // If the template file doesn't exist exactly, try case-insensitive file search
+                        if (!file_exists($exactTemplatePath)) {
+                            error_log("Exact template file not found. Trying case-insensitive search...");
+                            $foundFile = false;
+                            
+                            if ($handle = opendir($exactSubjectPath)) {
+                                while (false !== ($entry = readdir($handle))) {
+                                    if ($entry != "." && $entry != ".." && is_file($exactSubjectPath . "/" . $entry)) {
+                                        error_log("Comparing file: '" . strtolower($entry) . "' with '" . strtolower($type . ".php") . "'");
+                                        if (strtolower($entry) === strtolower($type . ".php")) {
+                                            error_log("FOUND case-insensitive file match: '$entry'");
+                                            $exactTemplatePath = $exactSubjectPath . "/{$entry}";
+                                            $foundFile = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                closedir($handle);
+                            }
+                            
+                            if ($foundFile) {
+                                error_log("Using case-insensitive matched file: '$exactTemplatePath'");
+                            } else {
+                                error_log("No case-insensitive file match found");
+                            }
+                        }
+                        
+                        if (file_exists($exactTemplatePath)) {
+                            error_log("FOUND AND USING exact practical subject template: {$exactTemplatePath}");
+                            error_log("=================== TEMPLATE SELECTION END ===================");
+                            return require $exactTemplatePath;
+                        }
+                    }
+                    
+                    // Fall back to the normalized path
+                    $normalizedSubjectPath = $gradeFullPath . "/{$normalizedSubject}";
+                    error_log("Normalized subject path: '$normalizedSubjectPath'");
+                    error_log("Normalized subject directory exists? " . (is_dir($normalizedSubjectPath) ? "YES" : "NO"));
+                    
+                    if (is_dir($normalizedSubjectPath)) {
+                        $normalizedTemplatePath = $normalizedSubjectPath . "/{$type}.php";
+                        error_log("Normalized template path: '$normalizedTemplatePath'");
+                        error_log("Normalized template file exists? " . (file_exists($normalizedTemplatePath) ? "YES" : "NO"));
+                        
+                        if (file_exists($normalizedTemplatePath)) {
+                            error_log("FOUND AND USING normalized practical subject template: {$normalizedTemplatePath}");
+                            error_log("=================== TEMPLATE SELECTION END ===================");
+                            return require $normalizedTemplatePath;
+                        }
+                    }
+                }
+                
+                // Fall back to grade-only practical template
+                $gradeTemplatePath = $gradeFullPath . "/{$type}.php";
+                error_log("Grade template path: '$gradeTemplatePath'");
+                error_log("Grade template file exists? " . (file_exists($gradeTemplatePath) ? "YES" : "NO"));
+                
+                if (file_exists($gradeTemplatePath)) {
+                    error_log("FOUND AND USING grade-level practical template: {$gradeTemplatePath}");
+                    error_log("=================== TEMPLATE SELECTION END ===================");
+                    return require $gradeTemplatePath;
+                }
+            }
+            
+            // Fall back to default practical template for this type
+            $defaultTemplatePath = $baseDir . "/{$type}.php";
+            error_log("Default template path: '$defaultTemplatePath'");
+            error_log("Default template file exists? " . (file_exists($defaultTemplatePath) ? "YES" : "NO"));
+            
+            if (file_exists($defaultTemplatePath)) {
+                error_log("FOUND AND USING default practical template: {$defaultTemplatePath}");
+                error_log("=================== TEMPLATE SELECTION END ===================");
+                return require $defaultTemplatePath;
+            }
+            
+            error_log("NO practical templates found, falling back to regular templates");
+        }
+        
+        // If not practical or no practical template found, continue with regular template logic
+        
         // If grade is provided, check for grade-specific template
         if ($grade) {
-            // Normalize grade format to match directory naming (remove spaces, dots, convert to lowercase)
             $gradeDir = strtolower(str_replace([' ', '.', '-'], '', $grade));
+            error_log("Regular template - Grade dir: '$gradeDir'");
             
-            // Log the normalized grade for debugging
-            error_log("Original grade: {$grade}, normalized to: {$gradeDir}");
-            
-            // Path to grade-specific template
             $gradePath = __DIR__ . "/../api/ai/templates/{$gradeDir}/{$type}.php";
+            error_log("Regular grade template path: '$gradePath'");
+            error_log("Regular grade template exists? " . (file_exists($gradePath) ? "YES" : "NO"));
             
-            // If grade-specific template exists, use it
             if (file_exists($gradePath)) {
-                error_log("Using grade-specific template: {$gradePath}");
+                error_log("FOUND AND USING grade-specific regular template: {$gradePath}");
+                error_log("=================== TEMPLATE SELECTION END ===================");
                 return require $gradePath;
             }
             
-            // Log if grade directory exists but specific template doesn't
             $gradeDirPath = __DIR__ . "/../api/ai/templates/{$gradeDir}";
             if (is_dir($gradeDirPath)) {
                 error_log("Grade directory exists but {$type}.php not found in {$gradeDirPath}");
@@ -40,8 +201,13 @@ class AIHandler {
         }
         
         // Fall back to default template if grade-specific not found
-        error_log("Using default template for type: {$type}");
-        return require __DIR__ . "/../api/ai/templates/{$type}.php";
+        $defaultPath = __DIR__ . "/../api/ai/templates/{$type}.php";
+        error_log("Default regular template path: '$defaultPath'");
+        error_log("Default regular template exists? " . (file_exists($defaultPath) ? "YES" : "NO"));
+        
+        error_log("FOUND AND USING default regular template: {$defaultPath}");
+        error_log("=================== TEMPLATE SELECTION END ===================");
+        return require $defaultPath;
     }
     
     public function createPrompt($template, $data) {

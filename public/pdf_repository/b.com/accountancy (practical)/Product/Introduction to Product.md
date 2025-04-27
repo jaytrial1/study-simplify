@@ -1,0 +1,7 @@
+1\. INTRODUCTION:
+
+Marketing has its origin in product. In the absence of a product, what is there to be sold? It is the product which yields utility to the consumers and profit to the producers. The general belief is that a product is something tangible, which can be seen and touched. Some examples of products are radio sets, television sets and machines. In fact, the concept of product is wide enough to include services also. A bus company provides services to its passengers when it moves them from one place to another. Similarly, the electricity company also provides services to its consumers. These services are included in the definition of product. In short, anything that satisfies the definition of product. In short, anything that satisfies human needs and gives utility to its consumers is a product, whether it is tangible or intangible.
+
+Many of the producers are engaged in the production, not of a single commodity, bu: of a number of commodities, i.e. product-line. For example, the Philips Company makes six different models of radio, whereas the Equity Company makes electric iron, toaster, washing machine, mixer-grinder etc. The marketing strategy is different depending on whether it is related to product-item, product-line or product-mix.
+
+We shall consider all these issues one by one in the succeeding sections.
