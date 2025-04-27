@@ -2,16 +2,21 @@
 require_once __DIR__ . '/config.php';
 
 class AIHandler {
-    private $apiKey;
+    private $apiKeys;
     private $apiUrl;
     private $generalInstructions;
     public $model;
+    private $modelName;
+    private $lastWorkingKeyIndex = 0;
+    private $enableLogging = false;
     
     public function __construct() {
         $this->model = AI_MODEL;
-        $this->apiKey = $this->model === 'gemini' ? GEMINI_API_KEY : DEEPSEEK_API_KEY;
         $this->apiUrl = $this->model === 'gemini' ? GEMINI_API_URL : DEEPSEEK_API_URL;
+        $this->apiKeys = $this->model === 'gemini' ? GEMINI_KEYS : DEEPSEEK_KEYS;
+        $this->modelName = $this->model === 'gemini' ? GEMINI_MODEL : DEEPSEEK_MODEL;
         $this->generalInstructions = require __DIR__ . "/../api/ai/templates/general_instructions.php";
+        $this->enableLogging = defined('ENABLE_API_LOGGING') ? ENABLE_API_LOGGING : false;
     }
     
     public function getPromptTemplate($type = 'long', $grade = null, $subject = null) {
@@ -273,7 +278,7 @@ class AIHandler {
             ];
             
             return [
-                'model' => 'deepseek/deepseek-chat:free',
+                'model' => $this->modelName,
                 'messages' => $formattedMessages
             ];
         }
@@ -281,19 +286,88 @@ class AIHandler {
     
     public function callGeminiAPI($promptData) {
         try {
-            if ($this->model === 'gemini') {
-                return $this->callGemini($promptData);
-            } else {
-                return $this->callDeepSeek($promptData);
+            // Initialize debug log
+            $debugLog = [];
+            $debugLog[] = "Starting API call process...";
+            $debugLog[] = "Selected AI Model: " . $this->model;
+
+            // Get response from appropriate API
+            $responseData = $this->model === 'gemini' ? 
+                $this->callGemini($promptData, $debugLog) : 
+                $this->callDeepSeek($promptData, $debugLog);
+            
+            // If logging is enabled and the response is successful, add the debug info to the client-side console
+            if ($this->enableLogging && isset($responseData['success']) && $responseData['success'] === true) {
+                $logInfo = "API KEY USAGE: ";
+                foreach ($debugLog as $logLine) {
+                    if (strpos($logLine, 'API_KEY_USAGE_LOG:') !== false) {
+                        $logInfo .= str_replace('API_KEY_USAGE_LOG:', '', $logLine) . " | ";
+                    }
+                }
+                // Add a special header that JavaScript can read
+                header('X-API-Key-Log: ' . $logInfo);
             }
+            
+            return $responseData;
         } catch (Exception $e) {
-            error_log("Error in API call: " . $e->getMessage());
-            throw $e;
+            // Log the final exception if something unexpected happens outside the specific model calls
+            error_log("Unhandled error in callGeminiAPI: " . $e->getMessage());
+            // Return a failure structure including any logs gathered so far
+            // Ensure $debugLog is initialized even if the try block fails early
+            if (!isset($debugLog)) {
+                $debugLog = ["Error occurred before model selection."];
+            }
+            $debugLog[] = "Unhandled Exception: " . $e->getMessage();
+            
+            // Create response - only include debug_log if logging is enabled
+            $response = [
+                'success' => false,
+                'error' => "An unexpected error occurred: " . $e->getMessage(),
+            ];
+            
+            if ($this->enableLogging) {
+                $response['debug_log'] = $debugLog;
+            }
+            
+            return $response;
         }
     }
 
-    private function callGemini($promptData) {
-        try {
+    private function callGemini($promptData, $debugLog) {
+        // Start with the last working key index, but don't start with paid key (index 4)
+        $startIndex = ($this->lastWorkingKeyIndex >= 4) ? 0 : $this->lastWorkingKeyIndex;
+        $errorMessages = [];
+        $debugLog[] = "Attempting Gemini API call...";
+        $debugLog[] = "Starting key index: " . $startIndex;
+
+        // Try each API key until one works or we've tried them all
+        for ($i = 0; $i < count($this->apiKeys); $i++) {
+            // Calculate the current key index, cycling through free keys (0-3) first
+            $currentIndex = ($i < 4) ? (($startIndex + $i) % 4) : 4;
+            $apiKey = $this->apiKeys[$currentIndex];
+            $keyType = ($currentIndex === 4) ? "(PAID)" : "(FREE)";
+            
+            // Skip the paid key (index 4) until we've tried all free keys
+            if ($currentIndex === 4 && $i < 4) {
+                 $debugLog[] = "Skipping paid key index {$currentIndex} on initial pass.";
+                continue;
+            }
+            
+            try {
+                $debugLog[] = "Trying Gemini key index: {$currentIndex} {$keyType}";
+                error_log("Trying Gemini API key index: " . $currentIndex . " " . $keyType);
+                
+                // Log API key usage for debugging (server-side only)
+                if ($this->enableLogging) {
+                    // Log to server error log instead of echoing script tags
+                    error_log("API_KEY_USAGE_LOG: Using Gemini key index " . $currentIndex . " " . $keyType);
+                    // Add to debug log that will be returned with the response
+                    $debugLog[] = "Key " . $currentIndex . " " . $keyType . ": Attempting API call";
+                    // Set header for client-side logging
+                    header('X-API-Key-Log: Using Gemini key index ' . $currentIndex . ' ' . $keyType);
+                }
+                
+                // Format the prompt data for Gemini
             if (is_array($promptData) && isset($promptData['messages'])) {
                 // Filter out any empty messages and format for Gemini
                 $messages = array_filter($promptData['messages'], function($message) {
@@ -325,66 +399,141 @@ class AIHandler {
                 ];
             }
 
-            error_log("Sending to Gemini: " . json_encode($data));
-            
-            $ch = curl_init($this->apiUrl . '?key=' . $this->apiKey);
+                // Make the API request
+                $ch = curl_init($this->apiUrl . '?key=' . $apiKey);
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json']
+                    CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                    CURLOPT_TIMEOUT => 5 // 5 second timeout for fast failover
             ]);
             
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            error_log("Gemini Response (HTTP $httpCode): " . $response);
+                curl_close($ch);
             
-            if ($error = curl_error($ch)) {
-                throw new Exception("CURL Error: " . $error);
+                // Check for CURL errors first
+                $curlError = curl_error($ch);
+                if (!empty($curlError)) {
+                    $debugLog[] = "Key {$currentIndex} {$keyType} failed: CURL Error - {$curlError}";
+                    error_log("DEBUG: CURL Error: " . $curlError);
+                    throw new Exception("CURL Error: " . $curlError);
             }
-            
-            curl_close($ch);
 
             if ($httpCode !== 200) {
                 $responseData = json_decode($response, true);
-                $errorMessage = isset($responseData['error']['message']) 
+                    $errorMsg = isset($responseData['error']['message'])
                     ? $responseData['error']['message'] 
-                    : "API request failed with HTTP $httpCode";
-                throw new Exception($errorMessage);
+                        : "API request failed with HTTP {$httpCode}";
+                    $debugLog[] = "Key {$currentIndex} {$keyType} failed: HTTP {$httpCode} - {$errorMsg}";
+                    throw new Exception($errorMsg);
             }
 
             $responseData = json_decode($response, true);
             if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
-                error_log("Invalid API response: " . json_encode($responseData));
-                throw new Exception("API returned unexpected format");
-            }
-            
-            return $responseData['candidates'][0]['content']['parts'][0]['text'];
+                    $errorMsg = "API returned unexpected format";
+                    $debugLog[] = "Key {$currentIndex} {$keyType} failed: {$errorMsg}";
+                    error_log("DEBUG: Unexpected response format: " . json_encode($responseData));
+                    throw new Exception($errorMsg);
+                }
+                
+                // Success!
+                $this->lastWorkingKeyIndex = $currentIndex;
+                $debugLog[] = "Key {$currentIndex} {$keyType} successful.";
+                error_log("Gemini API request successful with key index: " . $currentIndex);
+                
+                // Return success structure
+                $response = [
+                    'success' => true,
+                    'result' => $responseData['candidates'][0]['content']['parts'][0]['text']
+                ];
+                
+                // Only include debug_log if logging is enabled
+                if ($this->enableLogging) {
+                    $response['debug_log'] = $debugLog;
+                }
+                
+                return $response;
         } catch (Exception $e) {
-            error_log("Error in callGemini: " . $e->getMessage());
-            throw $e;
+                // Log the error message to the debug log (already done inside the catch block above)
+                $errorMsg = "Error with key index " . $currentIndex . ": " . $e->getMessage();
+                $errorMessages[] = $errorMsg; // Keep track for final error summary
+                error_log($errorMsg); // Keep logging to server logs too
+                continue; // Try the next key
+            }
         }
+        
+        // If we get here, all API keys failed
+        $errorSummary = "All Gemini API keys failed. Errors: " . implode("; ", $errorMessages);
+        error_log($errorSummary);
+        $debugLog[] = "All Gemini keys failed.";
+        // Return failure structure
+        $response = [
+            'success' => false,
+            'error' => $errorSummary,
+        ];
+        
+        if ($this->enableLogging) {
+            $response['debug_log'] = $debugLog;
+        }
+        
+        return $response;
     }
 
-    private function callDeepSeek($promptData) {
-        try {
+    private function callDeepSeek($promptData, $debugLog) {
+        // Start with the last working key index, but don't start with paid key (index 4)
+        $startIndex = ($this->lastWorkingKeyIndex >= 4) ? 0 : $this->lastWorkingKeyIndex;
+        $errorMessages = [];
+        $debugLog[] = "Attempting DeepSeek (OpenRouter) API call...";
+        $debugLog[] = "Starting key index: " . $startIndex;
+        
+        // Try each API key until one works or we've tried them all
+        for ($i = 0; $i < count($this->apiKeys); $i++) {
+            // Calculate the current key index, cycling through free keys (0-3) first
+            $currentIndex = ($i < 4) ? (($startIndex + $i) % 4) : 4;
+            $apiKey = $this->apiKeys[$currentIndex];
+            $keyType = ($currentIndex === 4) ? "(PAID)" : "(FREE)";
+            
+            // Skip the paid key (index 4) until we've tried all free keys
+            if ($currentIndex === 4 && $i < 4) {
+                 $debugLog[] = "Skipping paid key index {$currentIndex} on initial pass.";
+                continue;
+            }
+            
+            // Validate API key format for OpenRouter
+            if (strpos($apiKey, 'sk-or-v1-') !== 0) {
+                $errorMsg = "Invalid OpenRouter API key format at index $currentIndex. Keys should start with 'sk-or-v1-'";
+                 $debugLog[] = "Key {$currentIndex} {$keyType} failed: Invalid Format - {$errorMsg}";
+                error_log("DEBUG: " . $errorMsg);
+                $errorMessages[] = "Error with key index " . $currentIndex . ": Invalid API key format";
+                continue; // Try the next key
+            }
+            
+            try {
+                $debugLog[] = "Trying OpenRouter key index: {$currentIndex} {$keyType} - Key prefix: " . substr($apiKey, 0, 15) . "...";
+                error_log("DEBUG: Trying OpenRouter API key index: " . $currentIndex . " - Key prefix: " . substr($apiKey, 0, 15) . "...");
+                
+                // Log API key usage for debugging (server-side only)
+                if ($this->enableLogging) {
+                    // Log to server error log instead of echoing script tags
+                    error_log("API_KEY_USAGE_LOG: Using DeepSeek key index " . $currentIndex . " " . $keyType . " - Key prefix: " . substr($apiKey, 0, 10) . "...");
+                    // Add to debug log that will be returned with the response
+                    $debugLog[] = "Key " . $currentIndex . " " . $keyType . ": Attempting API call";
+                    // Set header for client-side logging
+                    header('X-API-Key-Log: Using DeepSeek key index ' . $currentIndex . ' ' . $keyType . ' - Key prefix: ' . substr($apiKey, 0, 10) . '...');
+                }
+                
+                // Prepare data for DeepSeek/OpenRouter
             $data = [];
             
             if (is_array($promptData) && isset($promptData['messages'])) {
                 // If it's already in DeepSeek format (from createContinuationPrompt)
                 $data = $promptData;
-                error_log("Using pre-formatted DeepSeek messages format");
             } else {
                 // For single prompts - this is the path for initial prompts with PDF context
-                error_log("Creating new DeepSeek messages format for single prompt");
-                error_log("General instructions length: " . strlen($this->generalInstructions));
-                
-                // Get first 100 chars of general instructions for debug
-                $instructionsPreview = substr($this->generalInstructions, 0, 100) . '...';
-                error_log("General instructions preview: " . $instructionsPreview);
-                
                 $data = [
-                    'model' => 'deepseek/deepseek-chat-v3-0324:free',
+                            'model' => $this->modelName,
                     'messages' => [
                         [
                             'role' => 'system',
@@ -396,63 +545,149 @@ class AIHandler {
                         ]
                     ]
                 ];
-                
-                // Log first 100 chars of prompt for debug
-                $promptPreview = substr($promptData, 0, 100) . '...';
-                error_log("Prompt preview: " . $promptPreview);
             }
 
             // Ensure model is specified for OpenRouter
             if (!isset($data['model'])) {
-                $data['model'] = 'deepseek/deepseek-chat-v3-0324:free';
+                     $data['model'] = $this->modelName;
+                     $debugLog[] = "Model not set in prompt data, using default: " . $this->modelName;
             }
             
-            // Format the data JSON for logging with better readability
-            $formattedJson = json_encode($data, JSON_PRETTY_PRINT);
-            error_log("Sending to DeepSeek: " . $formattedJson);
+                // Add additional parameters required by OpenRouter
+                $data['stream'] = false;
+                
+                // Log the exact request data and headers (Optional for debug log, keep in server log)
+                // $debugLog[] = "Request URL: " . $this->apiUrl;
+                // $debugLog[] = "Request Model: " . $data['model'];
+                // $debugLog[] = "Auth Header Prefix: Bearer " . substr($apiKey, 0, 10) . "...";
+                error_log("DEBUG: OpenRouter Request to URL: " . $this->apiUrl);
+                error_log("DEBUG: OpenRouter Request Model: " . $data['model']);
+                error_log("DEBUG: OpenRouter Request Auth Header: Bearer " . substr($apiKey, 0, 10) . "...");
             
+                // Make the API request
             $ch = curl_init($this->apiUrl);
+                
+                // Create headers array for better debugging
+                $headers = [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $apiKey,
+                    'HTTP-Referer: http://localhost:3000', // Replace with your actual site URL if needed
+                    'X-Title: StudySimplify' // Optional header
+                ];
+                
+                // error_log("DEBUG: Full OpenRouter headers: " . json_encode($headers)); // Keep in server log if needed
+                
             curl_setopt_array($ch, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $this->apiKey,
-                    'HTTP-Referer: http://localhost:3000',
-                    'X-Title: StudySimplify'
-                ]
+                    CURLOPT_HTTPHEADER => $headers,
+                    CURLOPT_TIMEOUT => 15, // Keep existing timeout
+                    CURLOPT_VERBOSE => false, // Keep VERBOSE for server logs if needed, not for client debug
+                    CURLOPT_HEADER => false // Don't need headers in the response body now
             ]);
             
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            error_log("DeepSeek Response (HTTP $httpCode): " . $response);
-            
-            if ($error = curl_error($ch)) {
-                throw new Exception("CURL Error: " . $error);
-            }
-            
+                // $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE); // Not needed
+                // $responseHeaders = substr($response, 0, $headerSize); // Not needed
+                // $responseBody = substr($response, $headerSize); // Response is now just the body
+                $responseBody = $response;
+                
+                // Log complete response data (Keep in server log if needed)
+                error_log("DEBUG: OpenRouter Response HTTP Code: " . $httpCode);
+                // error_log("DEBUG: OpenRouter Response Headers: " . $responseHeaders); // Not needed
+                error_log("DEBUG: OpenRouter Response Body (first 300 chars): " . substr($responseBody, 0, 300));
+                
+                $curlError = curl_error($ch);
             curl_close($ch);
 
+                // Check for CURL errors first
+                if (!empty($curlError)) {
+                    $debugLog[] = "Key {$currentIndex} {$keyType} failed: CURL Error - {$curlError}";
+                    error_log("DEBUG: CURL Error: " . $curlError);
+                    throw new Exception("CURL Error: " . $curlError);
+                }
+
             if ($httpCode !== 200) {
-                $responseData = json_decode($response, true);
-                $errorMessage = isset($responseData['error']['message']) 
+                    $responseData = json_decode($responseBody, true);
+                    $errorMsg = isset($responseData['error']['message'])
                     ? $responseData['error']['message'] 
-                    : "API request failed with HTTP $httpCode";
-                throw new Exception($errorMessage);
+                        : (isset($responseData['message']) ? $responseData['message'] : "API request failed with HTTP $httpCode");
+                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: HTTP {$httpCode} - {$errorMsg}";
+                    throw new Exception($errorMsg);
             }
 
-            $responseData = json_decode($response, true);
-            if (!isset($responseData['choices'][0]['message']['content'])) {
-                error_log("Invalid API response: " . json_encode($responseData));
-                throw new Exception("API returned unexpected format");
-            }
+                $responseData = json_decode($responseBody, true);
+                
+                // Debug the response structure (Keep in server log if needed)
+                // error_log("DEBUG: Response structure: " . json_encode(array_keys($responseData)));
+                
+                // Enhanced response format handling
+                $responseContent = null;
+                
+                // Try multiple possible response formats
+                if (isset($responseData['choices'][0]['message']['content'])) {
+                    $responseContent = $responseData['choices'][0]['message']['content'];
+                } else if (isset($responseData['choices'][0]['text'])) {
+                    $responseContent = $responseData['choices'][0]['text'];
+                } else if (isset($responseData['text'])) {
+                    $responseContent = $responseData['text'];
+                } else if (isset($responseData['content'])) {
+                    $responseContent = $responseData['content'];
+                } else if (isset($responseData['response'])) {
+                    $responseContent = $responseData['response'];
+                } else if (isset($responseData['output'])) {
+                    $responseContent = $responseData['output'];
+                }
+                
+                if ($responseContent === null) {
+                    $errorMsg = "API returned unexpected format";
+                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: {$errorMsg}";
+                    error_log("DEBUG: Unexpected response format: " . json_encode($responseData));
+                    throw new Exception($errorMsg);
+                }
             
-            error_log("Successfully received DeepSeek response");
-            return $responseData['choices'][0]['message']['content'];
+                // Success!
+                $this->lastWorkingKeyIndex = $currentIndex;
+                 $debugLog[] = "Key {$currentIndex} {$keyType} successful.";
+                error_log("DEBUG: OpenRouter API request successful with key index: " . $currentIndex);
+                
+                 // Return success structure
+                 $response = [
+                     'success' => true,
+                     'result' => $responseContent
+                 ];
+                 
+                 // Only include debug_log if logging is enabled
+                 if ($this->enableLogging) {
+                     $response['debug_log'] = $debugLog;
+                 }
+                 
+                 return $response;
         } catch (Exception $e) {
-            error_log("Error in callDeepSeek: " . $e->getMessage());
-            throw $e;
+                 // Log the error message to the debug log (already done inside the catch block above)
+                $errorMsg = "Error with key index " . $currentIndex . ": " . $e->getMessage();
+                $errorMessages[] = $errorMsg; // Keep track for final error summary
+                error_log("DEBUG: OpenRouter Error with key " . $currentIndex . ": " . $e->getMessage());
+                continue; // Try the next key
+            }
         }
+        
+        // If we get here, all API keys failed
+        $errorSummary = "All OpenRouter API keys failed. Errors: " . implode("; ", $errorMessages);
+        error_log("DEBUG: Fatal error - " . $errorSummary);
+        $debugLog[] = "All OpenRouter keys failed.";
+        // Return failure structure
+        $response = [
+            'success' => false,
+            'error' => $errorSummary,
+        ];
+        
+        if ($this->enableLogging) {
+            $response['debug_log'] = $debugLog;
+        }
+        
+        return $response;
     }
 } 

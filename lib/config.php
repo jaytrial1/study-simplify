@@ -1,10 +1,33 @@
 <?php
 // AI Configuration
-define('AI_MODEL', 'deepseek'); // Options: 'gemini' or 'deepseek'
-define('GEMINI_API_KEY', 'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU');
+define('AI_MODEL', 'gemini'); // Options: 'gemini' or 'deepseek'
+define('ENABLE_API_LOGGING', true); // Set to false to disable API key usage logging
+
+// Gemini API Configuration
 define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent');
-define('DEEPSEEK_API_KEY', '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');
+define('GEMINI_MODEL', 'gemini-2.0-flash-lite');
+define('GEMINI_KEYS', [
+        // Free tier keys
+        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
+        'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj',
+        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IUjkbsdk',
+        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU',
+        // Paid tier key (last resort)
+        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU'
+    ]);
+
+// DeepSeek/OpenRouter API Configuration
 define('DEEPSEEK_API_URL', 'https://openrouter.ai/api/v1/chat/completions');
+define('DEEPSEEK_MODEL', 'deepseek/deepseek-chat-v3-0324:free');
+define('DEEPSEEK_KEYS', [
+        // Free tier keys - Ensure the format is correct (should start with sk-or-v1-)
+        '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',
+        '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',
+        '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',
+        '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',
+        // Paid tier key (last resort)
+        'sk-or-v1-paid-685ea31c14a73de5fa1b9f8dc81b9cfedba4c28ff69f22ef1f06a7a0a240ab2e'
+    ]);
 
 // File Repository Configuration
 define('PDF_ROOT', 'E:/jay/Xampp/htdocs/Main/public/pdf_repository/');

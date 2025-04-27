@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Check if we're on a local server (using a different variable name than base-url.js)
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../../js/base-url.js" : "/public/js/base-url.js";
+        const cssStylesPath = _isLocalServer ? "../../css/admin/styles.css" : "/public/css/admin/styles.css";
+        const toastCssPath = _isLocalServer ? "../../css/owner/toast.css" : "/public/css/owner/toast.css";
+        const toastJsPath = _isLocalServer ? "../../js/owner/toast.js" : "/public/js/owner/toast.js";
+        
+        // Debugging - show paths to console
+        console.log("baseUrlJsPath:", baseUrlJsPath);
+        console.log("cssStylesPath:", cssStylesPath);
+        console.log("toastCssPath:", toastCssPath);
+        console.log("toastJsPath:", toastJsPath);
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI API Setup | StudySimplify Admin</title>
+    <script>
+        document.write(`<link rel="stylesheet" href="${cssStylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${toastCssPath}">`);
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Authentication check - redirect to login if not authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('adminToken') || !localStorage.getItem('admin_id')) {
+                window.location.href = 'login.html';
+            } else {
+                // Set admin name in header
+                const adminNameElement = document.getElementById('adminName');
+                if (adminNameElement) {
+                    adminNameElement.textContent = localStorage.getItem('adminName') || 'Admin';
+                }
+            }
+        });
+    </script>
+    <style>
+        .config-section {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .key-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+        .key-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 5px;
+        }
+        .key-item input {
+            flex-grow: 1;
+            margin-bottom: 0;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .key-item button {
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+        .toggle-visibility {
+            background-color: #6c757d;
+            color: white;
+        }
+        .toggle-visibility:hover {
+            background-color: #5a6268;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .add-key-btn {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 38px;
+            white-space: nowrap;
+        }
+        .add-key-btn:hover {
+            background-color: #218838;
+        }
+        .model-selection {
+            padding: 15px 0;
+        }
+        .model-selection label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        .model-selection input[type="radio"] {
+           margin-right: 5px;
+        }
+        .key-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .key-section .section-header {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .key-section h3 {
+            margin: 0;
+            padding: 0;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 15px;
+            display: inline-block;
+        }
+        .key-section .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .toggle-all-btn {
+            padding: 6px 12px;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 34px;
+        }
+        .toggle-all-btn:hover {
+            background-color: #138496;
+        }
+        .key-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 5px;
+        }
+        .key-item input {
+            flex-grow: 1;
+            margin-bottom: 0;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .key-item .key-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .key-item button {
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+        .status-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .spinner {
+            display: none;
+            margin-left: 10px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .save-btn-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .save-btn-container .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        
+        /* Tab Navigation Styles */
+        .tab-navigation {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        .tab-nav-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #e1e4e8;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+            position: relative;
+            bottom: -1px;
+            transition: all 0.2s ease;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .tab-nav-item i {
+            margin-right: 8px;
+            color: #666;
+        }
+        
+        .tab-nav-item.active {
+            background-color: #fff;
+            border-bottom-color: #fff;
+            color: #333;
+            z-index: 1;
+        }
+        
+        .tab-nav-item:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Count badge for tabs, if needed later */
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+            color: #fff;
+            background-color: #dc3545;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        /* Modern API key display */
+        .key-input-container {
+            position: relative;
+        }
+        
+        .key-dots {
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin-left: 10px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #28a745;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .toggle-label {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="logo">
+                <h1>StudySimplify Admin</h1>
+            </div>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <div class="dropdown">
+                    <button class="dropdown-button"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="admin-sidebar">
+            <nav>
+                <ul>
+                    <li><a href="owner_plan_management.html"><i class="fas fa-file-invoice-dollar"></i> Owner Plans</a></li>
+                    <li><a href="active_users.html"><i class="fas fa-users"></i> Active Users</a></li>
+                    <li class="active"><a href="api_setup.html"><i class="fas fa-key"></i> AI API Setup</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <main class="admin-main">
+            
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <div class="admin-card">
+                <div class="card-body">
+                    <form id="apiConfigForm">
+                        <div class="config-section">
+                            <h3>Model Selection</h3>
+                            <div class="model-selection">
+                                <label>
+                                    <input type="radio" name="ai_model" value="gemini" required> Gemini
+                                </label>
+                                <label>
+                                    <input type="radio" name="ai_model" value="deepseek" required> DeepSeek (OpenRouter)
+                                </label>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <div class="toggle-label">Enable API Key Usage Logging in Console:</div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableLogging" name="enable_logging">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <div class="hint-text" style="margin-left: 15px; font-size: 12px; color: #6c757d;">
+                                    When enabled, API key usage will be logged in the browser console for observation
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tab Navigation -->
+                        <div class="tab-navigation">
+                            <div class="tab-nav-item active" data-tab="gemini-tab">
+                                <i class="fas fa-brain"></i> Gemini Configuration
+                            </div>
+                            <div class="tab-nav-item" data-tab="deepseek-tab">
+                                <i class="fas fa-robot"></i> DeepSeek Configuration
+                            </div>
+                        </div>
+
+                        <!-- Gemini Configuration Tab -->
+                        <div class="tab-pane active" id="gemini-tab">
+                            <div class="config-section">
+                                <div class="form-group">
+                                    <label for="gemini_api_url">Gemini API URL:</label>
+                                    <input type="url" id="gemini_api_url" name="gemini_api_url" placeholder="https://generativelanguage.googleapis.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gemini_model_name">Gemini Model Name:</label>
+                                    <input type="text" id="gemini_model_name" name="gemini_model_name" placeholder="gemini-1.5-flash-latest">
+                                </div>
+                                <div class="key-section">
+                                    <div class="section-header">
+                                        <div class="header-left">
+                                            <h3>Free API Keys</h3>
+                                        </div>
+                                        <button type="button" class="add-key-btn" data-list="geminiFreeKeyList">
+                                            <i class="fas fa-plus"></i> Add Free Key
+                                        </button>
+                                    </div>
+                                    <ul class="key-list" id="geminiFreeKeyList">
+                                        <!-- Key items will be added dynamically -->
+                                    </ul>
+                                </div>
+                                <div class="key-section">
+                                    <div class="section-header">
+                                        <div class="header-left">
+                                            <h3>Paid API Keys</h3>
+                                        </div>
+                                        <button type="button" class="add-key-btn" data-list="geminiPaidKeyList">
+                                            <i class="fas fa-plus"></i> Add Paid Key
+                                        </button>
+                                    </div>
+                                    <ul class="key-list" id="geminiPaidKeyList">
+                                        <!-- Key items will be added dynamically -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DeepSeek Configuration Tab -->
+                        <div class="tab-pane" id="deepseek-tab">
+                            <div class="config-section">
+                                <div class="form-group">
+                                    <label for="deepseek_api_url">API URL:</label>
+                                    <input type="url" id="deepseek_api_url" name="deepseek_api_url" placeholder="https://openrouter.ai/api/v1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deepseek_model_name">Model Name:</label>
+                                    <input type="text" id="deepseek_model_name" name="deepseek_model_name" placeholder="deepseek/deepseek-coder">
+                                </div>
+                                <div class="key-section">
+                                    <div class="section-header">
+                                        <div class="header-left">
+                                            <h3>Free API Keys</h3>
+                                        </div>
+                                        <button type="button" class="add-key-btn" data-list="deepseekFreeKeyList">
+                                            <i class="fas fa-plus"></i> Add Free Key
+                                        </button>
+                                    </div>
+                                    <ul class="key-list" id="deepseekFreeKeyList">
+                                        <!-- Key items will be added dynamically -->
+                                    </ul>
+                                </div>
+                                <div class="key-section">
+                                    <div class="section-header">
+                                        <div class="header-left">
+                                            <h3>Paid API Keys</h3>
+                                        </div>
+                                        <button type="button" class="add-key-btn" data-list="deepseekPaidKeyList">
+                                            <i class="fas fa-plus"></i> Add Paid Key
+                                        </button>
+                                    </div>
+                                    <ul class="key-list" id="deepseekPaidKeyList">
+                                        <!-- Key items will be added dynamically -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="save-btn-container">
+                            <button type="submit" class="btn primary-btn">Save Configuration</button>
+                            <div class="spinner" id="loadingSpinner"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="admin-footer">
+            <p>&copy; 2025 StudySimplify. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.write(`<script src="${toastJsPath}"><\/script>`);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('apiConfigForm');
+            const addKeyButtons = document.querySelectorAll('.add-key-btn');
+            const statusMessage = document.getElementById('statusMessage');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const saveButton = form.querySelector('.primary-btn');
+            const refreshButton = document.getElementById('refreshButton');
+            
+            // Tab navigation functionality
+            const tabNavItems = document.querySelectorAll('.tab-nav-item');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Hide all tab panes and remove active class from tab nav items
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    tabNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    
+                    // Show selected tab pane and set active class on selected tab nav item
+                    document.getElementById(tabId).classList.add('active');
+                    this.classList.add('active');
+                });
+            });
+
+            // Function to add a new key input field
+            function addKeyInput(listId, key = '') {
+                const list = document.getElementById(listId);
+                if (!list) return;
+
+                const listItem = document.createElement('li');
+                listItem.className = 'key-item';
+
+                const input = document.createElement('input');
+                input.type = 'text'; // Always show keys as text fields
+                input.placeholder = 'Enter API Key';
+                input.value = key;
+                input.required = true; // Make keys required if added
+                
+                const actionDiv = document.createElement('div');
+                actionDiv.className = 'key-actions';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'delete-btn';
+                removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                removeBtn.title = 'Remove Key';
+                removeBtn.addEventListener('click', () => {
+                    listItem.remove();
+                });
+
+                actionDiv.appendChild(removeBtn);
+                
+                listItem.appendChild(input);
+                listItem.appendChild(actionDiv);
+                list.appendChild(listItem);
+            }
+
+            // Attach event listeners to Add Key buttons
+            addKeyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const listId = button.getAttribute('data-list');
+                    addKeyInput(listId);
+                });
+            });
+
+            // Function to show status messages
+            function showStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.className = `status-message ${isError ? 'error' : 'success'}`;
+                statusMessage.style.display = 'block';
+                // Scroll to top to make message visible
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                 setTimeout(() => {
+                     statusMessage.style.display = 'none';
+                 }, 5000); // Hide after 5 seconds
+            }
+
+             // Function to show/hide loading state
+             function setLoading(isLoading) {
+                 if (isLoading) {
+                     saveButton.disabled = true;
+                     saveButton.style.opacity = '0.7';
+                     loadingSpinner.style.display = 'inline-block';
+                 } else {
+                     saveButton.disabled = false;
+                     saveButton.style.opacity = '1';
+                     loadingSpinner.style.display = 'none';
+                 }
+             }
+
+            // --- Load Initial Configuration ---
+            async function loadConfig() {
+                 setLoading(true);
+                 statusMessage.style.display = 'none'; // Hide previous messages
+                try {
+                     // Determine base path dynamically
+                     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                     const basePath = isLocal ? '/main' : ''; // Adjust '/main' if your local setup differs
+                     const apiUrl = `${basePath}/api/admin/get_config.php`;
+
+                    const response = await fetch(apiUrl, {
+                         headers: {
+                             'Authorization': `Bearer ${localStorage.getItem('adminToken')}` // Assuming admin token is stored
+                         }
+                     });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to load config: ${response.status} ${response.statusText}`);
+                    }
+
+                    const config = await response.json();
+
+                    if (config.success) {
+                        // Set model selection
+                        document.querySelector(`input[name="ai_model"][value="${config.data.ai_model}"]`).checked = true;
+                        
+                        // Set logging toggle
+                        document.getElementById('enableLogging').checked = config.data.enable_logging || false;
+
+                        // Populate Gemini keys and info
+                        document.getElementById('gemini_api_url').value = config.data.gemini_api_url || '';
+                        document.getElementById('gemini_model_name').value = config.data.gemini_model_name || '';
+                        document.getElementById('geminiFreeKeyList').innerHTML = ''; // Clear existing
+                        document.getElementById('geminiPaidKeyList').innerHTML = '';
+                        config.data.gemini_keys.free.forEach(key => addKeyInput('geminiFreeKeyList', key));
+                        config.data.gemini_keys.paid.forEach(key => addKeyInput('geminiPaidKeyList', key));
+
+                        // Populate DeepSeek keys and info
+                        document.getElementById('deepseek_api_url').value = config.data.deepseek_api_url || '';
+                        document.getElementById('deepseek_model_name').value = config.data.deepseek_model_name || '';
+                        document.getElementById('deepseekFreeKeyList').innerHTML = ''; // Clear existing
+                        document.getElementById('deepseekPaidKeyList').innerHTML = '';
+                        config.data.deepseek_keys.free.forEach(key => addKeyInput('deepseekFreeKeyList', key));
+                        config.data.deepseek_keys.paid.forEach(key => addKeyInput('deepseekPaidKeyList', key));
+                        
+                        // Set active tab based on selected model
+                        if (config.data.ai_model === 'deepseek') {
+                            // Show the DeepSeek tab
+                            tabNavItems.forEach(item => item.classList.remove('active'));
+                            tabPanes.forEach(pane => pane.classList.remove('active'));
+                            document.querySelector('[data-tab="deepseek-tab"]').classList.add('active');
+                            document.getElementById('deepseek-tab').classList.add('active');
+                        }
+
+                    } else {
+                        throw new Error(config.error || 'Failed to load configuration data.');
+                    }
+
+                } catch (error) {
+                    console.error('Error loading config:', error);
+                    showStatus(`Error loading configuration: ${error.message}`, true);
+                } finally {
+                     setLoading(false);
+                }
+            }
+
+            // --- Save Configuration ---
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                setLoading(true);
+                statusMessage.style.display = 'none'; // Hide previous messages
+
+                try {
+                    const selectedModel = document.querySelector('input[name="ai_model"]:checked').value;
+                    const enableLogging = document.getElementById('enableLogging').checked;
+
+                    const geminiFreeKeys = Array.from(document.querySelectorAll('#geminiFreeKeyList .key-item input')).map(input => input.value.trim()).filter(key => key);
+                    const geminiPaidKeys = Array.from(document.querySelectorAll('#geminiPaidKeyList .key-item input')).map(input => input.value.trim()).filter(key => key);
+                    const geminiApiUrl = document.getElementById('gemini_api_url').value.trim();
+                    const geminiModelName = document.getElementById('gemini_model_name').value.trim();
+
+                    const deepseekFreeKeys = Array.from(document.querySelectorAll('#deepseekFreeKeyList .key-item input')).map(input => input.value.trim()).filter(key => key);
+                    const deepseekPaidKeys = Array.from(document.querySelectorAll('#deepseekPaidKeyList .key-item input')).map(input => input.value.trim()).filter(key => key);
+                    const deepseekApiUrl = document.getElementById('deepseek_api_url').value.trim();
+                    const deepseekModelName = document.getElementById('deepseek_model_name').value.trim();
+
+                    const dataToSave = {
+                        ai_model: selectedModel,
+                        enable_logging: enableLogging,
+                        gemini_keys: { free: geminiFreeKeys, paid: geminiPaidKeys },
+                        gemini_api_url: geminiApiUrl,
+                        gemini_model_name: geminiModelName,
+                        deepseek_keys: { free: deepseekFreeKeys, paid: deepseekPaidKeys },
+                        deepseek_api_url: deepseekApiUrl,
+                        deepseek_model_name: deepseekModelName
+                    };
+
+                     // Determine base path dynamically
+                     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                     const basePath = isLocal ? '/main' : ''; // Adjust '/main' if your local setup differs
+                     const apiUrl = `${basePath}/api/admin/save_config.php`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}` // Send admin token
+                        },
+                        body: JSON.stringify(dataToSave)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        showStatus('Configuration saved successfully!', false);
+                    } else {
+                        throw new Error(result.error || `Failed to save configuration. Status: ${response.status}`);
+                    }
+
+                } catch (error) {
+                    console.error('Error saving config:', error);
+                    showStatus(`Error saving configuration: ${error.message}`, true);
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Radio button change handler to switch tabs based on model selection
+            document.querySelectorAll('input[name="ai_model"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'gemini') {
+                        tabNavItems.forEach(item => item.classList.remove('active'));
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+                        document.querySelector('[data-tab="gemini-tab"]').classList.add('active');
+                        document.getElementById('gemini-tab').classList.add('active');
+                    } else if (this.value === 'deepseek') {
+                        tabNavItems.forEach(item => item.classList.remove('active'));
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+                        document.querySelector('[data-tab="deepseek-tab"]').classList.add('active');
+                        document.getElementById('deepseek-tab').classList.add('active');
+                    }
+                });
+            });
+
+            // Refresh button click handler
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function() {
+                    loadConfig();
+                });
+            }
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Clear admin session
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('admin_id');
+                localStorage.removeItem('adminName');
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            });
+
+            // Initial load
+            loadConfig();
+        });
+    </script>
+</body>
+</html> 

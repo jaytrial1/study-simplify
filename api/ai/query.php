@@ -83,6 +83,7 @@ try {
     
     foreach ($data['questions'] as $question) {
         $prompt = null;
+        $debugLog = []; // Initialize debug log for this question
         
         if ($isFollowUp) {
             // Load the follow-up template and pass the previous response
@@ -129,9 +130,9 @@ try {
         }
         
         // Get AI response with chat history context
-        $aiResponse = $aiHandler->callGeminiAPI(
+        $handlerResponse = $aiHandler->callGeminiAPI(
             $isFollowUp ? $prompt :
-            ($isNewSession ? $prompt : 
+            ($isNewSession ? $prompt :
             ($aiHandler->model === 'gemini' ? [
                 'messages' => array_merge(
                     array_map(function($msg) {
@@ -150,28 +151,84 @@ try {
             ] : $aiHandler->createContinuationPrompt($previousMessages, $data['userPrompt'])))
         );
         
+        // Extract result, error, and debug log from the handler response
+        $aiResponseText = null;
+        $currentDebugLog = isset($handlerResponse['debug_log']) ? $handlerResponse['debug_log'] : null;
+
+        if (isset($handlerResponse['success']) && $handlerResponse['success']) {
+            $aiResponseText = $handlerResponse['result'];
+        } else {
+            // Handle failure - log the error and use the error message as the response
+            $errorMsg = isset($handlerResponse['error']) ? $handlerResponse['error'] : 'Unknown error from AI Handler';
+            error_log("AI Handler failed for question '{$question}': " . $errorMsg);
+            $aiResponseText = "Sorry, I encountered an error trying to process your request. Details: " . $errorMsg; 
+            // We might still want to add the error message to the debug log for the client
+            if ($currentDebugLog === null) {
+                $currentDebugLog = [];
+            }
+            $currentDebugLog[] = "ERROR: " . $errorMsg;
+        }
+
+        // Ensure we always have a string response
+        if ($aiResponseText === null) {
+            $aiResponseText = "Sorry, couldn't get a response.";
+            if ($currentDebugLog === null) {
+                $currentDebugLog = [];
+            }
+            $currentDebugLog[] = "Error: AI response text was null after processing.";
+        }
+
         // Save messages to chat history
         if (isset($data['session_id'])) {
             $chatHistory->addMessage($data['session_id'], 'user', $data['userPrompt']);
-            $chatHistory->addMessage($data['session_id'], 'ai', $aiResponse);
+            // Save the actual AI response text (or the error message we constructed)
+            $chatHistory->addMessage($data['session_id'], 'ai', $aiResponseText);
+        }
+
+        // Add to the responses array, including the debug log only if it exists
+        $responseItem = [
+            'questionName' => $question,
+            'text' => $aiResponseText, // Use the extracted/constructed text
+            'isFollowUp' => $isFollowUp,
+        ];
+        
+        // Only include debug_log if it's not null
+        if ($currentDebugLog !== null) {
+            $responseItem['debug_log'] = $currentDebugLog;
         }
         
-        $responses[] = [
-            'questionName' => $question,
-            'text' => $aiResponse,
-            'isFollowUp' => $isFollowUp
-        ];
+        $responses[] = $responseItem;
     }
     
+    // Final JSON output
     echo json_encode([
-        'success' => true,
+        'success' => true, // Keep overall success true if the script ran, error is in the text
         'responses' => $responses
     ]);
 
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode([
+    // Create error response item
+    $errorResponse = [
         'success' => false,
-        'error' => $e->getMessage()
-    ]);
+        'error' => $e->getMessage(),
+    ];
+    
+    // Include debug_log only if it's enabled
+    if (defined('ENABLE_API_LOGGING') && ENABLE_API_LOGGING) {
+        // Include a basic debug log even in the catch block if possible
+        $finalDebugLog = isset($currentDebugLog) ? $currentDebugLog : [];
+        $finalDebugLog[] = "FATAL ERROR in query.php: " . $e->getMessage();
+        
+        $errorResponse['responses'] = [[ 
+            'text' => "Fatal error: " . $e->getMessage(),
+            'debug_log' => $finalDebugLog
+        ]];
+    } else {
+        $errorResponse['responses'] = [[ 
+            'text' => "Fatal error: " . $e->getMessage()
+        ]];
+    }
+    
+    echo json_encode($errorResponse);
 }

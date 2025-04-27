@@ -504,6 +504,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log("Request data:", JSON.stringify(requestData));
             
+            // Log initiation for frontend
+            console.log("%c[AI Request Start]%c Sending request...", "color: blue; font-weight: bold;", "color: black;");
+
             // Make the API call
             const queryResponse = await fetch(apiUrl, {
                 method: 'POST',
@@ -516,65 +519,114 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log("Response status:", queryResponse.status);
             
+            // Check if API key logging header is present and output to console
+            const apiKeyLog = queryResponse.headers.get('X-API-Key-Log');
+            if (apiKeyLog) {
+                console.log("%c[API Key Usage]%c " + apiKeyLog, "color: purple; font-weight: bold;", "color: black;");
+            }
+            
             // Check for HTTP errors first
             if (!queryResponse.ok) {
                 const errorText = await queryResponse.text();
-                console.error("API error response:", errorText);
+                console.error("%c[API HTTP Error]%c Status: " + queryResponse.status, "color: red; font-weight: bold;", "color: black;");
+                console.error("Error response text:", errorText);
+                 // Try to parse potential JSON error with debug log
+                 try {
+                     const errorData = JSON.parse(errorText);
+                     if (errorData.responses && errorData.responses[0] && errorData.responses[0].debug_log) {
+                         console.log("%c--- Backend Debug Log (HTTP Error) ---%c", "color: orange; font-weight: bold;", "color: black;");
+                         errorData.responses[0].debug_log.forEach(log => console.log("  " + log));
+                         console.log("%c--- End Debug Log ---%c", "color: orange; font-weight: bold;", "color: black;");
+                     }
+                 } catch (e) {
+                     // Ignore if parsing fails, just means it wasn't JSON
+                 }
                 throw new Error(`API request failed with status ${queryResponse.status}: ${errorText}`);
             }
             
             // Parse JSON response
             let queryData;
+            const responseTextForParsing = await queryResponse.text(); // Read as text first for better error handling
             try {
-                queryData = await queryResponse.json();
-                console.log("Response data:", queryData);
+                queryData = JSON.parse(responseTextForParsing);
+                console.log("%c[API Success]%c Raw Response Data:", "color: green; font-weight: bold;", "color: black;", queryData);
             } catch (jsonError) {
-                console.error("JSON parse error:", jsonError);
-                const responseText = await queryResponse.text();
-                console.error("Raw response:", responseText);
+                console.error("%c[JSON Parse Error]%c", "color: red; font-weight: bold;", "color: black;", jsonError);
+                console.error("Raw response text that failed parsing:", responseTextForParsing);
                 throw new Error(`Failed to parse API response: ${jsonError.message}`);
             }
             
-            // Check for API-level errors
+            // Check for API-level errors reported in the JSON
             if (!queryData.success) {
+                console.error("%c[API Logic Error]%c", "color: orange; font-weight: bold;", "color: black;", queryData.error || 'Unknown API error');
+                // Log debug info if available even on API error
+                if (queryData.responses && queryData.responses[0] && queryData.responses[0].debug_log) {
+                    console.log("%c--- Backend Debug Log (API Error) ---%c", "color: orange; font-weight: bold;", "color: black;");
+                    queryData.responses[0].debug_log.forEach(log => console.log("  " + log));
+                    console.log("%c--- End Debug Log ---%c", "color: orange; font-weight: bold;", "color: black;");
+                }
                 throw new Error(queryData.error || 'Failed to get AI response');
             }
             
-            // Process each response
-            queryData.responses.forEach(response => {
-                // Check if response.text is an object and convert it properly
-                let responseText = response.text;
-                
-                // Handle case where response.text is an object
-                if (responseText === null || responseText === undefined) {
-                    responseText = "Error: Empty response from server";
-                } else if (typeof responseText === 'object') {
-                    try {
-                        // Try to convert it to JSON string first
-                        responseText = JSON.stringify(responseText);
-                        console.warn('Response was an object, converted to:', responseText);
-                    } catch (e) {
-                        responseText = "Error: Received object instead of text";
-                        console.error('Failed to stringify object response:', e);
+            // Process each response (assuming one for now based on PHP logic)
+            if (queryData.responses && queryData.responses.length > 0) {
+                queryData.responses.forEach(response => {
+                    // Log the debug info from the backend (if present)
+                    if (response.debug_log && Array.isArray(response.debug_log)) {
+                        console.log("%c--- Backend Debug Log ---%c", "color: purple; font-weight: bold;", "color: black;");
+                        response.debug_log.forEach(log => console.log("  " + log));
+                        console.log("%c--- End Debug Log ---%c", "color: purple; font-weight: bold;", "color: black;");
                     }
-                }
-                
-                // Update loading message with AI response
-                updateMessage(loadingMessageResult.element, responseText);
-                
-                // Process code blocks immediately instead of waiting for typing effect
-                setTimeout(() => {
-                    enhanceCodeBlocks(loadingMessageResult.element);
-                }, 50);
-                
-                // Store the full AI response in the global variable
-                lastAIResponse = responseText;
-                console.log('Full AI Response:', lastAIResponse);
-            });
+                    // The warning about missing debug_log has been removed as it's normal when logging is disabled
+
+                    // Check if response.text is an object and convert it properly
+                    let responseText = response.text;
+                    
+                    // Handle case where response.text is an object
+                    if (responseText === null || responseText === undefined) {
+                        responseText = "Error: Empty response from server";
+                    } else if (typeof responseText === 'object') {
+                        try {
+                            // Try to convert it to JSON string first
+                            responseText = JSON.stringify(responseText);
+                            console.warn('Response was an object, converted to:', responseText);
+                        } catch (e) {
+                            responseText = "Error: Received object instead of text";
+                            console.error('Failed to stringify object response:', e);
+                        }
+                    }
+                    
+                    // Update loading message with AI response
+                    console.log("%cUpdating chat message with final AI response.%c", "color: green; font-weight: bold;", "color: black;");
+                    updateMessage(loadingMessageResult.element, responseText);
+                    
+                    // Process code blocks immediately
+                    setTimeout(() => {
+                        enhanceCodeBlocks(loadingMessageResult.element);
+                    }, 50);
+                    
+                    // Store the full AI response
+                    lastAIResponse = responseText;
+                    // console.log('Full AI Response:', lastAIResponse); // Already logged in debug section
+                });
+            } else {
+                 console.error("%c[API Logic Error]%c", "color: orange; font-weight: bold;", "color: black;", "No responses array found in successful queryData");
+                 throw new Error('Received success, but no responses from API.');
+            }
             
         } catch (error) {
-            console.error('Error in handleSend:', error);
-            showToast('Failed to get response. Please try again.');
+            console.error('%c[handleSend Error]%c Error caught in handleSend:', "color: red; font-weight: bold;", "color: black;", error);
+            // Update the loading message to show the error
+            if (typeof loadingMessageResult !== 'undefined' && loadingMessageResult && loadingMessageResult.element) {
+                 updateMessage(loadingMessageResult.element, `⚠️ Error: ${error.message}`);
+                 // Add error class to the message bubble
+                 loadingMessageResult.element.classList.add('error-message'); 
+                 loadingMessageResult.element.classList.remove('loading');
+            } else {
+                 // Fallback if loading message wasn't created
+                 addMessage('bot error-message', `⚠️ Error: ${error.message}`);
+            }
+            showToast('Failed to get response. Check console for details.');
         }
     }
 
