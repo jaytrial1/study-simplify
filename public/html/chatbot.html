@@ -184,34 +184,20 @@
             console.log("Chatbot page - Is subdomain:", isSubdomain);
             console.log("Chatbot page - tuitionClass:", tuitionClass);
             
-            // Only do tuition class checks if we're actually on a subdomain
-            if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
-                // Only redirect if we don't know if they're approved yet
-                // This allows approved users to access the chatbot
-                if (isApproved !== '1' || isActive !== '1' || isActiveByAdmin !== '1') {
-                    console.log("Redirecting to tuition_home.html - Not approved");
-                    window.location.href = 'tuition_home.html';
-                    return;
-                }
-                
-                // Show the tuition classes button for subdomain users
+            // If we're on main domain, just show the chatbot
+            console.log("Main domain - showing chatbot");
+            
+            // Show tuition button only if user has a tuition class AND is on subdomain
+            // Exception: Also show on local development for testing
+            const isLocalDev = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+                            
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isSubdomain || isLocalDev)) {
                 const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
                 if (tuitionClassesBtn) {
                     tuitionClassesBtn.style.display = 'flex';
-                }
-                
-                // Set up periodic access check for subdomain users
-                setupPeriodicAccessCheck(userId, tuitionClass, token);
-            } else if (!isSubdomain) {
-                // If we're on main domain, just show the chatbot
-                console.log("Main domain - showing chatbot");
-                
-                // Show tuition button only if user has a tuition class
-                if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
-                    const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
-                    if (tuitionClassesBtn) {
-                        tuitionClassesBtn.style.display = 'flex';
-                    }
                 }
             }
             

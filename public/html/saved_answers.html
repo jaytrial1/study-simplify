@@ -306,8 +306,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             const tuitionClass = localStorage.getItem('tuitionClass');
             
-            // If user belongs to a tuition class, show the tuition classes button
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+            // Check if we're on a subdomain
+            const currentHostname = window.location.hostname;
+            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                currentHostname !== 'studysimplify.in';
+            
+            // Only show tuition button if user has a tuition class AND is on a subdomain
+            // Exception: Also show in local development for testing
+            const isLocalDev = currentHostname === 'localhost' || 
+                              currentHostname === '127.0.0.1' || 
+                              currentHostname.includes('192.168.') || 
+                              currentHostname.includes('10.0.');
+                              
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isSubdomain || isLocalDev)) {
                 const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
                 if (tuitionClassesBtn) {
                     tuitionClassesBtn.style.display = 'flex';
