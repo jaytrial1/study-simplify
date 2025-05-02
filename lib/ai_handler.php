@@ -406,7 +406,7 @@ class AIHandler {
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => json_encode($data),
                     CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-                    CURLOPT_TIMEOUT => 5 // 5 second timeout for fast failover
+                    CURLOPT_TIMEOUT => 20 // Increased timeout to 20 seconds
             ]);
             
             $response = curl_exec($ch);
@@ -428,7 +428,7 @@ class AIHandler {
                         : "API request failed with HTTP {$httpCode}";
                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: HTTP {$httpCode} - {$errorMsg}";
                     throw new Exception($errorMsg);
-            }
+                }
 
             $responseData = json_decode($response, true);
             if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {

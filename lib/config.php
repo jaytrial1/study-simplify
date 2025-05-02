@@ -4,14 +4,14 @@ define('AI_MODEL', 'gemini'); // Options: 'gemini' or 'deepseek'
 define('ENABLE_API_LOGGING', true); // Set to false to disable API key usage logging
 
 // Gemini API Configuration
-define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent');
-define('GEMINI_MODEL', 'gemini-2.0-flash-lite');
+define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent');
+define('GEMINI_MODEL', 'gemini-2.5-flash-preview-04-17');
 define('GEMINI_KEYS', [
         // Free tier keys
         'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
         'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj',
         'AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs',
-        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU',
+        'AIzaSyBT3kJRHPts81wpwYHFQLuJ0NSeqt_kd4E',
         // Paid tier key (last resort)
         'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU'
     ]);
@@ -22,7 +22,7 @@ define('DEEPSEEK_MODEL', 'deepseek/deepseek-chat-v3-0324:free');
 define('DEEPSEEK_KEYS', [
         // Free tier keys - Ensure the format is correct (should start with sk-or-v1-)
         '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',
-        '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',
+        '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',
         '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',
         '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',
         // Paid tier key (last resort)

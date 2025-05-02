@@ -1,4 +1,24 @@
 <?php
+// ===== START OF SCRIPT DEBUG LOGGING & CONFIG =====
+// Force errors to be logged
+ini_set('log_errors', 1);
+// Force logging to a specific file in this directory
+ini_set('error_log', __DIR__ . '/error_log.txt'); 
+
+error_log("====== query.php script execution started ======");
+error_log("Timestamp: " . date('Y-m-d H:i:s'));
+error_log("Request Method: " . $_SERVER['REQUEST_METHOD']);
+error_log("Request URI: " . $_SERVER['REQUEST_URI']);
+error_log("Auth Header (Server Var): " . (isset($_SERVER['HTTP_AUTHORIZATION']) ? 'Present' : 'MISSING'));
+error_log("Auth Header (Redirect Var): " . (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? 'Present' : 'MISSING'));
+
+// Check include paths
+$config_path = '../../lib/config.php';
+$handler_path = '../../lib/ai_handler.php';
+error_log("Checking include: {$config_path} - Exists: " . (file_exists($config_path) ? 'Yes' : 'NO'));
+error_log("Checking include: {$handler_path} - Exists: " . (file_exists($handler_path) ? 'Yes' : 'NO'));
+// ===== END OF SCRIPT DEBUG LOGGING =====
+
 require_once '../../lib/pdf_parser.php';
 require_once '../../lib/ai_handler.php';
 require_once '../../lib/config.php';
