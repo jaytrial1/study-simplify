@@ -1,16 +1,16 @@
 :root {
   /* Dark Theme Core Color */
   --color-primary: #1e1f24;
-  --color-secondary: #f1f1f1; 
+  --color-secondary: #ffffff; 
 
   /* Light Theme Core Color */
   /* --color-primary: #f1f1f1;
   --color-secondary: #1e1f24; */
 
-
+/*3c6ad6b4*/
   /* Functional Colors */
   /* --color-accent: #3c69d6; */
-  --color-accent: #3c6ad6b7;
+  --color-accent: #3c6ad6b4;
   /* --color-accent: #07d2d9; */
   /* --color-accent: #00bf3d; */
   /* --color-accent: #8a2be2 */
@@ -26,7 +26,7 @@
 
   /* Dark Theme Base Colors */
   --color-black: #17181c;
-  --color-white: #d7d7d7;
+  --color-white: #d7d7d7dd;
 
   /* Light Theme Base Colors */
   /* --color-black: #ffffff;

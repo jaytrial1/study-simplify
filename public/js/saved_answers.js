@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .save-type-badge.question-related,
         .save-type-badge.question_related {
-            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+            background-color: var(--color-success);
         }
         
         .save-type-badge.important {
@@ -513,7 +513,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         /* Subject (outermost) - bright blue */
         .accordion-header {
-            background-color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+            background-color: color-mix(in srgb, var(--color-accent) 80%, var(--color-black));
             border-radius: 4px;
             color: var(--color-white);
             padding: 15px 15px;
@@ -1487,7 +1488,7 @@ class SavedAnswersManager {
             style.textContent = `
                 .no-answers-message-chapter {
                     padding: 15px;
-                    color: #666;
+                    color: #bcbcbc;
                     font-style: italic;
                     text-align: center;
                     background: rgba(200, 200, 200, 0.1);
