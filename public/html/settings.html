@@ -26,11 +26,37 @@
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+
+        // --- DYNAMIC THEME CSS LOADING (v2 - Fixed IP handling) --- 
+        const currentHostnameTheme = window.location.hostname;
+        const isMainDomainProdTheme = currentHostnameTheme === 'studysimplify.in';
+        // Check for direct local access (localhost, IP addresses)
+        const isDirectLocalAccessTheme = currentHostnameTheme === 'localhost' || 
+                                       currentHostnameTheme === '127.0.0.1' ||
+                                       currentHostnameTheme.startsWith('192.168.') || 
+                                       currentHostnameTheme.startsWith('10.');
+        // It's a theme-relevant subdomain ONLY if it's NOT the main production domain AND NOT direct local access.
+        const isSubdomainTheme = !isMainDomainProdTheme && !isDirectLocalAccessTheme;
+        let finalThemePath;
+
+        if (isSubdomainTheme) {
+            // This handles *.studysimplify.in (excluding main) and *.localhost
+            const subdomainName = currentHostnameTheme.split('.')[0]; 
+            finalThemePath = `/subdomain/${subdomainName}/theme.css`;
+            console.log(`Theme Loading: Subdomain detected (${subdomainName}). Path: ${finalThemePath}`);
+        } else {
+            // This handles main domain, localhost, 127.0.0.1, and local IPs
+            // Use the original _isLocalServer check which correctly identifies these as local.
+            finalThemePath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css"; // No PHP time() here
+            console.log(`Theme Loading: Not a theme subdomain. Using default. Path: ${finalThemePath}`);
+        }
+        // --- END DYNAMIC THEME CSS LOADING ---
+
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
     <link rel="manifest" href="../manifest.json">
-    <meta name="theme-color" content="#4166d5">
+    <meta name="theme-color" content="#1e1f24">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
@@ -38,7 +64,7 @@
         document.write(`<link rel="stylesheet" href="${stylesPath}">`);
         document.write(`<link rel="stylesheet" href="${authPath}">`);
         document.write(`<link rel="stylesheet" href="${settingsPath}">`);
-        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${finalThemePath}">`); // Load dynamic theme path
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>

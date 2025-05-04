@@ -1,0 +1,39 @@
+[04-May-2025 16:10:46 Europe/Berlin] ====== query.php script execution started ======
+[04-May-2025 16:10:46 Europe/Berlin] Timestamp: 2025-05-04 16:10:46
+[04-May-2025 16:10:46 Europe/Berlin] Request Method: POST
+[04-May-2025 16:10:46 Europe/Berlin] Request URI: /main/api/ai/query.php
+[04-May-2025 16:10:46 Europe/Berlin] Auth Header (Server Var): Present
+[04-May-2025 16:10:46 Europe/Berlin] Auth Header (Redirect Var): Present
+[04-May-2025 16:10:46 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[04-May-2025 16:10:46 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[04-May-2025 16:10:46 Europe/Berlin] Database connection - HTTP_HOST: 192.168.1.12
+[04-May-2025 16:10:46 Europe/Berlin] Database connection - SERVER_ADDR: 192.168.1.12
+[04-May-2025 16:10:46 Europe/Berlin] Database connection - SERVER_NAME: 192.168.1.12
+[04-May-2025 16:10:46 Europe/Berlin] Database connection - REQUEST_URI: /main/api/ai/query.php
+[04-May-2025 16:10:46 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[04-May-2025 16:10:46 Europe/Berlin] Database connection successful
+[04-May-2025 16:10:46 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[04-May-2025 16:10:46 Europe/Berlin] Retrieved messages for session 8: [{"sender":"system","message":"Chat started","timestamp":"2025-05-04 16:10:45"}]
+[04-May-2025 16:10:46 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 CBSE/Business Studies/Business Environment/Dimensions - Elements Of Business Environment.md
+[04-May-2025 16:10:46 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[04-May-2025 16:10:46 Europe/Berlin] QUERY DEBUG - Grade: '12 CBSE', Subject: 'Business Studies', Answer Type: 'short'
+[04-May-2025 16:10:46 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[04-May-2025 16:10:46 Europe/Berlin] PARAMS - Type: 'short', Grade: '12 CBSE', Subject: 'Business Studies'
+[04-May-2025 16:10:46 Europe/Berlin] Is practical subject: NO
+[04-May-2025 16:10:46 Europe/Berlin] Regular template - Grade dir: '12cbse'
+[04-May-2025 16:10:46 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12cbse/short.php'
+[04-May-2025 16:10:46 Europe/Berlin] Regular grade template exists? YES
+[04-May-2025 16:10:46 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12cbse/short.php
+[04-May-2025 16:10:46 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[04-May-2025 16:10:47 Europe/Berlin] Added message to chat session 8
+[04-May-2025 16:10:47 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[04-May-2025 16:10:47 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 0 (FREE)
+[04-May-2025 16:10:48 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[04-May-2025 16:10:48 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[04-May-2025 16:10:48 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 1 (FREE)
+[04-May-2025 16:10:49 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[04-May-2025 16:10:49 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[04-May-2025 16:10:49 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 2 (FREE)
+[04-May-2025 16:10:58 Europe/Berlin] Gemini API request successful with key index: 2
+[04-May-2025 16:10:58 Europe/Berlin] Added message to chat session 8
+[04-May-2025 16:10:58 Europe/Berlin] Added message to chat session 8

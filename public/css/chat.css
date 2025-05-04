@@ -162,7 +162,7 @@
 
 .instruction-content {
     background-color: color-mix(in srgb, var(--color-accent) 10%, var(--color-black));
-    border: 1px solid color-mix(in srgb, var(--color-accent) 10%, var(--color-black));
+    border: 1px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
     border-radius: 12px;
     padding: 25px;
     max-width: 500px;

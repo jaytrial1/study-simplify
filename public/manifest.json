@@ -5,7 +5,7 @@
   "start_url": "./html/chatbot.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
-  "theme_color": "#4166d5",
+  "theme_color": "#316gd5",
   "icons": [
     {
       "src": "/main/public/icons/icon-192x192.png",
