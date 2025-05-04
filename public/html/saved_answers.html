@@ -308,26 +308,42 @@
         document.addEventListener('DOMContentLoaded', function() {
             const tuitionClass = localStorage.getItem('tuitionClass');
             
-            // Check if we're on a subdomain
+            // --- CORRECTED ENVIRONMENT DETECTION FOR BUTTON VISIBILITY ---
             const currentHostname = window.location.hostname;
             
-            // --- Use the standardized subdomain check --- 
-            const isMainDomainProd = currentHostname === 'studysimplify.in';
-            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
-            // It's a subdomain if it's NOT the main production domain AND NOT a direct local address.
-            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
-            // --- End standardized check ---
-                              
-            // Show tuition button only if user has a tuition class AND is on a subdomain setup
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && isSubdomain) {
+            // Check for any local development environment (direct or subdomain)
+            const isLocalDev = currentHostname === 'localhost' || 
+                             currentHostname === '127.0.0.1' || 
+                             currentHostname.includes('.localhost') || // Include *.localhost
+                             currentHostname.includes('192.168.') || 
+                             currentHostname.includes('10.0.');
+                             
+            // Check specifically for production subdomains
+            const isProductionSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                        currentHostname !== 'studysimplify.in';
+
+            console.log("Saved Answers page - Current hostname:", currentHostname);
+            console.log("Saved Answers page - isLocalDev:", isLocalDev);
+            console.log("Saved Answers page - isProductionSubdomain:", isProductionSubdomain);
+            console.log("Saved Answers page - tuitionClass:", tuitionClass);
+            
+            // Show button if tuitionClass exists AND (it's local OR it's a production subdomain)
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isLocalDev || isProductionSubdomain)) {
+                console.log('Showing Tuition Classes button.');
                 const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
                 if (tuitionClassesBtn) {
-                    console.log('Showing tuition classes button in saved_answers.html'); // Added log
                     tuitionClassesBtn.style.display = 'flex';
+                } else {
+                    console.error('#tuitionClassesBtn element not found!');
                 }
             } else {
-                console.log('Not showing tuition classes button in saved_answers.html. Reason:', {tuitionClass, isSubdomain}); // Added log
+                console.log('Hiding Tuition Classes button. Conditions not met:', {
+                    tuitionClassExists: tuitionClass && tuitionClass !== 'null' && tuitionClass !== '',
+                    isLocal: isLocalDev,
+                    isProdSubdomain: isProductionSubdomain
+                });
             }
+            // --- END CORRECTION ---
         });
     </script>
     

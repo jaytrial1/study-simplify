@@ -1,0 +1,236 @@
+/* Add these styles to fix container positioning */
+.mobile-header {
+    position: relative;
+    z-index: 15; /* Increased z-index to ensure it stays above topic selection */
+    margin-bottom: 8px; /* Add space for the topic selection container */
+}
+
+.mobile-header.with-topics {
+    margin-bottom: 0; /* Remove margin when topics are shown */
+}
+
+.chat-container {
+    position: relative;
+}
+
+/* Add styles for the new topic selection container */
+.topic-selection-container {
+    background-color: var(--color-primary);
+    border-radius: 8px;
+    margin: 0 12px;
+    box-shadow: 0 2px 10px var(--color-gray-light);
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    max-height: 75vh; /* Increased height to prevent cramping */
+    z-index: 10; /* Ensure it's above other elements */
+    position: absolute; /* Use absolute positioning to control placement */
+    top: 100%; /* Position it right after the mobile-header */
+    left: 0;
+    right: 0;
+    overflow: hidden; /* Hide overflow but don't scroll at this level */
+}
+
+.topic-selection-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-secondary);
+    position: sticky;
+    top: 0;
+    background-color: color-mix(in srgb, var(--color-primary) 85%, var(--color-gray));
+    z-index: 2;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.topic-selection-header h4 {
+    margin: 0;
+    color: var(--color-secondary);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.topic-buttons-container {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px; /* Slightly increased gap for better spacing */
+    overflow-y: auto; /* Only this container should scroll */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    max-height: calc(75vh - 42px); /* Increased to match new container height */
+    flex: 1; /* Take up all available space */
+    background-color: color-mix(in srgb, var(--color-primary) 85%, var(--color-gray));
+}
+
+/* Ensure topic containers inside buttons container expand properly */
+.topic-buttons-container .topic-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px; /* Add space between topics */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Last topic container shouldn't have bottom margin */
+.topic-buttons-container .topic-container:last-child {
+    margin-bottom: 0;
+}
+
+.topic-button {
+    background-color: color-mix(in srgb, var(--color-primary) 50%, var(--color-gray));
+    border: none;
+    border-radius: 6px;
+    padding: 12px 15px;
+    text-align: left;
+    color: var(--color-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    position: relative; /* Ensure proper stacking context */
+    z-index: 11; /* Ensure buttons are above container */
+}
+
+.topic-button::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    background-color: var(--color-accent);
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 464c8.8 0 16-7.2 16-16V160H256c-17.7 0-32-14.3-32-32V48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H320zM0 64C0 28.7 28.7 0 64 0H229.5c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64z"/></svg>');
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M320 464c8.8 0 16-7.2 16-16V160H256c-17.7 0-32-14.3-32-32V48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H320zM0 64C0 28.7 28.7 0 64 0H229.5c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64z"/></svg>');
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    flex-shrink: 0;
+}
+
+.topic-button:hover {
+    background-color: var(--color-primary);
+}
+
+.topic-button:active {
+    background-color: var(--color-primary); /* Add active state for better feedback */
+    transform: translateY(1px); /* Small press effect */
+}
+
+.topic-selection-container.active {
+    display: flex;
+}
+
+/* Fix chat messages positioning to account for topic selection */
+.chat-messages {
+    position: absolute;
+    top: 130px; /* Default top position (adjust as needed based on mobile-header height) */
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    padding: 15px;
+    transition: top 0.3s ease;
+}
+
+/* Style scrollbar for the topic buttons container */
+.topic-buttons-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.topic-buttons-container::-webkit-scrollbar-track {
+    background: var(--color-primary);
+}
+
+.topic-buttons-container::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+.topic-buttons-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+}
+
+/* Empty Chat Instructions */
+.empty-chat-instructions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+}
+
+.instruction-content {
+    background-color: color-mix(in srgb, var(--color-accent) 10%, var(--color-black));
+    border: 1px solid color-mix(in srgb, var(--color-accent) 10%, var(--color-black));
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 500px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    box-shadow: 0 4px 12px var(--color-gray-light);
+}
+
+.instruction-content i {
+    font-size: 2rem;
+    color: var(--color-accent);
+    margin-bottom: 15px;
+}
+
+.instruction-content p {
+    color: var(--color-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .instruction-content {
+        padding: 20px;
+        max-width: 90%;
+    }
+    
+    .instruction-content i {
+        font-size: 1.5rem;
+    }
+    
+    .instruction-content p {
+        font-size: 0.9rem;
+    }
+}
+
+.chart-placeholder {
+    margin: 1rem 0;
+    min-height: 200px;
+    position: relative;
+    background-color: var(--color-primary);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.chart-placeholder canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.chart-error {
+    color: var(--color-warning);
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.chart-error-details {
+    margin-top: 0.5rem;
+    font-size: 0.8em;
+    color: var(--color-gray-light);
+    white-space: pre-wrap;
+    word-break: break-word;
+    background-color: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 4px;
+} 

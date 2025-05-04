@@ -1,0 +1,99 @@
+.answer-action-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.answer-action-popup.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-content {
+    position: fixed;
+    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-white));
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px var(--color-gray-light);
+    min-width: 180px;
+    max-width: 280px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.action-section {
+    margin-bottom: 10px;
+}
+
+.action-section-title {
+    font-size: 0.95rem;
+    color: var(--color-black);
+    margin: 0 0 10px 0;
+    text-align: left;
+    font-weight: 600;
+}
+
+.action-divider {
+    height: 1px;
+    background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+    margin: 15px 0;
+}
+
+.answer-action-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-accent) 80%, var(--color-black));
+    color: var(--color-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.answer-action-button:hover {
+    background: var(--color-accent);
+}
+
+/* Different colors for different button types */
+.follow-up-button {
+    background: color-mix(in srgb, var(--color-accent) 80%, var(--color-black)); /* Indigo for follow-up buttons */
+}
+
+.follow-up-button:hover {
+    background: var(--color-accent);
+}
+
+/* Save section styling */
+.save-section .answer-action-button {
+    text-align: center; /* Center text for save buttons */
+}
+
+/* Mobile styling to ensure it's usable on smaller screens */
+@media (max-width: 600px) {
+    .action-content {
+        width: 85%; /* Wider on mobile */
+        max-width: 320px;
+    }
+    
+    .answer-action-button {
+        padding: 12px 15px; /* Larger touch targets on mobile */
+        margin: 10px 0;
+        font-size: 1rem;
+    }
+}

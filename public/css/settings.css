@@ -1,0 +1,287 @@
+/* Additional styles for settings page */
+.settings-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-primary);
+}
+
+.settings-content {
+    flex: 1;
+    padding: 1.5rem;
+    padding-top: 5rem;
+    overflow-y: auto;
+    color: var(--color-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--color-black);
+}
+
+.settings-section {
+    background-color: var(--color-primary);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-primary);
+}
+
+.settings-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: color-mix(in srgb, var(--color-accent) 70%, var(--color-white));;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #b8a8a8;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    background-color: var(--color-black);
+    border: 1px solid var(--color-black);
+    padding: 0.8rem;
+    border-radius: 8px;
+    color: var(--color-secondary);
+}
+
+.form-group input:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-primary);
+}
+
+/* Toggle Switch */
+.form-group.toggle {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-primary);
+    transition: .4s;
+    border: 1px solid var(--color-primary);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--color-secondary);
+    transition: .4s;
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--color-accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Save Button */
+.save-button {
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+    background-color: var(--color-accent);
+}
+
+.logout-button {
+    background-color: var(--color-danger);
+    color: var(--color-secondary);
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.logout-button:hover {
+    background-color: var(--color-danger);
+}
+
+.back-to-chat {
+    margin-left: auto;
+    color: var(--color-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.back-to-chat:hover {
+    color: var(--color-secondary);
+}
+
+.chat-header {
+    background-color: var(--color-accent);
+    border-bottom: 1px solid var(--color-primary);
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+#grade-level {
+    background-color: var(--color-black);
+    border: 1px solid var(--color-black);
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: var(--color-white);
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%236b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+}
+
+#grade-level:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-primary);
+}
+
+#grade-level:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: var(--color-primary);
+}
+
+#grade-level option {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 0.8rem;
+}
+
+.success-message {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid var(--color-success);
+    color: var(--color-white);
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.success-message i {
+    color: var(--color-success);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Add this after the existing .auth-box styles */
+.auth-container .auth-box + .auth-box {
+    margin-top: 2rem;
+}
+
+/* Optional: Add a subtle divider between boxes */
+.auth-container .auth-box:not(:last-child) {
+    border-bottom: 1px solid var(--color-primary);
+    padding-bottom: 2rem;
+}
+
+/* Chat History Redirect */
+.chat-history-redirect {
+    padding: 15px;
+    text-align: center;
+}
+
+.chat-history-redirect p {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.history-redirect-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    font-weight: 500;
+}
+
+.history-redirect-btn:hover {
+    background-color: #007bff;
+    color: var(--color-secondary);
+}
+
+.history-redirect-btn i {
+    margin-right: 8px;
+} 

@@ -1,0 +1,66 @@
+/* Toast Notifications */
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: var(--color-success);
+    color: var(--color-secondary);
+    border-radius: 4px;
+    box-shadow: 0 2px 10px var(--color-gray-light);
+    z-index: 1000;
+    animation: slideInFromTop 0.3s, fadeOut 0.5s 2.5s;
+    opacity: 1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    max-width: 320px;
+}
+
+.toast-message.error {
+    background-color: var(--color-danger);
+}
+
+/* Add a subtle icon to toast */
+.toast-message::before {
+    content: '✓';
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.toast-message.error::before {
+    content: '✕';
+}
+
+/* Animations */
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Toast container for multiple toasts */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+} 
