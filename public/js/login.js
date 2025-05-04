@@ -81,22 +81,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Get the current hostname to check if we're on a subdomain
             const currentHostname = window.location.hostname;
-            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
-                               currentHostname !== 'studysimplify.in';
+            
+            // --- Updated Subdomain Check --- 
+            const isMainDomainProd = currentHostname === 'studysimplify.in';
+            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+            // It's a subdomain if it's NOT the main production domain AND NOT a direct local address.
+            // This covers *.studysimplify.in and *.localhost (or similar local setups).
+            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
+            // --- End Updated Check --- 
             
             console.log("Login.js - Current hostname:", currentHostname);
-            console.log("Login.js - Is subdomain:", isSubdomain);
-            console.log("Login.js - tuitionClass:", data.tuition_class);
+            console.log("Login.js - Is subdomain (updated check):", isSubdomain);
+            console.log("Login.js - tuitionClass from API:", data.tuition_class);
 
             // Conditional redirect based on tuition class AND subdomain status
-            const tuitionClass = localStorage.getItem('tuitionClass');
-            if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+            // Use data.tuition_class directly from the API response for immediate accuracy
+            const tuitionClassFromApi = data.tuition_class;
+            if (isSubdomain && tuitionClassFromApi && tuitionClassFromApi !== 'null' && tuitionClassFromApi !== '') {
                 console.log("Login.js - Redirecting to tuition_home.html - subdomain user");
-                // User belongs to a tuition class and is on a subdomain, redirect to intermediate page
                 window.location.href = 'tuition_home.html';
             } else {
-                console.log("Login.js - Redirecting to chatbot.html - main domain or no tuition class");
-                // Main domain user or not on a subdomain, redirect to chatbot
+                console.log("Login.js - Redirecting to chatbot.html - main domain or no tuition class or not on subdomain setup");
                 window.location.href = 'chatbot.html';
             }
 

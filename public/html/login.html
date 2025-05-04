@@ -13,6 +13,7 @@
         
         // Resource paths - choosing between local path and production path
         const cssPath = _isLocalServer ? "../css/auth.css" : "/public/css/auth.css";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css";
         const baseUrlJsPath = _isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
         const loginJsPath = _isLocalServer ? "../js/login.js" : "/public/js/login.js";
         const manifestPath = _isLocalServer ? "../manifest.json" : "/public/manifest.json";
@@ -30,39 +31,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
     <!-- CSS Files -->
-    <script>document.write(`<link rel="stylesheet" href="${cssPath}">`)</script>
+    <script>
+        document.write(`<link rel="stylesheet" href="${cssPath}">`);
+        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
-        // Check for authentication token on page load
+        // Check for authentication token on page load - REDIRECTION LOGIC REMOVED FROM HERE
+        // Redirection is now handled in login.js after successful login
         document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('user_id');
-            const tuitionClass = localStorage.getItem('tuitionClass');
-            
-            // Check if we're on a subdomain
-            const currentHostname = window.location.hostname;
-            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
-                                currentHostname !== 'studysimplify.in';
-            
-            console.log("Login page - Current hostname:", currentHostname);
-            console.log("Login page - Is subdomain:", isSubdomain);
-            console.log("Login page - tuitionClass:", tuitionClass);
-            
-            // If valid token exists, redirect to appropriate page
-            if (token && userId) {
-                // Only check tuition class AND we're on a subdomain
-                if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
-                    console.log("Redirecting to tuition_home.html from login - subdomain user");
-                    // User belongs to a tuition class on subdomain, redirect to tuition home page
-                    window.location.href = 'tuition_home.html';
-                } else {
-                    console.log("Redirecting to chatbot.html from login - main domain or no tuition class");
-                    // Main domain user or no tuition class, redirect to chatbot
-                    window.location.href = 'chatbot.html';
-                }
-            }
-            
             // Service worker is now handled in base-url.js
+            console.log('Login page DOM loaded. Redirection logic handled by login.js.');
         });
     </script>
 </head>

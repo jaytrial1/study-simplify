@@ -8,9 +8,24 @@
     <meta name="theme-color" content="#4166d5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <script src="../js/base-url.js"></script>
+    <script>
+        // Check if we're on a local server
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js";
+        const intermediateCssPath = _isLocalServer ? "../css/intermediate.css" : "/public/css/intermediate.css";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css";
+        
+        // Create and append resources
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+        document.write(`<link rel="stylesheet" href="${intermediateCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/intermediate.css">
     <style>
         /* Toast message styles */
         .toast {
@@ -131,12 +146,18 @@
                 // Get the current hostname
                 const currentHostname = window.location.hostname;
                 
-                // Check if we're on a subdomain of studysimplify.in
-                const isSubdomain = currentHostname.includes('.studysimplify.in') && 
-                                   currentHostname !== 'studysimplify.in';
+                // Check if we're on a subdomain (either production or local testing)
+                const isProductionSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                   currentHostname !== 'studysimplify.in' && 
+                                   currentHostname !== 'www.studysimplify.in';
+                
+                const isLocalSubdomain = currentHostname.includes('.localhost');
+                
+                // Combined subdomain check
+                const isSubdomain = isProductionSubdomain || isLocalSubdomain;
                 
                 console.log("Current hostname:", currentHostname);
-                console.log("Is actual subdomain:", isSubdomain);
+                console.log("Is actual subdomain:", isSubdomain, "(production:", isProductionSubdomain, ", local:", isLocalSubdomain, ")");
                 
                 // Only check approval status if we're actually on a subdomain
                 if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
@@ -152,30 +173,33 @@
                         let apiEndpoint;
                         
                         if (isSubdomain) {
-                            // Check if the URL structure indicates we're in the main directory or not
-                            const inMainDir = currentPath.startsWith('/main/');
-                            console.log("In /main/ directory?", inMainDir);
-                            
-                            // Try different path constructions for subdomains
-                            const protocol = window.location.protocol;
-                            
-                            // Option 1: Direct to root
-                            apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
-                            console.log("Using main domain API endpoint:", apiEndpoint);
-                        } else {
-                            // Regular domain path construction
-                            let basePath = '/main'; // Default subfolder
-                            
-                            // Try to extract the base path from the current URL
-                            const pathMatch = currentPath.match(/^\/([^\/]+)/);
-                            if (pathMatch && pathMatch[1]) {
-                                basePath = '/' + pathMatch[1];
+                            // Production subdomain: use the main domain for API endpoint
+                            if (isProductionSubdomain) {
+                                const protocol = window.location.protocol;
+                                apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
+                                console.log("Using main domain API endpoint:", apiEndpoint);
                             }
+                            // Local subdomain: path is relative to subdomain's root (which is likely the 'main' folder)
+                            else if (isLocalSubdomain) {
+                                // ---- CORRECTED LOCAL SUBDOMAIN LOGIC (v2) ----
+                                const basePath = ''; // NO /main prefix needed relative to the subdomain host
+                                const protocol = (host === 'localhost' || host.includes('.localhost') || 
+                                               host.startsWith('192.168.') || host.startsWith('10.') || 
+                                               host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
+                                
+                                // Construct API endpoint relative to the *subdomain host* WITHOUT /main
+                                apiEndpoint = `${protocol}//${host}${basePath}/api/user/check_status.php`;
+                                console.log("Using corrected local subdomain API endpoint (no /main):", apiEndpoint);
+                                // ---- END CORRECTION ----
+                            }
+                        } else {
+                            // Regular domain path construction (Direct localhost or 127.0.0.1 access)
+                            let basePath = '/main'; // Use /main for direct localhost
                             
                             // Construct the API endpoint to check user status
                             const protocol = (host === 'localhost' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.16.')) ? 'http:' : window.location.protocol;
                             apiEndpoint = `${protocol}//${host}${basePath}/api/user/check_status.php`;
-                            console.log("Using regular API endpoint:", apiEndpoint);
+                            console.log("Using regular API endpoint (direct localhost):", apiEndpoint);
                         }
                         
                         console.log("Sending request to:", apiEndpoint);
@@ -307,16 +331,45 @@
                     // Call the logout API (optional - continue with client-side logout even if this fails)
                     try {
                         const host = window.location.hostname;
-                        const isSubdomain = host.includes('.studysimplify.in');
+                        // Check for both production and local subdomains
+                        const isProductionSubdomain = host.includes('.studysimplify.in') && 
+                                                     host !== 'studysimplify.in' && 
+                                                     host !== 'www.studysimplify.in';
+                        const isLocalSubdomain = host.includes('.localhost');
+                        const isSubdomain = isProductionSubdomain || isLocalSubdomain;
+                        
                         const protocol = window.location.protocol;
                         
                         let logoutEndpoint;
                         
                         if (isSubdomain) {
-                            // Use main domain for API endpoint
-                            logoutEndpoint = `${protocol}//studysimplify.in/api/auth/logout.php`;
+                            // For production subdomain, use main domain API
+                            if (isProductionSubdomain) {
+                                logoutEndpoint = `${protocol}//studysimplify.in/api/auth/logout.php`;
+                            } 
+                            // For local subdomain, use proper path construction
+                            else if (isLocalSubdomain) {
+                                // Extract the base path from the current URL
+                                const currentPath = window.location.pathname;
+                                let basePath = '/main'; // Default subfolder
+                                
+                                const pathMatch = currentPath.match(/^\/([^\/]+)/);
+                                if (pathMatch && pathMatch[1]) {
+                                    basePath = '/' + pathMatch[1];
+                                }
+                                
+                                logoutEndpoint = `${protocol}//${host}${basePath}/api/auth/logout.php`;
+                            }
                         } else {
-                            // Regular domain path construction
+                            // Regular domain path construction (non-subdomain)
+                            const currentPath = window.location.pathname;
+                            let basePath = '/main'; // Default subfolder
+                            
+                            const pathMatch = currentPath.match(/^\/([^\/]+)/);
+                            if (pathMatch && pathMatch[1]) {
+                                basePath = '/' + pathMatch[1];
+                            }
+                            
                             logoutEndpoint = `${protocol}//${host}${basePath}/api/auth/logout.php`;
                         }
                         

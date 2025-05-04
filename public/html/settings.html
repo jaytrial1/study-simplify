@@ -18,6 +18,7 @@
         const stylesPath = _isLocalServer ? "../css/styles.css" : "/public/css/styles.css";
         const authPath = _isLocalServer ? "../css/auth.css" : "/public/css/auth.css";
         const settingsPath = _isLocalServer ? "../css/settings.css" : "/public/css/settings.css";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css";
         
         // JavaScript paths
         const settingsJsPath = _isLocalServer ? "../js/settings.js" : "/public/js/settings.js";
@@ -37,6 +38,7 @@
         document.write(`<link rel="stylesheet" href="${stylesPath}">`);
         document.write(`<link rel="stylesheet" href="${authPath}">`);
         document.write(`<link rel="stylesheet" href="${settingsPath}">`);
+        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -212,21 +214,23 @@
             
             // Check if we're on a subdomain
             const currentHostname = window.location.hostname;
-            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
-                                currentHostname !== 'studysimplify.in';
             
-            // Only show tuition button if user has a tuition class AND is on a subdomain
-            // Exception: Also show in local development for testing
-            const isLocalDev = currentHostname === 'localhost' || 
-                              currentHostname === '127.0.0.1' || 
-                              currentHostname.includes('192.168.') || 
-                              currentHostname.includes('10.0.');
+            // --- Use the standardized subdomain check --- 
+            const isMainDomainProd = currentHostname === 'studysimplify.in';
+            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+            // It's a subdomain if it's NOT the main production domain AND NOT a direct local address.
+            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
+            // --- End standardized check ---
                               
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isSubdomain || isLocalDev)) {
+            // Show tuition button only if user has a tuition class AND is on a subdomain setup
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && isSubdomain) {
                 const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
                 if (tuitionClassesBtn) {
+                    console.log('Showing tuition classes button in settings.html'); // Added log
                     tuitionClassesBtn.style.display = 'flex';
                 }
+            } else {
+                console.log('Not showing tuition classes button in settings.html. Reason:', {tuitionClass, isSubdomain}); // Added log
             }
         });
     </script>

@@ -390,22 +390,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .no-answers-message {
             text-align: center;
             padding: 30px;
-            background: rgba(59, 130, 246, 0.1);
+            background-color: color-mix(in srgb, var(--color-gray-light) 93%, var(--color-white));
             border-radius: 8px;
             margin: 20px 0;
         }
         
         .no-answers-message p {
             margin: 10px 0;
-            color: #c4c2c2;
+            color: var(--color-secondary);
         }
         
         .no-chapters-message, .no-answers-message-chapter {
             padding: 15px;
-            color: #666;
+            color: var(--color-muted-blue);
             font-style: italic;
             text-align: center;
-            background: rgba(200, 200, 200, 0.1);
+            background: color-mix(in srgb, var(--color-accent) 35%, var(--color-black));
             border-radius: 4px;
             margin: 10px 0;
         }
@@ -424,22 +424,22 @@ document.addEventListener('DOMContentLoaded', () => {
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            background-color: #2196F3; /* Default blue for all badges */
-            color: white;
+            background-color: color-mix(in srgb, var(--color-accent) 80%, var(--color-black)); /* Default blue for all badges */
+            color: var(--color-white);
         }
         
         .save-type-badge.best-response,
         .save-type-badge.best_response {
-            background-color: #4CAF50;
+            background-color: var(--color-success);
         }
         
         .save-type-badge.question-related,
         .save-type-badge.question_related {
-            background-color: #4CAF50;
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
         }
         
         .save-type-badge.important {
-            background-color: #FF9800;
+            background-color: var(--color-warning);
         }
         
         .save-type-badge.exam-related,
@@ -449,27 +449,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .answer-date {
             font-size: 0.75rem;
-            color: #666;
+            color: color-mix(in srgb, var(--color-accent) 60%, var(--color-white));
         }
         
         .answer-item {
             margin-bottom: 15px;
             padding: 12px;
             border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-black));
+            border: 1px solid color-mix(in srgb, var(--color-accent) 40%, var(--color-black));
         }
         
         .answer-body {
             margin-bottom: 10px;
-            color: #ccc;
+            color: var(--color-secondary);
             font-size: 0.9rem;
             line-height: 1.4;
         }
         
         .view-full-answer {
-            background-color: #3b82f6;
-            color: white;
+            background-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-black));
+            color: var(--color-white);
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
@@ -478,13 +478,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         .view-full-answer:hover {
-            background-color: #2563eb;
+            background-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-black));
         }
         
         /* New styles for better visibility */
         .answer-count {
-            background-color: #2196F3;
-            color: white;
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+            color: var(--color-white);
             font-size: 0.7rem;
             font-weight: 600;
             padding: 2px 6px;
@@ -511,116 +511,115 @@ document.addEventListener('DOMContentLoaded', () => {
             justify-content: space-between;
         }
         
-        .chapter-item.active > .chapter-header,
+        /* Subject (outermost) - bright blue */
+        .accordion-header {
+            background-color: var(--color-accent);
+            border-radius: 4px;
+            color: var(--color-white);
+            padding: 15px 15px;
+        }
+        /* When active, make it slightly darker */
         .accordion-item.active > .accordion-header {
-            background-color: rgba(59, 130, 246, 0.1);
+            background-color: color-mix(in srgb, var(--color-accent) 80%, var(--color-black));
+        }
+        
+        /* Chapter - much darker */
+        .chapter-item {
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+        }
+        .chapter-header {
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+            color: var(--color-white);
+        }
+        .chapter-item.active > .chapter-header {
+            background-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-black));
+        }
+        
+        /* Topic/Question - even darker */
+        .question-item {
+            background-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-black));
+        }
+        .question-header {
+            background-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-black));
+            color: var(--color-white);
+        }
+        .question-item.active > .question-header {
+            background-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-black));
+        }
+        
+        /* Answer - darkest, blending with background */
+        .answer-item {
+            background-color: color-mix(in srgb, var(--color-accent) 20%, var(--color-black));
+            border: 1px solid color-mix(in srgb, var(--color-accent) 20%, var(--color-black));
         }
         
         .accordion-content, .chapter-content, .question-content {
             display: none;
             padding: 10px;
             border-radius: 0 0 4px 4px;
+            background: transparent;
         }
-        
         .accordion-item.active > .accordion-content,
         .chapter-item.active > .chapter-content,
         .question-item.active > .question-content {
             display: block;
         }
-        
         .single-answer .question-content {
             padding-top: 0;
         }
-        
         /* Better toggle button visibility */
         .toggle-section-btn {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
             border: none;
-            color: white;
+            color: var(--color-white);
             border-radius: 4px;
             padding: 2px 6px;
             cursor: pointer;
         }
-        
         .toggle-section-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-black));
         }
-        
         /* Highlight chapters with saved answers */
         .highlighted-chapter {
-            border-left: 3px solid #2196F3;
-            background-color: rgba(33, 150, 243, 0.05);
+            border-left: 3px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+            background-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
         }
-        
         .highlighted-chapter .chapter-header {
-            background-color: rgba(33, 150, 243, 0.1);
+            background-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-black));
         }
-        
         .highlighted-chapter.active .chapter-header {
-            background-color: rgba(33, 150, 243, 0.2);
+            background-color: color-mix(in srgb, var(--color-accent) 80%, var(--color-black));
         }
-        
-        /* Ensure proper scrolling for expanded content */
         body, html {
             height: 100%;
             max-height: 100%;
             overflow-x: hidden;
         }
-        
         main {
             min-height: 100%;
-            padding-bottom: 80px; /* Add padding at bottom to ensure scrollability */
+            padding-bottom: 80px;
             position: relative;
         }
-        
         .answers-container {
             overflow-y: auto;
             position: relative;
         }
-        
-        /* Improve scrolling when all content is expanded */
         .answers-tree {
-            margin-bottom: 100px; /* Add extra margin at bottom for better scrolling */
+            margin-bottom: 100px;
         }
-        
-        /* Fix for accordion behavior */
         .accordion-content {
-            max-height: none !important; /* Ensure no height restrictions */
+            max-height: none !important;
         }
-        
-        /* Ensure the page footer doesn't interfere with scrolling */
         footer {
             position: relative;
             z-index: 10;
         }
-        
-        /* When all is expanded, improve visibility of bottom content */
         .toggle-all-btn.active ~ .answers-tree {
             padding-bottom: 150px;
         }
-        
-        /* Make subject headers always have a blue background */
-        .accordion-header {
-            background-color: #3B82F6;
-            border-radius: 4px;
-            color: white;
-            padding: 15px 15px;
-        }
-        
-        /* When active, make it slightly darker rather than gray */
-        .accordion-item.active > .accordion-header {
-            background-color: #2563EB;
-        }
-        
-        /* Make sure the icons in the header are white */
         .accordion-header i,
         .accordion-header .toggle-section-btn {
-            color: white;
-        }
-        
-        /* Keep chapter styling as is */
-        .chapter-item.active > .chapter-header {
-            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--color-white);
         }
     `;
     document.head.appendChild(style);

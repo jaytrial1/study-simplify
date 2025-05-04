@@ -13,6 +13,7 @@
         
         // CSS path - choosing between local path and production path
         const cssPath = _isLocalServer ? "../css/auth.css" : "/public/css/auth.css";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css";
         console.log("CSS Path:", cssPath);
         
         // JS path - choosing between local path and production path
@@ -21,6 +22,7 @@
         
         // Create and append CSS link
         document.write(`<link rel="stylesheet" href="${cssPath}">`);
+        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1515,7 +1515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /* Completely redesigned question item styling */
         .command-item {
             margin: 6px;
-            background-color: #252525;
+            background-color: color-mix(in srgb, var(--color-primary) 50%, var(--color-gray));
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.15s ease;
@@ -1547,7 +1547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .command-context {
             font-size: 11px;
-            color: #4166d5;
+            color: color-mix(in srgb, var(--color-accent) 90%, var(--color-white));
             display: flex;
             align-items: center;
             line-height: 1.2;
@@ -1559,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         .command-item:hover {
-            background-color: #2d2d2d;
+            background-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-gray));
         }
         
         /* Loading indicator */
@@ -1586,14 +1586,12 @@ document.addEventListener('DOMContentLoaded', () => {
             text-align: center;
             font-size: 11px;
             color: #777;
-            background-color: #1c1c1c;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: color-mix(in srgb, var(--color-primary) 50%, var(--color-gray));
+            border-top: 1px solid color-mix(in srgb, var(--color-primary) 50%, var(--color-gray));
         }
         
         /* Make question tag in selected container more appealing */
         .question-tag {
-            background-color: #4166d5;
-            border-radius: ;
             padding: 6px 10px;
             margin-right: 6px;ss
             margin-bottom: 6px;
@@ -2491,7 +2489,7 @@ function checkEmptyChatAndShowInstructions() {
             instructionBox.innerHTML = `
                 <div class="instruction-content">
                     <i class="fas fa-keyboard"></i>
-                    <p>Type "/" in from your keyboard to filter the topics from any chapter</p>
+                    <p>/" in from your keyboard to filter the topics from any chapter</p>
                 </div>
             `;
             chatMessages.appendChild(instructionBox);

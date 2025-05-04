@@ -25,6 +25,7 @@
         const mobileSidebarPath = _isLocalServer ? "../css/mobile-sidebar.css" : "/public/css/mobile-sidebar.css?v=<?php echo time(); ?>";
         const followUpCssPath = _isLocalServer ? "../css/follow-up.css" : "/public/css/follow-up.css?v=<?php echo time(); ?>";
         const topicListCssPath = _isLocalServer ? "../css/topic-list.css" : "/public/css/topic-list.css?v=<?php echo time(); ?>";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css?v=<?php echo time(); ?>";
         
         // JavaScript paths
         const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js?v=<?php echo time(); ?>";
@@ -58,6 +59,7 @@
         document.write(`<link rel="stylesheet" href="${mobileSidebarPath}">`);
         document.write(`<link rel="stylesheet" href="${followUpCssPath}">`);
         document.write(`<link rel="stylesheet" href="${topicListCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${themeCssPath}">`);
     </script>
     <!-- Highlight.js for code syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
@@ -177,28 +179,32 @@
             
             // Check if we're on a subdomain before doing tuition class redirects
             const currentHostname = window.location.hostname;
-            const isSubdomain = currentHostname.includes('.studysimplify.in') && 
-                                currentHostname !== 'studysimplify.in';
+            
+            // --- Use the standardized subdomain check --- 
+            const isMainDomainProd = currentHostname === 'studysimplify.in';
+            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+            // It's a subdomain if it's NOT the main production domain AND NOT a direct local address.
+            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
+            // --- End standardized check ---
             
             console.log("Chatbot page - Current hostname:", currentHostname);
-            console.log("Chatbot page - Is subdomain:", isSubdomain);
+            console.log("Chatbot page - Is subdomain (updated check):", isSubdomain);
             console.log("Chatbot page - tuitionClass:", tuitionClass);
             
             // If we're on main domain, just show the chatbot
             console.log("Main domain - showing chatbot");
             
-            // Show tuition button only if user has a tuition class AND is on subdomain
-            // Exception: Also show on local development for testing
-            const isLocalDev = window.location.hostname === 'localhost' || 
-                            window.location.hostname === '127.0.0.1' || 
-                            window.location.hostname.includes('192.168.') || 
-                            window.location.hostname.includes('10.0.');
-                            
-            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isSubdomain || isLocalDev)) {
+            // Show tuition button only if user has a tuition class AND is on a subdomain setup
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && isSubdomain) {
                 const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
                 if (tuitionClassesBtn) {
+                    console.log('Showing tuition classes button'); // Added log
                     tuitionClassesBtn.style.display = 'flex';
+                } else {
+                    console.log('Tuition classes button not found'); // Added log
                 }
+            } else {
+                 console.log('Not showing tuition classes button. Reason:', {tuitionClass, isSubdomain}); // Added log
             }
             
             // Service worker is now handled in base-url.js
@@ -445,7 +451,7 @@
             <div class="chat-input">
                 <div id="selectedQuestionsContainer"></div>
                 <div class="input-wrapper">
-                    <textarea id="userInput" placeholder="Type '/' to view questions from any subject..." rows="1"></textarea>
+                    <textarea id="userInput" placeholder="Type '/' to view questions of any subject." rows="1"></textarea>
                     <button id="sendButton">
                         <i class="fas fa-paper-plane"></i>
                     </button>
