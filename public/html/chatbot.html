@@ -114,6 +114,15 @@
             margin-right: 12px;
             color: var(--color-accent);
         }
+
+        /* Style for the dynamically added logo in the chat header */
+        .chat-header-logo {
+            max-width: 50px;  /* Adjust size as needed */
+            max-height: 40px; /* Adjust size to fit header */
+             /* Re-add space between logo and title */
+            object-fit: contain; /* Ensure logo scales nicely */
+            vertical-align: middle; /* Align vertically with text */
+        }
     </style>
     <script>
         // Configure marked.js with proper settings
@@ -430,7 +439,7 @@
                 <button id="menuToggle" class="menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h2><i class="fas fa-graduation-cap"></i> Study Assistant</h2>
+                <h2><i class="fas fa-graduation-cap"></i> <span class="chat-header-title-text">Study Assistant</span></h2>
             </div>
             <div class="mobile-header">
                 <div class="dropdown-trigger" id="dropdownTrigger">
@@ -572,5 +581,68 @@
     })();
     </script>
     <!-- End Active User Tracking Script -->
+
+    <!-- Script to dynamically replace chat header icon with logo on subdomains -->
+    <script>
+        (function() {
+            const currentHostname = window.location.hostname;
+            const isMainDomainProd = currentHostname === 'studysimplify.in';
+            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
+
+            if (isSubdomain) {
+                const subdomainName = currentHostname.split('.')[0];
+                const logoUrl = `/subdomain/${subdomainName}/logo.png`;
+                const titleUrl = `/subdomain/${subdomainName}/title.txt`; // Path to the title file
+                
+                // --- Handle Logo Replacement ---
+                const iconElement = document.querySelector('.chat-header h2 i.fas.fa-graduation-cap');
+                if (iconElement) {
+                    console.log(`Chatbot Page: Subdomain (${subdomainName}) detected. Replacing header icon with logo: ${logoUrl}`);
+                    // Create the image element
+                    const imgElement = document.createElement('img');
+                    imgElement.src = logoUrl;
+                    imgElement.alt = `${subdomainName} Logo`;
+                    imgElement.classList.add('chat-header-logo'); // Apply CSS class
+                    // Basic error handling: hide if logo not found
+                    imgElement.onerror = function() { 
+                        console.warn(`Header logo not found for subdomain ${subdomainName} at ${logoUrl}. Hiding image.`);
+                        this.style.display = 'none'; 
+                    };
+                    
+                    // Replace the icon with the image
+                    iconElement.replaceWith(imgElement);
+                } else {
+                    console.log('Chatbot Page: Subdomain detected, but default header icon not found.');
+                }
+
+                // --- Handle Title Replacement ---
+                console.log(`Chatbot Page: Fetching title from ${titleUrl}`);
+                fetch(titleUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(titleText => {
+                        const titleElement = document.querySelector('.chat-header-title-text');
+                        if (titleElement) {
+                            titleElement.textContent = titleText.trim();
+                            console.log(`Chatbot Page: Header title set to "${titleText.trim()}"`);
+                        } else {
+                            console.warn('Chatbot Page: Title span element (.chat-header-title-text) not found.');
+                        }
+                    })
+                    .catch(error => {
+                        console.warn(`Chatbot Page: Failed to fetch or set title from ${titleUrl}. Error: ${error}. Keeping default title.`);
+                    });
+
+            } else {
+                console.log('Chatbot Page: Not on a subdomain. Keeping default header icon and title.');
+            }
+        })();
+    </script>
+
 </body>
 </html> 

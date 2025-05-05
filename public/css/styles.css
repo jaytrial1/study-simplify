@@ -302,6 +302,8 @@ body {
 }
 
 .chat-header {
+    max-height: 60px;
+    max-width: 100%;
     background-color: var(--color-accent);
     padding: 0.8rem 1.5rem;
     display: flex;
@@ -326,7 +328,7 @@ body {
 }
 
 .chat-header h2 i {
-    color: var(--color-warning); /* Golden color for the cap */
+    color: #d9d9d9; /* Golden color for the cap */
     font-size: 1.6rem;
 }
 

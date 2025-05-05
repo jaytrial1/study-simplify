@@ -159,14 +159,32 @@
             console.log("localStorage tuitionClass:", tuitionClass);
             console.log("localStorage userId:", userId);
             
-            // --- Branding Logic (similar to index.html but for PHP config) ---
-            const logoUrl = `/subdomain/${tuitionClass}/logo.png`; // Assuming logo.png exists
-            tuitionLogo.src = logoUrl;
-            tuitionLogo.alt = `${tuitionClass} Logo`; // Improve alt text
-            
-            // You might want to fetch the actual tuition name from a config file later
-            // For now, use the tuitionClass value
-            tuitionName.textContent = `Welcome to ${tuitionClass.charAt(0).toUpperCase() + tuitionClass.slice(1)}`;
+            // --- Enhanced Branding Logic ---
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                const cleanTuitionName = tuitionClass.charAt(0).toUpperCase() + tuitionClass.slice(1);
+                tuitionName.textContent = `Welcome to ${cleanTuitionName}`;
+
+                // Construct logo URL (assuming logo.png)
+                const logoUrl = `/subdomain/${tuitionClass}/logo.png`;
+                tuitionLogo.src = logoUrl;
+                tuitionLogo.alt = `${cleanTuitionName} Logo`;
+
+                // Add error handling for the logo
+                tuitionLogo.onerror = function() {
+                    console.warn(`Logo not found at ${logoUrl}. Hiding logo element.`);
+                    this.style.display = 'none'; // Hide the image element if logo fails to load
+                    // Optionally, try logo.jpg here: 
+                    // this.onerror = null; // Prevent infinite loop if jpg also fails
+                    // this.src = `/subdomain/${tuitionClass}/logo.jpg`; 
+                };
+                
+                console.log(`Set logo src to: ${logoUrl}`);
+            } else {
+                // Fallback if tuitionClass isn't set (though unlikely for this page)
+                tuitionName.textContent = 'Welcome';
+                tuitionLogo.style.display = 'none'; // Hide logo if no class
+                console.warn('tuitionClass not found in localStorage. Hiding logo.');
+            }
 
             // --- Button Actions ---
             document.getElementById('chatbot-btn').addEventListener('click', async () => {

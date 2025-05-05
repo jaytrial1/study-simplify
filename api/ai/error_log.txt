@@ -37,3 +37,42 @@
 [04-May-2025 16:10:58 Europe/Berlin] Gemini API request successful with key index: 2
 [04-May-2025 16:10:58 Europe/Berlin] Added message to chat session 8
 [04-May-2025 16:10:58 Europe/Berlin] Added message to chat session 8
+[05-May-2025 13:18:35 Europe/Berlin] ====== query.php script execution started ======
+[05-May-2025 13:18:35 Europe/Berlin] Timestamp: 2025-05-05 13:18:35
+[05-May-2025 13:18:35 Europe/Berlin] Request Method: POST
+[05-May-2025 13:18:35 Europe/Berlin] Request URI: /api/ai/query.php
+[05-May-2025 13:18:35 Europe/Berlin] Auth Header (Server Var): Present
+[05-May-2025 13:18:35 Europe/Berlin] Auth Header (Redirect Var): Present
+[05-May-2025 13:18:35 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[05-May-2025 13:18:35 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[05-May-2025 13:18:35 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[05-May-2025 13:18:35 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[05-May-2025 13:18:35 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[05-May-2025 13:18:35 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[05-May-2025 13:18:35 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[05-May-2025 13:18:35 Europe/Berlin] Database connection successful
+[05-May-2025 13:18:35 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[05-May-2025 13:18:35 Europe/Berlin] Retrieved messages for session 9: [{"sender":"system","message":"Chat started","timestamp":"2025-05-05 13:18:26"}]
+[05-May-2025 13:18:35 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/11 CBSE/Business Studies/Business Services/Business Services  Meaning And Types.md
+[05-May-2025 13:18:35 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[05-May-2025 13:18:35 Europe/Berlin] QUERY DEBUG - Grade: '11 CBSE', Subject: 'Business Studies', Answer Type: 'short'
+[05-May-2025 13:18:35 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[05-May-2025 13:18:35 Europe/Berlin] PARAMS - Type: 'short', Grade: '11 CBSE', Subject: 'Business Studies'
+[05-May-2025 13:18:35 Europe/Berlin] Is practical subject: NO
+[05-May-2025 13:18:35 Europe/Berlin] Regular template - Grade dir: '11cbse'
+[05-May-2025 13:18:35 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/11cbse/short.php'
+[05-May-2025 13:18:35 Europe/Berlin] Regular grade template exists? YES
+[05-May-2025 13:18:35 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/11cbse/short.php
+[05-May-2025 13:18:35 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[05-May-2025 13:18:36 Europe/Berlin] Added message to chat session 9
+[05-May-2025 13:18:36 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[05-May-2025 13:18:36 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 0 (FREE)
+[05-May-2025 13:18:37 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[05-May-2025 13:18:37 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[05-May-2025 13:18:37 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 1 (FREE)
+[05-May-2025 13:18:38 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[05-May-2025 13:18:38 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[05-May-2025 13:18:38 Europe/Berlin] API_KEY_USAGE_LOG: Using Gemini key index 2 (FREE)
+[05-May-2025 13:18:43 Europe/Berlin] Gemini API request successful with key index: 2
+[05-May-2025 13:18:44 Europe/Berlin] Added message to chat session 9
+[05-May-2025 13:18:44 Europe/Berlin] Added message to chat session 9

@@ -60,6 +60,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script>document.write(`<link rel="apple-touch-icon" href="${iconPath}">`)</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Style for the dynamically added logo */
+        .auth-header-logo {
+            max-width: 70px;  /* Adjust size as needed */
+            max-height: 70px; /* Adjust size as needed */
+            margin-bottom: 15px; /* Space below the logo */
+            object-fit: contain; /* Ensure logo scales nicely */
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
@@ -163,5 +172,45 @@
     })();
     </script>
     <!-- End Active User Tracking Script -->
+
+    <!-- Script to dynamically replace icon with logo on subdomains -->
+    <script>
+        (function() {
+            const currentHostname = window.location.hostname;
+            const isMainDomainProd = currentHostname === 'studysimplify.in';
+            const isKnownLocalDirect = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
+            const isSubdomain = !isMainDomainProd && !isKnownLocalDirect;
+
+            if (isSubdomain) {
+                const subdomainName = currentHostname.split('.')[0];
+                const logoUrl = `/subdomain/${subdomainName}/logo.png`;
+                
+                // Find the default icon
+                const iconElement = document.querySelector('.auth-header i.fas.fa-book-reader');
+                
+                if (iconElement) {
+                    console.log(`Signup Page: Subdomain (${subdomainName}) detected. Replacing icon with logo: ${logoUrl}`);
+                    // Create the image element
+                    const imgElement = document.createElement('img');
+                    imgElement.src = logoUrl;
+                    imgElement.alt = `${subdomainName} Logo`;
+                    imgElement.classList.add('auth-header-logo'); // Apply CSS class
+                    // Basic error handling: hide if logo not found
+                    imgElement.onerror = function() { 
+                        console.warn(`Logo not found for subdomain ${subdomainName} at ${logoUrl}. Hiding image.`);
+                        this.style.display = 'none'; 
+                    };
+                    
+                    // Replace the icon with the image
+                    iconElement.replaceWith(imgElement);
+                } else {
+                    console.log('Signup Page: Subdomain detected, but default icon not found.');
+                }
+            } else {
+                console.log('Signup Page: Not on a subdomain. Keeping default icon.');
+            }
+        })();
+    </script>
+
 </body>
 </html> 

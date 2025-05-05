@@ -6,3 +6,11 @@
 [2025-05-04 13:31:07] Transaction committed successfully
 [2025-05-04 13:31:07] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":"224"}
 [2025-05-04 13:31:07] Request completed
+[2025-05-05 13:54:49] Request started - Data: []
+[2025-05-05 13:54:49] Transaction started - Data: {"action":"toggle_student_status","student_id":"225","owner_id":"47","is_first_approval":true,"activate":true}
+[2025-05-05 13:54:49] Verifying owner - Data: {"owner_id":"47"}
+[2025-05-05 13:54:49] Student data - Data: {"id":225,"name":"Jay Jariwala","subdomain_identifier":"classb","is_active_by_owner":0,"is_approved_by_owner":0}
+[2025-05-05 13:54:49] Plan data before update - Data: {"plan_id":83,"owner_id":47,"plan_type":"semester","price_per_student":"1200.00","initial_student_count":0,"current_total_students":0,"active_student_count":null,"inactive_approved_student_count":null,"start_date":null,"expiry_date":null,"total_amount":"0.00","payment_done":"0.00","total_due_amount":"0.00","payment_status":"expired","date_of_last_payment":null,"installment_count":1,"installment_interval_days":null,"next_installment_due_date":null,"next_installment_amount":null,"payment_deadline_for_addition":null,"created_at":"2025-04-25 18:40:14","updated_at":"2025-04-26 17:14:24"}
+[2025-05-05 13:54:49] Transaction committed successfully
+[2025-05-05 13:54:49] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":"225"}
+[2025-05-05 13:54:49] Request completed
