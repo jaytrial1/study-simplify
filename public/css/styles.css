@@ -1776,12 +1776,14 @@ select option:hover {
     flex-wrap: wrap;
     gap: 5px;
     padding: 5px;
+    
     background: color-mix(in srgb, var(--color-primary) 85%, var(--color-gray));;
     /* border-bottom: 1px solid var(--color-gray); */
 }
 
 .question-tag {
     background: color-mix(in srgb, var(--color-accent) 60%, var(--color-black));
+    border: 1px solid var(--color-accent);
     color: var(--color-secondary);
     padding: 4px 12px;
     border-radius: 16px;
