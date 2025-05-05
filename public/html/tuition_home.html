@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="../generate_manifest.php">
     <meta name="theme-color" content="#1e1f24">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,7 +23,9 @@
         // Create and append resources
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
         document.write(`<link rel="stylesheet" href="${intermediateCssPath}">`);
-        // document.write(`<link rel="stylesheet" href="${themeCssPath}">`); // Old theme link removed
+        // Link styles.css for splash screen styles - REMOVED
+        // const stylesPath = _isLocalServer ? "../css/styles.css" : "/public/css/styles.css";
+        // document.write(`<link rel="stylesheet" href="${stylesPath}">`);
 
         // --- DYNAMIC THEME CSS LOADING (v2 - Fixed IP handling) --- 
         const currentHostnameTheme = window.location.hostname;
@@ -119,6 +121,9 @@
     </style>
 </head>
 <body>
+    <!-- PWA Splash Screen - REMOVED -->
+    <!-- <div class="splash-screen" id="splash-screen"> ... </div> -->
+
     <div class="intermediate-container">
         <div class="intermediate-box">
             <div class="header">
@@ -150,6 +155,16 @@
             const tuitionClass = localStorage.getItem('tuitionClass');
             const userId = localStorage.getItem('user_id');
             const token = localStorage.getItem('token');
+            
+            // --- IMMEDIATE LOGIN CHECK --- 
+            // If token or user_id is missing, redirect to login immediately
+            if (!token || !userId) {
+                console.log('Token or User ID missing from localStorage. Redirecting to login.');
+                window.location.href = 'login.html';
+                return; // Stop further execution of this script block
+            }
+            // --- END IMMEDIATE LOGIN CHECK ---
+            
             const tuitionName = document.getElementById('tuition-name');
             const tuitionLogo = document.getElementById('tuition-logo');
             
@@ -159,10 +174,36 @@
             console.log("localStorage tuitionClass:", tuitionClass);
             console.log("localStorage userId:", userId);
             
-            // --- Enhanced Branding Logic ---
+            // --- Enhanced Branding Logic --- 
             if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
                 const cleanTuitionName = tuitionClass.charAt(0).toUpperCase() + tuitionClass.slice(1);
-                tuitionName.textContent = `Welcome to ${cleanTuitionName}`;
+                const fallbackWelcome = `Welcome to ${cleanTuitionName}`;
+
+                // --- Fetch App Name --- 
+                const appNameUrl = `/subdomain/${tuitionClass}/app_name.txt`;
+                console.log(`Fetching app name from: ${appNameUrl}`);
+                fetch(appNameUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        const appName = text.trim();
+                        if (appName) {
+                            tuitionName.textContent = appName; // Use fetched app name
+                            console.log(`Using app name from file: ${appName}`);
+                        } else {
+                            tuitionName.textContent = fallbackWelcome; // Fallback if file is empty
+                            console.warn(`app_name.txt found but empty. Using fallback welcome: ${fallbackWelcome}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching app_name.txt: ${error}. Using fallback welcome: ${fallbackWelcome}`);
+                        tuitionName.textContent = fallbackWelcome; // Fallback on fetch error
+                    });
+                // --- End Fetch App Name ---
 
                 // Construct logo URL (assuming logo.png)
                 const logoUrl = `/subdomain/${tuitionClass}/logo.png`;
@@ -458,5 +499,11 @@
             });
         });
     </script>
+
+    <!-- Splash Screen Logic - REMOVED -->
+    <!-- <script>
+        // Splash screen logic was here...
+    </script> -->
+
 </body>
 </html> 

@@ -91,7 +91,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="manifest" href="../manifest.json">
+    <link rel="manifest" href="../generate_manifest.php">
     <!-- Custom styles for tuition classes button -->
     <style>
         /* Styling for the tuition classes button */
@@ -356,13 +356,8 @@
     </script>
 </head>
 <body>
-    <!-- PWA Splash Screen -->
-    <div class="splash-screen" id="splash-screen">
-        <div class="splash-logo">
-            <i class="fas fa-robot"></i>
-        </div>
-        <div class="splash-text">Study Assistant</div>
-    </div>
+    <!-- PWA Splash Screen - REMOVED -->
+    <!-- <div class="splash-screen" id="splash-screen"> ... </div> -->
 
     <div class="app-container">
         <!-- Sidebar -->
@@ -523,26 +518,10 @@
         document.write(`<script src="${followUpJsPath}"><\/script>`);
         document.write(`<script src="${topicListJsPath}"><\/script>`);
     </script>
-    <script>
-        // Handle splash screen
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show splash screen only when launched as PWA
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                const splashScreen = document.getElementById('splash-screen');
-                // Hide splash screen after 2 seconds
-                setTimeout(() => {
-                    splashScreen.classList.add('hidden');
-                    // Remove from DOM after animation completes
-                    setTimeout(() => {
-                        splashScreen.remove();
-                    }, 500);
-                }, 2000);
-            } else {
-                // Not in PWA mode, remove splash immediately
-                document.getElementById('splash-screen').remove();
-            }
-        });
-    </script>
+    <!-- Splash screen script REMOVED -->
+    <!-- <script>
+        // Handle splash screen ... 
+    </script> -->
     
     <!-- Active User Tracking Script -->
     <script>
