@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .no-answers-message p {
             margin: 10px 0;
-            color: var(--color-secondary);
+            color: color-mix(in srgb, var(--color-white) 70%, var(--color-black));
         }
         
         .no-chapters-message, .no-answers-message-chapter {

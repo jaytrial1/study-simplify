@@ -2489,7 +2489,7 @@ function checkEmptyChatAndShowInstructions() {
             instructionBox.innerHTML = `
                 <div class="instruction-content">
                     <i class="fas fa-keyboard"></i>
-                    <p>/" in from your keyboard to filter the topics from any chapter</p>
+                    <p>Type "/" in from your keyboard to filter the topics from any chapter</p>
                 </div>
             `;
             chatMessages.appendChild(instructionBox);

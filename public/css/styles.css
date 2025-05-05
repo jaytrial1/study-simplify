@@ -574,7 +574,7 @@ body {
 
 #userInput::placeholder {
     font-family: inherit;
-    color: var(--color-white);
+    color: color-mix(in srgb, var(--color-white) 60%, var(--color-black));
 }
 
 #sendButton {
