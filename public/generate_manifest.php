@@ -62,7 +62,7 @@ if ($is_subdomain && $subdomain) {
     $subdomain_dir = dirname(__DIR__) . '/subdomain/' . $subdomain; // Relative to htdocs/main
     error_log("PWA Manifest: Checking subdomain directory: " . $subdomain_dir);
 
-    $title_file = $subdomain_dir . '/title.txt';
+    $title_file = $subdomain_dir . '/app_name.txt';
     $logo_file_relative_path = '/subdomain/' . $subdomain . '/logo.png'; // Path relative to web root
     $logo_file_system_path = $subdomain_dir . '/logo.png';
     error_log("PWA Manifest: Checking title file: " . $title_file);
