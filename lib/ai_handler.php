@@ -285,17 +285,25 @@ class AIHandler {
     }
     
     public function callGeminiAPI($promptData) {
+        $debugLog = []; // Initialize debug log array here
         try {
             // Initialize debug log
-            $debugLog = [];
             $debugLog[] = "Starting API call process...";
             $debugLog[] = "Selected AI Model: " . $this->model;
 
-            // Get response from appropriate API
+            $overallStartTime = microtime(true); // Start overall timer
+
+            // Get response from appropriate API, passing $debugLog by reference
             $responseData = $this->model === 'gemini' ? 
                 $this->callGemini($promptData, $debugLog) : 
                 $this->callDeepSeek($promptData, $debugLog);
             
+            $overallEndTime = microtime(true); // End overall timer
+            $totalDuration = $overallEndTime - $overallStartTime;
+
+            // Add total duration to the debug log (which was modified by reference)
+            $debugLog[] = sprintf("--- Total API processing time: %.2f seconds ---", $totalDuration);
+
             // If logging is enabled and the response is successful, add the debug info to the client-side console
             if ($this->enableLogging && isset($responseData['success']) && $responseData['success'] === true) {
                 $logInfo = "API KEY USAGE: ";
@@ -308,6 +316,11 @@ class AIHandler {
                 header('X-API-Key-Log: ' . $logInfo);
             }
             
+            // Now, add the completed debug log to the response if logging is enabled
+            if ($this->enableLogging) {
+                $responseData['debug_log'] = $debugLog;
+            }
+
             return $responseData;
         } catch (Exception $e) {
             // Log the final exception if something unexpected happens outside the specific model calls
@@ -325,15 +338,17 @@ class AIHandler {
                 'error' => "An unexpected error occurred: " . $e->getMessage(),
             ];
             
+            // Ensure debugLog is part of the response even on exception
             if ($this->enableLogging) {
-                $response['debug_log'] = $debugLog;
+                 $response['debug_log'] = isset($debugLog) ? $debugLog : ["Debug log unavailable due to early exception."];
+                 $response['debug_log'][] = "Exception prevented total time calculation."; // Add note
             }
             
             return $response;
         }
     }
 
-    private function callGemini($promptData, $debugLog) {
+    private function callGemini($promptData, array &$debugLog) {
         // Start with the last working key index, but don't start with paid key (index 4)
         $startIndex = ($this->lastWorkingKeyIndex >= 4) ? 0 : $this->lastWorkingKeyIndex;
         $errorMessages = [];
@@ -401,28 +416,36 @@ class AIHandler {
 
                 // Make the API request
                 $ch = curl_init($this->apiUrl . '?key=' . $apiKey);
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => json_encode($data),
                     CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-                    CURLOPT_TIMEOUT => 20 // Increased timeout to 20 seconds
-            ]);
+                    CURLOPT_TIMEOUT => 100 // Increased timeout to 100 seconds
+                ]);
             
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
+                $startTime = microtime(true); // Record start time
+                $response = curl_exec($ch);
+                $endTime = microtime(true);   // Record end time
+                $duration = $endTime - $startTime; // Calculate duration
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP Code *before* closing
+                $curlError = curl_error($ch); // Get potential CURL error *before* closing
+                curl_close($ch); // Now close the handle
             
+                // Log the duration immediately after the call
+                $duration_log = sprintf("Key %d %s attempt took: %.2f seconds", $currentIndex, $keyType, $duration);
+                $debugLog[] = $duration_log;
+                error_log("DEBUG: " . $duration_log); 
+
                 // Check for CURL errors first
-                $curlError = curl_error($ch);
                 if (!empty($curlError)) {
                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: CURL Error - {$curlError}";
                     error_log("DEBUG: CURL Error: " . $curlError);
                     throw new Exception("CURL Error: " . $curlError);
-            }
+                }
 
-            if ($httpCode !== 200) {
-                $responseData = json_decode($response, true);
+                if ($httpCode !== 200) {
+                    $responseData = json_decode($response, true);
                     $errorMsg = isset($responseData['error']['message'])
                     ? $responseData['error']['message'] 
                         : "API request failed with HTTP {$httpCode}";
@@ -430,8 +453,8 @@ class AIHandler {
                     throw new Exception($errorMsg);
                 }
 
-            $responseData = json_decode($response, true);
-            if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+                $responseData = json_decode($response, true);
+                if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
                     $errorMsg = "API returned unexpected format";
                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: {$errorMsg}";
                     error_log("DEBUG: Unexpected response format: " . json_encode($responseData));
@@ -444,18 +467,11 @@ class AIHandler {
                 error_log("Gemini API request successful with key index: " . $currentIndex);
                 
                 // Return success structure
-                $response = [
+                return [
                     'success' => true,
                     'result' => $responseData['candidates'][0]['content']['parts'][0]['text']
                 ];
-                
-                // Only include debug_log if logging is enabled
-                if ($this->enableLogging) {
-                    $response['debug_log'] = $debugLog;
-                }
-                
-                return $response;
-        } catch (Exception $e) {
+            } catch (Exception $e) {
                 // Log the error message to the debug log (already done inside the catch block above)
                 $errorMsg = "Error with key index " . $currentIndex . ": " . $e->getMessage();
                 $errorMessages[] = $errorMsg; // Keep track for final error summary
@@ -469,19 +485,13 @@ class AIHandler {
         error_log($errorSummary);
         $debugLog[] = "All Gemini keys failed.";
         // Return failure structure
-        $response = [
+        return [
             'success' => false,
             'error' => $errorSummary,
         ];
-        
-        if ($this->enableLogging) {
-            $response['debug_log'] = $debugLog;
-        }
-        
-        return $response;
     }
 
-    private function callDeepSeek($promptData, $debugLog) {
+    private function callDeepSeek($promptData, array &$debugLog) {
         // Start with the last working key index, but don't start with paid key (index 4)
         $startIndex = ($this->lastWorkingKeyIndex >= 4) ? 0 : $this->lastWorkingKeyIndex;
         $errorMessages = [];
@@ -583,7 +593,7 @@ class AIHandler {
                     CURLOPT_POST => true,
                     CURLOPT_POSTFIELDS => json_encode($data),
                     CURLOPT_HTTPHEADER => $headers,
-                    CURLOPT_TIMEOUT => 15, // Keep existing timeout
+                    CURLOPT_TIMEOUT => 100, // Keep existing timeout
                     CURLOPT_VERBOSE => false,
                     CURLOPT_HEADER => false,
                     // Make sure we're passing the full authorization value including in cookies
@@ -593,17 +603,24 @@ class AIHandler {
                     CURLOPT_MAXREDIRS => 3
                 ]);
             
+                $startTime = microtime(true); // Record start time
                 $response = curl_exec($ch);
-                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                $responseBody = $response;
+                $endTime = microtime(true); // End timer immediately after
+                $duration = $endTime - $startTime; // Calculate duration
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP Code *before* closing
+                $responseBody = $response; // Keep this for potential decoding later
+                $curlError = curl_error($ch); // Get curl error *before* closing
+                curl_close($ch); // Now close the handle
+            
+                // Log the duration immediately after the call completes
+                $duration_log = sprintf("Key %d %s attempt took: %.2f seconds", $currentIndex, $keyType, $duration);
+                $debugLog[] = $duration_log;
+                error_log("DEBUG: " . $duration_log); 
                 
                 // Log complete response data (Keep in server log if needed)
                 error_log("DEBUG: OpenRouter Response HTTP Code: " . $httpCode);
                 error_log("DEBUG: OpenRouter Response Body (first 300 chars): " . substr($responseBody, 0, 300));
                 
-                $curlError = curl_error($ch);
-                curl_close($ch);
-
                 // Check for CURL errors first
                 if (!empty($curlError)) {
                     $debugLog[] = "Key {$currentIndex} {$keyType} failed: CURL Error - {$curlError}";
@@ -653,17 +670,10 @@ class AIHandler {
                 error_log("DEBUG: OpenRouter API request successful with key index: " . $currentIndex);
                 
                  // Return success structure
-                 $response = [
+                 return [
                      'success' => true,
                      'result' => $responseContent
                  ];
-                 
-                 // Only include debug_log if logging is enabled
-                 if ($this->enableLogging) {
-                     $response['debug_log'] = $debugLog;
-                 }
-                 
-                 return $response;
             } catch (Exception $e) {
                  // Log the error message to the debug log (already done inside the catch block above)
                 $errorMsg = "Error with key index " . $currentIndex . ": " . $e->getMessage();
@@ -678,15 +688,9 @@ class AIHandler {
         error_log("DEBUG: Fatal error - " . $errorSummary);
         $debugLog[] = "All OpenRouter keys failed.";
         // Return failure structure
-        $response = [
+        return [
             'success' => false,
             'error' => $errorSummary,
         ];
-        
-        if ($this->enableLogging) {
-            $response['debug_log'] = $debugLog;
-        }
-        
-        return $response;
     }
 } 
