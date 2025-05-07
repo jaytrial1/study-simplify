@@ -207,7 +207,7 @@
 
                 // Construct logo URL (assuming logo.png)
                 const logoUrl = `/subdomain/${tuitionClass}/logo.png`;
-                tuitionLogo.src = logoUrl;
+            tuitionLogo.src = logoUrl;
                 tuitionLogo.alt = `${cleanTuitionName} Logo`;
 
                 // Add error handling for the logo
@@ -261,9 +261,9 @@
                         if (isSubdomain) {
                             // Production subdomain: use the main domain for API endpoint
                             if (isProductionSubdomain) {
-                                const protocol = window.location.protocol;
-                                apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
-                                console.log("Using main domain API endpoint:", apiEndpoint);
+                            const protocol = window.location.protocol;
+                            apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
+                            console.log("Using main domain API endpoint:", apiEndpoint);
                             }
                             // Local subdomain: path is relative to subdomain's root (which is likely the 'main' folder)
                             else if (isLocalSubdomain) {
@@ -431,7 +431,7 @@
                         if (isSubdomain) {
                             // For production subdomain, use main domain API
                             if (isProductionSubdomain) {
-                                logoutEndpoint = `${protocol}//studysimplify.in/api/auth/logout.php`;
+                            logoutEndpoint = `${protocol}//studysimplify.in/api/auth/logout.php`;
                             } 
                             // For local subdomain, use proper path construction
                             else if (isLocalSubdomain) {

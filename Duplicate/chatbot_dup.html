@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // Check if we're on a local server (using a different variable name than base-url.js)
+        const _isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        console.log("Server detection (inline):", _isLocalServer ? "LOCAL SERVER" : "PRODUCTION SERVER");
+        
+        // Resource paths - choosing between local path and production path
+        const baseUrlJsPath = _isLocalServer ? "../js/base-url.js" : "/public/js/base-url.js?v=<?php echo time(); ?>";
+        const manifestPath = _isLocalServer ? "../manifest.json" : "/public/manifest.json";
+        const iconPath = _isLocalServer ? "../icons/icon-192x192.png" : "/public/icons/icon-192x192.png";
+        
+        // CSS paths
+        const stylesPath = _isLocalServer ? "../css/styles.css" : "/public/css/styles.css?v=<?php echo time(); ?>";
+        const responsePath = _isLocalServer ? "../css/response.css" : "/public/css/response.css?v=<?php echo time(); ?>";
+        const ansActionPath = _isLocalServer ? "../css/ans_action.css" : "/public/css/ans_action.css?v=<?php echo time(); ?>";
+        const toastPath = _isLocalServer ? "../css/toast.css" : "/public/css/toast.css?v=<?php echo time(); ?>";
+        const chatCssPath = _isLocalServer ? "../css/chat.css" : "/public/css/chat.css?v=<?php echo time(); ?>";
+        const mobileSidebarPath = _isLocalServer ? "../css/mobile-sidebar.css" : "/public/css/mobile-sidebar.css?v=<?php echo time(); ?>";
+        const followUpCssPath = _isLocalServer ? "../css/follow-up.css" : "/public/css/follow-up.css?v=<?php echo time(); ?>";
+        const topicListCssPath = _isLocalServer ? "../css/topic-list.css" : "/public/css/topic-list.css?v=<?php echo time(); ?>";
+        const themeCssPath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css?v=<?php echo time(); ?>";
+        
+        // JavaScript paths
+        const scriptPath = _isLocalServer ? "../js/script.js" : "/public/js/script.js?v=<?php echo time(); ?>";
+        const historySearchPath = _isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js?v=<?php echo time(); ?>";
+        const transitionsPath = _isLocalServer ? "../js/transitions.js" : "/public/js/transitions.js?v=<?php echo time(); ?>";
+        const chatHistoryPath = _isLocalServer ? "../js/chat-history.js" : "/public/js/chat-history.js?v=<?php echo time(); ?>";
+        const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js?v=<?php echo time(); ?>";
+        const followUpJsPath = _isLocalServer ? "../js/follow-up-prompts.js" : "/public/js/follow-up-prompts.js?v=<?php echo time(); ?>";
+        const topicListJsPath = _isLocalServer ? "../js/topic-list.js" : "/public/js/topic-list.js?v=<?php echo time(); ?>";
+        
+        // Create and append base URL script
+        document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+
+        // --- DYNAMIC THEME CSS LOADING (v2 - Fixed IP handling) --- 
+        const currentHostnameTheme = window.location.hostname;
+        const isMainDomainProdTheme = currentHostnameTheme === 'studysimplify.in';
+        // Check for direct local access (localhost, IP addresses)
+        const isDirectLocalAccessTheme = currentHostnameTheme === 'localhost' || 
+                                       currentHostnameTheme === '127.0.0.1' ||
+                                       currentHostnameTheme.startsWith('192.168.') || 
+                                       currentHostnameTheme.startsWith('10.');
+        // It's a theme-relevant subdomain ONLY if it's NOT the main production domain AND NOT direct local access.
+        const isSubdomainTheme = !isMainDomainProdTheme && !isDirectLocalAccessTheme;
+        let finalThemePath;
+
+        if (isSubdomainTheme) {
+            // This handles *.studysimplify.in (excluding main) and *.localhost
+            const subdomainName = currentHostnameTheme.split('.')[0]; 
+            finalThemePath = `/subdomain/${subdomainName}/theme.css`; 
+            console.log(`Theme Loading: Subdomain detected (${subdomainName}). Path: ${finalThemePath}`);
+        } else {
+            // This handles main domain, localhost, 127.0.0.1, and local IPs
+            // Use the original _isLocalServer check which correctly identifies these as local.
+            finalThemePath = _isLocalServer ? "../css/theme.css" : "/public/css/theme.css?v=<?php echo time(); ?>";
+            console.log(`Theme Loading: Not a theme subdomain. Using default. Path: ${finalThemePath}`);
+        }
+        // --- END DYNAMIC THEME CSS LOADING ---
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>ChatBot UI</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PWA Support -->
+    
+    <meta name="theme-color" content="#1e1f24">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+    <!-- CSS Files -->
+    <script>
+        document.write(`<link rel="stylesheet" href="${stylesPath}">`);
+        document.write(`<link rel="stylesheet" href="${responsePath}">`);
+        document.write(`<link rel="stylesheet" href="${ansActionPath}">`);
+        document.write(`<link rel="stylesheet" href="${toastPath}">`);
+        document.write(`<link rel="stylesheet" href="${chatCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${mobileSidebarPath}">`);
+        document.write(`<link rel="stylesheet" href="${followUpCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${topicListCssPath}">`);
+        document.write(`<link rel="stylesheet" href="${finalThemePath}">`); 
+        
+    </script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="manifest" href="../manifest.json">
+    <!-- Custom styles for tuition classes button -->
+    <style>
+        /* Styling for the tuition classes button */
+        #tuitionClassesBtn {
+            align-items: center;
+            justify-content: space-between;
+            color: inherit;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        #tuitionClassesBtn:hover {
+            background-color: rgba(65, 102, 245, 0.1);
+        }
+        
+        #tuitionClassesBtn i.fas.fa-school {
+            font-size: 18px;
+            margin-right: 12px;
+            color: var(--color-accent);
+        }
+    </style>
+    <script>
+        // Configure marked.js with proper settings
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set options for marked to ensure consistent rendering
+            marked.setOptions({
+                renderer: new marked.Renderer(),
+                highlight: function(code, lang) {
+                    try {
+                        return hljs.highlight(code, { language: lang || 'plaintext' }).value;
+                    } catch (e) {
+                        console.warn('Language not supported for highlighting:', lang);
+                        return hljs.highlight(code, { language: 'plaintext' }).value;
+                    }
+                },
+                pedantic: false,
+                gfm: true,
+                breaks: true,
+                sanitize: false,
+                smartLists: true,
+                smartypants: false,
+                xhtml: false
+            });
+            
+            // Add a custom renderer for code blocks to better handle fenced code blocks
+            const renderer = new marked.Renderer();
+            
+            // Override the code block renderer
+            renderer.code = function(code, language) {
+                // Ensure code is a string
+                const codeStr = typeof code === 'string' ? code : String(code || '');
+                
+                // Handle triple backtick fences within the content
+                if (codeStr.startsWith('```') && (codeStr.match(/```/g) || []).length >= 2) {
+                    // Extract just the code contents without the backticks
+                    const codeMatch = codeStr.match(/```(?:(\w+)\n)?([\s\S]*?)```/);
+                    if (codeMatch) {
+                        const extractedLang = codeMatch[1] || language || 'plaintext';
+                        const extractedCode = codeMatch[2].trim();
+                        
+                        try {
+                            const highlighted = hljs.highlight(extractedCode, { 
+                                language: extractedLang || 'plaintext'
+                            }).value;
+                            
+                            return `<pre><code class="hljs language-${extractedLang}">${highlighted}</code></pre>`;
+                        } catch (e) {
+                            console.warn('Error highlighting nested code:', e);
+                        }
+                    }
+                }
+                
+                // Normal code highlighting
+                let highlighted;
+                try {
+                    highlighted = hljs.highlight(codeStr, { 
+                        language: language || 'plaintext'
+                    }).value;
+                } catch (e) {
+                    console.warn('Language not supported:', language);
+                    highlighted = hljs.highlight(codeStr, { language: 'plaintext' }).value;
+                }
+                
+                return `<pre><code class="hljs language-${language || 'plaintext'}">${highlighted}</code></pre>`;
+            };
+            
+            // Set the custom renderer
+            marked.setOptions({ renderer: renderer });
+            
+            console.log('Marked.js has been properly initialized with custom options');
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('user_id');
+            const tuitionClass = localStorage.getItem('tuitionClass');
+            const isApproved = localStorage.getItem('is_approved_by_owner');
+            const isActive = localStorage.getItem('is_active_by_owner');
+            const isActiveByAdmin = localStorage.getItem('is_active_by_admin');
+            
+            // If no token or user ID exists, redirect to login page
+            if (!token || !userId) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // --- CORRECTED ENVIRONMENT DETECTION FOR BUTTON VISIBILITY ---
+            const currentHostname = window.location.hostname;
+            
+            // Check for any local development environment (direct or subdomain)
+            const isLocalDev = currentHostname === 'localhost' || 
+                             currentHostname === '127.0.0.1' || 
+                             currentHostname.includes('.localhost') || // Include *.localhost
+                             currentHostname.includes('192.168.') || 
+                             currentHostname.includes('10.0.');
+                             
+            // Check specifically for production subdomains
+            const isProductionSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                        currentHostname !== 'studysimplify.in';
+
+            console.log("Chatbot page - Current hostname:", currentHostname);
+            console.log("Chatbot page - isLocalDev:", isLocalDev);
+            console.log("Chatbot page - isProductionSubdomain:", isProductionSubdomain);
+            console.log("Chatbot page - tuitionClass:", tuitionClass);
+            
+            // Show button if tuitionClass exists AND (it's local OR it's a production subdomain)
+            if (tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && (isLocalDev || isProductionSubdomain)) {
+                console.log('Showing Tuition Classes button.');
+                const tuitionClassesBtn = document.getElementById('tuitionClassesBtn');
+                if (tuitionClassesBtn) {
+                    tuitionClassesBtn.style.display = 'flex';
+                } else {
+                    console.error('#tuitionClassesBtn element not found!');
+                }
+            } else {
+                console.log('Hiding Tuition Classes button. Conditions not met:', {
+                    tuitionClassExists: tuitionClass && tuitionClass !== 'null' && tuitionClass !== '',
+                    isLocal: isLocalDev,
+                    isProdSubdomain: isProductionSubdomain
+                });
+            }
+            // --- END CORRECTION ---
+            
+            // Service worker is now handled in base-url.js
+        });
+        
+        // Function to periodically check if the user still has access rights
+        function setupPeriodicAccessCheck(userId, tuitionClass, token) {
+            // First check after 2 minutes, then every 5 minutes after that
+            setTimeout(() => {
+                checkUserAccess(userId, tuitionClass, token);
+                
+                // Then set up recurring checks every 5 minutes
+                setInterval(() => {
+                    checkUserAccess(userId, tuitionClass, token);
+                }, 5 * 60 * 1000); // 5 minutes
+            }, 2 * 60 * 1000); // 2 minutes
+        }
+        
+        // Function to check if user still has access
+        async function checkUserAccess(userId, tuitionClass, token) {
+            console.log("Performing periodic access check...");
+            
+            try {
+                const currentHostname = window.location.hostname;
+                const isSubdomain = currentHostname.includes('.studysimplify.in') && 
+                                   currentHostname !== 'studysimplify.in';
+                
+                // Skip check if not on a subdomain
+                if (!isSubdomain) return;
+                
+                // Determine API endpoint
+                const protocol = window.location.protocol;
+                const apiEndpoint = `${protocol}//studysimplify.in/api/user/check_status.php`;
+                
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        tuition_class: tuitionClass
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Periodic access check result:", data);
+                    
+                    // Check if user has lost access
+                    if (data.is_approved_by_owner != 1 || data.is_active_by_owner != 1 || data.is_active_by_admin != 1) {
+                        console.log("Access has been revoked. Redirecting to tuition home page...");
+                        
+                        // Update localStorage with current status
+                        localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
+                        localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
+                        localStorage.setItem('is_active_by_admin', data.is_active_by_admin);
+                        
+                        // Show a message to the user
+                        const toastMessage = document.getElementById('toastMessage');
+                        const toastNotification = document.getElementById('toastNotification');
+                        
+                        if (toastMessage && toastNotification) {
+                            toastMessage.textContent = "Your access has been deactivated. Redirecting...";
+                            toastNotification.classList.add('show');
+                            
+                            // Redirect after showing toast
+                            setTimeout(() => {
+                                window.location.href = 'tuition_home.html';
+                            }, 3000);
+                        } else {
+                            // If toast elements not found, redirect immediately
+                            window.location.href = 'tuition_home.html';
+                        }
+                    }
+                } else {
+                    console.log("Periodic access check failed with status:", response.status);
+                    // Don't redirect on failed checks - might be temporary network issues
+                }
+            } catch (error) {
+                console.error("Error in periodic access check:", error);
+                // Don't redirect on failed checks - might be temporary network issues
+            }
+        }
+    </script>
+    
+    <!-- MathJax for LaTeX Support -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        // MathJax configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    
+    <!-- CSS to fix MathJax scrollbar issues -->
+    <style>
+        /* Fix for MathJax vertical scrollbars */
+        .scrollable-wrapper {
+            overflow-y: visible !important;
+            overflow-x: auto !important;
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 1em !important; /* Add some space below formulas */
+        }
+        
+        /* Ensure MathJax containers don't show vertical scrollbars */
+        mjx-container, 
+        mjx-container[display="true"], 
+        mjx-container[jax="CHTML"],
+        mjx-container[jax="CHTML"][display="true"] {
+            overflow: visible !important;
+            min-height: unset !important;
+            padding: 0 !important;
+            max-height: none !important;
+        }
+        
+        /* Target all MathJax inner elements */
+        mjx-math, mjx-assistive-mml, 
+        mjx-container > * {
+            overflow: visible !important;
+            max-height: none !important;
+            min-height: unset !important;
+        }
+        
+        /* Prevent overflow issues with SVG */
+        mjx-container svg {
+            overflow: visible !important;
+        }
+        
+        /* Ensure MathJax elements with display="block" can expand vertically */
+        mjx-container[display="true"] mjx-math {
+            display: block !important;
+            max-width: 100% !important;
+            overflow-y: visible !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- PWA Splash Screen -->
+    <div class="splash-screen" id="splash-screen">
+        <div class="splash-logo">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="splash-text">Study Assistant</div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                
+                <nav class="sidebar-nav">
+                    <a href="index.html" class="nav-button active">
+                        <i class="fas fa-robot"></i>
+                        <span>Chat Bot</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <a href="saved_answers.html" class="nav-button">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Saved Answers</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <a href="tuition_home.html" class="nav-button" id="tuitionClassesBtn" style="display:none;">
+                        <i class="fas fa-school"></i>
+                        <span>Tuition Classes</span>
+                        <i class="fas fa-chevron-right arrow-icon"></i>
+                    </a>
+                </nav>
+                
+                <div class="chat-history">
+                    <div class="history-header">
+                        <h3>Chat History</h3>
+                        <button class="search-toggle">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div class="history-search-panel">
+                        <div class="search-container">
+                            <input type="text" placeholder="Search chats..." class="history-search">
+                            <button class="filter-toggle">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="history-filters">
+                            <select class="subject-filter">
+                                <option value="">All Subjects</option>
+                            </select>
+                            <select class="chapter-filter">
+                                <option value="">All Chapters</option>
+                            </select>
+                            <button class="clear-filters-btn" title="Clear all filters">
+                                <a>Clear All Filter</a>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="history-items">
+                        <!-- Chat history will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div class="sidebar-bottom">
+                    <a href="settings.html" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2><i class="fas fa-graduation-cap"></i> Study Assistant</h2>
+            </div>
+            <div class="mobile-header">
+                <div class="dropdown-trigger" id="dropdownTrigger">
+                    <i class="fas fa-book-open"></i>
+                    <div class="selected-values">
+                        <span id="selectedSubject">Select Subject</span>
+                        <span id="selectedChapter">Select Chapter</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-panel" id="dropdownPanel">
+                    <div class="dropdown-search">
+                        <input type="text" placeholder="Search..." class="search-input">
+                    </div>
+                    <div class="dropdown-content-wrapper">
+                        <div class="dropdown-section">
+                            <div class="dropdown-header">
+                                <h4>Subjects</h4>
+                                <span class="item-count">3</span>
+                            </div>
+                            <div class="dropdown-items subject-list">
+                                <!-- Sorted subjects will be added here dynamically -->
+                            </div>
+                        </div>
+                        <div class="dropdown-section">
+                            <div class="dropdown-header">
+                                <h4>Chapters</h4>
+                                <span class="item-count">5</span>
+                            </div>
+                            <div class="dropdown-items chapter-list">
+                                <!-- Sorted chapters will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Topic Selection Container - moved inside mobile-header for proper positioning -->
+                <div class="topic-selection-container" id="topicSelectionContainer">
+                    <div class="topic-selection-header">
+                        <h4>Select topic:</h4>
+                    </div>
+                    <div class="topic-buttons-container" id="topicButtonsContainer">
+                        <!-- Topic buttons will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div class="chat-input">
+                <div id="selectedQuestionsContainer"></div>
+                <div class="input-wrapper">
+                    <textarea id="userInput" placeholder="Type '/' to view questions of any subject." rows="1"></textarea>
+                    <button id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="command-panel" id="commandPanel">
+                    <div class="command-list">
+                        <!-- Questions will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+            <div class="toast-notification" id="toastNotification">
+                <span id="toastMessage"></span>
+            </div>
+        </div>
+
+        <!-- Toast Message Container -->
+        <div id="toast-container"></div>
+    </div>
+    
+    <script>
+        // Load JavaScript files using the determined paths
+        document.write(`<script src="${scriptPath}"><\/script>`);
+        document.write(`<script src="${historySearchPath}"><\/script>`);
+        document.write(`<script src="${transitionsPath}"><\/script>`);
+        document.write(`<script src="${chatHistoryPath}"><\/script>`);
+        document.write(`<script src="${answerActionPath}"><\/script>`);
+        document.write(`<script src="${followUpJsPath}"><\/script>`);
+        document.write(`<script src="${topicListJsPath}"><\/script>`);
+    </script>
+    <script>
+        // Handle splash screen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show splash screen only when launched as PWA
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                const splashScreen = document.getElementById('splash-screen');
+                // Hide splash screen after 2 seconds
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                    // Remove from DOM after animation completes
+                    setTimeout(() => {
+                        splashScreen.remove();
+                    }, 500);
+                }, 2000);
+            } else {
+                // Not in PWA mode, remove splash immediately
+                document.getElementById('splash-screen').remove();
+            }
+        });
+    </script>
+    
+    <!-- Active User Tracking Script -->
+    <script>
+    // Auto-detect server environment and load the appropriate script
+    (function() {
+        // Determine if we're in production or local
+        const isProduction = !(
+            window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1' || 
+            window.location.hostname.startsWith('192.168.') ||
+            window.location.hostname.includes('.local')
+        );
+        
+        // Get the base path (main folder detection)
+        const getBasePath = () => {
+            const pathParts = window.location.pathname.split('/');
+            if (pathParts.length > 1 && pathParts[1] === 'main') {
+                return '/main';
+            }
+            return '';
+        };
+        
+        // Construct the correct script URL based on environment
+        const basePath = getBasePath();
+        const scriptPath = isProduction 
+            ? '/active-users/js/tracker.js' 
+            : basePath + '/active-users/js/tracker.js';
+        
+        // Create and append the script element
+        const script = document.createElement('script');
+        script.src = scriptPath;
+        script.async = true;
+        
+        // Add the script to the document
+        document.body.appendChild(script);
+    })();
+    </script>
+    <!-- End Active User Tracking Script -->
+</body>
+</html> 

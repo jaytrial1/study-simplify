@@ -57,7 +57,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saved Answers</title>
-    <link rel="manifest" href="../generate_manifest.php">
+    <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#1e1f24">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -169,6 +169,85 @@
             }
         };
     </script>
+    
+    <!-- CSS to fix MathJax scrollbar issues -->
+    <style>
+        /* Fix for MathJax vertical scrollbars */
+        .scrollable-wrapper {
+            overflow-y: visible !important;
+            overflow-x: auto !important;
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 1em !important; /* Add some space below formulas */
+        }
+        
+        /* Ensure MathJax containers don't show vertical scrollbars */
+        mjx-container, 
+        mjx-container[display="true"], 
+        mjx-container[jax="CHTML"],
+        mjx-container[jax="CHTML"][display="true"] {
+            overflow: visible !important;
+            min-height: unset !important;
+            padding: 0 !important;
+            max-height: none !important;
+        }
+        
+        /* Target all MathJax inner elements */
+        mjx-math, mjx-assistive-mml, 
+        mjx-container > * {
+            overflow: visible !important;
+            max-height: none !important;
+            min-height: unset !important;
+        }
+        
+        /* Prevent overflow issues with SVG */
+        mjx-container svg {
+            overflow: visible !important;
+        }
+        
+        /* Ensure MathJax elements with display="block" can expand vertically */
+        mjx-container[display="true"] mjx-math {
+            display: block !important;
+            max-width: 100% !important;
+            overflow-y: visible !important;
+        }
+    </style>
+    <!-- Additional styles for answer previews -->
+    <style>
+        /* Answer body preview styling */
+        .answer-body {
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 4.5em;  /* Show approximately 3 lines of text */
+        }
+        
+        /* Style the View Full Answer button */
+        .view-full-answer {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            color: #4166f5;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85em;
+        }
+        
+        .view-full-answer:hover {
+            background-color: #4166f5;
+            color: white;
+            border-color: #4166f5;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -430,7 +509,7 @@
         #tuitionClassesBtn i.fas.fa-school {
             font-size: 18px;
             margin-right: 12px;
-            color: var(--color-accent);
+            color: #4166f5;
         }
     </style>
 </body>
