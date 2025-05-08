@@ -410,6 +410,23 @@
     </script>
     <!-- End Active User Tracking Script -->
     
+    <!-- Trial status checker script -->
+    <script>
+        // Check if we're on a local server
+        const _isLocalServerTrial = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        // Set trial script paths based on environment
+        const trialCheckerPath = _isLocalServerTrial ? "../js/trial-status-checker.js" : "/public/js/trial-status-checker.js";
+        const trialNotifPath = _isLocalServerTrial ? "../js/trial-notification.js" : "/public/js/trial-notification.js";
+        
+        // Add the scripts dynamically
+        document.write(`<script src="${trialCheckerPath}"><\/script>`);
+        document.write(`<script src="${trialNotifPath}"><\/script>`);
+    </script>
+    
     <!-- Styles for tuition classes button -->
     <style>
         /* Styling for the tuition classes button */
@@ -431,6 +448,123 @@
             font-size: 18px;
             margin-right: 12px;
             color: var(--color-accent);
+        }
+        /* Fix for MathJax vertical scrollbars */
+        .scrollable-wrapper {
+            overflow-y: visible !important;
+            overflow-x: auto !important;
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 1em !important; /* Add some space below formulas */
+        }
+        
+        /* Ensure MathJax containers don't show vertical scrollbars */
+        mjx-container, 
+        mjx-container[display="true"], 
+        mjx-container[jax="CHTML"],
+        mjx-container[jax="CHTML"][display="true"] {
+            overflow: visible !important;
+            min-height: unset !important;
+            padding: 0 !important;
+            max-height: none !important;
+        }
+        
+        /* Target all MathJax inner elements */
+        mjx-math, mjx-assistive-mml, 
+        mjx-container > * {
+            overflow: visible !important;
+            max-height: none !important;
+            min-height: unset !important;
+        }
+        
+        /* Prevent overflow issues with SVG */
+        mjx-container svg {
+            overflow: visible !important;
+        }
+        
+        /* Ensure MathJax elements with display="block" can expand vertically */
+        mjx-container[display="true"] mjx-math {
+            display: block !important;
+            max-width: 100% !important;
+            overflow-y: visible !important;
+        }
+    </style>
+
+    <!-- Trial status toast notification -->
+    <div id="toastNotification" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-clock toast-icon"></i>
+            <span id="toastMessage"></span>
+            <button class="toast-close" onclick="document.getElementById('toastNotification').classList.remove('show')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* Toast Notification Styling */
+        .toast-notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #222639;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            transition: top 0.5s ease;
+            min-width: 300px;
+            max-width: 90%;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .toast-notification.show {
+            top: 20px;
+        }
+        
+        .toast-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+        
+        .toast-icon {
+            color: #ff9800;
+            font-size: 20px;
+        }
+        
+        #toastMessage {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-close:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .toast-notification {
+                width: 90%;
+                max-width: 400px;
+            }
         }
     </style>
 </body>

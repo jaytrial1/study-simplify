@@ -1444,3 +1444,422 @@
 [07-May-2025 17:31:09 Europe/Berlin] DEBUG: OpenRouter API request successful with key index: 1
 [07-May-2025 17:31:09 Europe/Berlin] Added message to chat session 13
 [07-May-2025 17:31:09 Europe/Berlin] Added message to chat session 13
+[08-May-2025 19:10:37 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:10:37 Europe/Berlin] Timestamp: 2025-05-08 19:10:37
+[08-May-2025 19:10:37 Europe/Berlin] Request Method: POST
+[08-May-2025 19:10:37 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:10:37 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:10:37 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:10:37 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:10:37 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:10:37 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:10:37 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:10:37 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:10:37 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:10:37 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:10:37 Europe/Berlin] Database connection successful
+[08-May-2025 19:10:37 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:10:37 Europe/Berlin] Retrieved messages for session 1: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:10:35"}]
+[08-May-2025 19:10:37 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:10:37 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:10:37 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:10:37 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:10:37 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:10:37 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:10:37 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:10:37 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:10:37 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:10:37 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:10:37 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:10:37 Europe/Berlin] Added message to chat session 1
+[08-May-2025 19:10:37 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 0 - Key prefix: sk-or-v1-533b27...
+[08-May-2025 19:10:37 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:10:37 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:10:37 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-5...
+[08-May-2025 19:10:37 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.68 seconds
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Error with key 0: No auth credentials found
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 1 - Key prefix: sk-or-v1-958d4b...
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-9...
+[08-May-2025 19:10:39 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.92 seconds
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Error with key 1: No auth credentials found
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 2 - Key prefix: sk-or-v1-7d9e26...
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-7...
+[08-May-2025 19:10:41 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 1.29 seconds
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Error with key 2: No auth credentials found
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 3 - Key prefix: sk-or-v1-d35f3a...
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-d...
+[08-May-2025 19:10:42 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: Key 3 (FREE) attempt took: 1.30 seconds
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Error with key 3: No auth credentials found
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 4 - Key prefix: sk-or-v1-paid-6...
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-p...
+[08-May-2025 19:10:44 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:10:45 Europe/Berlin] DEBUG: Key 4 (PAID) attempt took: 1.32 seconds
+[08-May-2025 19:10:45 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:10:45 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:10:45 Europe/Berlin] DEBUG: OpenRouter Error with key 4: No auth credentials found
+[08-May-2025 19:10:45 Europe/Berlin] DEBUG: Fatal error - All OpenRouter API keys failed. Errors: Error with key index 0: No auth credentials found; Error with key index 1: No auth credentials found; Error with key index 2: No auth credentials found; Error with key index 3: No auth credentials found; Error with key index 4: No auth credentials found
+[08-May-2025 19:10:45 Europe/Berlin] AI Handler failed for question 'Linear Organization': All OpenRouter API keys failed. Errors: Error with key index 0: No auth credentials found; Error with key index 1: No auth credentials found; Error with key index 2: No auth credentials found; Error with key index 3: No auth credentials found; Error with key index 4: No auth credentials found
+[08-May-2025 19:10:45 Europe/Berlin] Added message to chat session 1
+[08-May-2025 19:10:45 Europe/Berlin] Added message to chat session 1
+[08-May-2025 19:12:55 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:12:55 Europe/Berlin] Timestamp: 2025-05-08 19:12:55
+[08-May-2025 19:12:55 Europe/Berlin] Request Method: POST
+[08-May-2025 19:12:55 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:12:55 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:12:55 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:12:55 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:12:55 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:12:55 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:12:55 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:12:55 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:12:55 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:12:55 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:12:55 Europe/Berlin] Database connection successful
+[08-May-2025 19:12:55 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:12:55 Europe/Berlin] Retrieved messages for session 2: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:12:52"}]
+[08-May-2025 19:12:55 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:12:55 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:12:55 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:12:55 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:12:55 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:12:55 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:12:55 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:12:55 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:12:55 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:12:55 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:12:55 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:12:55 Europe/Berlin] Added message to chat session 2
+[08-May-2025 19:12:55 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 0 - Key prefix: sk-or-v1-533b27...
+[08-May-2025 19:12:55 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:12:55 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:12:55 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-5...
+[08-May-2025 19:12:55 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.74 seconds
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Error with key 0: No auth credentials found
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 1 - Key prefix: sk-or-v1-958d4b...
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-9...
+[08-May-2025 19:12:57 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 100.00 seconds
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 200
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): 
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: CURL Error: Operation timed out after 100003 milliseconds with 2563 bytes received
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Error with key 1: CURL Error: Operation timed out after 100003 milliseconds with 2563 bytes received
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 2 - Key prefix: sk-or-v1-7d9e26...
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-7...
+[08-May-2025 19:14:37 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 1.44 seconds
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Error with key 2: No auth credentials found
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 3 - Key prefix: sk-or-v1-d35f3a...
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-d...
+[08-May-2025 19:14:39 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: Key 3 (FREE) attempt took: 1.57 seconds
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Error with key 3: No auth credentials found
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: Trying OpenRouter API key index: 4 - Key prefix: sk-or-v1-paid-6...
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Request to URL: https://openrouter.ai/api/v1/chat/completions
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Request Model: deepseek/deepseek-chat-v3-0324:free
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: OpenRouter Request Auth Header: Bearer sk-or-v1-p...
+[08-May-2025 19:14:40 Europe/Berlin] DEBUG: Trying with URL-based authentication as fallback
+[08-May-2025 19:14:42 Europe/Berlin] DEBUG: Key 4 (PAID) attempt took: 1.30 seconds
+[08-May-2025 19:14:42 Europe/Berlin] DEBUG: OpenRouter Response HTTP Code: 401
+[08-May-2025 19:14:42 Europe/Berlin] DEBUG: OpenRouter Response Body (first 300 chars): {"error":{"message":"No auth credentials found","code":401}}
+[08-May-2025 19:14:42 Europe/Berlin] DEBUG: OpenRouter Error with key 4: No auth credentials found
+[08-May-2025 19:14:42 Europe/Berlin] DEBUG: Fatal error - All OpenRouter API keys failed. Errors: Error with key index 0: No auth credentials found; Error with key index 1: CURL Error: Operation timed out after 100003 milliseconds with 2563 bytes received; Error with key index 2: No auth credentials found; Error with key index 3: No auth credentials found; Error with key index 4: No auth credentials found
+[08-May-2025 19:14:42 Europe/Berlin] AI Handler failed for question 'Linear Organization': All OpenRouter API keys failed. Errors: Error with key index 0: No auth credentials found; Error with key index 1: CURL Error: Operation timed out after 100003 milliseconds with 2563 bytes received; Error with key index 2: No auth credentials found; Error with key index 3: No auth credentials found; Error with key index 4: No auth credentials found
+[08-May-2025 19:14:42 Europe/Berlin] Added message to chat session 2
+[08-May-2025 19:14:42 Europe/Berlin] Added message to chat session 2
+[08-May-2025 19:15:19 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:15:19 Europe/Berlin] Timestamp: 2025-05-08 19:15:19
+[08-May-2025 19:15:19 Europe/Berlin] Request Method: POST
+[08-May-2025 19:15:19 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:15:19 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:15:19 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:15:19 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:15:19 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:15:19 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:15:19 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:15:19 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:15:19 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:15:19 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:15:19 Europe/Berlin] Database connection successful
+[08-May-2025 19:15:19 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:15:19 Europe/Berlin] Retrieved messages for session 3: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:15:17"}]
+[08-May-2025 19:15:19 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:15:19 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:15:19 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:15:19 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:15:19 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:15:19 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:15:19 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:15:19 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:15:19 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:15:19 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:15:19 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:15:19 Europe/Berlin] Added message to chat session 3
+[08-May-2025 19:15:19 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:15:21 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 2.07 seconds
+[08-May-2025 19:15:21 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:15:21 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:15:22 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.33 seconds
+[08-May-2025 19:15:22 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:15:22 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:15:34 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 11.66 seconds
+[08-May-2025 19:15:34 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:15:34 Europe/Berlin] Added message to chat session 3
+[08-May-2025 19:15:34 Europe/Berlin] Added message to chat session 3
+[08-May-2025 19:17:33 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:17:33 Europe/Berlin] Timestamp: 2025-05-08 19:17:33
+[08-May-2025 19:17:33 Europe/Berlin] Request Method: POST
+[08-May-2025 19:17:33 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:17:33 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:17:33 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:17:33 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:17:33 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:17:33 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:17:33 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:17:33 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:17:33 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:17:33 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:17:33 Europe/Berlin] Database connection successful
+[08-May-2025 19:17:33 Europe/Berlin] Retrieved messages with proper encoding, count: 4
+[08-May-2025 19:17:33 Europe/Berlin] Retrieved messages for session 3: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:15:17"},{"sender":"system","message":"You are an educational AI assistant. Please follow these guidelines for ALL responses:\n\n1. always give answer in md fomate\n2. use h1 , h2 , h3 header as per the question\n3. always use seperator to separate sub header or sub topic\n4. also use bold and italic to highlight the key term\n5. when the quetsion is more good to undertand and read in table format or the original context you have for the quetsion is in table format then use table for the answer\n6. Use MathJax formatting for equations: $...$ for inline math\/chemistry, $$...$$ for block math\/chemistry, and \\ce{...} for chemical notation. No Markdown, HTML, or extra formatting inside these.\n7. Include a chart only when it's helpful. Use a fenced code block starting strictly with ```chart. After it, provide a JSON object with type (bar, line, pie, etc.), labels, and values. Do not use '''json{}, add text, or explanations\u2014just the chart data.\n8. To include an image, use a fenced code block starting strictly with ```image (three backticks and the word image). Inside, put only the image path (e.g., \/images\/...). Do not use Markdown image syntax or add any other text inside the code block. Example:\n```image\n\/images\/path\/to\/image.png\n```\n\nFor this specific response:\nYou are an EXPERT GSEB 12TH GRADE TUTOR, highly skilled in creating answers that earn TOP MARKS in GSEB 12th grade board exams. Your ABSOLUTE GOAL is to help students understand, REMEMBER, and ultimately ACHIEVE the HIGHEST POSSIBLE SCORES on their GSEB board exams.\n\nQUESTION: Linear Organization\n\nYour task is to REWRITE and IMPROVE the textbook\/study material into an EXCELLENT, HIGH-SCORING EXAM ANSWER FORMAT specifically tailored for GSEB 12th grade board exams that is EASY TO LEARN and MEMORIZE.\n\nYour rewritten answer MUST be specifically designed to impress a GSEB board examiner and include the following ESSENTIAL elements to MAXIMIZE marks:\n\n- *MAINTAIN ORIGINAL HEADERS:* IMPORTANT: You MUST use the EXACT SAME MAIN HEADERS and SUBHEADERS as provided in the student's textbook\/study material. Do NOT change the headings.\n    \n- *COMPLETE CONTENT COVERAGE:* Ensure the answer FULLY covers ALL the information under each header and subheader. Do not miss any points.\n    \n- *KEYWORD INTEGRATION & EMPHASIS:* Identify and NATURALLY INTEGRATE all the MAIN KEYWORDS and TERMINOLOGY, highlighted in **bold**.\n    \n- *CLEAR AND SIMPLE EXPLANATIONS:* Explain all concepts in a VERY CLEAR, SIMPLE, and EASY-TO-UNDERSTAND way appropriate for 12th GSEB students.\n    \n- *STRUCTURED FOR OPTIMAL LEARNING & MEMORIZATION:* ORGANIZE with clear HEADERS, SUBHEADERS, and BULLET POINTS. Structure information in a LOGICAL, STEP-BY-STEP manner.\n    \n- *MEMORY AIDS FOR QUICK RECALL:* Include \"MEMORY TIP\" for EACH MAIN POINT using practical techniques like acronyms, analogies, or examples relevant to 12th GSEB curriculum.\n    \n- *CONCISE AND FOCUSED ON BOARD EXAM SUCCESS:* Be DIRECT and focus on information needed for a high-scoring answer in GSEB 12th board exams.\n    \n- *GSEB BOARD EXAM ALIGNMENT:* Ensure sufficient DETAIL to align with GSEB 12th grade board exam marking schemes.\n\nStudy Material:\n# Linear Organization\r\n\r\n## Meaning :\r\nLinear organization is the most simple and ancient type of organization. Since many years it has been used in army and so it is also known as Army organization. In this kind of organization, the centralization of power is done on top level. The distribution of power and responsibilities is done in straight line from top to bottom level. As the distribution of power is in straight line from top to bottom level, it is called Linear organization. In this, each employee is answerable to his or her superior authority. In this type, higher degree of power can be seen on top level and lower amount of power is seen on the bottom level.\r\n## Formation :\r\nIn this type of organization, entire business unit is classified in different department. As per each section or area, a separate departmental head is appointed. This departmental head is answerable to the superior head of his or her own area. The area head is given all the necessary power needed as per his or her department. In this type of organization, division is not done according to the work but according to departments. Hence it is also known as departmental organization. The Linear organization structure can be best seen with the help of the following diagram :\r\n\r\nIn Linear organization, the greatest power is seen with the Board of Directors. They take policy based decisions. The General Manager is assigned necessary powers from them. The General Manager is the main Administrative Head, whose work is to ensure that the lower employees follow the task and decisions taken by the board of director. The above given chart is divided into production department, administrative department and sales department, three parts. As per the important work in each department, Purchase, Production or Sales officers etc. are appointed. Such officers carry the entire responsibility of their own sections. Under such officers, supervisors, foreman and clerks, etc. work. Under the foreman, workers work. In this way, Linear organization ensures power from top to bottom and responsibilities flow on from bottom to top level.\r\n\r\nSuch kind of structure is more favourable where there is a small size of the organization and the work area is also limited and the problems of control and discipline are also limited.\n\nAdditional Instructions:\n","timestamp":"2025-05-08 19:15:19"},{"sender":"user","message":"","timestamp":"2025-05-08 19:15:34"},{"sender":"ai","message":"# Linear Organization\n\n***\n\n## Meaning :\n\n*   **Linear organization** is the ***most simple*** and *ancient* type of organizational structure.\n*   It has been used extensively in the army for many years, leading to its alternative name: **Army organization**.\n*   In this structure, the **centralization of power** is concentrated at the ***top level***.\n*   The **distribution of power and responsibilities** flows in a ***straight line*** from the ***top level to the bottom level***. This straight flow is why it is called **Linear organization**.\n*   Each employee in this setup is ***answerable*** directly to their **superior authority**.\n*   A ***higher degree of power*** is observed at the ***top level***, while a ***lower amount of power*** is found at the ***bottom level***.\n\n***\n\n### MEMORY TIP (Meaning):\n\nThink of an **ARMY (Army Organization)** where orders flow in a **STRAIGHT LINE (Linear)** from the **GENERAL (Top)** down to the **SOLDIERS (Bottom)**. Everyone answers to their immediate boss (**Superior Authority**). Power is **CENTRALISED** at the top.\n\n***\n\n## Formation :\n\n*   In **Linear organization**, the *entire business unit* is first classified into **different departments**.\n*   For each *section or area*, a separate **departmental head** is appointed.\n*   This **departmental head** is ***answerable*** to the **superior head** of their specific area.\n*   The **area head** is granted *all the necessary power* required to manage their department effectively.\n*   A key characteristic is that the *division* in this structure is done **according to departments**, *not according to the work process*.\n*   Due to this departmental division, it is also known as **Departmental organization**.\n*   The structure flows hierarchically from the top:\n    *   At the very top are the **Board of Directors**, who hold the *greatest power* and make *policy-based decisions*.\n    *   The **General Manager** is assigned the necessary powers by the Board of Directors and serves as the *main Administrative Head*. Their role is to ensure that *lower employees follow the tasks and decisions* made by the board.\n    *   The organization is divided into main departments (e.g., **production department**, **administrative department**, and **sales department**).\n    *   According to the important work in each department, specific officers like **Purchase, Production or Sales officers** are appointed.\n    *   These officers bear the ***entire responsibility*** for their own sections.\n    *   Under these officers, different levels of employees work, such as **supervisors**, **foreman**, and **clerks**.\n    *   Under the **foreman**, the actual **workers** perform the tasks.\n*   In **Linear organization**, **power** flows in a **straight line from top to bottom**, while **responsibilities** flow **from bottom to top level**.\n*   This type of structure is more *favourable* for organizations with a ***small size***, a ***limited work area***, and where *problems of control and discipline* are also ***limited***.\n\n***\n\n### MEMORY TIP (Formation):\n\nRemember the flow like a *pyramid*: **BOD** (Board) $\\rightarrow$ **GM** (General Manager) $\\rightarrow$ **Dept. Heads** (Production, Sales, etc.) $\\rightarrow$ **Officers** $\\rightarrow$ **Supervisors\/Foreman\/Clerks** $\\rightarrow$ **Workers**. **Departments** are key! Power goes **DOWN** $\\downarrow$, Responsibility goes **UP** $\\uparrow$. It's good for **SMALL** and **SIMPLE** businesses.","timestamp":"2025-05-08 19:15:34"}]
+[08-May-2025 19:17:33 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:17:34 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.45 seconds
+[08-May-2025 19:17:34 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:17:34 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:17:35 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.31 seconds
+[08-May-2025 19:17:35 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:17:35 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:17:39 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 3.43 seconds
+[08-May-2025 19:17:39 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:17:39 Europe/Berlin] Added message to chat session 3
+[08-May-2025 19:17:39 Europe/Berlin] Added message to chat session 3
+[08-May-2025 19:19:55 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:19:55 Europe/Berlin] Timestamp: 2025-05-08 19:19:55
+[08-May-2025 19:19:55 Europe/Berlin] Request Method: POST
+[08-May-2025 19:19:55 Europe/Berlin] Request URI: /main/api/ai/query.php
+[08-May-2025 19:19:55 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:19:55 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:19:55 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:19:55 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:19:55 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[08-May-2025 19:19:55 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:19:55 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[08-May-2025 19:19:55 Europe/Berlin] Database connection - REQUEST_URI: /main/api/ai/query.php
+[08-May-2025 19:19:55 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:19:55 Europe/Berlin] Database connection successful
+[08-May-2025 19:19:55 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:19:55 Europe/Berlin] Retrieved messages for session 4: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:19:52"}]
+[08-May-2025 19:19:55 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:19:55 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:19:55 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:19:55 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:19:55 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:19:55 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:19:55 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:19:55 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:19:55 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:19:55 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:19:55 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:19:55 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:19:55 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:19:56 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.25 seconds
+[08-May-2025 19:19:56 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:19:56 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:19:59 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 2.55 seconds
+[08-May-2025 19:19:59 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:19:59 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:20:10 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 11.87 seconds
+[08-May-2025 19:20:10 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:20:10 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:20:10 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:20:23 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:20:23 Europe/Berlin] Timestamp: 2025-05-08 19:20:23
+[08-May-2025 19:20:23 Europe/Berlin] Request Method: POST
+[08-May-2025 19:20:23 Europe/Berlin] Request URI: /main/api/ai/query.php
+[08-May-2025 19:20:23 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:20:23 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:20:23 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:20:23 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:20:23 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[08-May-2025 19:20:23 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:20:23 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[08-May-2025 19:20:23 Europe/Berlin] Database connection - REQUEST_URI: /main/api/ai/query.php
+[08-May-2025 19:20:23 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:20:23 Europe/Berlin] Database connection successful
+[08-May-2025 19:20:23 Europe/Berlin] Retrieved messages with proper encoding, count: 4
+[08-May-2025 19:20:23 Europe/Berlin] Retrieved messages for session 4: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:19:52"},{"sender":"system","message":"You are an educational AI assistant. Please follow these guidelines for ALL responses:\n\n1. always give answer in md fomate\n2. use h1 , h2 , h3 header as per the question\n3. always use seperator to separate sub header or sub topic\n4. also use bold and italic to highlight the key term\n5. when the quetsion is more good to undertand and read in table format or the original context you have for the quetsion is in table format then use table for the answer\n6. Use MathJax formatting for equations: $...$ for inline math\/chemistry, $$...$$ for block math\/chemistry, and \\ce{...} for chemical notation. No Markdown, HTML, or extra formatting inside these.\n7. Include a chart only when it's helpful. Use a fenced code block starting strictly with ```chart. After it, provide a JSON object with type (bar, line, pie, etc.), labels, and values. Do not use '''json{}, add text, or explanations\u2014just the chart data.\n8. To include an image, use a fenced code block starting strictly with ```image (three backticks and the word image). Inside, put only the image path (e.g., \/images\/...). Do not use Markdown image syntax or add any other text inside the code block. Example:\n```image\n\/images\/path\/to\/image.png\n```\n\nFor this specific response:\nYou are an EXPERT GSEB 12TH GRADE TUTOR, highly skilled in creating answers that earn TOP MARKS in GSEB 12th grade board exams. Your ABSOLUTE GOAL is to help students understand, REMEMBER, and ultimately ACHIEVE the HIGHEST POSSIBLE SCORES on their GSEB board exams.\n\nQUESTION: Linear Organization\n\nYour task is to REWRITE and IMPROVE the textbook\/study material into an EXCELLENT, HIGH-SCORING EXAM ANSWER FORMAT specifically tailored for GSEB 12th grade board exams that is EASY TO LEARN and MEMORIZE.\n\nYour rewritten answer MUST be specifically designed to impress a GSEB board examiner and include the following ESSENTIAL elements to MAXIMIZE marks:\n\n- *MAINTAIN ORIGINAL HEADERS:* IMPORTANT: You MUST use the EXACT SAME MAIN HEADERS and SUBHEADERS as provided in the student's textbook\/study material. Do NOT change the headings.\n    \n- *COMPLETE CONTENT COVERAGE:* Ensure the answer FULLY covers ALL the information under each header and subheader. Do not miss any points.\n    \n- *KEYWORD INTEGRATION & EMPHASIS:* Identify and NATURALLY INTEGRATE all the MAIN KEYWORDS and TERMINOLOGY, highlighted in **bold**.\n    \n- *CLEAR AND SIMPLE EXPLANATIONS:* Explain all concepts in a VERY CLEAR, SIMPLE, and EASY-TO-UNDERSTAND way appropriate for 12th GSEB students.\n    \n- *STRUCTURED FOR OPTIMAL LEARNING & MEMORIZATION:* ORGANIZE with clear HEADERS, SUBHEADERS, and BULLET POINTS. Structure information in a LOGICAL, STEP-BY-STEP manner.\n    \n- *MEMORY AIDS FOR QUICK RECALL:* Include \"MEMORY TIP\" for EACH MAIN POINT using practical techniques like acronyms, analogies, or examples relevant to 12th GSEB curriculum.\n    \n- *CONCISE AND FOCUSED ON BOARD EXAM SUCCESS:* Be DIRECT and focus on information needed for a high-scoring answer in GSEB 12th board exams.\n    \n- *GSEB BOARD EXAM ALIGNMENT:* Ensure sufficient DETAIL to align with GSEB 12th grade board exam marking schemes.\n\nStudy Material:\n# Linear Organization\r\n\r\n## Meaning :\r\nLinear organization is the most simple and ancient type of organization. Since many years it has been used in army and so it is also known as Army organization. In this kind of organization, the centralization of power is done on top level. The distribution of power and responsibilities is done in straight line from top to bottom level. As the distribution of power is in straight line from top to bottom level, it is called Linear organization. In this, each employee is answerable to his or her superior authority. In this type, higher degree of power can be seen on top level and lower amount of power is seen on the bottom level.\r\n## Formation :\r\nIn this type of organization, entire business unit is classified in different department. As per each section or area, a separate departmental head is appointed. This departmental head is answerable to the superior head of his or her own area. The area head is given all the necessary power needed as per his or her department. In this type of organization, division is not done according to the work but according to departments. Hence it is also known as departmental organization. The Linear organization structure can be best seen with the help of the following diagram :\r\n\r\nIn Linear organization, the greatest power is seen with the Board of Directors. They take policy based decisions. The General Manager is assigned necessary powers from them. The General Manager is the main Administrative Head, whose work is to ensure that the lower employees follow the task and decisions taken by the board of director. The above given chart is divided into production department, administrative department and sales department, three parts. As per the important work in each department, Purchase, Production or Sales officers etc. are appointed. Such officers carry the entire responsibility of their own sections. Under such officers, supervisors, foreman and clerks, etc. work. Under the foreman, workers work. In this way, Linear organization ensures power from top to bottom and responsibilities flow on from bottom to top level.\r\n\r\nSuch kind of structure is more favourable where there is a small size of the organization and the work area is also limited and the problems of control and discipline are also limited.\n\nAdditional Instructions:\n","timestamp":"2025-05-08 19:19:55"},{"sender":"user","message":"","timestamp":"2025-05-08 19:20:10"},{"sender":"ai","message":"# Linear Organization\n\n---\n\n## Meaning :\n\nLinear organization is a fundamental and traditional type of organizational structure.\n\n*   **Simplicity and Antiquity:** It is considered the *most simple* and *ancient* type of organization.\n*   **Origin and Name:** It has been extensively used in the army for many years, which is why it is also known as **Army organization**.\n*   **Centralization:** In this structure, the **centralization of power** is primarily located at the **top level** of the management hierarchy.\n*   **Power and Responsibility Flow:** The **distribution of power** and **responsibilities** follows a direct, straight line from the **top level** down to the **bottom level**. This straight-line flow gives it the name **Linear organization**.\n*   **Accountability:** Each employee is directly **answerable to his or her superior authority** (their immediate boss) in the chain of command.\n*   **Power Distribution:** There is a higher degree of **power** concentrated at the **top level** and a progressively lower amount of **power** as one moves down to the **bottom level**.\n\n---\n\n### MEMORY TIP:\n*Linear* means straight line. Think of an *Army* chain of command: orders go down (power), reports go up (responsibility), everyone answers to their immediate *superior*.\n\n---\n\n## Formation :\n\nThe formation of Linear organization involves structuring the business unit based on distinct departments and establishing a clear, direct chain of command within them.\n\n*   **Departmental Classification:** The entire business unit is divided into different **departments** or sections (e.g., Production, Sales, Administration).\n*   **Departmental Heads:** A separate **departmental head** is appointed for each section or area.\n*   **Accountability of Heads:** This **departmental head** is directly **answerable** to the **superior head** who oversees their specific area or function.\n*   **Delegation of Power:** The **area head** or departmental head is given all the **necessary power** required to manage their respective department effectively.\n*   **Basis of Division:** This structure is organized according to **departments**, rather than strictly by the type of work being performed. Due to this departmental basis, it is also known as **departmental organization**.\n*   **Hierarchical Structure (Example):**\n    *   The **Board of Directors** holds the greatest power and makes **policy-based decisions**.\n    *   The **General Manager** is delegated necessary powers by the Board of Directors and acts as the main **Administrative Head**. Their role is to ensure that the decisions and tasks set by the Board of Directors are followed by the lower employees.\n    *   Under the General Manager, heads of major departments (like **Production department**, **Administrative department**, **Sales department**) are appointed as **officers** (e.g., Purchase Officer, Production Officer, Sales Officer). These officers have the responsibility for their entire sections.\n    *   Working under these officers are **supervisors**, **foremen**, and **clerks**, etc.\n    *   Under the foreman, the **workers** perform the actual tasks.\n*   **Flow of Power and Responsibility:** In this structure, **power** flows downwards from the **top to the bottom** level, while **responsibilities** flow upwards from the **bottom to the top** level.\n*   **Suitability:** This type of structure is generally more favorable for organizations that are **small in size**, have a **limited work area**, and where problems related to **control** and **discipline** are also limited.\n\n---\n\n### MEMORY TIP:\nFormation is *Department*-based. Picture the levels like a staircase: *BOD* at the top, then *GM*, then *Officers* for each *Department*, then *Supervisors*, and *Workers* at the bottom. Power goes *down* the stairs, but reports\/responsibility go *up*! Good for *Small, Simple* businesses.","timestamp":"2025-05-08 19:20:10"}]
+[08-May-2025 19:20:23 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:20:25 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 2.08 seconds
+[08-May-2025 19:20:25 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:20:25 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:20:27 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.42 seconds
+[08-May-2025 19:20:27 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:20:27 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:20:31 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 3.69 seconds
+[08-May-2025 19:20:31 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:20:31 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:20:31 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:22:14 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:22:14 Europe/Berlin] Timestamp: 2025-05-08 19:22:14
+[08-May-2025 19:22:14 Europe/Berlin] Request Method: POST
+[08-May-2025 19:22:14 Europe/Berlin] Request URI: /main/api/ai/query.php
+[08-May-2025 19:22:14 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:22:14 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:22:14 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:22:14 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:22:14 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[08-May-2025 19:22:14 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:22:14 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[08-May-2025 19:22:14 Europe/Berlin] Database connection - REQUEST_URI: /main/api/ai/query.php
+[08-May-2025 19:22:14 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:22:14 Europe/Berlin] Database connection successful
+[08-May-2025 19:22:14 Europe/Berlin] Retrieved messages with proper encoding, count: 6
+[08-May-2025 19:22:14 Europe/Berlin] Retrieved messages for session 4: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:19:52"},{"sender":"system","message":"You are an educational AI assistant. Please follow these guidelines for ALL responses:\n\n1. always give answer in md fomate\n2. use h1 , h2 , h3 header as per the question\n3. always use seperator to separate sub header or sub topic\n4. also use bold and italic to highlight the key term\n5. when the quetsion is more good to undertand and read in table format or the original context you have for the quetsion is in table format then use table for the answer\n6. Use MathJax formatting for equations: $...$ for inline math\/chemistry, $$...$$ for block math\/chemistry, and \\ce{...} for chemical notation. No Markdown, HTML, or extra formatting inside these.\n7. Include a chart only when it's helpful. Use a fenced code block starting strictly with ```chart. After it, provide a JSON object with type (bar, line, pie, etc.), labels, and values. Do not use '''json{}, add text, or explanations\u2014just the chart data.\n8. To include an image, use a fenced code block starting strictly with ```image (three backticks and the word image). Inside, put only the image path (e.g., \/images\/...). Do not use Markdown image syntax or add any other text inside the code block. Example:\n```image\n\/images\/path\/to\/image.png\n```\n\nFor this specific response:\nYou are an EXPERT GSEB 12TH GRADE TUTOR, highly skilled in creating answers that earn TOP MARKS in GSEB 12th grade board exams. Your ABSOLUTE GOAL is to help students understand, REMEMBER, and ultimately ACHIEVE the HIGHEST POSSIBLE SCORES on their GSEB board exams.\n\nQUESTION: Linear Organization\n\nYour task is to REWRITE and IMPROVE the textbook\/study material into an EXCELLENT, HIGH-SCORING EXAM ANSWER FORMAT specifically tailored for GSEB 12th grade board exams that is EASY TO LEARN and MEMORIZE.\n\nYour rewritten answer MUST be specifically designed to impress a GSEB board examiner and include the following ESSENTIAL elements to MAXIMIZE marks:\n\n- *MAINTAIN ORIGINAL HEADERS:* IMPORTANT: You MUST use the EXACT SAME MAIN HEADERS and SUBHEADERS as provided in the student's textbook\/study material. Do NOT change the headings.\n    \n- *COMPLETE CONTENT COVERAGE:* Ensure the answer FULLY covers ALL the information under each header and subheader. Do not miss any points.\n    \n- *KEYWORD INTEGRATION & EMPHASIS:* Identify and NATURALLY INTEGRATE all the MAIN KEYWORDS and TERMINOLOGY, highlighted in **bold**.\n    \n- *CLEAR AND SIMPLE EXPLANATIONS:* Explain all concepts in a VERY CLEAR, SIMPLE, and EASY-TO-UNDERSTAND way appropriate for 12th GSEB students.\n    \n- *STRUCTURED FOR OPTIMAL LEARNING & MEMORIZATION:* ORGANIZE with clear HEADERS, SUBHEADERS, and BULLET POINTS. Structure information in a LOGICAL, STEP-BY-STEP manner.\n    \n- *MEMORY AIDS FOR QUICK RECALL:* Include \"MEMORY TIP\" for EACH MAIN POINT using practical techniques like acronyms, analogies, or examples relevant to 12th GSEB curriculum.\n    \n- *CONCISE AND FOCUSED ON BOARD EXAM SUCCESS:* Be DIRECT and focus on information needed for a high-scoring answer in GSEB 12th board exams.\n    \n- *GSEB BOARD EXAM ALIGNMENT:* Ensure sufficient DETAIL to align with GSEB 12th grade board exam marking schemes.\n\nStudy Material:\n# Linear Organization\r\n\r\n## Meaning :\r\nLinear organization is the most simple and ancient type of organization. Since many years it has been used in army and so it is also known as Army organization. In this kind of organization, the centralization of power is done on top level. The distribution of power and responsibilities is done in straight line from top to bottom level. As the distribution of power is in straight line from top to bottom level, it is called Linear organization. In this, each employee is answerable to his or her superior authority. In this type, higher degree of power can be seen on top level and lower amount of power is seen on the bottom level.\r\n## Formation :\r\nIn this type of organization, entire business unit is classified in different department. As per each section or area, a separate departmental head is appointed. This departmental head is answerable to the superior head of his or her own area. The area head is given all the necessary power needed as per his or her department. In this type of organization, division is not done according to the work but according to departments. Hence it is also known as departmental organization. The Linear organization structure can be best seen with the help of the following diagram :\r\n\r\nIn Linear organization, the greatest power is seen with the Board of Directors. They take policy based decisions. The General Manager is assigned necessary powers from them. The General Manager is the main Administrative Head, whose work is to ensure that the lower employees follow the task and decisions taken by the board of director. The above given chart is divided into production department, administrative department and sales department, three parts. As per the important work in each department, Purchase, Production or Sales officers etc. are appointed. Such officers carry the entire responsibility of their own sections. Under such officers, supervisors, foreman and clerks, etc. work. Under the foreman, workers work. In this way, Linear organization ensures power from top to bottom and responsibilities flow on from bottom to top level.\r\n\r\nSuch kind of structure is more favourable where there is a small size of the organization and the work area is also limited and the problems of control and discipline are also limited.\n\nAdditional Instructions:\n","timestamp":"2025-05-08 19:19:55"},{"sender":"user","message":"","timestamp":"2025-05-08 19:20:10"},{"sender":"ai","message":"# Linear Organization\n\n---\n\n## Meaning :\n\nLinear organization is a fundamental and traditional type of organizational structure.\n\n*   **Simplicity and Antiquity:** It is considered the *most simple* and *ancient* type of organization.\n*   **Origin and Name:** It has been extensively used in the army for many years, which is why it is also known as **Army organization**.\n*   **Centralization:** In this structure, the **centralization of power** is primarily located at the **top level** of the management hierarchy.\n*   **Power and Responsibility Flow:** The **distribution of power** and **responsibilities** follows a direct, straight line from the **top level** down to the **bottom level**. This straight-line flow gives it the name **Linear organization**.\n*   **Accountability:** Each employee is directly **answerable to his or her superior authority** (their immediate boss) in the chain of command.\n*   **Power Distribution:** There is a higher degree of **power** concentrated at the **top level** and a progressively lower amount of **power** as one moves down to the **bottom level**.\n\n---\n\n### MEMORY TIP:\n*Linear* means straight line. Think of an *Army* chain of command: orders go down (power), reports go up (responsibility), everyone answers to their immediate *superior*.\n\n---\n\n## Formation :\n\nThe formation of Linear organization involves structuring the business unit based on distinct departments and establishing a clear, direct chain of command within them.\n\n*   **Departmental Classification:** The entire business unit is divided into different **departments** or sections (e.g., Production, Sales, Administration).\n*   **Departmental Heads:** A separate **departmental head** is appointed for each section or area.\n*   **Accountability of Heads:** This **departmental head** is directly **answerable** to the **superior head** who oversees their specific area or function.\n*   **Delegation of Power:** The **area head** or departmental head is given all the **necessary power** required to manage their respective department effectively.\n*   **Basis of Division:** This structure is organized according to **departments**, rather than strictly by the type of work being performed. Due to this departmental basis, it is also known as **departmental organization**.\n*   **Hierarchical Structure (Example):**\n    *   The **Board of Directors** holds the greatest power and makes **policy-based decisions**.\n    *   The **General Manager** is delegated necessary powers by the Board of Directors and acts as the main **Administrative Head**. Their role is to ensure that the decisions and tasks set by the Board of Directors are followed by the lower employees.\n    *   Under the General Manager, heads of major departments (like **Production department**, **Administrative department**, **Sales department**) are appointed as **officers** (e.g., Purchase Officer, Production Officer, Sales Officer). These officers have the responsibility for their entire sections.\n    *   Working under these officers are **supervisors**, **foremen**, and **clerks**, etc.\n    *   Under the foreman, the **workers** perform the actual tasks.\n*   **Flow of Power and Responsibility:** In this structure, **power** flows downwards from the **top to the bottom** level, while **responsibilities** flow upwards from the **bottom to the top** level.\n*   **Suitability:** This type of structure is generally more favorable for organizations that are **small in size**, have a **limited work area**, and where problems related to **control** and **discipline** are also limited.\n\n---\n\n### MEMORY TIP:\nFormation is *Department*-based. Picture the levels like a staircase: *BOD* at the top, then *GM*, then *Officers* for each *Department*, then *Supervisors*, and *Workers* at the bottom. Power goes *down* the stairs, but reports\/responsibility go *up*! Good for *Small, Simple* businesses.","timestamp":"2025-05-08 19:20:10"},{"sender":"user","message":"where is image as i told you","timestamp":"2025-05-08 19:20:31"},{"sender":"ai","message":"I apologize, but I was unable to include the image as described in the study material because the image path or the image itself was not provided in the input I received.\n\nMy instructions require a specific image path within a code block (` ```image \/path\/to\/image.png ``` `) to display an image. Since that was missing from the material, I could not generate the diagram.\n\nIf you can provide the image or its path, I can try to include it.","timestamp":"2025-05-08 19:20:31"}]
+[08-May-2025 19:22:14 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:22:16 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.55 seconds
+[08-May-2025 19:22:16 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:22:16 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:22:17 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.36 seconds
+[08-May-2025 19:22:17 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:22:17 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:22:24 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 6.49 seconds
+[08-May-2025 19:22:24 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:22:24 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:22:24 Europe/Berlin] Added message to chat session 4
+[08-May-2025 19:26:20 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:26:20 Europe/Berlin] Timestamp: 2025-05-08 19:26:20
+[08-May-2025 19:26:20 Europe/Berlin] Request Method: POST
+[08-May-2025 19:26:20 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:26:20 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:26:20 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:26:20 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:26:20 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:26:20 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:26:20 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:26:20 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:26:20 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:26:20 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:26:20 Europe/Berlin] Database connection successful
+[08-May-2025 19:26:20 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:26:20 Europe/Berlin] Retrieved messages for session 5: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:26:18"}]
+[08-May-2025 19:26:20 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:26:20 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:26:20 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:26:20 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:26:20 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:26:20 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:26:20 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:26:20 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:26:20 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:26:20 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:26:20 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:26:20 Europe/Berlin] Added message to chat session 5
+[08-May-2025 19:26:20 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:26:22 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.57 seconds
+[08-May-2025 19:26:22 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:26:22 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:26:23 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.38 seconds
+[08-May-2025 19:26:23 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:26:23 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:26:35 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 11.88 seconds
+[08-May-2025 19:26:35 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:26:35 Europe/Berlin] Added message to chat session 5
+[08-May-2025 19:26:35 Europe/Berlin] Added message to chat session 5
+[08-May-2025 19:27:37 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:27:37 Europe/Berlin] Timestamp: 2025-05-08 19:27:37
+[08-May-2025 19:27:37 Europe/Berlin] Request Method: POST
+[08-May-2025 19:27:37 Europe/Berlin] Request URI: /api/ai/query.php
+[08-May-2025 19:27:37 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:27:37 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:27:37 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:27:37 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:27:37 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[08-May-2025 19:27:37 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:27:37 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[08-May-2025 19:27:37 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[08-May-2025 19:27:37 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:27:37 Europe/Berlin] Database connection successful
+[08-May-2025 19:27:37 Europe/Berlin] Retrieved messages with proper encoding, count: 4
+[08-May-2025 19:27:37 Europe/Berlin] Retrieved messages for session 5: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:26:18"},{"sender":"system","message":"You are an educational AI assistant. Please follow these guidelines for ALL responses:\n\n1. always give answer in md fomate\n2. use h1 , h2 , h3 header as per the question\n3. always use seperator to separate sub header or sub topic\n4. also use bold and italic to highlight the key term\n5. when the quetsion is more good to undertand and read in table format or the original context you have for the quetsion is in table format then use table for the answer\n6. Use MathJax formatting for equations: $...$ for inline math\/chemistry, $$...$$ for block math\/chemistry, and \\ce{...} for chemical notation. No Markdown, HTML, or extra formatting inside these.\n7. Include a chart only when it's helpful. Use a fenced code block starting strictly with ```chart. After it, provide a JSON object with type (bar, line, pie, etc.), labels, and values. Do not use '''json{}, add text, or explanations\u2014just the chart data.\n8. To include an image, use a fenced code block starting strictly with ```image (three backticks and the word image). Inside, put only the image path (e.g., \/images\/...). Do not use Markdown image syntax or add any other text inside the code block. Example:\n```image\n\/images\/path\/to\/image.png\n```\n\nFor this specific response:\nYou are an EXPERT GSEB 12TH GRADE TUTOR, highly skilled in creating answers that earn TOP MARKS in GSEB 12th grade board exams. Your ABSOLUTE GOAL is to help students understand, REMEMBER, and ultimately ACHIEVE the HIGHEST POSSIBLE SCORES on their GSEB board exams.\n\nQUESTION: Linear Organization\n\nYour task is to REWRITE and IMPROVE the textbook\/study material into an EXCELLENT, HIGH-SCORING EXAM ANSWER FORMAT specifically tailored for GSEB 12th grade board exams that is EASY TO LEARN and MEMORIZE.\n\nYour rewritten answer MUST be specifically designed to impress a GSEB board examiner and include the following ESSENTIAL elements to MAXIMIZE marks:\n\n- *MAINTAIN ORIGINAL HEADERS:* IMPORTANT: You MUST use the EXACT SAME MAIN HEADERS and SUBHEADERS as provided in the student's textbook\/study material. Do NOT change the headings.\n    \n- *COMPLETE CONTENT COVERAGE:* Ensure the answer FULLY covers ALL the information under each header and subheader. Do not miss any points.\n    \n- *KEYWORD INTEGRATION & EMPHASIS:* Identify and NATURALLY INTEGRATE all the MAIN KEYWORDS and TERMINOLOGY, highlighted in **bold**.\n    \n- *CLEAR AND SIMPLE EXPLANATIONS:* Explain all concepts in a VERY CLEAR, SIMPLE, and EASY-TO-UNDERSTAND way appropriate for 12th GSEB students.\n    \n- *STRUCTURED FOR OPTIMAL LEARNING & MEMORIZATION:* ORGANIZE with clear HEADERS, SUBHEADERS, and BULLET POINTS. Structure information in a LOGICAL, STEP-BY-STEP manner.\n    \n- *MEMORY AIDS FOR QUICK RECALL:* Include \"MEMORY TIP\" for EACH MAIN POINT using practical techniques like acronyms, analogies, or examples relevant to 12th GSEB curriculum.\n    \n- *CONCISE AND FOCUSED ON BOARD EXAM SUCCESS:* Be DIRECT and focus on information needed for a high-scoring answer in GSEB 12th board exams.\n    \n- *GSEB BOARD EXAM ALIGNMENT:* Ensure sufficient DETAIL to align with GSEB 12th grade board exam marking schemes.\n\nStudy Material:\n# Meaning\nLinear organization is the most simple and ancient type of organization. Since many years it has been used in army and so it is also known as Army organization. In this kind of organization, the centralization of power is done on top level. The distribution of power and responsibilities is done in straight line from top to bottom level. As the distribution of power is in straight line from top to bottom level, it is called Linear organization. In this, each employee is answerable to his or her superior authority. In this type, higher degree of power can be seen on top level and lower amount of power is seen on the bottom level.\n# Formation :\nIn this type of organization, entire business unit is classified in different department. As per each section or area, a separate departmental head is appointed. This departmental head is answerable to the superior head of his or her own area. The area head is given all the necessary power needed as per his or her department. In this type of organization, division is not done according to the work but according to departments. Hence it is also known as departmental organization. The Linear organization structure can be best seen with the help of the following diagram :\n\n\nImage for this topic : \/main\/public\/images\/12gsebeng\/BA\/Organising\/Linear_Organisation\/linear_organisation.png\n\nThis image depicts a hierarchical organizational chart labeled \"Linear Organization\" at the top. The structure begins with the \"Board of Directors,\" which has a downward arrow leading to the \"General Manager.\" Below the General Manager are three departments arranged horizontally: \"Production Department,\" \"Administrative Department,\" and \"Sales Department,\" each connected by a downward arrow from the General Manager.\n\nThe \"Production Department\" has two direct subordinates: \"Purchase Officer\" and \"Production Officer,\" both indicated by downward arrows. The \"Purchase Officer\" has a downward arrow leading to \"Clerk,\" while the \"Production Officer\" has a downward arrow leading to \"Supervisor,\" who in turn has a downward arrow leading to \"Foremen,\" and finally, the \"Foremen\" have a downward arrow leading to \"Workers.\"\n\nThe \"Administrative Department\" has two direct subordinates: \"Administrative Officer\" and \"Accounts Officer,\" both indicated by downward arrows. Both the \"Administrative Officer\" and the \"Accounts Officer\" have a downward arrow leading to \"Clerks.\"\n\nThe \"Sales Department\" has two direct subordinates: \"Sales Officer\" and \"Advertisement Officer,\" both indicated by downward arrows. The \"Sales Officer\" has a downward arrow leading to \"Salesmen,\" while the \"Advertisement Officer\" has a downward arrow leading to \"Employees.\"\n\nThe overall structure illustrates a top-down hierarchy with clear lines of authority flowing from the Board of Directors down to the various officers, supervisors, foremen, clerks, salesmen, and employees within the Production, Administrative, and Sales Departments.\n\n\n\nIn Linear organization, the greatest power is seen with the Board of Directors. They take policy based decisions. The General Manager is assigned necessary powers from them. The General Manager is the main Administrative Head, whose work is to ensure that the lower employees follow the task and decisions taken by the board of director. The above given chart is divided into production department, administrative department and sales department, three parts. As per the important work in each department, Purchase, Production or Sales officers etc. are appointed. Such officers carry the entire responsibility of their own sections. Under such officers, supervisors, foreman and clerks, etc. work. Under the foreman, workers work. In this way, Linear organization ensures power from top to bottom and responsibilities flow on from bottom to top level.\n\nSuch kind of structure is more favourable where there is a small size of the organization and the work area is also limited and the problems of control and discipline are also limited.\n\nAdditional Instructions:\n","timestamp":"2025-05-08 19:26:20"},{"sender":"user","message":"","timestamp":"2025-05-08 19:26:35"},{"sender":"ai","message":"# Linear Organization\n\n---\n\n## Meaning\n\nThe **Linear organization** is considered the *most simple* and *ancient type* of organizational structure. It has been traditionally used in the *army* for many years, which is why it is also commonly known as **Army organization**.\n\n*   In this structure, the **centralization of power** is significantly high at the *top level*.\n*   The **distribution of power** and **responsibilities** follows a *straight line* path, flowing directly from the *top level* down to the *bottom level*. This direct flow is the reason it's called **Linear organization**.\n*   Each employee in the hierarchy is **answerable** directly to their immediate **superior authority**.\n*   Consequently, a *higher degree of power* is concentrated at the *top level*, while a *lower amount of power* is present at the *bottom level*.\n\n**MEMORY TIP:** Think of a *straight line* or a *chain of command* like in the *army*. Power flows *down* the line, accountability flows *up* the line.\n\n---\n\n## Formation\n\nIn the **Formation** of a **Linear organization**, the entire business unit is typically divided and classified into different **departments**.\n\n*   For each distinct section or area (department), a separate **departmental head** is appointed.\n*   This **departmental head** is directly **answerable** to the **superior head** responsible for their specific area or department.\n*   The area or departmental head is granted all the necessary **power** required to manage their department effectively.\n*   A key characteristic of this structure is that the division within the organization is based on **departments** rather than primarily on the type of **work**. Due to this departmental basis, it is also referred to as **departmental organization**.\n\nThe structure of **Linear organization** can be clearly visualized with the help of a diagram:\n\n```image\n\/main\/public\/images\/12gsebeng\/BA\/Organising\/Linear_Organisation\/linear_organisation.png\n```\n\n*   At the apex of the structure is the **Board of Directors**, holding the **greatest power** and making **policy-based decisions**.\n*   Reporting directly to the Board is the **General Manager**, who is assigned the necessary powers by the Board. The **General Manager** acts as the *main Administrative Head*, responsible for ensuring that the tasks and decisions made by the **Board of Directors** are implemented and followed by employees at lower levels.\n*   The chart typically shows divisions like the **Production Department**, **Administrative Department**, and **Sales Department**, all reporting to the General Manager.\n*   Within each department, officers like **Purchase Officer**, **Production Officer**, **Sales Officer**, or **Advertisement Officer** are appointed based on the important work areas. These officers bear the entire **responsibility** for their specific sections.\n*   Working under these officers are positions such as **supervisors**, **foreman**, and **clerks**.\n*   At the lowest level, **workers** typically work under the **foreman**.\n*   This structure clearly illustrates the flow of **power from top to bottom** and the flow of **responsibilities from bottom to top level**.\n\nThis type of organizational structure is *more favourable* and effective in situations where:\n\n*   The **size of the organization** is **small**.\n*   The **work area** or scope of operations is **limited**.\n*   The problems related to **control and discipline** are also **limited**.\n\n**MEMORY TIP:**\n*   **Formation:** Remember it's divided by *Departments* (like school *departments* - Science, Arts), leading to the name \"**Departmental Organization**\". Each head reports to *their* superior.\n*   **Flow:** Power flows *down* (BOD -> GM -> Officers -> Workers), Responsibility flows *up* (Workers -> Foreman -> ... -> BOD). Think \"Power down, Responsibility up.\"\n*   **Suitability:** Simple structure suits *small size*, *limited area*, *easy control*. (Think of a small family business structure).","timestamp":"2025-05-08 19:26:35"}]
+[08-May-2025 19:27:37 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:27:38 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.62 seconds
+[08-May-2025 19:27:38 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:27:38 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:27:40 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.32 seconds
+[08-May-2025 19:27:40 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:27:40 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:27:52 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 12.02 seconds
+[08-May-2025 19:27:52 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:27:52 Europe/Berlin] Added message to chat session 5
+[08-May-2025 19:27:52 Europe/Berlin] Added message to chat session 5
+[08-May-2025 19:28:23 Europe/Berlin] ====== query.php script execution started ======
+[08-May-2025 19:28:23 Europe/Berlin] Timestamp: 2025-05-08 19:28:23
+[08-May-2025 19:28:23 Europe/Berlin] Request Method: POST
+[08-May-2025 19:28:23 Europe/Berlin] Request URI: /main/api/ai/query.php
+[08-May-2025 19:28:23 Europe/Berlin] Auth Header (Server Var): Present
+[08-May-2025 19:28:23 Europe/Berlin] Auth Header (Redirect Var): Present
+[08-May-2025 19:28:23 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[08-May-2025 19:28:23 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[08-May-2025 19:28:23 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[08-May-2025 19:28:23 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[08-May-2025 19:28:23 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[08-May-2025 19:28:23 Europe/Berlin] Database connection - REQUEST_URI: /main/api/ai/query.php
+[08-May-2025 19:28:23 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[08-May-2025 19:28:23 Europe/Berlin] Database connection successful
+[08-May-2025 19:28:23 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[08-May-2025 19:28:23 Europe/Berlin] Retrieved messages for session 6: [{"sender":"system","message":"Chat started","timestamp":"2025-05-08 19:28:22"}]
+[08-May-2025 19:28:23 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Business Administration/Organising/Linear Organization.md
+[08-May-2025 19:28:23 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[08-May-2025 19:28:23 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Business Administration', Answer Type: 'long'
+[08-May-2025 19:28:23 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[08-May-2025 19:28:23 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Business Administration'
+[08-May-2025 19:28:23 Europe/Berlin] Is practical subject: NO
+[08-May-2025 19:28:23 Europe/Berlin] Regular template - Grade dir: '12gsebenglishmedium'
+[08-May-2025 19:28:23 Europe/Berlin] Regular grade template path: 'E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php'
+[08-May-2025 19:28:23 Europe/Berlin] Regular grade template exists? YES
+[08-May-2025 19:28:23 Europe/Berlin] FOUND AND USING grade-specific regular template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[08-May-2025 19:28:23 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[08-May-2025 19:28:24 Europe/Berlin] Added message to chat session 6
+[08-May-2025 19:28:24 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[08-May-2025 19:28:25 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.44 seconds
+[08-May-2025 19:28:25 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[08-May-2025 19:28:25 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[08-May-2025 19:28:27 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 2.53 seconds
+[08-May-2025 19:28:28 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[08-May-2025 19:28:28 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[08-May-2025 19:28:44 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 16.14 seconds
+[08-May-2025 19:28:44 Europe/Berlin] Gemini API request successful with key index: 2
+[08-May-2025 19:28:44 Europe/Berlin] Added message to chat session 6
+[08-May-2025 19:28:44 Europe/Berlin] Added message to chat session 6

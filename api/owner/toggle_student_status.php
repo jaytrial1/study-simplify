@@ -143,7 +143,7 @@ try {
     $subdomain = $owner['subdomain_identifier'];
 
     // Step 2: Verify the student belongs to this owner's class
-    $stmt = $conn->prepare("SELECT id, name, subdomain_identifier, is_active_by_owner, is_approved_by_owner 
+    $stmt = $conn->prepare("SELECT id, name, subdomain_identifier, is_active_by_owner, is_approved_by_owner, Progress_status
                             FROM users 
                             WHERE id = ?");
     $stmt->bind_param("i", $student_id);
@@ -453,6 +453,29 @@ try {
         }
         
         $update_stmt->execute();
+        
+        // Update is_active_by_owner and is_approved_by_owner
+        if ($activate) {
+            // Approving student: Update Progress_status to 'subscribed' and activate
+            $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1, Progress_status = 'subscribed' WHERE id = ?");
+            $stmt->bind_param("i", $student_id);
+        } else {
+            // Denying student: Update Progress_status to 'expired' and deactivate
+            $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 0, is_active_by_owner = 0, Progress_status = 'expired' WHERE id = ?");
+            $stmt->bind_param("i", $student_id);
+        }
+        $stmt->execute();
+
+        debug_log("User status update", [
+            'student_id' => $student_id,
+            'activate' => $activate,
+            'affected_rows' => $stmt->affected_rows,
+            'set_progress_status' => $activate ? 'subscribed' : 'expired'
+        ]);
+
+        if ($stmt->affected_rows <= 0) {
+            throw new Exception("Failed to update student status");
+        }
         
         $action_performed = "approved and " . ($activate ? "activated" : "deactivated");
         

@@ -76,6 +76,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('is_active_by_admin', data.is_active_by_admin);
             }
             
+            // Store trial status information (new)
+            if (data.progressStatus !== undefined) {
+                localStorage.setItem('progressStatus', data.progressStatus);
+            }
+            if (data.trialExpiryDate !== undefined) {
+                localStorage.setItem('trialExpiryDate', data.trialExpiryDate);
+            }
+            
             // Handle "Remember me" by saving credentials securely if checked
             handleRememberMe(formData.email, formData.password, formData.rememberMe);
 

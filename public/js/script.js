@@ -633,48 +633,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to preprocess markdown content
     function preprocessMarkdown(markdown) {
         // Ensure input is a string
-        if (!markdown) return { markdown: '', chartData: [] };
         if (typeof markdown !== 'string') {
             try {
-                // Handle special case for objects
-                if (typeof markdown === 'object') {
-                    // Check for OpenAI-like response format
-                    if (markdown.choices && Array.isArray(markdown.choices) && markdown.choices.length > 0) {
-                        if (markdown.choices[0].message && markdown.choices[0].message.content) {
-                            markdown = markdown.choices[0].message.content;
-                        } else if (markdown.choices[0].text) {
-                            markdown = markdown.choices[0].text;
-                        }
-                    } 
-                    // Check for common completion formats
-                    else if (markdown.completion) {
-                        markdown = markdown.completion;
-                    } else if (markdown.answer) {
-                        markdown = markdown.answer;
-                    } 
-                    // Try to extract text from known object formats
-                    else if (markdown.text) {
-                        markdown = markdown.text;
-                    } else if (markdown.message) {
-                        markdown = markdown.message;
-                    } else if (markdown.content) {
-                        markdown = markdown.content;
-                    } else if (markdown.response) {
-                        markdown = markdown.response;
-                    } else if (markdown.data && typeof markdown.data === 'object') {
-                        // Try nested data object
-                        if (markdown.data.text) {
-                            markdown = markdown.data.text;
-                        } else if (markdown.data.message) {
-                            markdown = markdown.data.message;
-                        } else if (markdown.data.content) {
-                            markdown = markdown.data.content;
-                        } else if (markdown.data.response) {
-                            markdown = markdown.data.response;
-                        } else {
-                            // Stringify entire data object if no text fields found
-                            markdown = JSON.stringify(markdown.data, null, 2);
-                        }
+                if (markdown instanceof Error) {
+                    markdown = markdown.message;
+                } else if (markdown instanceof Object) {
+                    if (markdown.data) {
+                        markdown = JSON.stringify(markdown.data, null, 2);
                     } else {
                         // Check if object has toString method that returns something useful
                         if (typeof markdown.toString === 'function' && markdown.toString() !== '[object Object]') {
@@ -693,61 +658,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { markdown: 'Error rendering content', chartData: [] };
             }
         }
-        
-        // Handle the case where markdown might be a stringified JSON object
-        if (markdown.startsWith('{') && markdown.endsWith('}')) {
-            try {
-                const parsedObj = JSON.parse(markdown);
-                // Check for OpenAI-like format in stringified JSON
-                if (parsedObj.choices && Array.isArray(parsedObj.choices) && parsedObj.choices.length > 0) {
-                    if (parsedObj.choices[0].message && parsedObj.choices[0].message.content) {
-                        markdown = parsedObj.choices[0].message.content;
-                    } else if (parsedObj.choices[0].text) {
-                        markdown = parsedObj.choices[0].text;
-                    }
-                }
-                // Check for other response formats
-                else if (parsedObj.completion) {
-                    markdown = parsedObj.completion;
-                } else if (parsedObj.answer) {
-                    markdown = parsedObj.answer;
-                } 
-                // Extract text from known object formats
-                else if (parsedObj.text) {
-                    markdown = parsedObj.text;
-                } else if (parsedObj.message) {
-                    markdown = parsedObj.message;
-                } else if (parsedObj.content) {
-                    markdown = parsedObj.content;
-                } else if (parsedObj.response) {
-                    markdown = parsedObj.response;
-                } else if (parsedObj.data && typeof parsedObj.data === 'object') {
-                    // Try nested data object
-                    if (parsedObj.data.text) {
-                        markdown = parsedObj.data.text;
-                    } else if (parsedObj.data.message) {
-                        markdown = parsedObj.data.message;
-                    } else if (parsedObj.data.content) {
-                        markdown = parsedObj.data.content;
-                    } else if (parsedObj.data.response) {
-                        markdown = parsedObj.data.response;
-                    } else {
-                        // If no text fields found in data, keep original stringified
-                        // Likely it's intended to be displayed as JSON
-                    }
-                }
-                // If no recognized property was found, keep the original JSON string
-                // This ensures JSON intended for display stays as is
-            } catch (e) {
-                // If it couldn't be parsed as JSON, keep it as is
-                console.log('String looks like JSON but cannot be parsed:', e);
-            }
-        }
-        
-        // Handle the case where the input is the literal string "[object Object]"
-        if (markdown === '[object Object]') {
-            markdown = "Error: Response was incorrectly serialized to [object Object]";
-        }
 
         // Handle markdown code blocks
         if (markdown.startsWith('```markdown')) {
@@ -760,6 +670,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Process LaTeX expressions before other Markdown processing
         try {
+            // Process chemical equations using \ce command
+            const chemicalEquationPattern = /\\ce\{([^}]+)\}/g;
+            processed = processed.replace(chemicalEquationPattern, function(match, equation) {
+                // Use the mhchem package syntax for chemical equations
+                return `$\\ce{${equation}}$`;
+            });
+
             // Process block math expressions
             // Look for $$...$$, but avoid replacing if it's already inside a code block
             const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
@@ -941,6 +858,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (e) {
             console.error('Error processing markdown:', e);
+        }
+
+        // 1. In preprocessMarkdown, after chart block handling, add image block handling:
+        try {
+            // Find and process all image blocks
+            const imageBlockRegex = /```image\s*([\s\S]*?)```/g;
+            let match;
+            let imageIndex = 0;
+            while ((match = imageBlockRegex.exec(processed)) !== null) {
+                const imageUrl = match[1].trim();
+                // Replace with a placeholder div for later rendering
+                const placeholder = `<div class=\"ai-image-card\" data-image-url=\"${imageUrl}\" data-image-index=\"${imageIndex}\"></div>`;
+                processed = processed.replace(match[0], placeholder);
+                imageIndex++;
+            }
+        } catch (e) {
+            console.error('Error processing image blocks:', e);
         }
         
         return {
@@ -2414,8 +2348,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // Create scrollable wrapper
                                     const wrapper = document.createElement('div');
                                     wrapper.classList.add('scrollable-wrapper');
-                                    wrapper.style.overflowY = 'hidden'; // Force horizontal scrolling only
                                     
+                                    // Set styles directly as properties (more reliable than shorthand)
+                                    wrapper.style.overflowY = 'visible'; 
+                                    wrapper.style.overflowX = 'auto';
+                                    wrapper.style.display = 'block';      // Ensure block display for proper sizing
+                                    wrapper.style.width = '100%';         // Set width to 100%
+                                    wrapper.style.maxWidth = '100%';      // Prevent overflow from width
+
                                     // Replace equation with wrapper containing equation
                                     mathElement.parentNode.insertBefore(wrapper, mathElement);
                                     wrapper.appendChild(mathElement);
@@ -2435,6 +2375,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error rendering LaTeX with MathJax for message:', error);
             }
         }
+
+        // 2. In enhanceCodeBlocks, after chart rendering, add image card rendering:
+        // Process AI image cards
+        const imageCards = messageElement.querySelectorAll('.ai-image-card');
+        imageCards.forEach(card => {
+            // Only append the image if not already present
+            if (card.querySelector('img.ai-image')) return;
+            const imageUrl = card.getAttribute('data-image-url');
+            if (!imageUrl) return;
+            // Create image element
+            const img = document.createElement('img');
+            img.src = imageUrl.replace(/\\\\/g, '/').replace(/\\/g, '/');
+            img.alt = 'AI provided image';
+            img.className = 'ai-image';
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+            img.style.borderRadius = '12px';
+            img.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
+            img.style.cursor = 'zoom-in';
+            // Responsive: scale down on mobile
+            img.style.maxHeight = '400px';
+            card.appendChild(img);
+            // Add click-to-zoom (lightbox)
+            img.addEventListener('click', function() {
+                let modal = document.createElement('div');
+                modal.className = 'ai-image-zoom-modal';
+                modal.innerHTML = `<div class=\"ai-image-zoom-backdrop\"></div><img src=\"${imageUrl}\" class=\"ai-image-zoomed\" style=\"max-width:90vw; max-height:90vh; display:block; margin:auto; border-radius:16px; box-shadow:0 4px 32px rgba(0,0,0,0.18);\" />`;
+                document.body.appendChild(modal);
+                // Initialize pinch-zoom if available
+                const zoomedImg = modal.querySelector('.ai-image-zoomed');
+                if (window.PinchZoom) {
+                    new PinchZoom(zoomedImg, { draggableUnzoomed: false });
+                } else if (typeof PinchZoom !== 'undefined') {
+                    new PinchZoom(zoomedImg, { draggableUnzoomed: false });
+                }
+                // Close on click (but not on image pinch/drag)
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal || e.target.classList.contains('ai-image-zoom-backdrop')) {
+                        modal.remove();
+                    }
+                });
+            });
+        });
     }
 
     // Add resize event listener to adjust positions on window resize

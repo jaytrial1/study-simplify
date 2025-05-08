@@ -128,6 +128,13 @@ function preprocessMarkdown(markdown) {
     
     // Process LaTeX expressions before other Markdown processing
     try {
+        // Process chemical equations using \ce command
+        const chemicalEquationPattern = /\\ce\{([^}]+)\}/g;
+        processed = processed.replace(chemicalEquationPattern, function(match, equation) {
+            // Wrap the entire \ce command in $ delimiters for inline math rendering
+            return `$\\ce{${equation}}$`;
+        });
+
         // Process block math expressions
         // Look for $$...$$, but avoid replacing if it's already inside a code block
         const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
@@ -309,6 +316,23 @@ function preprocessMarkdown(markdown) {
         }
     } catch (e) {
         console.error('Error processing markdown:', e);
+    }
+    
+    // --- ADD IMAGE BLOCK HANDLING (from script.js) ---
+    try {
+        // Find and process all image blocks
+        const imageBlockRegex = /```image\s*([\s\S]*?)```/g;
+        let match;
+        let imageIndex = 0;
+        while ((match = imageBlockRegex.exec(processed)) !== null) {
+            const imageUrl = match[1].trim();
+            // Replace with a placeholder div for later rendering
+            const placeholder = `<div class=\"ai-image-card\" data-image-url=\"${imageUrl}\" data-image-index=\"${imageIndex}\"></div>`;
+            processed = processed.replace(match[0], placeholder);
+            imageIndex++;
+        }
+    } catch (e) {
+        console.error('Error processing image blocks:', e);
     }
     
     return {
@@ -1130,7 +1154,13 @@ window.chatHistory = new ChatHistoryManager();
 
 // Function to enhance code blocks and render charts
 function enhanceCodeBlocks(messageElement) {
-    console.log('Enhancing message structure and rendering charts for:', messageElement);
+    if (!messageElement) {
+        console.error('[DEBUG] enhanceCodeBlocks was called, but messageElement is null or undefined!');
+        return; // Exit if messageElement is not valid
+    }
+    console.log('[DEBUG] enhanceCodeBlocks successfully entered. messageElement:', messageElement);
+    // Now it's safer to log innerHTML if you need to, or just proceed
+    // console.log('[DEBUG] messageElement.innerHTML:', messageElement.innerHTML); 
 
     // Process code blocks (assume existing logic is okay)
     const codeBlocks = messageElement.querySelectorAll('pre code');
@@ -1163,20 +1193,24 @@ function enhanceCodeBlocks(messageElement) {
 
     // Process chart placeholders
     const chartPlaceholders = formattedContent.querySelectorAll('.chart-placeholder'); // Search within formattedContent
-    if (chartPlaceholders.length === 0) return; // No charts to render
+    // if (chartPlaceholders.length === 0) return; // No charts to render
 
     console.log('Found chart placeholders:', chartPlaceholders.length);
 
     let chartData;
     try {
         const chartDataString = messageElement.dataset.chartData;
+        console.log('[enhanceCodeBlocks] messageElement.dataset.chartData (string):', chartDataString); // Log 2
+        
         if (chartDataString) {
             chartData = JSON.parse(chartDataString);
+            console.log('[enhanceCodeBlocks] Parsed chartData from dataset:', JSON.parse(JSON.stringify(chartData))); // Log 3
         } else {
+            console.log('[enhanceCodeBlocks] chartDataString is missing or invalid, using empty array for chartData.'); // Log 4
             chartData = [];
         }
     } catch (error) {
-        console.error('Error parsing chart data from dataset:', error);
+        console.error('[enhanceCodeBlocks] Error parsing chart data from dataset:', error);
         chartData = [];
     }
 
@@ -1267,7 +1301,57 @@ function enhanceCodeBlocks(messageElement) {
         }
     });
 
-    // REMOVED MathJax call from here
+    // Debug: Log the raw markdown and processed markdown
+    if (messageElement.dataset && messageElement.dataset.originalMarkdown) {
+        console.log('[DEBUG] Raw markdown from DB:', messageElement.dataset.originalMarkdown);
+    }
+    if (formattedContent && formattedContent.innerHTML) {
+        console.log('[DEBUG] Formatted content HTML:', formattedContent.innerHTML);
+    }
+    // Process AI image cards
+    const imageCards = messageElement.querySelectorAll('.ai-image-card');
+    imageCards.forEach(card => {
+        // Only append the image if not already present
+        if (card.querySelector('img.ai-image')) return;
+        const imageUrl = card.getAttribute('data-image-url');
+        console.log('[DEBUG] ai-image-card imageUrl:', imageUrl, card);
+        if (!imageUrl) return;
+        // Create image element
+        const img = document.createElement('img');
+        img.src = imageUrl.replace(/\\\\/g, '/').replace(/\\/g, '/');
+        img.alt = 'AI provided image';
+        img.className = 'ai-image';
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.display = 'block';
+        img.style.margin = '0 auto';
+        img.style.borderRadius = '12px';
+        img.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
+        img.style.cursor = 'zoom-in';
+        img.style.maxHeight = '400px';
+        card.appendChild(img);
+        // Add click-to-zoom (lightbox)
+        img.addEventListener('click', function() {
+            let modal = document.createElement('div');
+            modal.className = 'ai-image-zoom-modal';
+            modal.innerHTML = `<div class=\"ai-image-zoom-backdrop\"></div><img src=\"${imageUrl}\" class=\"ai-image-zoomed\" style=\"max-width:90vw; max-height:90vh; display:block; margin:auto; border-radius:16px; box-shadow:0 4px 32px rgba(0,0,0,0.18);\" />`;
+            document.body.appendChild(modal);
+            // Initialize pinch-zoom if available
+            const zoomedImg = modal.querySelector('.ai-image-zoomed');
+            if (window.PinchZoom) {
+                new PinchZoom(zoomedImg, { draggableUnzoomed: false });
+            } else if (typeof PinchZoom !== 'undefined') {
+                new PinchZoom(zoomedImg, { draggableUnzoomed: false });
+            }
+            // Close on click (but not on image pinch/drag)
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal || e.target.classList.contains('ai-image-zoom-backdrop')) {
+                    modal.remove();
+                }
+            });
+        });
+    });
+
 }
 
 // NEW Helper function to wrap MathJax elements after typesetting
@@ -1293,7 +1377,13 @@ function wrapMathJaxElements(contentElement) {
             console.log('Wrapping MathJax element:', mathElement);
             const wrapper = document.createElement('div');
             wrapper.classList.add('scrollable-wrapper');
-            wrapper.style.overflowY = 'hidden'; // Ensure only horizontal scroll
+
+            // Set styles directly as properties (more reliable than shorthand)
+            wrapper.style.overflowY = 'visible'; 
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.display = 'block';      // Ensure block display for proper sizing
+            wrapper.style.width = '100%';         // Set width to 100%
+            wrapper.style.maxWidth = '100%';      // Prevent overflow from width
 
             mathElement.parentNode.insertBefore(wrapper, mathElement);
             wrapper.appendChild(mathElement);

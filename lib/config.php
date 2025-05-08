@@ -1,6 +1,6 @@
 <?php
 // AI Configuration
-define('AI_MODEL', 'deepseek'); // Options: 'gemini' or 'deepseek'
+define('AI_MODEL', 'gemini'); // Options: 'gemini' or 'deepseek'
 define('ENABLE_API_LOGGING', false); // Set to false to disable API key usage logging
 
 // Gemini API Configuration

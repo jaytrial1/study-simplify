@@ -69,6 +69,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Add debugging script -->
+    <script>
+        console.log("*** DEBUG: Settings page loaded ***");
+        
+        // Check DOM elements after a short delay to ensure they're loaded
+        setTimeout(() => {
+            const menuToggle = document.getElementById('menuToggle');
+            console.log("DEBUG: menuToggle element:", menuToggle);
+            
+            const nameInput = document.getElementById('name');
+            console.log("DEBUG: name input element:", nameInput);
+            console.log("DEBUG: name input value:", nameInput ? nameInput.value : 'not found');
+        }, 500);
+    </script>
+    
     <div class="app-container">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
@@ -220,6 +235,24 @@
                             <i class="fas fa-power-off"></i> Logout
                         </button>
                     </div>
+
+                    <!-- Add trial status section here, after the account settings -->
+                    <div id="trialStatusSection" class="auth-box" style="display: none;">
+                        <div class="auth-header">
+                            <i class="fas fa-clock"></i>
+                            <h1>Subscription Status</h1>
+                        </div>
+                        <div class="subscription-info">
+                            <div class="subscription-status">
+                                <div class="status-badge" id="trialStatusBadge">
+                                    <span id="trialStatusTitle">Trial Active</span>
+                                </div>
+                                <div class="subscription-details">
+                                    <p id="trialStatusDescription">Your trial status information will appear here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,6 +265,8 @@
         
         // Check for tuition class to show the tuition classes button
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("*** DEBUG: Settings page DOMContentLoaded handler running - showing tuition button ***");
+            
             const tuitionClass = localStorage.getItem('tuitionClass');
             
             // --- CORRECTED ENVIRONMENT DETECTION FOR BUTTON VISIBILITY ---
@@ -270,6 +305,26 @@
                 });
             }
             // --- END CORRECTION ---
+            
+            // Explicitly call loadUserData from settings.js to load profile data
+            console.log("DEBUG: Explicitly calling loadUserData function");
+            if (typeof loadUserData === 'function') {
+                loadUserData().then(() => {
+                    console.log("DEBUG: loadUserData completed");
+                    
+                    // Call displayTrialStatus after user data is loaded
+                    if (typeof displayTrialStatus === 'function') {
+                        console.log("DEBUG: Calling displayTrialStatus");
+                        displayTrialStatus();
+                    } else {
+                        console.error("DEBUG: displayTrialStatus function not found");
+                    }
+                }).catch(error => {
+                    console.error("DEBUG: Error in loadUserData:", error);
+                });
+            } else {
+                console.error("DEBUG: loadUserData function not defined - settings.js might not be loaded correctly");
+            }
         });
     </script>
     
@@ -332,6 +387,120 @@
             font-size: 18px;
             margin-right: 12px;
             color: var(--color-accent);
+        }
+    </style>
+
+    <!-- Debug script to check for duplicate menuToggle event handlers -->
+    <script>
+        // Log the original addEventListener method
+        const originalAddEventListener = EventTarget.prototype.addEventListener;
+        
+        // Replace it with our version that logs menu toggle event listeners
+        EventTarget.prototype.addEventListener = function(type, listener, options) {
+            // If this is a menuToggle element and the event is click, log it
+            if (this.id === 'menuToggle' && type === 'click') {
+                console.log('DEBUG: Adding click event listener to menuToggle');
+                console.trace('Event listener stack trace');
+            }
+            
+            // Call the original method
+            return originalAddEventListener.call(this, type, listener, options);
+        };
+    </script>
+    
+    <!-- Trial status checker script -->
+    <script>
+        // Check if we're on a local server
+        const _isLocalServerTrial = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        // Set trial script paths based on environment
+        const trialCheckerPath = _isLocalServerTrial ? "../js/trial-status-checker.js" : "/public/js/trial-status-checker.js";
+        const trialNotifPath = _isLocalServerTrial ? "../js/trial-notification.js" : "/public/js/trial-notification.js";
+        
+        // Add the scripts dynamically
+        document.write(`<script src="${trialCheckerPath}"><\/script>`);
+        document.write(`<script src="${trialNotifPath}"><\/script>`);
+    </script>
+    <!-- User session script - commented out to test if this is causing conflicts -->
+    <!-- <script src="../js/user-session.js"></script> -->
+    
+    <!-- Trial status toast notification -->
+    <div id="toastNotification" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-clock toast-icon"></i>
+            <span id="toastMessage"></span>
+            <button class="toast-close" onclick="document.getElementById('toastNotification').classList.remove('show')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* Toast Notification Styling */
+        .toast-notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #222639;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            transition: top 0.5s ease;
+            min-width: 300px;
+            max-width: 90%;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .toast-notification.show {
+            top: 20px;
+        }
+        
+        .toast-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+        
+        .toast-icon {
+            color: #ff9800;
+            font-size: 20px;
+        }
+        
+        #toastMessage {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-close:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .toast-notification {
+                width: 90%;
+                max-width: 400px;
+            }
         }
     </style>
 </body>

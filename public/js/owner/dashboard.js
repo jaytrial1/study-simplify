@@ -750,183 +750,206 @@ function displayStudents(studentsToDisplay) {
     const studentsTable = document.getElementById('studentsTable');
     const tableBody = document.getElementById('studentsTableBody');
     
-    // Add debug for troubleshooting
+    // Debug for troubleshooting
     console.log('Debug - Display students with count:', studentsToDisplay ? studentsToDisplay.length : 0);
-    console.log('Debug - Empty state element:', emptyState ? 'found' : 'missing');
-    console.log('Debug - Students table element:', studentsTable ? 'found' : 'missing');
-    console.log('Debug - Table body element:', tableBody ? 'found' : 'missing');
+    
+    // Add debug for Progress_status values
+    console.log('Debug - Student Progress Status values:', studentsToDisplay.map(s => ({
+        id: s.id,
+        name: s.name,
+        Progress_status: s.Progress_status || 'not set',
+        trial_expiry_date: s.trial_expiry_date || 'not set',
+        approved: s.approved
+    })));
     
     // Clear existing table content
     if (tableBody) {
         tableBody.innerHTML = '';
-    } else {
-        console.error('Table body element not found!');
-        return;
     }
-
-    // Check if the list to display is empty
+    
+    // Show empty state or table based on data
     if (!studentsToDisplay || studentsToDisplay.length === 0) {
-        // Show empty state and hide table
-        if (emptyState) {
-            const searchInput = document.getElementById('studentSearchInput');
-            const searchQuery = searchInput ? searchInput.value.trim() : '';
-            const isSearching = searchQuery !== '';
-
-            // Determine the appropriate empty state message
-            if (isSearching && isShowingPendingOnly) {
-                emptyState.querySelector('p:first-of-type').textContent = 'No pending students match your search.';
-                emptyState.querySelector('p:last-of-type').textContent = 'Try adjusting search or showing all students.';
-            } else if (isSearching) {
-                emptyState.querySelector('p:first-of-type').textContent = 'No students match your search.';
-                emptyState.querySelector('p:last-of-type').textContent = 'Try adjusting your search query.';
-            } else if (isShowingPendingOnly) {
-                 emptyState.querySelector('p:first-of-type').textContent = 'There are no students pending approval.';
-                 emptyState.querySelector('p:last-of-type').textContent = 'Click \'Show All Students\' to view approved students.';
-            } else {
-                // Default empty state message
-                emptyState.querySelector('p:first-of-type').textContent = 'No students have signed up for your class yet.';
-                emptyState.querySelector('p:last-of-type').textContent = 'Share your portal URL with your students to get started.';
-            }
-            emptyState.style.display = 'block';
-        }
+        if (emptyState) emptyState.style.display = 'flex';
         if (studentsTable) studentsTable.style.display = 'none';
         return;
+    } else {
+        if (emptyState) emptyState.style.display = 'none';
+        if (studentsTable) studentsTable.style.display = 'table';
     }
-
-    // Hide empty state and show table
-    if (emptyState) emptyState.style.display = 'none';
-    if (studentsTable) studentsTable.style.display = 'table';
+    
+    // Update student count if available
+    const studentCount = document.getElementById('studentCount');
+    if (studentCount) {
+        studentCount.textContent = `${studentsToDisplay.length} student${studentsToDisplay.length !== 1 ? 's' : ''}`;
+    }
     
     // Populate the table
     studentsToDisplay.forEach(student => {
-        // Debug to see what approval status fields exist
-        console.log(`Student ${student.id} (${student.name}) approval fields:`, {
-            approved: student.approved,
-            is_approved_by_owner: student.is_approved_by_owner,
-            is_approved: student.is_approved,
-            typeOfApproved: typeof student.approved,
-            active: student.active,
-            is_active_by_owner: student.is_active_by_owner,
-            is_active: student.is_active,
-            typeOfActive: typeof student.active
-        });
-        
-        // Create a new row
+        // Create a new row with student-row class
         const row = document.createElement('tr');
+        row.className = 'student-row';
+        row.setAttribute('data-student-id', student.id);
         
-        // Determine if the student is approved and active
-        const isApproved = student.approved === '1' || 
-                          student.approved === 1 || 
-                          student.is_approved_by_owner === '1' || 
-                          student.is_approved_by_owner === 1 ||
-                          student.is_approved === '1' ||
-                          student.is_approved === 1 ||
-                          Boolean(student.approved) === true ||
-                          Boolean(student.is_approved_by_owner) === true;
-
-        const isActive = student.active === '1' || 
-                        student.active === 1 || 
-                        student.is_active_by_owner === '1' || 
-                        student.is_active_by_owner === 1 ||
-                        student.is_active === '1' ||
-                        student.is_active === 1 ||
-                        Boolean(student.active) === true ||
-                        Boolean(student.is_active_by_owner) === true;
-        
-        // Create approval status badge
-        const approvalBadge = document.createElement('span');
-        if (isApproved) {
-            approvalBadge.className = 'status-badge approval-badge';
-            approvalBadge.innerHTML = 'Approved <small>(✓)</small>';
-        } else {
-            approvalBadge.className = 'status-badge approval-badge pending';
-            approvalBadge.innerHTML = 'Pending <small>(?)</small>';
-        }
-        
-        // Create approval action buttons
-        const approvalButtons = document.createElement('div');
-        approvalButtons.className = 'action-buttons';
-        
-        if (!isApproved) {
-            // For unapproved students - show approve/deny buttons
-            const approveBtn = document.createElement('button');
-            approveBtn.className = 'action-btn approve-btn';
-            approveBtn.textContent = 'Approve';
-            approveBtn.dataset.studentId = student.id;
-            approveBtn.addEventListener('click', () => showApprovalModal(student));
-            approvalButtons.appendChild(approveBtn);
-            
-            const denyBtn = document.createElement('button');
-            denyBtn.className = 'action-btn deny-btn';
-            denyBtn.textContent = 'Deny';
-            denyBtn.dataset.studentId = student.id;
-            denyBtn.addEventListener('click', () => showDenyModal(student));
-            approvalButtons.appendChild(denyBtn);
-        } else {
-            // For approved students - show disabled approved text
-            const approvedText = document.createElement('span');
-            approvedText.className = 'status-text';
-            approvedText.textContent = 'Already approved';
-            approvalButtons.appendChild(approvedText);
-        }
-        
-        // Create access status badge
-        const accessBadge = document.createElement('span');
-        if (isActive) {
-            accessBadge.className = 'status-badge access-badge active';
-            accessBadge.textContent = 'Active';
-        } else {
-            accessBadge.className = 'status-badge access-badge inactive';
-            accessBadge.textContent = 'Inactive';
-        }
-        
-        // Create access action buttons
-        const accessButtons = document.createElement('div');
-        accessButtons.className = 'action-buttons';
-        
-        if (isApproved) {
-            // Only approved students can be activated/deactivated
-            const toggleBtn = document.createElement('button');
-            toggleBtn.className = isActive ? 'action-btn deactivate-btn' : 'action-btn activate-btn';
-            toggleBtn.textContent = isActive ? 'Deactivate' : 'Activate';
-            toggleBtn.dataset.studentId = student.id;
-            toggleBtn.dataset.actionType = isActive ? 'deactivate' : 'activate';
-            toggleBtn.addEventListener('click', () => toggleStudentStatus(student.id, !isActive, false));
-            accessButtons.appendChild(toggleBtn);
-        } else {
-            // Unapproved students cannot be activated/deactivated
-            const disabledText = document.createElement('span');
-            disabledText.className = 'status-text disabled';
-            disabledText.textContent = 'Pending approval';
-            accessButtons.appendChild(disabledText);
-        }
-        
-        // Create the row structure with the modified columns
+        // Create the row structure with properly classed cells
         row.innerHTML = `
-            <td>${student.name || 'N/A'}</td>
-            <td>${student.email || 'N/A'}</td>
-            <td>${student.tuition_class_identifier || student.grade || 'N/A'}</td>
-            <td id="approval-cell-${student.id}"></td> <!-- Combined Approval Cell -->
-            <td id="access-status-${student.id}"></td>
-            <td id="access-action-${student.id}"></td>
+            <td class="name-column">${student.name || 'N/A'}</td>
+            <td class="email-column">${student.email || 'N/A'}</td>
+            <td class="cell-xs">${student.tuition_class_identifier || student.grade || 'N/A'}</td>
+            <td id="approval-cell-${student.id}" class="cell-sm text-center"></td>
+            <td id="access-status-${student.id}" class="cell-sm text-center"></td>
+            <td id="progress-status-${student.id}" class="cell-sm text-center"></td>
+            <td id="access-action-${student.id}" class="cell-sm text-center"></td>
         `;
         
         // Add the row to the table
         tableBody.appendChild(row);
         
-        // Get the combined approval cell
+        // Populate approval cell content
         const approvalCell = document.getElementById(`approval-cell-${student.id}`);
-
-        // Populate the combined approval cell
-        if (isApproved) {
-            approvalCell.appendChild(approvalBadge); // Show badge if approved
-        } else {
-            approvalCell.appendChild(approvalButtons); // Show buttons if pending
+        if (approvalCell) {
+            // Show appropriate approval badge
+            if (student.approved == 1) {
+                approvalCell.innerHTML = `<span class="status-badge approval-badge">Approved <i class="fas fa-check"></i></span>`;
+            } else {
+                // Show approval action buttons
+                approvalCell.innerHTML = `
+                    <div class="action-buttons">
+                        <button class="action-btn approve-btn" data-student-id="${student.id}">Approve</button>
+                        <button class="action-btn deny-btn" data-student-id="${student.id}">Deny</button>
+                    </div>
+                `;
+            }
         }
         
-        // Add the access badges and buttons to their cells (no change here)
-        document.getElementById(`access-status-${student.id}`).appendChild(accessBadge);
-        document.getElementById(`access-action-${student.id}`).appendChild(accessButtons);
+        // Populate access status cell content
+        const accessStatusCell = document.getElementById(`access-status-${student.id}`);
+        if (accessStatusCell) {
+            // Show active/inactive status badge
+            if (student.active == 1) {
+                accessStatusCell.innerHTML = `<span class="status-badge access-badge active">Active</span>`;
+            } else {
+                accessStatusCell.innerHTML = `<span class="status-badge access-badge inactive">Inactive</span>`;
+            }
+        }
+        
+        // Populate progress status cell content
+        const progressStatusCell = document.getElementById(`progress-status-${student.id}`);
+        if (progressStatusCell) {
+            // Create progress status badge based on the student's Progress_status
+            if (student.Progress_status === 'demo') {
+                // Calculate days remaining if trial_expiry_date is available
+                let daysLeftText = '';
+                if (student.trial_expiry_date) {
+                    const today = new Date();
+                    const expiryDate = new Date(student.trial_expiry_date);
+                    today.setHours(0, 0, 0, 0);
+                    expiryDate.setHours(0, 0, 0, 0);
+                    
+                    const diffTime = expiryDate.getTime() - today.getTime();
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays > 1) {
+                        daysLeftText = ` (${diffDays} days left)`;
+                    } else if (diffDays === 1) {
+                        daysLeftText = ` (1 day left)`;
+                    } else if (diffDays === 0) {
+                        daysLeftText = ` (Expires today)`;
+                    } else {
+                        // If days are negative, it should have been marked as expired
+                        daysLeftText = ` (Expired)`;
+                    }
+                }
+                progressStatusCell.innerHTML = `<span class="progress-badge demo">Demo${daysLeftText}</span>`;
+            } else if (student.Progress_status === 'subscribed') {
+                progressStatusCell.innerHTML = `<span class="progress-badge subscribed">Subscribed</span>`;
+            } else if (student.Progress_status === 'expired') {
+                progressStatusCell.innerHTML = `<span class="progress-badge expired">Trial Expired</span>`;
+            } else {
+                // Default status - this is needed for students that might not have a Progress_status set
+                if (student.approved == 1) {
+                    // Approved students without explicit status are considered subscribed
+                    progressStatusCell.innerHTML = `<span class="progress-badge subscribed">Subscribed</span>`;
+                } else {
+                    // Unapproved students are in demo mode, pending approval
+                    progressStatusCell.innerHTML = `<span class="progress-badge demo">Demo (pending)</span>`;
+                }
+            }
+        }
+        
+        // Populate access action cell content
+        const accessActionCell = document.getElementById(`access-action-${student.id}`);
+        if (accessActionCell) {
+            // Show appropriate action button based on current status
+            if (student.active == 1) {
+                accessActionCell.innerHTML = `<button class="action-btn deactivate-btn" data-student-id="${student.id}">Deactivate</button>`;
+            } else {
+                accessActionCell.innerHTML = `<button class="action-btn activate-btn" data-student-id="${student.id}">Activate</button>`;
+            }
+        }
+    });
+    
+    // Attach event listeners to the action buttons
+    attachApprovalEventListeners();
+    attachAccessEventListeners();
+}
+
+// Add a CSS class for center alignment
+if (!document.getElementById('text-center-style')) {
+    const style = document.createElement('style');
+    style.id = 'text-center-style';
+    style.textContent = `.text-center { text-align: center; }`;
+    document.head.appendChild(style);
+}
+
+// Attach event listeners for approval buttons
+function attachApprovalEventListeners() {
+    // Find all approve buttons and attach click handlers
+    const approveButtons = document.querySelectorAll('.approve-btn');
+    approveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const student = allStudents.find(s => s.id == studentId);
+            if (student) {
+                showApprovalModal(student);
+            } else {
+                console.error('Student not found:', studentId);
+            }
+        });
+    });
+
+    // Find all deny buttons and attach click handlers
+    const denyButtons = document.querySelectorAll('.deny-btn');
+    denyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const student = allStudents.find(s => s.id == studentId);
+            if (student) {
+                showDenyModal(student);
+            } else {
+                console.error('Student not found:', studentId);
+            }
+        });
+    });
+}
+
+// Attach event listeners for activation/deactivation buttons
+function attachAccessEventListeners() {
+    // Find all activate buttons and attach click handlers
+    const activateButtons = document.querySelectorAll('.activate-btn');
+    activateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            toggleStudentStatus(studentId, true, false);
+        });
+    });
+
+    // Find all deactivate buttons and attach click handlers
+    const deactivateButtons = document.querySelectorAll('.deactivate-btn');
+    deactivateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            toggleStudentStatus(studentId, false, false);
+        });
     });
 }
 

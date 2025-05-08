@@ -245,8 +245,25 @@
                 console.log("Current hostname:", currentHostname);
                 console.log("Is actual subdomain:", isSubdomain, "(production:", isProductionSubdomain, ", local:", isLocalSubdomain, ")");
                 
-                // Only check approval status if we're actually on a subdomain
-                if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '') {
+                // Get trial status from localStorage
+                const progressStatus = localStorage.getItem('progressStatus');
+                const trialExpiryDate = localStorage.getItem('trialExpiryDate');
+                
+                // Check if the user is on a trial
+                const isOnValidTrial = progressStatus === 'demo' && trialExpiryDate;
+                
+                // If on trial, check if trial is still valid
+                let isTrialValid = false;
+                if (isOnValidTrial && trialExpiryDate) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const expiryDate = new Date(trialExpiryDate);
+                    expiryDate.setHours(0, 0, 0, 0);
+                    isTrialValid = expiryDate >= today;
+                }
+                
+                // Only check approval status if we're actually on a subdomain and NOT on a valid trial
+                if (isSubdomain && tuitionClass && tuitionClass !== 'null' && tuitionClass !== '' && !isTrialValid) {
                     try {
                         // Get the same base path we use elsewhere
                         const host = window.location.hostname;
@@ -398,8 +415,8 @@
                         setTimeout(() => { toast.classList.remove('show'); }, 3000);
                     }
                 } else {
-                    // Main domain user (or no tuition class), directly go to chatbot
-                window.location.href = 'chatbot.html';
+                    // User is on main domain OR has a valid trial - directly go to chatbot
+                    window.location.href = 'chatbot.html';
                 }
             });
 
@@ -500,6 +517,29 @@
         });
     </script>
 
+    <!-- Session tracker -->
+    <script src="../js/user-session.js"></script>
+
+    <!-- Trial notification script -->
+    <script src="../js/trial-notification.js"></script>
+    <script>
+        // Check if we're on a local server
+        const _isLocalServerTrial = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('192.168.') || 
+                            window.location.hostname.includes('10.0.');
+        
+        // Set trial script paths based on environment
+        
+        const trialNotifPath = _isLocalServerTrial ? "../js/trial-notification.js" : "/public/js/trial-notification.js";
+        const userSessionPath = _isLocalServerTrial ? "../js/user-session.js" : "/public/js/user-session.js";
+    
+        
+        // Add the scripts dynamically
+       
+        document.write(`<script src="${trialNotifPath}"><\/script>`);
+        document.write(`<script src="${userSessionPath}"><\/script>`);
+    </script>
     <!-- Splash Screen Logic - REMOVED -->
     <!-- <script>
         // Splash screen logic was here...

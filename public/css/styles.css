@@ -2583,3 +2583,64 @@ blockquote {
     opacity: 1;
     box-shadow: 0 0 8px #4166d580;
 }
+
+
+/* AI Image Card Styles */
+.ai-image-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 12px;
+    margin: 18px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    overflow-x: auto;
+}
+.ai-image-card img.ai-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    cursor: zoom-in;
+    transition: box-shadow 0.2s;
+}
+.ai-image-card img.ai-image:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+}
+
+/* Zoom Modal Styles */
+.ai-image-zoom-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s;
+}
+.ai-image-zoom-modal .ai-image-zoom-backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: transparent;
+}
+.ai-image-zoom-modal img.ai-image-zoomed {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    background: #fff;
+    display: block;
+    margin: auto;
+}
+@media (max-width: 600px) {
+    .ai-image-card {
+        padding: 6px;
+    }
+    .ai-image-zoom-modal img.ai-image-zoomed {
+        max-width: 98vw;
+        max-height: 80vh;
+    }
+}
