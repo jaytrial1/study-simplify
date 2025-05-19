@@ -128,7 +128,7 @@ function showTrialNotification(expiryDate) {
             right: 0;
             background-color: #222639;
             color: #f8f9fa;
-            z-index: 1000;
+            z-index: 1001; /* Ensure banner is above header */
             padding: 12px 20px;
             text-align: left;
             font-size: 0.9rem;
@@ -261,6 +261,23 @@ function showTrialNotification(expiryDate) {
                 padding-top: 100px;
             }
         }
+
+        /* Basic styles for the new toast close button */
+        #toastNotification .toast-close-btn {
+            background: transparent;
+            border: none;
+            color: inherit; /* Inherit color from parent toast */
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 5px;
+            margin-left: 10px;
+            line-height: 1;
+        }
+
+        #toastNotification .toast-close-btn:hover {
+            opacity: 0.7;
+        }
     `;
     document.head.appendChild(style);
     
@@ -292,10 +309,21 @@ function showTrialToast(message) {
     // Show the toast
     toastElement.classList.add('show');
     
-    // Hide after 5 seconds
-    setTimeout(() => {
-        toastElement.classList.remove('show');
+    // Auto-hide after 5 seconds
+    let autoHideTimeout = setTimeout(() => {
+        if (toastElement.classList.contains('show')) { // Check if still visible
+            toastElement.classList.remove('show');
+        }
     }, 5000);
+
+    // Find close button and attach event listener
+    let closeButton = toastElement.querySelector('.toast-close-btn');
+    if (closeButton) {
+        closeButton.onclick = function() { 
+            toastElement.classList.remove('show');
+            clearTimeout(autoHideTimeout); // Clear the auto-hide timeout
+        };
+    }
 }
 
 // Add function to force show trial toast on page load
@@ -333,5 +361,5 @@ function forceShowTrialToast() {
     }
 }
 
-// Force show trial toast on page load after a short delay
-setTimeout(forceShowTrialToast, 2000); 
+// Force show trial toast on page load after a short delay,
+// but not on chatbot.html
