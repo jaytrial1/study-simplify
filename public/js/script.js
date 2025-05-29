@@ -52,17 +52,32 @@ function showChangeConfirmation() {
             </div>
         </div>
     `;
+    toast.style.display = ''; // Clear any inline display style from previous uses
     toast.classList.add('active');
-    // Return a promise (stops all other code from running) to handle the confirmation dialog (if user click on continue or cancel)
+
     return new Promise((resolve) => {
-        const handleClick = (result) => {
-            toast.classList.remove('active');
-            resolve(result);
-            toast.removeEventListener('click', handleClick);
+        const confirmBtn = toast.querySelector('.confirm-btn');
+        const cancelBtn = toast.querySelector('.cancel-btn');
+
+        const onConfirm = () => {
+            cleanupAndResolve(true);
         };
 
-        toast.querySelector('.confirm-btn').addEventListener('click', () => handleClick(true));
-        toast.querySelector('.cancel-btn').addEventListener('click', () => handleClick(false));
+        const onCancel = () => {
+            cleanupAndResolve(false);
+        };
+
+        function cleanupAndResolve(result) {
+            toast.classList.remove('active');
+            toast.style.display = 'none'; // Explicitly hide the toast
+
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+            resolve(result);
+        }
+
+        confirmBtn.addEventListener('click', onConfirm);
+        cancelBtn.addEventListener('click', onCancel);
     });
 }
 

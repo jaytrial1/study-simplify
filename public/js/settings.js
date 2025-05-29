@@ -227,6 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
             errorDiv.classList.remove('show');
         }
     });
+
+    initializeAffiliateSection();
 });
 
 async function loadUserData() {
@@ -498,5 +500,148 @@ function displayTrialStatus() {
     } else {
         // Hide for unknown status
         trialStatusSection.style.display = 'none';
+    }
+}
+
+function initializeAffiliateSection() {
+    const affiliateProgramSection = document.getElementById('affiliateProgramSection');
+    if (!affiliateProgramSection) {
+        // Section not present in HTML, so do nothing for affiliate feature
+        // console.log("DEBUG: Affiliate program section not found in HTML.");
+        return;
+    }
+
+    const generateAffiliateLinkBtn = document.getElementById('generateAffiliateLinkBtn');
+    const affiliateUpiIdInput = document.getElementById('affiliateUpiId');
+    const generatedLinkContainer = document.getElementById('generatedLinkContainer');
+    const generatedAffiliateLinkInput = document.getElementById('generatedAffiliateLink');
+    const copyAffiliateLinkBtn = document.getElementById('copyAffiliateLinkBtn');
+
+    // Show section only on app.studysimplify.in or specified test domains
+    const isAppDomain = window.location.hostname === 'app.studysimplify.in' || 
+                        window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1' ||
+                        window.location.hostname.startsWith('192.168.') || // For local network testing
+                        window.location.hostname.startsWith('10.');      // For local network testing
+
+    if (isAppDomain) {
+        affiliateProgramSection.style.display = 'block';
+    } else {
+        affiliateProgramSection.style.display = 'none';
+        return; // Don't attach listeners if section isn't relevant
+    }
+    
+    if (!generateAffiliateLinkBtn || !affiliateUpiIdInput) {
+        console.error("Affiliate form elements (button or UPI input) not found!");
+        return;
+    }
+
+    generateAffiliateLinkBtn.addEventListener('click', async function() {
+        const upiId = affiliateUpiIdInput.value.trim();
+        const upiRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/; // Basic UPI validation
+
+        if (!upiId || !upiRegex.test(upiId)) {
+            showAffiliateMessage('Please enter a valid UPI ID (e.g., yourname@bank).', false);
+            return;
+        }
+        showAffiliateMessage('', null); // Clear previous messages
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showAffiliateMessage('Authentication error. Please log in again.', false);
+                return;
+            }
+            
+            generateAffiliateLinkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            generateAffiliateLinkBtn.disabled = true;
+
+            const response = await fetch(`${window.apiBasePath}/api/affiliate_razorpay/generate_link.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ upi_id: upiId })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.status !== 'success') {
+                throw new Error(data.error || 'Failed to generate link.');
+            }
+
+            if (data.payment_link) {
+                generatedAffiliateLinkInput.value = data.payment_link;
+                generatedLinkContainer.style.display = 'block';
+                showAffiliateMessage('Payment link generated successfully!', true);
+            } else {
+                throw new Error('Payment link not found in response.');
+            }
+
+        } catch (error) {
+            console.error('Error generating affiliate link:', error);
+            showAffiliateMessage(error.message || 'An error occurred while generating the link.', false);
+        } finally {
+            generateAffiliateLinkBtn.innerHTML = '<i class="fas fa-link"></i> Generate Link';
+            generateAffiliateLinkBtn.disabled = false;
+        }
+    });
+
+    if (copyAffiliateLinkBtn && generatedAffiliateLinkInput) {
+        copyAffiliateLinkBtn.addEventListener('click', function() {
+            generatedAffiliateLinkInput.select();
+            generatedAffiliateLinkInput.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                const successful = document.execCommand('copy');
+                const originalText = copyAffiliateLinkBtn.innerHTML;
+                copyAffiliateLinkBtn.innerHTML = successful ? '<i class="fas fa-check"></i> Copied!' : '<i class="fas fa-times"></i> Failed';
+                setTimeout(() => {
+                    copyAffiliateLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                }, 2000);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy via execCommand', err);
+                 if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(generatedAffiliateLinkInput.value).then(() => {
+                        const originalText = copyAffiliateLinkBtn.innerHTML;
+                        copyAffiliateLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                         setTimeout(() => {
+                            copyAffiliateLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        }, 2000);
+                    }).catch(clipErr => {
+                        console.error('Clipboard API copy failed:', clipErr);
+                        showAffiliateMessage('Failed to copy link. Please copy manually.', false);
+                    });
+                } else {
+                    showAffiliateMessage('Failed to copy link. Please copy manually.', false);
+                }
+            }
+        });
+    }
+}
+
+function showAffiliateMessage(message, isSuccess) {
+    const affiliateLinkErrorDiv = document.getElementById('affiliateLinkError');
+    const affiliateLinkSuccessDiv = document.getElementById('affiliateLinkSuccess');
+    
+    if (!affiliateLinkErrorDiv || !affiliateLinkSuccessDiv) return;
+
+    const errorTextEl = affiliateLinkErrorDiv.querySelector('.error-text');
+    const successTextEl = affiliateLinkSuccessDiv.querySelector('.success-text');
+
+    // Hide both initially
+    affiliateLinkErrorDiv.style.display = 'none';
+    affiliateLinkSuccessDiv.style.display = 'none';
+
+    if (message === '' || message === null) return; // Clear messages
+
+    if (isSuccess === true) {
+        if(successTextEl) successTextEl.textContent = message;
+        affiliateLinkSuccessDiv.style.display = 'block';
+    } else if (isSuccess === false) {
+        if(errorTextEl) errorTextEl.textContent = message;
+        affiliateLinkErrorDiv.style.display = 'block';
     }
 } 
