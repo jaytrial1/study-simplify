@@ -68,33 +68,43 @@
     *   Addressed UI issues where the generated payment link and "Copy" button did not display correctly on smaller mobile screens.
     *   CSS adjustments (like `flex-wrap`, `word-break`) were made to ensure the link wraps and elements stack appropriately.
 
+3.  **Pre-Link Generation Buyer Email Check (`public/html/settings.html` & `affiliate/check_buyer_email.php`):**
+    *   Before displaying the confirmation modal, the system now performs a backend check to verify if the entered Buyer's Email exists in the `users` table.
+    *   A new PHP script, `affiliate/check_buyer_email.php`, was created to handle this validation. It receives the buyer's email and returns whether it exists.
+    *   If the email does not exist, a toast notification (using the page's custom toast UI) informs the affiliate, and the link generation process is halted.
+    *   If the email exists, the flow continues to the custom confirmation modal.
+    *   This feature provides early feedback to the affiliate, preventing errors and unnecessary steps if the buyer is not registered.
+
 ---
 
 **Phase 4: Database Integration & Advanced Logging**
 
 1.  **Database Schema (`affiliate` table):**
     *   A new MySQL table named `affiliate` was designed and created to store structured data from successful affiliate payments.
-    *   **Columns:**
+    *   **Columns (updated list):**
         *   `id` (Primary Key, Auto Increment)
         *   `affiliate_email` (Affiliate's email)
         *   `affiliate_user_id` (Affiliate's user ID from the `users` table)
+        *   `affiliate_upi_id` (Affiliate's UPI ID, extracted from notes)
         *   `commission_amount` (Fixed at 500.00)
         *   `principal_amount` (Fixed at 2000.00)
         *   `buyer_email` (Buyer's email)
         *   `buyer_user_id` (Buyer's user ID from the `users` table)
+        *   `buyer_subdomain_identifier` (Buyer's subdomain from `users` table)
         *   `razorpay_payment_id` (The payment ID from Razorpay)
         *   `payment_status` (e.g., 'paid', 'captured')
         *   `commission_paid_status` (ENUM: 'pending', 'paid', 'failed', default 'pending')
+        *   `commission_paid_at` (Timestamp, for when commission is actually paid out)
         *   `webhook_received_at` (Timestamp)
         *   `created_at`, `updated_at` (Timestamps)
 
 2.  **Webhook Handler Update (`affiliate/webhook_handler.php`):**
     *   **Database Connection:** Modified to include `config/database.php` to use the existing `getConnection()` function for database access.
-    *   **Data Extraction & Lookup:**
-        *   Continues to extract `affiliate_email_context` and `buyer_email` from webhook notes.
-        *   Performs SQL lookups on the `users` table to retrieve `affiliate_user_id` (based on `affiliate_email_context`) and `buyer_user_id` (based on `buyer_email`). If a user isn't found, the respective ID is stored as `NULL`.
-    *   **Database Insertion:**
-        *   Upon a successful payment event (e.g., `payment_link.paid`, `payment.captured`), the script now inserts a new row into the `affiliate` table with the collected and looked-up data.
+    *   **Data Extraction & Lookup (updated):**
+        *   Extracts `affiliate_upi_id`, `affiliate_email_context`, and `buyer_email` from webhook notes.
+        *   Performs SQL lookups on the `users` table to retrieve `affiliate_user_id` (based on `affiliate_email_context`), and `buyer_user_id` along with `buyer_subdomain_identifier` (based on `buyer_email`). If a user isn't found, the respective ID/identifier is stored as `NULL`.
+    *   **Database Insertion (updated):**
+        *   Upon a successful payment event, the script now inserts a new row into the `affiliate` table including the newly added `affiliate_upi_id` and `buyer_subdomain_identifier`.
         *   The text file logging was commented out as the database became the primary storage.
     *   **Custom Error Logging:**
         *   Implemented `ini_set()` calls at the beginning of the script to direct all PHP errors, warnings, and notices to a dedicated log file: `affiliate/webhook_debug.log`. This proved crucial for diagnosing issues.
@@ -114,15 +124,26 @@
 
 ---
 
+**Phase 6: Admin Dashboard Enhancements**
+
+1.  **Display New Affiliate Data (`public/html/admin/affiliate_commission_management.html` & `public/js/admin/affiliate_commission_management.js`):**
+    *   The backend API endpoint `api/admin/affiliates/get_affiliate_data.php` was updated to select the new `affiliate_upi_id` and `buyer_subdomain_identifier` columns from the `affiliate` table.
+    *   The HTML table in `affiliate_commission_management.html` was modified to include new header columns for "Affiliate UPI" and "Buyer Subdomain".
+    *   The corresponding JavaScript in `affiliate_commission_management.js` was updated in the `populateAffiliateTable` function to display the values for these new fields for each record.
+2.  **Navigation Update:** Added a link to the "Affiliate Commissions" page in the sidebars of other admin panel pages (`api_setup.html`, `owner_plan_management.html`, `active_users.html`) for consistent navigation.
+
+---
+
 **Current State:**
 
 The system now successfully:
-*   Allows affiliates to generate Razorpay payment links via the settings page.
-*   Passes affiliate and buyer information through Razorpay's `notes` field.
+*   Allows affiliates to generate Razorpay payment links via the settings page, with a pre-check for buyer email registration.
+*   Passes affiliate UPI, affiliate email, and buyer information through Razorpay's `notes` field.
 *   Receives Razorpay webhooks for successful payments.
 *   Verifies webhook authenticity.
-*   Looks up user IDs for both affiliate and buyer.
-*   Stores detailed transaction and affiliate data in the `affiliate` MySQL table.
+*   Looks up user IDs and subdomain identifiers for both affiliate and buyer.
+*   Stores detailed transaction and affiliate data, including UPI and buyer's subdomain, in the `affiliate` MySQL table.
+*   Provides an admin dashboard to view this comprehensive affiliate data.
 *   Utilizes a custom error log for easier debugging of the webhook handler.
 
 This provides a solid foundation for tracking affiliate sales and managing future commission payouts. 

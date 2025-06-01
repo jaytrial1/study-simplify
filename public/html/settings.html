@@ -226,7 +226,7 @@
                     </div>
 
                     <!-- NEW AFFILIATE LINK GENERATION BOX -->
-                    <div class="auth-box" id="affiliateLinkBox">
+                    <div class="auth-box" id="affiliateLinkBox" style="display: none;">
                         <div class="auth-header">
                             <i class="fas fa-link"></i>
                             <h1>Generate Affiliate Link</h1>
@@ -278,6 +278,26 @@
                         </div>
                     </div>
                     <!-- END NEW AFFILIATE LINK GENERATION BOX -->
+
+                    <!-- NEW DIRECT SUBSCRIPTION BOX -->
+                    <div class="auth-box" id="directSubscriptionBox" style="display: none;">
+                        <div class="auth-header">
+                            <i class="fas fa-rocket"></i>
+                            <h1>Activate Your Subscription</h1>
+                            <p>Pay the subscription fee (₹2000) to unlock all features and services.</p>
+                        </div>
+                        <div id="directSubscriptionError" class="error-message" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="error-text"></span>
+                        </div>
+                        <button type="button" id="paySubscriptionBtn" class="auth-button primary-btn" style="width: 100%; margin-top: 10px;">
+                            <i class="fas fa-credit-card"></i> Pay Subscription Fee (₹2000)
+                        </button>
+                         <p style="text-align: center; font-size: 0.9em; color: #aaa; margin-top: 15px;">
+                            You will be redirected to Razorpay to complete your payment.
+                        </p>
+                    </div>
+                    <!-- END DIRECT SUBSCRIPTION BOX -->
 
                     <!-- Logout Box -->
                     <div class="auth-box">
@@ -363,21 +383,136 @@
             // Explicitly call loadUserData from settings.js to load profile data
             console.log("DEBUG: Explicitly calling loadUserData function");
             if (typeof loadUserData === 'function') {
-                loadUserData().then(() => {
-                    console.log("DEBUG: loadUserData completed");
+                loadUserData().then((userData) => { // Assuming loadUserData resolves with user data object
+                    console.log("DEBUG: loadUserData completed in settings.html context.");
+
+                    // Determine subscription status based on localStorage (set by login/other processes)
+                    // or potentially from userData if loadUserData starts returning it directly.
+                    const userProgressStatus = localStorage.getItem('progressStatus');
+                    // const userIsActive = localStorage.getItem('isActiveByOwner') === '1'; // Example if you also store this
                     
-                    // Call displayTrialStatus after user data is loaded
-                    if (typeof displayTrialStatus === 'function') {
-                        console.log("DEBUG: Calling displayTrialStatus");
-                        displayTrialStatus();
+                    // Primary condition for being subscribed for affiliate feature
+                    const isUserSubscribed = (userProgressStatus === 'subscribed');
+                    
+                    console.log("User Subscription Check - Progress Status:", userProgressStatus, "Is Subscribed Flag:", isUserSubscribed);
+
+                    const affiliateBox = document.getElementById('affiliateLinkBox');
+                    const subscriptionBox = document.getElementById('directSubscriptionBox');
+
+                    if (affiliateBox && subscriptionBox) {
+                        if (isUserSubscribed) {
+                            affiliateBox.style.display = 'block';
+                            subscriptionBox.style.display = 'none';
+                            console.log("Displaying Affiliate Link Box");
+                        } else {
+                            affiliateBox.style.display = 'none';
+                            subscriptionBox.style.display = 'block';
+                            console.log("Displaying Direct Subscription Box");
+                        }
                     } else {
-                        console.error("DEBUG: displayTrialStatus function not found");
+                        console.error("Affiliate or Subscription box not found in DOM for conditional display.");
+                    }
+                    
+                    // Call displayTrialStatus after user data is loaded (original position)
+                    if (typeof displayTrialStatus === 'function') {
+                        console.log("DEBUG: Calling displayTrialStatus from settings.html after loadUserData promise");
+                        displayTrialStatus(); // This function uses localStorage internally
                     }
                 }).catch(error => {
-                    console.error("DEBUG: Error in loadUserData:", error);
+                    console.error("DEBUG: Error in loadUserData promise chain in settings.html:", error);
+                    // Fallback: If loadUserData fails, perhaps hide both or show subscription box by default?
+                    const affiliateBox = document.getElementById('affiliateLinkBox');
+                    const subscriptionBox = document.getElementById('directSubscriptionBox');
+                    if (affiliateBox) affiliateBox.style.display = 'none';
+                    if (subscriptionBox) subscriptionBox.style.display = 'block'; // Default to showing subscription box on error
                 });
             } else {
                 console.error("DEBUG: loadUserData function not defined - settings.js might not be loaded correctly");
+                // Fallback if loadUserData itself isn't defined - show subscription box
+                const subscriptionBox = document.getElementById('directSubscriptionBox');
+                if (subscriptionBox) subscriptionBox.style.display = 'block';
+            }
+
+            // Event listener for the new Pay Subscription Button
+            const paySubscriptionBtn = document.getElementById('paySubscriptionBtn');
+            const directSubErrorDiv = document.getElementById('directSubscriptionError');
+            const directSubErrorText = directSubErrorDiv ? directSubErrorDiv.querySelector('.error-text') : null;
+
+            if (paySubscriptionBtn) {
+                console.log("DEBUG: paySubscriptionBtn found and event listener is being attached.");
+                paySubscriptionBtn.addEventListener('click', async function() {
+                    console.log("DEBUG: paySubscriptionBtn clicked.");
+                    let userEmail = localStorage.getItem('userEmail');
+                    console.log("DEBUG: Retrieved userEmail from localStorage:", userEmail);
+
+                    // Fallback: Try to get email from the input field if localStorage is null
+                    const emailInputFieldValue = document.getElementById('email')?.value;
+                    console.log("DEBUG: Value from email input field (document.getElementById('email').value):", emailInputFieldValue);
+
+                    if (!userEmail && emailInputFieldValue) {
+                        userEmail = emailInputFieldValue;
+                        console.log("DEBUG: Using email from input field as fallback:", userEmail);
+                    }
+
+                    console.log("DEBUG: _isLocalServer value:", _isLocalServer);
+
+                    if (!userEmail) {
+                        console.log("DEBUG: userEmail is still missing or invalid after fallback.");
+                        if (directSubErrorText && directSubErrorDiv) {
+                            directSubErrorText.textContent = 'Your email is not available. Please log in again.';
+                            directSubErrorDiv.style.display = 'flex';
+                        } else {
+                            (window.toastManager || alert)('Your email is not available. Please log in again.');
+                        }
+                        return;
+                    }
+                    
+                    if (directSubErrorDiv) directSubErrorDiv.style.display = 'none';
+                    paySubscriptionBtn.disabled = true;
+                    paySubscriptionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    console.log("DEBUG: Button disabled, text changed to Processing...");
+
+                    try {
+                        console.log("DEBUG: Entering try block for fetch.");
+                        const formData = new FormData();
+                        formData.append('subscriber_email', userEmail);
+
+                        const subLinkPath = (_isLocalServer ? '../../user_subscription/generate_subscription_link.php' : '/user_subscription/generate_subscription_link.php');
+                        console.log("DEBUG: Constructed subLinkPath:", subLinkPath);
+
+                        console.log("DEBUG: About to make fetch call to:", subLinkPath);
+                        const response = await fetch(subLinkPath, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        console.log("DEBUG: Fetch call completed. Response status:", response.status, "Response ok:", response.ok);
+
+                        const result = await response.json();
+                        console.log("DEBUG: Parsed JSON response:", result);
+
+                        if (response.ok && result.success && result.payment_link) {
+                            console.log("DEBUG: Fetch successful, redirecting to:", result.payment_link);
+                            // Redirect to Razorpay
+                            window.location.href = result.payment_link;
+                        } else {
+                            console.log("DEBUG: Fetch response not ok or success=false or no payment_link. Error message:", result.message);
+                            throw new Error(result.message || 'Failed to generate subscription link.');
+                        }
+                    } catch (error) {
+                        console.error('DEBUG: Catch block error in generate_subscription_link:', error); // Changed original console.error to include DEBUG prefix for clarity
+                        if (directSubErrorText && directSubErrorDiv) {
+                            directSubErrorText.textContent = 'Error: ' + error.message;
+                            directSubErrorDiv.style.display = 'flex';
+                        } else {
+                             // Use toastManager if available (added in previous steps for affiliate part), otherwise alert
+                            (window.toastManager ? window.toastManager.error('Error: ' + error.message) : alert('Error: ' + error.message));
+                        }
+                        paySubscriptionBtn.disabled = false;
+                        paySubscriptionBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay Subscription Fee (₹2000)';
+                    }
+                });
+            } else {
+                console.error("DEBUG: paySubscriptionBtn element NOT FOUND in the DOM.");
             }
 
             // Affiliate Link Generation Logic
