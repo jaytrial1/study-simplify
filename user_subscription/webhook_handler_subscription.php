@@ -52,7 +52,15 @@ if (isset($eventData['event'])) {
         }
         $razorpay_payment_id = $eventData['payload']['payment']['entity']['id'] ?? null;
         $payment_status_from_webhook = $eventData['payload']['payment_link']['entity']['status'] ?? null;
-        if ($payment_status_from_webhook === 'paid') $isSuccessfulPayment = true;
+        
+        error_log("Subscription Webhook: Event is payment_link.paid. Status from webhook: {$payment_status_from_webhook}. Payment ID: {$razorpay_payment_id}");
+
+        if ($payment_status_from_webhook === 'paid') {
+            $isSuccessfulPayment = true;
+            error_log("Subscription Webhook: Payment status is 'paid'. Setting isSuccessfulPayment to true.");
+        } else {
+            error_log("Subscription Webhook: Payment status for payment_link.paid is NOT 'paid' ({$payment_status_from_webhook}). isSuccessfulPayment remains false.");
+        }
 
     } elseif ($eventName === 'payment.captured') { // Often used for direct payments too
         if (isset($eventData['payload']['payment']['entity']['notes'])) {
@@ -60,9 +68,17 @@ if (isset($eventData['event'])) {
         }
         $razorpay_payment_id = $eventData['payload']['payment']['entity']['id'] ?? null;
         $payment_status_from_webhook = $eventData['payload']['payment']['entity']['status'] ?? null;
-        if ($payment_status_from_webhook === 'captured') $isSuccessfulPayment = true;
+        
+        error_log("Subscription Webhook: Event is payment.captured. Status from webhook: {$payment_status_from_webhook}. Payment ID: {$razorpay_payment_id}");
+
+        if ($payment_status_from_webhook === 'captured') {
+            $isSuccessfulPayment = true;
+            error_log("Subscription Webhook: Payment status is 'captured'. Setting isSuccessfulPayment to true.");
+        } else {
+            error_log("Subscription Webhook: Payment status for payment.captured is NOT 'captured' ({$payment_status_from_webhook}). isSuccessfulPayment remains false.");
+        }
     } else {
-        error_log("Subscription Webhook: Received unhandled event type: " . $eventName);
+        error_log("Subscription Webhook: Received event type '{$eventName}'. This event will not be processed for subscription activation.");
         http_response_code(200); // Acknowledge other events but don't process for subscription
         echo "Event received but not processed for subscription.";
         exit;

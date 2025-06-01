@@ -63,38 +63,33 @@ if (isset($eventData['event'])) {
 
     error_log("Webhook Event in affiliate/webhook_handler.php: " . $eventName); // DEBUG
 
-    // Consolidate notes and payment details extraction
+    // This handler is specifically for affiliate payment links, so we primarily care about payment_link.paid
     if ($eventName === 'payment_link.paid') {
         if (isset($eventData['payload']['payment_link']['entity']['notes'])) {
             $notes = $eventData['payload']['payment_link']['entity']['notes'];
         }
         // Fallback for notes in payment entity within payment_link.paid
+        // This structure can sometimes occur if the payment object is more detailed in the webhook.
         if (empty($notes) && isset($eventData['payload']['payment']['entity']['notes'])){
             $notes = $eventData['payload']['payment']['entity']['notes'];
         }
+        
         $razorpay_payment_id = $eventData['payload']['payment']['entity']['id'] ?? null;
         $payment_status_from_webhook = $eventData['payload']['payment_link']['entity']['status'] ?? null;
-        if ($payment_status_from_webhook === 'paid') $isSuccessfulPayment = true;
+        
+        error_log("Event is payment_link.paid. Status from webhook: {$payment_status_from_webhook}. Payment ID: {$razorpay_payment_id}"); // Detailed log
 
-    } elseif ($eventName === 'order.paid') {
-        if (isset($eventData['payload']['order']['entity']['notes'])) {
-            $notes = $eventData['payload']['order']['entity']['notes'];
+        if ($payment_status_from_webhook === 'paid') {
+            $isSuccessfulPayment = true;
+            error_log("Payment status is 'paid'. Setting isSuccessfulPayment to true.");
+        } else {
+            error_log("Payment status is NOT 'paid' ({$payment_status_from_webhook}). isSuccessfulPayment remains false.");
         }
-        $razorpay_payment_id = $eventData['payload']['payment']['entity']['id'] ?? null;
-        $payment_status_from_webhook = 'paid'; // order.paid implies payment is successful
-        $isSuccessfulPayment = true;
-
-    } elseif ($eventName === 'payment.captured') { // We are interested only in captured (successful) payments
-        if (isset($eventData['payload']['payment']['entity']['notes'])) {
-            $notes = $eventData['payload']['payment']['entity']['notes'];
-        }
-        $razorpay_payment_id = $eventData['payload']['payment']['entity']['id'] ?? null;
-        $payment_status_from_webhook = $eventData['payload']['payment']['entity']['status'] ?? null;
-        if ($payment_status_from_webhook === 'captured') $isSuccessfulPayment = true;
     } else {
-        error_log("Received unhandled or non-successful event type: " . $eventName);
-        http_response_code(200); // Acknowledge other events but don't process further
-        echo "Event received but not processed for affiliate table.";
+        // If it's not payment_link.paid, we will not process it for affiliate commission.
+        error_log("Received event type '{$eventName}', which is not 'payment_link.paid'. This event will not be processed for affiliate commission.");
+        http_response_code(200); // Acknowledge event, but don't process further for commission logic.
+        echo "Event received but not processed for affiliate commission as it's not payment_link.paid.";
         exit;
     }
 

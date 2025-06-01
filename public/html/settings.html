@@ -692,13 +692,17 @@
                 function createToastContainer() {
                     let container = document.createElement('div');
                     container.id = 'toastNotifications';
-                    container.style.position = 'fixed'; container.style.bottom = '20px'; container.style.right = '20px'; container.style.zIndex = '1050';
+                    container.style.position = 'fixed'; 
+                    container.style.top = '20px'; // Changed from bottom to top
+                    container.style.right = '20px'; 
+                    container.style.zIndex = '1050';
+                    // container.style.flexDirection = 'column-reverse'; // Not needed for top-right
                     document.body.appendChild(container);
                     return container;
                 }
                 const styleSheet = document.createElement("style");
                 styleSheet.type = "text/css";
-                styleSheet.innerText = `#toastNotifications { display: flex; flex-direction: column-reverse; align-items: flex-end; } .toast { background-color: #333; color: #fff; padding: 15px 20px; margin-top: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; opacity: 0; transition: opacity 0.5s, transform 0.5s; transform: translateX(100%); } .toast.show { opacity: 1; transform: translateX(0); } .toast.hide { opacity: 0; transform: translateX(100%); } .toast-success { background-color: #28a745; } .toast-error { background-color: var(--color-danger); } .toast-info { background-color: #17a2b8; } .toast-warning { background-color: #ffc107; color: #333; } .toast i { font-size: 1.2em; }`;
+                styleSheet.innerText = `#toastNotifications { display: flex; flex-direction: column; align-items: flex-end; } .toast { background-color: #333; color: #fff; padding: 15px 20px; margin-bottom: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; opacity: 0; transition: opacity 0.5s, transform 0.5s; transform: translateX(100%); } .toast.show { opacity: 1; transform: translateX(0); } .toast.hide { opacity: 0; transform: translateX(100%); } .toast-success { background-color: #28a745; } .toast-error { background-color: var(--color-danger); } .toast-info { background-color: #17a2b8; } .toast-warning { background-color: #ffc107; color: #333; } .toast i { font-size: 1.2em; }`; // Changed margin-top to margin-bottom for toasts
                 document.head.appendChild(styleSheet);
             }
             // --- End Toast Notification Manager ---
