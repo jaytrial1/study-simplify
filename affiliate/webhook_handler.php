@@ -51,6 +51,8 @@ $buyer_email_from_notes = null;
 $buyer_user_id = null;
 $razorpay_payment_id = null;
 $payment_status_from_webhook = null;
+$affiliate_upi_id_from_notes = null; // Added for UPI ID
+$buyer_subdomain_identifier = null; // Added for subdomain
 // commission_paid_status defaults to 'pending' in the DB
 
 $isSuccessfulPayment = false;
@@ -107,7 +109,8 @@ if (isset($eventData['event'])) {
     if (!empty($notes)) {
         $affiliate_email_from_notes = $notes['affiliate_email_context'] ?? null; // Note: key was affiliate_email_context
         $buyer_email_from_notes = $notes['buyer_email'] ?? null;
-        error_log("Extracted from notes - Affiliate Email Context: {$affiliate_email_from_notes}, Buyer Email: {$buyer_email_from_notes}");
+        $affiliate_upi_id_from_notes = $notes['affiliate_upi_id'] ?? null; // Extract affiliate UPI ID
+        error_log("Extracted from notes - Affiliate Email Context: {$affiliate_email_from_notes}, Buyer Email: {$buyer_email_from_notes}, Affiliate UPI: {$affiliate_upi_id_from_notes}");
     } else {
         error_log("Notes array is empty or not found for a successful payment event. Cannot proceed with affiliate logic.");
         http_response_code(200); // Acknowledge but log error
@@ -152,25 +155,31 @@ if (isset($eventData['event'])) {
             }
         }
 
-        // Get buyer_user_id
-        $stmt_buy = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        // Get buyer_user_id and subdomain_identifier
+        // IMPORTANT: Assuming 'subdomain_identifier' is the correct column name in your 'users' table.
+        // If it's different, this query needs to be adjusted.
+        $stmt_buy = $conn->prepare("SELECT id, subdomain_identifier FROM users WHERE email = ? LIMIT 1");
         if ($stmt_buy) {
             $stmt_buy->bind_param("s", $buyer_email_from_notes);
             $stmt_buy->execute();
             $result_buy = $stmt_buy->get_result();
             if ($row_buy = $result_buy->fetch_assoc()) {
                 $buyer_user_id = $row_buy['id'];
+                $buyer_subdomain_identifier = $row_buy['subdomain_identifier'] ?? null; // Fetch subdomain identifier
+                error_log("Webhook: Found buyer_user_id: {$buyer_user_id} and buyer_subdomain_identifier: {$buyer_subdomain_identifier} for email: {$buyer_email_from_notes}");
+            } else {
+                error_log("Webhook: Buyer email {$buyer_email_from_notes} not found in users table.");
             }
             $stmt_buy->close();
         } else {
-            error_log("Failed to prepare statement for buyer user ID lookup: " . $conn->error);
+            error_log("Failed to prepare statement for buyer user ID and subdomain lookup: " . $conn->error);
         }
 
         // Insert into affiliate table
-        $sql_insert = "INSERT INTO affiliate (affiliate_email, affiliate_user_id, commission_amount, principal_amount, buyer_email, buyer_user_id, razorpay_payment_id, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_insert = "INSERT INTO affiliate (affiliate_email, affiliate_user_id, commission_amount, principal_amount, buyer_email, buyer_user_id, razorpay_payment_id, payment_status, affiliate_upi_id, buyer_subdomain_identifier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt_insert = $conn->prepare($sql_insert);
         if ($stmt_insert) {
-            $stmt_insert->bind_param("siddsiss", 
+            $stmt_insert->bind_param("siddsissss", 
                 $affiliate_email_from_notes, 
                 $affiliate_user_id, 
                 $commission_amount, 
@@ -178,7 +187,9 @@ if (isset($eventData['event'])) {
                 $buyer_email_from_notes, 
                 $buyer_user_id, 
                 $razorpay_payment_id, 
-                $payment_status_from_webhook
+                $payment_status_from_webhook,
+                $affiliate_upi_id_from_notes, // Added
+                $buyer_subdomain_identifier   // Added
             );
             
             if ($stmt_insert->execute()) {
