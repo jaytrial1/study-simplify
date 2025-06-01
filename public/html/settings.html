@@ -238,35 +238,34 @@
                             <span class="error-text"></span>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="affiliate_upi_id_settings"><i class="fas fa-id-card"></i> Your UPI ID (for commission)</label>
-                            <input type="text" id="affiliate_upi_id_settings" name="affiliate_upi_id_settings" placeholder="Enter your UPI ID">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="buyer_email_settings"><i class="fas fa-user-plus"></i> Buyer's Email Address (for their account)</label>
-                            <input type="email" id="buyer_email_settings" name="buyer_email_settings" placeholder="Enter buyer's email">
-                        </div>
-
-                        <button type="button" id="generateAffiliateLinkSettingsBtn" class="auth-button">
-                            <i class="fas fa-bolt"></i> Generate Link
-                        </button>
-
-                        <div id="affiliateLinkResultSettings" style="margin-top: 15px; display: none; word-wrap: break-word; background-color: #1e2130; padding: 15px; border: 1px solid #2c3e50; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
-                            <div style="text-align: center; margin-bottom: 15px;">
-                                <span style="background-color: #28a745; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">✓ LINK GENERATED</span>
+                        <form id="affiliateLinkForm">
+                            <div class="form-group">
+                                <label for="affiliate_upi_id_settings"><i class="fas fa-id-card"></i> Your UPI ID (for commission)</label>
+                                <input type="text" id="affiliate_upi_id_settings" name="affiliate_upi_id_settings" placeholder="Enter your UPI ID" required>
                             </div>
+
+                            <div class="form-group">
+                                <label for="buyer_email_settings"><i class="fas fa-user-plus"></i> Buyer's Email Address (for their account)</label>
+                                <input type="email" id="buyer_email_settings" name="buyer_email_settings" placeholder="Enter buyer's email" required>
+                            </div>
+
+                            <button type="button" id="generateAffiliateLinkBtn" class="auth-button">
+                                <i class="fas fa-paper-plane"></i> Generate Link
+                            </button>
+                        </form>
+                        
+                        <div id="generatedLinkContainer" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #4CAF50; border-radius: 5px; background-color: #2c2c2c; color: #fff; word-wrap: break-word;">
                             <p style="font-weight: 600; margin-bottom: 5px; color: #e2e2e2;">Payment Link:</p>
                             <div style="position: relative;">
                                 <div id="linkContainer" style="background-color: #2c3e50; border: 1px solid #3d4d5f; padding: 12px; border-radius: 6px; margin-bottom: 15px; overflow: hidden; text-overflow: ellipsis; display: flex; flex-wrap: wrap; align-items: center; position: relative;">
                                     <div style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; width: 100%;">
-                                        <a id="generatedAffiliateLinkDisplaySettings" href="#" target="_blank" style="color: #3498db; text-decoration: none; font-family: monospace; font-size: 14px; word-break: break-all;"></a>
+                                        <a id="paymentLink" href="#" target="_blank" style="color: #3498db; text-decoration: none; font-family: monospace; font-size: 14px; word-break: break-all;"></a>
                                     </div>
-                                    <button id="copyLinkButton" onclick="copyAffiliateLink()" style="background-color: #375a7f; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 2px; font-size: 12px; display: flex; align-items: center;">
+                                    <button id="copyLinkBtn" onclick="copyAffiliateLink()" style="background-color: #375a7f; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 2px; font-size: 12px; display: flex; align-items: center;">
                                         <i class="fas fa-copy" style="margin-right: 5px;"></i> Copy
                                     </button>
                                 </div>
-                                <div id="copyMessage" style="position: absolute; top: -25px; right: 0; background-color: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; display: none;">
+                                <div id="copyMessage" style="position: absolute; top: -25px; right: 0; background-color: var(--color-success); color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; display: none;">
                                     Copied!
                                 </div>
                             </div>
@@ -382,76 +381,175 @@
             }
 
             // Affiliate Link Generation Logic
-            const generateAffiliateBtn = document.getElementById('generateAffiliateLinkSettingsBtn');
+            const generateAffiliateBtn = document.getElementById('generateAffiliateLinkBtn');
             const affiliateUpiInput = document.getElementById('affiliate_upi_id_settings');
-            const userEmailInput = document.getElementById('email'); // Existing email field
-            const affiliateLinkResultDiv = document.getElementById('affiliateLinkResultSettings');
-            const affiliateLinkDisplayP = document.getElementById('generatedAffiliateLinkDisplaySettings');
+            const buyerEmailInput = document.getElementById('buyer_email_settings');
+            const userEmailInput = document.getElementById('email');
+            const affiliateLinkResultDiv = document.getElementById('generatedLinkContainer');
+            const affiliateLinkDisplayP = document.getElementById('paymentLink');
             const affiliateErrorDiv = document.getElementById('affiliateSettingsError');
-            const affiliateErrorText = affiliateErrorDiv.querySelector('.error-text');
+            const affiliateErrorText = affiliateErrorDiv ? affiliateErrorDiv.querySelector('.error-text') : null;
+
+            // --- Toast Notification Manager (Dark Theme Adapted) ---
+            if (typeof window.toastManager === 'undefined') {
+                window.toastManager = {
+                    show: function(message, type = 'info', duration = 4000) {
+                        const toastContainer = document.getElementById('toastNotifications') || createToastContainer();
+                        const toast = document.createElement('div');
+                        toast.className = `toast toast-${type} show`;
+                        let iconClass = 'fas fa-info-circle';
+                        if (type === 'success') iconClass = 'fas fa-check-circle';
+                        else if (type === 'error') iconClass = 'fas fa-exclamation-circle';
+                        else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+                        toast.innerHTML = `<i class="${iconClass}"></i> ${message}`;
+                        toastContainer.appendChild(toast);
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                            toast.classList.add('hide');
+                            setTimeout(() => toast.remove(), 500);
+                        }, duration);
+                    },
+                    success: function(message, duration = 3000) { this.show(message, 'success', duration); },
+                    error: function(message, duration = 5000) { this.show(message, 'error', duration); },
+                    info: function(message, duration = 3000) { this.show(message, 'info', duration); },
+                    warning: function(message, duration = 4000) { this.show(message, 'warning', duration); }
+                };
+                function createToastContainer() {
+                    let container = document.createElement('div');
+                    container.id = 'toastNotifications';
+                    container.style.position = 'fixed'; container.style.bottom = '20px'; container.style.right = '20px'; container.style.zIndex = '1050';
+                    document.body.appendChild(container);
+                    return container;
+                }
+                const styleSheet = document.createElement("style");
+                styleSheet.type = "text/css";
+                styleSheet.innerText = `#toastNotifications { display: flex; flex-direction: column-reverse; align-items: flex-end; } .toast { background-color: #333; color: #fff; padding: 15px 20px; margin-top: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; opacity: 0; transition: opacity 0.5s, transform 0.5s; transform: translateX(100%); } .toast.show { opacity: 1; transform: translateX(0); } .toast.hide { opacity: 0; transform: translateX(100%); } .toast-success { background-color: #28a745; } .toast-error { background-color: var(--color-danger); } .toast-info { background-color: #17a2b8; } .toast-warning { background-color: #ffc107; color: #333; } .toast i { font-size: 1.2em; }`;
+                document.head.appendChild(styleSheet);
+            }
+            // --- End Toast Notification Manager ---
+
+            function validateEmailFormat(email) {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            async function actualLinkGeneration(upiId, buyerEmail, affiliateEmailContext) {
+                generateAffiliateBtn.disabled = true;
+                generateAffiliateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+                const genLinkPath = (_isLocalServer ? '../../affiliate/generate_payment_link.php' : '/affiliate/generate_payment_link.php');
+                try {
+                    const formData = new FormData();
+                    formData.append('upi_id', upiId);
+                    formData.append('amount', '2000'); // Fixed amount
+                    formData.append('buyer_email', buyerEmail);
+                    formData.append('affiliate_email_context', affiliateEmailContext);
+
+                    const response = await fetch(genLinkPath, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (result.success && result.payment_link) {
+                        affiliateLinkDisplayP.href = result.payment_link;
+                        affiliateLinkDisplayP.textContent = result.payment_link;
+                        document.getElementById('buyerEmailDisplay').textContent = buyerEmail;
+                        affiliateLinkResultDiv.style.display = 'block';
+                        window.toastManager.success('Payment link generated successfully!');
+                    } else {
+                        throw new Error(result.message || 'Failed to generate payment link.');
+                    }
+                } catch (error) {
+                    console.error('Error generating affiliate link:', error);
+                    if (affiliateErrorText) {
+                        affiliateErrorText.textContent = 'Error generating link: ' + error.message;
+                        if(affiliateErrorDiv) affiliateErrorDiv.style.display = 'flex';
+                    } else {
+                        window.toastManager.error('Error generating link: ' + error.message);
+                    }
+                } finally {
+                    generateAffiliateBtn.disabled = false;
+                    generateAffiliateBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Generate Link';
+                }
+            }
 
             if (generateAffiliateBtn) {
                 generateAffiliateBtn.addEventListener('click', async function() {
                     const upiId = affiliateUpiInput.value.trim();
-                    const buyerEmail = document.getElementById('buyer_email_settings').value.trim();
+                    const buyerEmail = buyerEmailInput.value.trim();
                     const affiliateEmailContext = userEmailInput.value.trim();
-                    const fixedAmount = 2000;
 
+                    // Clear previous states
                     affiliateLinkResultDiv.style.display = 'none';
-                    affiliateErrorDiv.style.display = 'none';
-                    affiliateLinkDisplayP.innerHTML = '';
+                    if(affiliateErrorDiv) affiliateErrorDiv.style.display = 'none';
+                    if(affiliateErrorText) affiliateErrorText.textContent = '';
 
                     if (!upiId) {
-                        affiliateErrorText.textContent = 'Please enter your UPI ID.';
-                        affiliateErrorDiv.style.display = 'flex';
+                        window.toastManager.error('Your UPI ID is required.');
+                        affiliateUpiInput.focus();
                         return;
                     }
-                    if (!buyerEmail || !buyerEmail.includes('@')) {
-                        affiliateErrorText.textContent = 'Please enter a valid Buyer\'s Email Address.';
-                        affiliateErrorDiv.style.display = 'flex';
+                    if (!buyerEmail) {
+                        window.toastManager.error("Buyer's Email Address is required.");
+                        buyerEmailInput.focus();
                         return;
                     }
-                    if (!affiliateEmailContext) {
-                        affiliateErrorText.textContent = 'Your email (Affiliate\'s email) not found. Please ensure your profile is loaded.';
-                        affiliateErrorDiv.style.display = 'flex';
+                    if (!validateEmailFormat(buyerEmail)) {
+                        window.toastManager.error("Invalid Buyer's Email Address format.");
+                        buyerEmailInput.focus();
+                        return;
+                    }
+                    if (!affiliateEmailContext || !validateEmailFormat(affiliateEmailContext)) {
+                        window.toastManager.error('Could not retrieve your email for context or it is invalid. Please ensure your profile is loaded and email is correct.');
                         return;
                     }
 
-                    // Show custom confirmation modal instead of browser confirm
-                    showConfirmationModal({
-                        upiId: upiId,
-                        buyerEmail: buyerEmail,
-                        onConfirm: async () => {
-                            // Continue with link generation as before
-                            const genLinkPath = _isLocalServer ? '../../affiliate/generate_payment_link.php' : '/affiliate/generate_payment_link.php';
+                    generateAffiliateBtn.disabled = true;
+                    generateAffiliateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking email...';
 
-                            try {
-                                const response = await fetch(genLinkPath, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    body: `upi_id=${encodeURIComponent(upiId)}&amount=${fixedAmount}&buyer_email=${encodeURIComponent(buyerEmail)}&affiliate_email_context=${encodeURIComponent(affiliateEmailContext)}`
-                                });
+                    try {
+                        const checkEmailFormData = new FormData();
+                        checkEmailFormData.append('buyer_email', buyerEmail);
+                        
+                        const emailCheckPath = (_isLocalServer ? '../../affiliate/check_buyer_email.php' : '/affiliate/check_buyer_email.php');
+                        const emailCheckResponse = await fetch(emailCheckPath, {
+                            method: 'POST',
+                            body: checkEmailFormData
+                        });
+                        const emailCheckResult = await emailCheckResponse.json();
 
-                                const result = await response.json();
-
-                                if (result.success && result.payment_link) {
-                                    document.getElementById('generatedAffiliateLinkDisplaySettings').href = result.payment_link;
-                                    document.getElementById('generatedAffiliateLinkDisplaySettings').textContent = result.payment_link;
-                                    document.getElementById('buyerEmailDisplay').textContent = buyerEmail;
-                                    affiliateLinkResultDiv.style.display = 'block';
-                                } else {
-                                    affiliateErrorText.textContent = result.message || 'Failed to generate payment link.';
-                                    affiliateErrorDiv.style.display = 'flex';
-                                }
-                            } catch (error) {
-                                console.error('Error generating affiliate link:', error);
-                                affiliateErrorText.textContent = 'An error occurred. Check console for details.';
-                                affiliateErrorDiv.style.display = 'flex';
-                            }
+                        if (!emailCheckResponse.ok || emailCheckResult.status !== 'success') {
+                            throw new Error(emailCheckResult.message || 'Failed to verify buyer email existence.');
                         }
-                    });
+
+                        if (!emailCheckResult.exists) {
+                            window.toastManager.error(`Buyer email '${buyerEmail}' is not registered. Please verify or ask them to register.`);
+                            generateAffiliateBtn.disabled = false;
+                            generateAffiliateBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Generate Link';
+                            buyerEmailInput.focus();
+                            return;
+                        }
+
+                        // If email exists, proceed to show custom confirmation modal
+                        generateAffiliateBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Generate Link'; // Reset button before modal
+                        showConfirmationModal({
+                            upiId: upiId,
+                            buyerEmail: buyerEmail,
+                            onConfirm: () => {
+                                actualLinkGeneration(upiId, buyerEmail, affiliateEmailContext);
+                            },
+                            onCancel: () => {
+                                generateAffiliateBtn.disabled = false; // Re-enable button if cancelled
+                            }
+                        });
+
+                    } catch (error) {
+                        console.error('Error during email check or showing confirmation:', error);
+                        window.toastManager.error('Error: ' + error.message);
+                        generateAffiliateBtn.disabled = false;
+                        generateAffiliateBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Generate Link';
+                    }
                 });
             }
         });
@@ -788,7 +886,7 @@
 
     <script>
         function copyAffiliateLink() {
-            const linkElem = document.getElementById('generatedAffiliateLinkDisplaySettings');
+            const linkElem = document.getElementById('paymentLink');
             const text = linkElem.href;
             
             navigator.clipboard.writeText(text).then(function() {
