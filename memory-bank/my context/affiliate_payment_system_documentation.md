@@ -147,3 +147,62 @@ The system now successfully:
 *   Utilizes a custom error log for easier debugging of the webhook handler.
 
 This provides a solid foundation for tracking affiliate sales and managing future commission payouts. 
+
+---
+
+**Phase 7: Direct User Subscription - Debugging and Robustness**
+
+This phase addressed an issue with the "Pay Subscription Fee" button on the `public/html/settings.html` page, which is shown to users who are not yet subscribed.
+
+1.  **Problem Identification (via Console Logging):**
+    *   When a user clicked the "Pay Subscription Fee" button, no action occurred, and no errors were initially visible in the browser console.
+    *   Added detailed `console.log` statements to the JavaScript event handler for this button.
+    *   The logs revealed that `localStorage.getItem('userEmail')` was returning `null`. The button handler relied on this to get the user's email for the subscription payment link generation, so it was failing silently.
+
+2.  **Solution Implemented (`public/html/settings.html`):**
+    *   To make the process more robust, a fallback mechanism was added to the JavaScript click handler for the "Pay Subscription Fee" button.
+    *   If `localStorage.getItem('userEmail')` is `null`, the code now attempts to retrieve the user's email directly from the value of the (disabled) email input field (`<input type="email" id="email">`) on the settings page.
+    *   Additional `console.log` statements were included to verify this fallback mechanism and to see the email value being used.
+
+3.  **Outcome:**
+    *   This change ensures that even if the `userEmail` is not available in `localStorage` for some reason (e.g., cleared by another script or a browser extension, or a race condition during login/page load), the direct subscription feature can still function as long as the user's email is populated in their profile section on the settings page.
+    *   The system can now more reliably fetch the user's email to proceed with generating the direct subscription payment link via `user_subscription/generate_subscription_link.php`. 
+
+---
+
+**Phase 8: Enhanced Affiliate Sales Summary in Settings**
+
+This phase further refined the affiliate summary section on the `public/html/settings.html` page for subscribed users, improving UI and data presentation.
+
+1.  **Initial Implementation (Direct List):**
+    *   A new backend script `affiliate/get_affiliate_summary.php` was created to fetch:
+        *   The affiliate's total due commission (sum of `commission_amount` where `commission_paid_status` is 'pending').
+        *   A list of their last 5 sales (buyer email, commission amount, sale date).
+    *   `public/html/settings.html` was updated to call this script and display the information directly within the affiliate link generation box.
+
+2.  **UI/UX Refinement (Modal for Sales Details):**
+    *   **Feedback:** The direct display of the sales list was deemed potentially cluttering.
+    *   **Change:** The detailed sales list was moved into a modal popup.
+        *   The "Total Due Commission" remains directly visible.
+        *   A "View Recent Sales Details" button was added. Clicking this button opens the modal.
+        *   The modal itself was styled for consistency with the application's theme, including a close button and the ability to close by clicking outside the modal content.
+        *   The JavaScript in `loadAffiliateSummary` was updated to populate this modal dynamically when the button is clicked.
+
+3.  **Data Enhancement (All-Time Sales & Status with Color-Coding):**
+    *   **Requirement:** Instead of recent sales, display all-time sales history and show the commission paid status for each sale with visual cues.
+    *   **Backend (`affiliate/get_affiliate_summary.php`):**
+        *   The SQL query was modified to remove the `LIMIT 5`, thereby fetching all sales for the affiliate.
+        *   The `commission_paid_status` field was added to the data retrieved for each sale.
+    *   **Frontend (`public/html/settings.html`):
+        *   The modal title was changed from "Recent Sales (Last 5)" to "All Sales History".
+        *   The JavaScript logic for populating the modal was updated to include the `commission_paid_status` for each sale.
+        *   Inline styles were applied to color-code the status: green for "Paid", red for "Pending", and a default yellowish-orange for any other statuses. The status text is also capitalized.
+
+4.  **Styling Consistency (User Update):**
+    *   The user updated the CSS for the sales detail modal in `public/html/settings.html` to use `var(--color-accent)` for the left border and header text, ensuring better theme consistency.
+
+5.  **Outcome:**
+    *   Subscribed affiliates now see their total pending commission directly on the settings page.
+    *   They can click a button to view a comprehensive modal popup displaying their entire sales history.
+    *   Each sale in the modal clearly shows the buyer, commission amount, sale date, and the commission payment status, highlighted with appropriate colors for quick visual assessment.
+    *   This provides affiliates with a much clearer and more detailed overview of their performance and earnings. 

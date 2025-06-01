@@ -230,8 +230,32 @@
                         <div class="auth-header">
                             <i class="fas fa-link"></i>
                             <h1>Generate Affiliate Link</h1>
-                            <p>Create a payment link for your referrals (Fixed Amount: ₹2000).</p>
+                            <p>Create a payment link for your referrals (You will receive ₹500 for each referral).</p>
                         </div>
+
+                        <!-- Affiliate Summary Section -->
+                        <div id="affiliateSummaryContainer" style="margin-bottom: 25px; padding: 15px; border: 1px solid #3d4d5f; border-radius: 5px; background-color: #2c2c2c;">
+                            <h3 style="margin-top: 0; margin-bottom: 10px; color: #e2e2e2; font-size: 1.1em; border-bottom: 1px solid #444; padding-bottom: 8px;"><i class="fas fa-chart-line"></i> Your Affiliate Summary</h3>
+                            <p style="font-size: 1em; color: #c0c0c0; margin-bottom: 15px;">
+                                <strong>Total Due Commission:</strong> ₹<span id="totalDueCommission" style="font-weight: bold; color: #4CAF50;">Loading...</span>
+                            </p>
+                            <button id="showRecentSalesBtn" class="auth-button compact-btn" style="display: none; font-size: 0.9em; padding: 8px 12px;">
+                                <i class="fas fa-list-alt"></i> View Recent Sales Details
+                            </button>
+                            <!-- Modal for Recent Sales -->
+                            <div id="recentSalesModal" class="custom-sales-modal" style="display: none;">
+                                <div class="custom-sales-modal-content">
+                                    <div class="custom-sales-modal-header">
+                                        <h4>All Sales History</h4>
+                                        <button id="closeRecentSalesModalBtn" class="custom-sales-modal-close-btn">&times;</button>
+                                    </div>
+                                    <ul id="modalRecentSalesList" style="list-style: none; padding-left: 0; font-size: 0.9em; color: #b0b0b0; max-height: 300px; overflow-y: auto;">
+                                        <li>Loading details...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Affiliate Summary Section -->
                         
                         <div id="affiliateSettingsError" class="error-message" style="display: none;">
                             <i class="fas fa-exclamation-circle"></i>
@@ -398,12 +422,15 @@
 
                     const affiliateBox = document.getElementById('affiliateLinkBox');
                     const subscriptionBox = document.getElementById('directSubscriptionBox');
+                    const affiliateSummaryContainer = document.getElementById('affiliateSummaryContainer');
 
                     if (affiliateBox && subscriptionBox) {
                         if (isUserSubscribed) {
                             affiliateBox.style.display = 'block';
                             subscriptionBox.style.display = 'none';
                             console.log("Displaying Affiliate Link Box");
+                            // Call function to load affiliate summary
+                            loadAffiliateSummary(); 
                         } else {
                             affiliateBox.style.display = 'none';
                             subscriptionBox.style.display = 'block';
@@ -524,6 +551,119 @@
             const affiliateLinkDisplayP = document.getElementById('paymentLink');
             const affiliateErrorDiv = document.getElementById('affiliateSettingsError');
             const affiliateErrorText = affiliateErrorDiv ? affiliateErrorDiv.querySelector('.error-text') : null;
+
+            // --- Function to load affiliate summary ---
+            async function loadAffiliateSummary() {
+                console.log("DEBUG: Attempting to load affiliate summary.");
+                const userEmail = localStorage.getItem('userEmail') || document.getElementById('email')?.value;
+                const totalDueCommissionSpan = document.getElementById('totalDueCommission');
+                const showRecentSalesBtn = document.getElementById('showRecentSalesBtn');
+                const modalRecentSalesListUl = document.getElementById('modalRecentSalesList');
+
+                let storedRecentSales = []; // Variable to store sales data
+
+                if (!userEmail) {
+                    console.error("DEBUG: Affiliate email not available for summary.");
+                    if(totalDueCommissionSpan) totalDueCommissionSpan.textContent = 'N/A (email missing)';
+                    if(modalRecentSalesListUl) modalRecentSalesListUl.innerHTML = '<li>Could not load summary (email missing).</li>';
+                    return;
+                }
+
+                if (!totalDueCommissionSpan || !showRecentSalesBtn || !modalRecentSalesListUl) {
+                    console.error("DEBUG: Affiliate summary UI elements (totalDue, button, or modal list) not found.");
+                    return;
+                }
+
+                // Reset button and modal list initially
+                showRecentSalesBtn.style.display = 'none';
+                modalRecentSalesListUl.innerHTML = '<li>Loading details...</li>';
+
+                try {
+                    const formData = new FormData();
+                    formData.append('affiliate_email', userEmail);
+
+                    const summaryPath = (_isLocalServer ? '../../affiliate/get_affiliate_summary.php' : '/affiliate/get_affiliate_summary.php');
+                    const response = await fetch(summaryPath, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    console.log("DEBUG: Affiliate summary response:", result);
+
+                    if (response.ok && result.success) {
+                        totalDueCommissionSpan.textContent = parseFloat(result.total_due_commission).toFixed(2);
+                        storedRecentSales = result.recent_sales || []; // Store for modal
+
+                        if (storedRecentSales.length > 0) {
+                            showRecentSalesBtn.style.display = 'inline-block'; // Show button only if there are sales to view
+                        } else {
+                            showRecentSalesBtn.style.display = 'none'; // Or keep it hidden, or show a message like "No recent sales"
+                        }
+                        console.log("DEBUG: Affiliate summary (total due) loaded and displayed. Recent sales stored.");
+                    } else {
+                        throw new Error(result.message || 'Failed to load affiliate summary.');
+                    }
+                } catch (error) {
+                    console.error('DEBUG: Error loading affiliate summary:', error);
+                    totalDueCommissionSpan.textContent = 'Error';
+                    if(modalRecentSalesListUl) modalRecentSalesListUl.innerHTML = '<li>Error loading summary: ' + error.message + '</li>';
+                }
+
+                // Event listener for the show recent sales button
+                showRecentSalesBtn.onclick = function() { // Using .onclick for simplicity here, can be addEventListener
+                    const modal = document.getElementById('recentSalesModal');
+                    modalRecentSalesListUl.innerHTML = ''; // Clear previous/loading message
+                    if (storedRecentSales.length > 0) {
+                        storedRecentSales.forEach(sale => {
+                            const listItem = document.createElement('li');
+                            listItem.style.padding = '8px 0';
+                            listItem.style.borderBottom = '1px dashed #444';
+                            
+                            let statusColor = '#ffc107'; // Default yellow/orange for other statuses
+                            let displayStatus = sale.commission_paid_status.charAt(0).toUpperCase() + sale.commission_paid_status.slice(1);
+
+                            if (sale.commission_paid_status === 'paid') {
+                                statusColor = '#28a745'; // Green
+                            } else if (sale.commission_paid_status === 'pending') {
+                                statusColor = '#dc3545'; // Red
+                            }
+
+                            listItem.innerHTML = `
+                                <span style="display: block;"><strong>Buyer:</strong> ${sale.buyer_email}</span>
+                                <span style="display: block;"><strong>Commission:</strong> ₹${parseFloat(sale.commission_amount).toFixed(2)}</span>
+                                <span style="display: block;"><strong>Date:</strong> ${sale.sale_date}</span>
+                                <span style="display: block;"><strong>Status:</strong> <strong style="color: ${statusColor};">${displayStatus}</strong></span>
+                            `;
+                            modalRecentSalesListUl.appendChild(listItem);
+                        });
+                        if(modalRecentSalesListUl.lastChild) modalRecentSalesListUl.lastChild.style.borderBottom = 'none';
+                    } else {
+                        modalRecentSalesListUl.innerHTML = '<li>No recent sales found.</li>';
+                    }
+                    if(modal) {
+                        modal.style.display = 'flex'; // Make it flex first for transition
+                        setTimeout(() => modal.classList.add('show'), 10); // Then add show for opacity/transform
+                    }
+                };
+
+                // Event listener for closing the modal
+                const closeBtn = document.getElementById('closeRecentSalesModalBtn');
+                const modal = document.getElementById('recentSalesModal');
+                if(closeBtn && modal) {
+                    closeBtn.onclick = function() {
+                        modal.classList.remove('show');
+                        setTimeout(() => modal.style.display = 'none', 300); // Hide after transition
+                    };
+                    // Optional: Close modal if clicking outside of modal-content
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.classList.remove('show');
+                            setTimeout(() => modal.style.display = 'none', 300); // Hide after transition
+                        }
+                    }
+                }
+            }
+            // --- End Function to load affiliate summary ---
 
             // --- Toast Notification Manager (Dark Theme Adapted) ---
             if (typeof window.toastManager === 'undefined') {
@@ -1014,6 +1154,112 @@
             }
             
             .custom-confirm-info-label {
+                margin-bottom: 3px;
+            }
+        }
+
+        /* Styles for compact auth button */
+        .auth-button.compact-btn {
+            font-size: 0.9em;
+            padding: 8px 12px;
+            /* display: block; */ /* remove if it should be inline */
+            width: auto; /* allow button to size to content */
+            margin-top: 5px; /* Adjust as needed */
+        }
+
+        /* Styles for Recent Sales Modal */
+        .custom-sales-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 10001; /* Higher than confirmation modal */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-sales-modal.show {
+             opacity: 1;
+             display: flex; /* To enable opacity transition with display */
+        }
+
+        .custom-sales-modal-content {
+            background-color: #2a2e45; /* Slightly different from confirm modal for distinction */
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            max-width: 90%;
+            width: 500px;
+            border-left: 4px solid var(--color-accent); /* Info blue */
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-sales-modal.show .custom-sales-modal-content {
+            transform: translateY(0);
+        }
+
+        .custom-sales-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .custom-sales-modal-header h4 {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--color-accent);
+        }
+
+        .custom-sales-modal-close-btn {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        .custom-sales-modal-close-btn:hover {
+            color: #fff;
+        }
+
+        #modalRecentSalesList li {
+            border-bottom: 1px dashed #555; /* Darker dash for modal */
+            padding: 10px 5px;
+        }
+        #modalRecentSalesList li:last-child {
+            border-bottom: none;
+        }
+        #modalRecentSalesList span {
+            color: #c8c8c8; /* Slightly lighter text for details */
+        }
+        #modalRecentSalesList span strong {
+            color: #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .custom-sales-modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .custom-sales-modal-info-item {
+                flex-direction: column;
+            }
+            
+            .custom-sales-modal-info-label {
                 margin-bottom: 3px;
             }
         }

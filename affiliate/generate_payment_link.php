@@ -47,10 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'currency' => $currency,
         'accept_partial' => false,
         'description' => $description,
-        'customer' => [],
+        'customer' => [
+            'email' => $buyer_email_param
+        ],
         'notify' => [
             'sms' => false,
-            'email' => !empty($buyer_email_param) // Send Razorpay email receipt to the BUYER
+            'email' => false
         ],
         'reminder_enable' => false,
         'notes' => [
@@ -62,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     if (!empty($buyer_email_param)) {
-        $data['customer']['email'] = $buyer_email_param; // Set buyer's email for Razorpay customer object
         error_log("Customer email (buyer) being added to Razorpay data: " . $buyer_email_param); // DEBUG
     } else {
         error_log("Buyer email was empty, not adding to Razorpay customer data."); // DEBUG

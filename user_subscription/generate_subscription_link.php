@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $amount_in_paise = 2000 * 100; // ₹2000
+    $amount_in_paise = 2100 * 100; // ₹2000
     $currency = 'INR';
     $description = 'StudySimplify Subscription for ' . $subscriber_email;
 
