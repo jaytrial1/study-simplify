@@ -2397,11 +2397,27 @@ document.addEventListener('DOMContentLoaded', () => {
         imageCards.forEach(card => {
             // Only append the image if not already present
             if (card.querySelector('img.ai-image')) return;
-            const imageUrl = card.getAttribute('data-image-url');
-            if (!imageUrl) return;
+            const imageUrlFromData = card.getAttribute('data-image-url');
+            
+            if (!imageUrlFromData) {
+                console.warn('[DEBUG] ai-image-card found without data-image-url:', card);
+                return;
+            }
+
+            // Normalize slashes first (e.g., Windows paths if any)
+            let finalImageUrl = imageUrlFromData.replace(/\\\\/g, '/').replace(/\\/g, '/');
+
+            // Ensure the path is absolute from the root if it's not an external URL and not already absolute
+            if (!finalImageUrl.toLowerCase().startsWith('http') && !finalImageUrl.startsWith('/')) {
+                finalImageUrl = '/' + finalImageUrl;
+                console.log('[DEBUG] Relative path detected, converted to absolute:', finalImageUrl);
+            }
+            
+            console.log('[DEBUG] ai-image-card original imageUrl:', imageUrlFromData, 'finalImageUrl:', finalImageUrl, card);
+            
             // Create image element
             const img = document.createElement('img');
-            img.src = imageUrl.replace(/\\\\/g, '/').replace(/\\/g, '/');
+            img.src = finalImageUrl;
             img.alt = 'AI provided image';
             img.className = 'ai-image';
             img.style.maxWidth = '100%';
@@ -2418,7 +2434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.addEventListener('click', function() {
                 let modal = document.createElement('div');
                 modal.className = 'ai-image-zoom-modal';
-                modal.innerHTML = `<div class=\"ai-image-zoom-backdrop\"></div><img src=\"${imageUrl}\" class=\"ai-image-zoomed\" style=\"max-width:90vw; max-height:90vh; display:block; margin:auto; border-radius:16px; box-shadow:0 4px 32px rgba(0,0,0,0.18);\" />`;
+                modal.innerHTML = `<div class=\"ai-image-zoom-backdrop\"></div><img src=\"${finalImageUrl}\" class=\"ai-image-zoomed\" style=\"max-width:90vw; max-height:90vh; display:block; margin:auto; border-radius:16px; box-shadow:0 4px 32px rgba(0,0,0,0.18);\" />`;
                 document.body.appendChild(modal);
                 // Initialize pinch-zoom if available
                 const zoomedImg = modal.querySelector('.ai-image-zoomed');
