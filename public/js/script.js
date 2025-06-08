@@ -484,7 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show popup only for new sessions
                 if (!sessionResponse.existing) {
                     isNewSession = true;  // Set flag for new session
-                    const selectedType = await showAnswerTypePopup();
+                    // const selectedType = await showAnswerTypePopup();
+                    const selectedType = 'long'; // Automatically select 'long' (Detailed Answer)
                     chatHistory.setAnswerType(currentQuestion, selectedType);
                     answerType = selectedType;
                 } else if (!answerType) {
