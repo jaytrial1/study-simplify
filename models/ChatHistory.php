@@ -365,4 +365,52 @@ class ChatHistory {
             return false;
         }
     }
+
+    public function deleteSession($sessionId, $userId) {
+        try {
+            // First, verify that the session belongs to the user to prevent unauthorized deletions
+            $sql = "SELECT id FROM chat_history WHERE id = ? AND user_id = ?";
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                error_log("Prepare failed (verify user): " . $this->conn->error);
+                return false;
+            }
+            $stmt->bind_param("ii", $sessionId, $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 0) {
+                // The session does not exist or does not belong to the user
+                error_log("Delete permission denied for session " . $sessionId . " by user " . $userId);
+                return false;
+            }
+            
+            // If verification is successful, proceed with deletion
+            $sql = "DELETE FROM chat_history WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            if (!$stmt) {
+                error_log("Prepare failed (delete): " . $this->conn->error);
+                return false;
+            }
+            $stmt->bind_param("i", $sessionId);
+            $success = $stmt->execute();
+
+            if (!$success) {
+                error_log("Execute failed (delete): " . $stmt->error);
+                return false;
+            }
+
+            // Check if any row was actually deleted
+            if ($stmt->affected_rows > 0) {
+                error_log("Successfully deleted chat session with ID: " . $sessionId);
+                return true;
+            } else {
+                error_log("No session found with ID: " . $sessionId . " to delete.");
+                return false; // Or true, depending on if "not found" is a success
+            }
+        } catch (Exception $e) {
+            error_log("Error in deleteSession: " . $e->getMessage());
+            return false;
+        }
+    }
 }

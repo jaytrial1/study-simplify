@@ -233,4 +233,140 @@
     background-color: var(--color-primary);
     padding: 0.5rem;
     border-radius: 4px;
+}
+
+.history-item {
+    position: relative; /* Add this to position the delete button relative to the item */
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #3d434b;
+    transition: background-color 0.2s;
+}
+
+.history-item:hover {
+    background-color: #3a4047;
+}
+
+/* Make the delete button visible on hover */
+.history-item:hover .delete-history-btn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.delete-history-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%) translateX(10px); /* Start off-screen */
+    background-color: #e74c3c; /* Red color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    line-height: 1; /* Ensure icon is centered */
+}
+
+.delete-history-btn:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+.history-item i.fa-message {
+    font-size: 16px;
+    color: #8e9297;
+    margin-right: 15px;
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 768px) {
+    /* On mobile, make the delete button always visible */
+    .delete-history-btn {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+
+    /* Adjust the main history item content to prevent text from overlapping the button */
+    .history-item .history-item-content {
+        padding-right: 35px; /* Add space for the visible button */
+    }
+    
+    .history-item:hover .delete-history-btn {
+        /* No change on hover needed since it's always visible */
+        background-color: #c0392b;
+    }
+}
+
+/* Custom Confirmation Modal Styles */
+.custom-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Ensure it's on top of other content */
+}
+
+.custom-confirm-box {
+    background-color: var(--color-primary); /* Dark background matching the theme */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    color: #ecf0f1; /* Light text color */
+}
+
+.custom-confirm-box h3 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 1.25rem;
+}
+
+.custom-confirm-box p {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.custom-confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.custom-confirm-buttons button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.custom-confirm-buttons .btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.custom-confirm-buttons .btn-danger:hover {
+    opacity: 0.9;
+}
+
+.custom-confirm-buttons .btn-secondary {
+    background-color: #566573;
+    color: white;
+}
+
+.custom-confirm-buttons .btn-secondary:hover {
+    opacity: 0.9;
 } 

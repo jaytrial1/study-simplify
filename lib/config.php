@@ -8,12 +8,12 @@ define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/model
 define('GEMINI_MODEL', 'gemini-2.5-flash-preview-04-17');
 define('GEMINI_KEYS', [
         // Free tier keys
-        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO81',
-        'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj1',
-        'AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs1',
-        'AIzaSyBT3kJRHPts81wpwYHFQLuJ0NSeqt_kd4E1',
+        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
+        'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj',
+        'AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs',
+        'AIzaSyBT3kJRHPts81wpwYHFQLuJ0NSeqt_kd4E',
         // Paid tier key (last resort)
-        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU1'
+        'AIzaSyC3ytLD5xZlCa70pkYajN2RjW4ehdoX6IU'
     ]);
 
 // DeepSeek/OpenRouter API Configuration

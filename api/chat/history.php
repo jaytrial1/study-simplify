@@ -145,6 +145,28 @@ try {
             
             echo json_encode(['success' => $success], JSON_UNESCAPED_UNICODE);
             break;
+
+        case 'DELETE':
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            if (!isset($data['session_id'], $data['user_id'])) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Missing session_id or user_id']);
+                break;
+            }
+
+            $sessionId = $data['session_id'];
+            $userId = $data['user_id'];
+
+            $success = $chatHistory->deleteSession($sessionId, $userId);
+
+            if ($success) {
+                echo json_encode(['success' => true]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => 'Failed to delete session']);
+            }
+            break;
     }
 } catch (Exception $e) {
     error_log("Error in chat history API: " . $e->getMessage());

@@ -1003,10 +1003,11 @@ class ChatHistoryManager {
 
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
-            historyItem.dataset.sessionId = item.id; // Set the session ID in the dataset
+            historyItem.id = `session-${item.id}`; // Add an ID for easier removal
+            historyItem.dataset.sessionId = item.id;
             historyItem.dataset.subject = item.subject;
             historyItem.dataset.chapter = item.chapter;
-            
+
             historyItem.innerHTML = `
                 <i class="fas fa-message"></i>
                 <div class="history-item-content">
@@ -1016,14 +1017,25 @@ class ChatHistoryManager {
                         <span class="chapter-tag">${item.chapter}</span>
                     </div>
                 </div>
+                <button class="delete-history-btn" title="Delete Chat"><i class="fas fa-trash-alt"></i></button>
             `;
 
-            historyItem.addEventListener('click', () => {
+            historyItem.addEventListener('click', (e) => {
+                // Do not load session if delete button was clicked
+                if (e.target.closest('.delete-history-btn')) {
+                    return;
+                }
                 if (item.id) {
                     this.loadChatSession(item.id);
                 } else {
                     console.error('No session ID found for history item:', item);
                 }
+            });
+
+            const deleteButton = historyItem.querySelector('.delete-history-btn');
+            deleteButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent the history item click event
+                this.deleteSession(item.id);
             });
 
             this.historyContainer.appendChild(historyItem);
@@ -1045,6 +1057,47 @@ class ChatHistoryManager {
         this.loadHistory();
     }
 
+    // Custom confirmation modal
+    showConfirmation(message, title = 'Confirm Deletion') {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('custom-confirm-overlay');
+            const messageEl = document.getElementById('custom-confirm-message');
+            const titleEl = document.getElementById('custom-confirm-title');
+            const okBtn = document.getElementById('custom-confirm-ok');
+            const cancelBtn = document.getElementById('custom-confirm-cancel');
+
+            if (!overlay || !messageEl || !titleEl || !okBtn || !cancelBtn) {
+                console.error('Custom confirm elements not found!');
+                resolve(false); // Fallback to prevent getting stuck
+                return;
+            }
+
+            messageEl.textContent = message;
+            titleEl.textContent = title;
+            overlay.style.display = 'flex';
+
+            const okListener = () => {
+                overlay.style.display = 'none';
+                cleanup();
+                resolve(true);
+            };
+
+            const cancelListener = () => {
+                overlay.style.display = 'none';
+                cleanup();
+                resolve(false);
+            };
+            
+            const cleanup = () => {
+                okBtn.removeEventListener('click', okListener);
+                cancelBtn.removeEventListener('click', cancelListener);
+            };
+
+            okBtn.addEventListener('click', okListener);
+            cancelBtn.addEventListener('click', cancelListener);
+        });
+    }
+
     // Update the getQuestions method to use the apiBasePath
     async getQuestions(session) {
         const subject = session.subject || '';
@@ -1063,45 +1116,66 @@ class ChatHistoryManager {
     }
 
     async deleteSession(sessionId) {
+        const confirmed = await this.showConfirmation(
+            'Are you sure you want to delete this chat history? This action cannot be undone.'
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
         try {
             // Get user ID for API request with proper URL encoding
-            const userId = encodeURIComponent(localStorage.getItem('user_id'));
-            
+            const userId = localStorage.getItem('user_id');
+            if (!userId) {
+                this.showToast('User not logged in.', 'error');
+                return;
+            }
+
             const response = await fetch(`${window.apiBasePath}/api/chat/history.php`, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('user_token')}` // Include auth token
                 },
                 body: JSON.stringify({
-                    user_id: localStorage.getItem('user_id'),
+                    user_id: userId,
                     session_id: sessionId
                 })
             });
-            
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json().catch(() => ({ error: 'Unknown server error' }));
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error}`);
             }
-            
+
             const data = await response.json();
-            
+
             if (data.success) {
                 // Remove the session from the UI
                 const sessionElement = document.getElementById(`session-${sessionId}`);
                 if (sessionElement) {
                     sessionElement.remove();
                 }
-                
+
                 // Show success message
                 this.showToast('Session deleted successfully!', 'success');
+
+                // Optional: If you have a counter, update it
+                // this.updateHistoryCount(); 
                 
-                // Reload history to update counts
-                this.loadHistory();
+                // If the deleted session was the currently active one, clear the chat window
+                if (this.currentSessionId === sessionId) {
+                    this.clearChatWindow();
+                    this.currentSessionId = null;
+                }
+
             } else {
-                this.showToast('Failed to delete session. Please try again.', 'error');
+                this.showToast(data.error || 'Failed to delete session. Please try again.', 'error');
             }
         } catch (error) {
             console.error('Error deleting chat session:', error);
-            this.showToast('Error deleting session. Please try again.', 'error');
+            this.showToast(`Error: ${error.message}`, 'error');
         }
     }
 
