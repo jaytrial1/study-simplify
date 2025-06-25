@@ -174,14 +174,19 @@ try {
         // Extract result, error, and debug log from the handler response
         $aiResponseText = null;
         $currentDebugLog = isset($handlerResponse['debug_log']) ? $handlerResponse['debug_log'] : null;
+        $shouldSaveAiResponse = true; // Flag to control saving
 
         if (isset($handlerResponse['success']) && $handlerResponse['success']) {
             $aiResponseText = $handlerResponse['result'];
         } else {
-            // Handle failure - log the error and use the error message as the response
+            // This is the critical failure condition where all API keys failed.
             $errorMsg = isset($handlerResponse['error']) ? $handlerResponse['error'] : 'Unknown error from AI Handler';
             error_log("AI Handler failed for question '{$question}': " . $errorMsg);
-            $aiResponseText = "Sorry, I encountered an error trying to process your request. Details: " . $errorMsg; 
+            
+            // Set user-friendly message and prevent saving
+            $aiResponseText = "Sorry, our AI service is temporarily unavailable. Please try again later.";
+            $shouldSaveAiResponse = false;
+
             // We might still want to add the error message to the debug log for the client
             if ($currentDebugLog === null) {
                 $currentDebugLog = [];
@@ -189,9 +194,10 @@ try {
             $currentDebugLog[] = "ERROR: " . $errorMsg;
         }
 
-        // Ensure we always have a string response
+        // Ensure we always have a string response (should be redundant now but safe)
         if ($aiResponseText === null) {
             $aiResponseText = "Sorry, couldn't get a response.";
+            $shouldSaveAiResponse = false; // Don't save null responses
             if ($currentDebugLog === null) {
                 $currentDebugLog = [];
             }
@@ -201,8 +207,11 @@ try {
         // Save messages to chat history
         if (isset($data['session_id'])) {
             $chatHistory->addMessage($data['session_id'], 'user', $data['userPrompt']);
-            // Save the actual AI response text (or the error message we constructed)
-            $chatHistory->addMessage($data['session_id'], 'ai', $aiResponseText);
+            
+            // Only save the AI response if the flag is true
+            if ($shouldSaveAiResponse) {
+                $chatHistory->addMessage($data['session_id'], 'ai', $aiResponseText);
+            }
         }
         
         // Add to the responses array, including the debug log only if it exists

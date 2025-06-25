@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+If any changes are made in the app, if they are  
+- structure changes  
+- dependency/tech stack changes  
+
+upload or modify them in memory
+
