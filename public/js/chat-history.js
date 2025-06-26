@@ -1007,7 +1007,7 @@ class ChatHistoryManager {
             historyItem.dataset.sessionId = item.id;
             historyItem.dataset.subject = item.subject;
             historyItem.dataset.chapter = item.chapter;
-
+            
             historyItem.innerHTML = `
                 <i class="fas fa-message"></i>
                 <div class="history-item-content">
@@ -1131,7 +1131,7 @@ class ChatHistoryManager {
                 this.showToast('User not logged in.', 'error');
                 return;
             }
-
+            
             const response = await fetch(`${window.apiBasePath}/api/chat/history.php`, {
                 method: 'DELETE',
                 headers: {
@@ -1143,24 +1143,24 @@ class ChatHistoryManager {
                     session_id: sessionId
                 })
             });
-
+            
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Unknown server error' }));
                 throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error}`);
             }
-
+            
             const data = await response.json();
-
+            
             if (data.success) {
                 // Remove the session from the UI
                 const sessionElement = document.getElementById(`session-${sessionId}`);
                 if (sessionElement) {
                     sessionElement.remove();
                 }
-
+                
                 // Show success message
                 this.showToast('Session deleted successfully!', 'success');
-
+                
                 // Optional: If you have a counter, update it
                 // this.updateHistoryCount(); 
                 
