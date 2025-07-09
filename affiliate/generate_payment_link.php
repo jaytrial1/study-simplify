@@ -3,8 +3,8 @@ header('Content-Type: application/json');
 error_log("--- generate_payment_link.php accessed ---"); // DEBUG
 
 // Razorpay Test Credentials
-$keyId = 'rzp_test_bqaCFLyb2Nt506';
-$keySecret = '2jLxGk8AFIza2FqHhXuD14jo';
+$keyId = 'rzp_live_5rpmGepQCY8FEw';
+$keySecret = 'Bd2sszN6IX272msoCETaoFvI';
 
 $response = ['success' => false, 'message' => 'An unexpected error occurred.'];
 
