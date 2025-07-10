@@ -1,33 +1,43 @@
 <?php
 header("Content-Type: application/json");
 require_once '../../config/database.php';
+require_once '../../utils/session_manager.php';
 
-$conn = getConnection();
-
-// Get the token from Authorization header
+// Get token from Authorization header
 $headers = getallheaders();
 $token = null;
 
 if (isset($headers['Authorization'])) {
-    $token = str_replace('Bearer ', '', $headers['Authorization']);
+    // Format: "Bearer <token>"
+    $auth = explode(' ', $headers['Authorization']);
+    if (count($auth) == 2 && strtolower($auth[0]) == 'bearer') {
+        $token = $auth[1];
+    }
 }
 
+// If no token in header, check POST data
+if (!$token && isset($_POST['token'])) {
+    $token = $_POST['token'];
+}
+
+// If still no token, check JSON body
 if (!$token) {
-    http_response_code(401);
-    echo json_encode(['error' => 'No token provided']);
-    exit;
+    $json_data = json_decode(file_get_contents('php://input'), true);
+    if (isset($json_data['token'])) {
+        $token = $json_data['token'];
+    }
 }
 
-// Invalidate the token in the database
-$stmt = $conn->prepare("UPDATE users SET token = NULL WHERE token = ?");
-$stmt->bind_param("s", $token);
-$stmt->execute();
-
-if ($stmt->affected_rows > 0) {
-    echo json_encode(['message' => 'Logged out successfully']);
-} else {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid token']);
+// If we have a token, invalidate it
+$success = false;
+if ($token) {
+    $success = invalidateSession($token);
 }
 
-$conn->close();
+// Return success response regardless of whether we found a token
+// This ensures the client can always "log out" even if the session is already invalid
+echo json_encode([
+    'success' => true,
+    'message' => 'Logged out successfully'
+]);
+?>

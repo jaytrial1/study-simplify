@@ -2,6 +2,7 @@
 header("Content-Type: application/json");
 require_once '../../config/database.php';
 require_once '../../utils/validation.php';
+require_once '../../utils/session_manager.php'; // Add session manager
 
 $conn = getConnection();
 
@@ -177,13 +178,17 @@ if (!$access_granted) {
 }
 // --- END: Implement Access Rules ---
 
-// Generate a simple token (in production, use a proper JWT library)
-$token = bin2hex(random_bytes(32));
+// Get IP address and user agent for session tracking
+$ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
 
-// Return success response
+// Create a new session for the user (this will invalidate any existing sessions)
+$sessionId = createUserSession($user['id'], $ip_address, $user_agent);
+
+// Return success response with the session ID
 echo json_encode([
     'message' => 'Login successful',
-    'token' => $token,
+    'token' => $sessionId, // Use session ID as the token
     'user_id' => $user['id'],
     'name' => $user['name'],
     'grade' => $user['grade_level'],
@@ -194,3 +199,4 @@ echo json_encode([
 
 $stmt->close();
 $conn->close();
+?>

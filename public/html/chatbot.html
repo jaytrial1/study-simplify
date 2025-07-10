@@ -35,9 +35,11 @@
         const answerActionPath = _isLocalServer ? "../js/answer-action-popup.js" : "/public/js/answer-action-popup.js?v=<?php echo time(); ?>";
         const followUpJsPath = _isLocalServer ? "../js/follow-up-prompts.js" : "/public/js/follow-up-prompts.js?v=<?php echo time(); ?>";
         const topicListJsPath = _isLocalServer ? "../js/topic-list.js" : "/public/js/topic-list.js?v=<?php echo time(); ?>";
+        const sessionManagerPath = _isLocalServer ? "../js/session-manager.js" : "/public/js/session-manager.js?v=<?php echo time(); ?>";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+        document.write(`<script src="${sessionManagerPath}"><\/script>`);
 
         // --- DYNAMIC THEME CSS LOADING (v2 - Fixed IP handling) --- 
         const currentHostnameTheme = window.location.hostname;

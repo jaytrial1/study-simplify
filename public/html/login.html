@@ -18,9 +18,11 @@
         const loginJsPath = _isLocalServer ? "../js/login.js" : "/public/js/login.js";
         const manifestPath = _isLocalServer ? "../manifest.json" : "/public/manifest.json";
         const iconPath = _isLocalServer ? "../icons/icon-192x192.png" : "/public/icons/icon-192x192.png";
+        const sessionManagerPath = _isLocalServer ? "../js/session-manager.js" : "/public/js/session-manager.js";
         
         // Create and append resources
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
+        document.write(`<script src="${sessionManagerPath}"><\/script>`);
 
         // --- DYNAMIC THEME CSS LOADING (v2 - Fixed IP handling) --- 
         const currentHostnameTheme = window.location.hostname;
