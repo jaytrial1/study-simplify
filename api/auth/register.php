@@ -42,6 +42,18 @@ if ($stmt->num_rows > 0) {
     exit;
 }
 
+// Check existing phone number
+$stmt = $conn->prepare("SELECT id FROM users WHERE phone_number = ?");
+$stmt->bind_param("s", $data['phone']);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    http_response_code(409);
+    echo json_encode(['error' => 'Phone number already registered']);
+    exit;
+}
+
 // Get tuition class from subdomain
 $host = $_SERVER['HTTP_HOST'];
 $parts = explode('.', $host);
