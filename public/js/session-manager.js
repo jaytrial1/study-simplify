@@ -184,7 +184,7 @@ function handleSessionExpiration() {
             margin-bottom: 20px;
         }
         .session-modal-content button {
-            background-color: #4166d5;
+            background-color: var(--color-accent);
             color: white;
             border: none;
             padding: 10px 20px;
