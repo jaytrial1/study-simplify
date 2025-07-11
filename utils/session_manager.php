@@ -123,4 +123,23 @@ function cleanupOldSessions($hoursOld = 24) {
     
     return $rowsAffected;
 }
+
+/**
+ * Starts a secure PHP session with appropriate cookie settings.
+ * Ensures the session cookie is available across the entire site.
+ */
+function startSecureSession() {
+    if (session_status() == PHP_SESSION_NONE) {
+        $cookieParams = session_get_cookie_params();
+        session_set_cookie_params([
+            'lifetime' => $cookieParams['lifetime'],
+            'path' => '/', // Cookie available for the entire domain
+            'domain' => $cookieParams['domain'],
+            'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off', // Use secure cookies on HTTPS
+            'httponly' => true, // Prevent client-side script access
+            'samesite' => 'Lax' // CSRF protection
+        ]);
+        session_start();
+    }
+}
 ?> 

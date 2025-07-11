@@ -58,6 +58,10 @@ if (isset($_SESSION['admin_authenticated']) && $_SESSION['admin_authenticated'] 
             margin: 0 auto;
             padding: 20px;
         }
+        .table th, .table td {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -128,7 +132,7 @@ if (isset($_SESSION['admin_authenticated']) && $_SESSION['admin_authenticated'] 
 
         <div class="row mt-4">
             <!-- Page Distribution -->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         Pages Being Viewed
@@ -152,7 +156,7 @@ if (isset($_SESSION['admin_authenticated']) && $_SESSION['admin_authenticated'] 
             </div>
 
             <!-- Recent Users -->
-            <div class="col-md-6">
+            <div class="col-md-12 mt-4">
                 <div class="card">
                     <div class="card-header">
                         Most Recent Activity
@@ -163,6 +167,11 @@ if (isset($_SESSION['admin_authenticated']) && $_SESSION['admin_authenticated'] 
                                 <thead>
                                     <tr>
                                         <th>User</th>
+                                        <th>User ID</th>
+                                        <th>Email</th>
+                                        <th>Subdomain</th>
+                                        <th>Status</th>
+                                        <th>Phone</th>
                                         <th>Page</th>
                                         <th>Last Active</th>
                                     </tr>
@@ -285,6 +294,11 @@ if (isset($_SESSION['admin_authenticated']) && $_SESSION['admin_authenticated'] 
                             
                             row.innerHTML = `
                                 <td>${displayName}</td>
+                                <td>${user.user_id || '-'}</td>
+                                <td>${user.email || '-'}</td>
+                                <td>${user.subdomain_identifier || 'N/A'}</td>
+                                <td>${user.Progress_status || '-'}</td>
+                                <td>${user.phone_number || '-'}</td>
                                 <td>${user.page}</td>
                                 <td>${formatDateTime(user.last_activity)}</td>
                             `;

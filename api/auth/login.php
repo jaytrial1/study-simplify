@@ -185,6 +185,10 @@ $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
 // Create a new session for the user (this will invalidate any existing sessions)
 $sessionId = createUserSession($user['id'], $ip_address, $user_agent);
 
+// CRITICAL FIX: Set the user_id in the PHP session so tracking works
+startSecureSession();
+$_SESSION['user_id'] = $user['id'];
+
 // Return success response with the session ID
 echo json_encode([
     'message' => 'Login successful',

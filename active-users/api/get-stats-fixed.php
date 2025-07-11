@@ -148,7 +148,11 @@ try {
                               a.page, 
                               a.last_activity, 
                               a.first_seen,
-                              u.name as user_name
+                              u.name as user_name,
+                              u.email,
+                              u.subdomain_identifier,
+                              u.Progress_status,
+                              u.phone_number
                               FROM active_users a
                               LEFT JOIN users u ON a.user_id = u.id
                               ORDER BY a.last_activity DESC LIMIT 20");

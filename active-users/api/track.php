@@ -1,9 +1,13 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once '../../utils/session_manager.php'; // Use the new session manager
+startSecureSession(); // Start the session securely
 
 // Include database connection
 require_once '../../config/database.php';
+
+// Connect to database
+$conn = getConnection();
 
 // Get user data
 $sessionId = session_id();
@@ -36,9 +40,6 @@ if ($userId) {
 
 // Generate a device fingerprint for persistent identification
 $deviceFingerprint = generateDeviceFingerprint($ipAddress, $userAgent, $deviceId);
-
-// Connect to database
-$conn = getConnection();
 
 // Function to generate a more persistent device fingerprint
 function generateDeviceFingerprint($ip, $userAgent, $deviceId = null) {
