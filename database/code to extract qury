@@ -1,0 +1,1 @@
+"E:\jay\Xampp\mysql\bin\mysqldump.exe" -u root --no-data --routines --databases studysimplify_new > "C:\Users\Yashi\Desktop\studysimplify_with_procedures.sql"
