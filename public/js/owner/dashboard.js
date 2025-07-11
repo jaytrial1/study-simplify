@@ -747,7 +747,7 @@ function applyFiltersAndDisplay() {
 function displayStudents(studentsToDisplay) {
     // Get the elements for empty state and table
     const emptyState = document.getElementById('emptyStudentState');
-    const studentsTable = document.getElementById('studentsTable');
+    const studentsTableContainer = document.getElementById('studentsTableContainer');
     const tableBody = document.getElementById('studentsTableBody');
     
     // Debug for troubleshooting
@@ -770,11 +770,11 @@ function displayStudents(studentsToDisplay) {
     // Show empty state or table based on data
     if (!studentsToDisplay || studentsToDisplay.length === 0) {
         if (emptyState) emptyState.style.display = 'flex';
-        if (studentsTable) studentsTable.style.display = 'none';
+        if (studentsTableContainer) studentsTableContainer.style.display = 'none';
         return;
     } else {
         if (emptyState) emptyState.style.display = 'none';
-        if (studentsTable) studentsTable.style.display = 'table';
+        if (studentsTableContainer) studentsTableContainer.style.display = 'block';
     }
     
     // Update student count if available
@@ -798,6 +798,7 @@ function displayStudents(studentsToDisplay) {
             <td id="approval-cell-${student.id}" class="cell-sm text-center"></td>
             <td id="access-status-${student.id}" class="cell-sm text-center"></td>
             <td id="progress-status-${student.id}" class="cell-sm text-center"></td>
+            <td class="cell-sm text-center payment-type-cell">${student.payment_type || 'N/A'}</td>
             <td id="access-action-${student.id}" class="cell-sm text-center"></td>
         `;
         

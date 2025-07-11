@@ -118,7 +118,7 @@ if (isset($eventData['event'])) {
         }
 
         // Update user status. Ensure Progress_status='subscribed' is correct for your enum/varchar.
-        $stmt_update_user = $conn->prepare("UPDATE users SET Progress_status = 'subscribed', is_approved_by_owner = 1, is_active_by_owner = 1 WHERE email = ?");
+        $stmt_update_user = $conn->prepare("UPDATE users SET Progress_status = 'subscribed', is_approved_by_owner = 1, is_active_by_owner = 1, payment_type = 'online' WHERE email = ?");
         if (!$stmt_update_user) {
             throw new Exception("Subscription Webhook: Failed to prepare statement for user update: " . $conn->error);
         }

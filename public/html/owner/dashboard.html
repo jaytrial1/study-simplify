@@ -334,63 +334,66 @@
                                 <p>Share your portal URL with your students to get started.</p>
                             </div>
                             
-                            <div class="table-responsive-container" id="studentsTableContainer" style="display: none;">
-                                <table class="students-table" id="studentsTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="name-column">Name</th>
-                                            <th class="email-column">Email</th>
-                                            <th class="cell-sm">Grade</th>
-                                            <th class="cell-sm">
-                                                <div class="column-header">
-                                                    <span>Approval</span>
-                                                    <div class="column-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        <div class="tooltip">
-                                                            Approve or Deny pending students. Approved students count towards billing.
+                            <div id="studentsTableContainer" style="display: none;">
+                                <div class="table-responsive-container">
+                                    <table class="students-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="name-column">Name</th>
+                                                <th class="email-column">Email</th>
+                                                <th class="cell-sm">Grade</th>
+                                                <th class="cell-sm">
+                                                    <div class="column-header">
+                                                        <span>Approval</span>
+                                                        <div class="column-info">
+                                                            <i class="fas fa-info-circle"></i>
+                                                            <div class="tooltip">
+                                                                Approve or Deny pending students. Approved students count towards billing.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </th>
-                                            <th class="cell-sm">
-                                                <div class="column-header">
-                                                    <span>Access Status</span>
-                                                    <div class="column-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        <div class="tooltip">
-                                                            Shows whether the student can currently access the platform.
+                                                </th>
+                                                <th class="cell-sm">
+                                                    <div class="column-header">
+                                                        <span>Access Status</span>
+                                                        <div class="column-info">
+                                                            <i class="fas fa-info-circle"></i>
+                                                            <div class="tooltip">
+                                                                Shows whether the student can currently access the platform.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </th>
-                                            <th class="cell-sm">
-                                                <div class="column-header">
-                                                    <span>Progress Status</span>
-                                                    <div class="column-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        <div class="tooltip">
-                                                            Shows whether the student is on a 7-day trial (Demo), subscribed, or has an expired trial.
+                                                </th>
+                                                <th class="cell-sm">
+                                                    <div class="column-header">
+                                                        <span>Progress Status</span>
+                                                        <div class="column-info">
+                                                            <i class="fas fa-info-circle"></i>
+                                                            <div class="tooltip">
+                                                                Shows whether the student is on a 7-day trial (Demo), subscribed, or has an expired trial.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </th>
-                                            <th class="cell-sm">
-                                                <div class="column-header">
-                                                    <span>Access Action</span>
-                                                    <div class="column-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        <div class="tooltip">
-                                                            Can be toggled any time. Controls student's ability to login.
+                                                </th>
+                                                <th class="cell-sm">Payment Type</th>
+                                                <th class="cell-sm">
+                                                    <div class="column-header">
+                                                        <span>Access Action</span>
+                                                        <div class="column-info">
+                                                            <i class="fas fa-info-circle"></i>
+                                                            <div class="tooltip">
+                                                                Can be toggled any time. Controls student's ability to login.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="studentsTableBody">
-                                        <!-- Student rows will be populated dynamically -->
-                                    </tbody>
-                                </table>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="studentsTableBody">
+                                            <!-- Student rows will be populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -96,7 +96,7 @@ $subdomain = $owner['subdomain_identifier'];
 
 // Get students associated with this subdomain
 $stmt = $conn->prepare("SELECT id, name, email, grade_level, is_active_by_owner, is_approved_by_owner, created_at, 
-                        Progress_status, trial_expiry_date 
+                        Progress_status, trial_expiry_date, payment_type 
                         FROM users 
                         WHERE subdomain_identifier = ? 
                         ORDER BY created_at DESC");
@@ -115,7 +115,8 @@ while ($row = $result->fetch_assoc()) {
         'approved' => $row['is_approved_by_owner'],
         'joined_date' => $row['created_at'],
         'Progress_status' => $row['Progress_status'],
-        'trial_expiry_date' => $row['trial_expiry_date']
+        'trial_expiry_date' => $row['trial_expiry_date'],
+        'payment_type' => $row['payment_type']
     ];
 }
 

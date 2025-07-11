@@ -352,7 +352,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
+ALTER TABLE users ADD COLUMN payment_type VARCHAR(10) NOT NULL DEFAULT 'none';
 -- Dumping routines for database 'studysimplify_new'
 --
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
@@ -366,9 +366,12 @@ CREATE TABLE `users` (
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cleanup_inactive_users`()
-BEGIN
-  DELETE FROM active_users
-  WHERE last_activity < (NOW() - INTERVAL 15 MINUTE);
+BEGIN
+
+  DELETE FROM active_users
+
+  WHERE last_activity < (NOW() - INTERVAL 15 MINUTE);
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

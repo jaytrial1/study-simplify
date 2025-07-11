@@ -193,7 +193,7 @@ if (isset($eventData['event'])) {
                 // Now, update the users table for the buyer
                 if ($buyer_user_id) { // Prefer updating by user_id if available
                     // 1. Mark as approved and active
-                    $stmt_user_approve = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1 WHERE id = ?");
+                    $stmt_user_approve = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1, payment_type = 'online' WHERE id = ?");
                     if ($stmt_user_approve) {
                         $stmt_user_approve->bind_param("i", $buyer_user_id);
                         if ($stmt_user_approve->execute()) {
@@ -227,7 +227,7 @@ if (isset($eventData['event'])) {
                     error_log("Webhook: buyer_user_id not found. Attempting to update users table by email: " . $buyer_email_from_notes);
                     
                     // 1. Mark as approved and active by email
-                    $stmt_user_approve_email = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1 WHERE email = ?");
+                    $stmt_user_approve_email = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1, payment_type = 'online' WHERE email = ?");
                     if ($stmt_user_approve_email) {
                         $stmt_user_approve_email->bind_param("s", $buyer_email_from_notes);
                         if ($stmt_user_approve_email->execute()) {

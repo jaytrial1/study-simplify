@@ -246,7 +246,7 @@ try {
         }
         
         // Update both approval and activation status
-        $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = ?, payment_type = 'cash' WHERE id = ?");
         $activateVal = $activate ? 1 : 0;
         $stmt->bind_param("ii", $activateVal, $student_id);
         $stmt->execute();
@@ -457,7 +457,7 @@ try {
         // Update is_active_by_owner and is_approved_by_owner
         if ($activate) {
             // Approving student: Update Progress_status to 'subscribed' and activate
-            $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1, Progress_status = 'subscribed' WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE users SET is_approved_by_owner = 1, is_active_by_owner = 1, Progress_status = 'subscribed', payment_type = 'cash' WHERE id = ?");
             $stmt->bind_param("i", $student_id);
         } else {
             // Denying student: Update Progress_status to 'expired' and deactivate

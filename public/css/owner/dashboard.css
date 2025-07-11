@@ -1809,8 +1809,9 @@ body {
 /* Search Bar Styles */
 .search-container {
     position: relative;
-    margin-bottom: 15px; /* Keep space below search bar */
-    margin-top: 20px; /* Add space ABOVE search bar */
+    margin-bottom: 20px; /* Keep space below search bar */
+    width: 100%;
+    max-width: 400px;
 }
 
 #studentSearchInput {
@@ -1947,13 +1948,14 @@ body {
 
 /* Adjust table responsive container and cell widths */
 .table-responsive-container {
+    display: block;
     width: 100%;
-    overflow: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
     border-radius: 8px;
     margin-bottom: 20px;
     position: relative;
     max-height: 480px; /* Increased to show approximately 8 rows before scrolling */
-    display: block;
     scrollbar-width: thin;
 }
 
