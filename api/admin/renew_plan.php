@@ -143,7 +143,8 @@ try {
                 is_approved_by_owner = 0, 
                 Progress_status = 'demo', 
                 trial_start_date = NOW(), 
-                trial_expiry_date = NOW() + INTERVAL 7 DAY 
+                trial_expiry_date = NOW() + INTERVAL 7 DAY,
+                payment_type = 'none'
             WHERE id IN ($id_list)";
             
             $conn->query($update_sql);

@@ -113,3 +113,63 @@
 [2025-07-12 09:03:07] Transaction committed successfully
 [2025-07-12 09:03:07] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":16}
 [2025-07-12 09:03:07] Request completed
+[2025-07-12 10:05:22] Request started - Data: []
+[2025-07-12 10:05:22] Transaction started - Data: {"action":"toggle_student_status","student_id":17,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:05:22] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:05:23] Student data - Data: {"id":17,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":1,"is_approved_by_owner":0,"Progress_status":"demo"}
+[2025-07-12 10:05:23] Plan data before update - Data: {"plan_id":15,"owner_id":2,"plan_type":"","price_per_student":"99.00","initial_student_count":0,"current_total_students":0,"active_student_count":0,"inactive_approved_student_count":0,"start_date":"2025-07-12","expiry_date":"2026-07-12","total_amount":"0.00","payment_done":"0.00","total_due_amount":"0.00","payment_status":"active","date_of_last_payment":null,"installment_count":1,"installment_interval_days":null,"next_installment_due_date":null,"next_installment_amount":null,"payment_deadline_for_addition":null,"created_at":"2025-07-12 12:47:16","updated_at":"2025-07-12 12:47:16"}
+[2025-07-12 10:05:23] User status update - Data: {"student_id":17,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:05:23] Transaction committed successfully
+[2025-07-12 10:05:23] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":17}
+[2025-07-12 10:05:23] Request completed
+[2025-07-12 10:05:23] Request started - Data: []
+[2025-07-12 10:05:23] Transaction started - Data: {"action":"toggle_student_status","student_id":16,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:05:23] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:05:23] Student data - Data: {"id":16,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":1,"is_approved_by_owner":0,"Progress_status":"demo"}
+[2025-07-12 10:05:23] Plan data before update - Data: {"plan_id":15,"owner_id":2,"plan_type":"","price_per_student":"99.00","initial_student_count":0,"current_total_students":1,"active_student_count":1,"inactive_approved_student_count":0,"start_date":"2025-07-12","expiry_date":"2026-07-12","total_amount":"99.00","payment_done":"0.00","total_due_amount":"99.00","payment_status":"active","date_of_last_payment":null,"installment_count":1,"installment_interval_days":null,"next_installment_due_date":null,"next_installment_amount":null,"payment_deadline_for_addition":null,"created_at":"2025-07-12 12:47:16","updated_at":"2025-07-12 13:35:23"}
+[2025-07-12 10:05:23] User status update - Data: {"student_id":16,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:05:23] Transaction committed successfully
+[2025-07-12 10:05:23] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":16}
+[2025-07-12 10:05:23] Request completed
+[2025-07-12 10:05:23] Request started - Data: []
+[2025-07-12 10:05:23] Transaction started - Data: {"action":"toggle_student_status","student_id":15,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:05:23] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:05:23] Student data - Data: {"id":15,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":0,"is_approved_by_owner":0,"Progress_status":"expired"}
+[2025-07-12 10:05:23] Plan data before update - Data: {"plan_id":15,"owner_id":2,"plan_type":"","price_per_student":"99.00","initial_student_count":0,"current_total_students":2,"active_student_count":2,"inactive_approved_student_count":0,"start_date":"2025-07-12","expiry_date":"2026-07-12","total_amount":"198.00","payment_done":"0.00","total_due_amount":"198.00","payment_status":"active","date_of_last_payment":null,"installment_count":1,"installment_interval_days":null,"next_installment_due_date":null,"next_installment_amount":null,"payment_deadline_for_addition":null,"created_at":"2025-07-12 12:47:16","updated_at":"2025-07-12 13:35:23"}
+[2025-07-12 10:05:23] User status update - Data: {"student_id":15,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:05:23] Transaction committed successfully
+[2025-07-12 10:05:23] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":15}
+[2025-07-12 10:05:23] Request completed
+[2025-07-12 10:07:40] Request started - Data: []
+[2025-07-12 10:07:40] Transaction started - Data: {"action":"toggle_student_status","student_id":17,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:07:40] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:07:40] Student data - Data: {"id":17,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":1,"is_approved_by_owner":0,"Progress_status":"demo"}
+[2025-07-12 10:07:40] Plan data before update - Data: {"plan_id":16,"owner_id":2,"plan_type":"full_year","price_per_student":"1200.00","initial_student_count":0,"current_total_students":0,"active_student_count":0,"inactive_approved_student_count":0,"start_date":null,"expiry_date":null,"total_amount":"0.00","payment_done":"0.00","total_due_amount":"0.00","payment_status":"pending_initialization","date_of_last_payment":null,"installment_count":3,"installment_interval_days":30,"next_installment_due_date":null,"next_installment_amount":null,"payment_deadline_for_addition":null,"created_at":"2025-07-12 13:37:28","updated_at":"2025-07-12 13:37:28"}
+[2025-07-12 10:07:40] Calculating installments - Data: {"total_amount":"0.00","installment_count":3,"payment_done":"0.00"}
+[2025-07-12 10:07:40] Installment calculation completed - Data: {"original_installment_size":1,"installments_completed":0,"original_remaining":3,"additional_due":1197,"next_installment_amount":400}
+[2025-07-12 10:07:40] User status update - Data: {"student_id":17,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:07:40] Transaction committed successfully
+[2025-07-12 10:07:40] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":17}
+[2025-07-12 10:07:40] Request completed
+[2025-07-12 10:07:40] Request started - Data: []
+[2025-07-12 10:07:40] Transaction started - Data: {"action":"toggle_student_status","student_id":16,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:07:40] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:07:40] Student data - Data: {"id":16,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":1,"is_approved_by_owner":0,"Progress_status":"demo"}
+[2025-07-12 10:07:40] Plan data before update - Data: {"plan_id":16,"owner_id":2,"plan_type":"full_year","price_per_student":"1200.00","initial_student_count":0,"current_total_students":1,"active_student_count":1,"inactive_approved_student_count":0,"start_date":null,"expiry_date":null,"total_amount":"1200.00","payment_done":"0.00","total_due_amount":"1200.00","payment_status":"pending_initialization","date_of_last_payment":null,"installment_count":3,"installment_interval_days":30,"next_installment_due_date":"2025-08-11","next_installment_amount":"400.00","payment_deadline_for_addition":null,"created_at":"2025-07-12 13:37:28","updated_at":"2025-07-12 13:37:40"}
+[2025-07-12 10:07:40] Calculating installments - Data: {"total_amount":"1200.00","installment_count":3,"payment_done":"0.00"}
+[2025-07-12 10:07:40] Installment calculation completed - Data: {"original_installment_size":400,"installments_completed":0,"original_remaining":3,"additional_due":1200,"next_installment_amount":800}
+[2025-07-12 10:07:40] User status update - Data: {"student_id":16,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:07:40] Transaction committed successfully
+[2025-07-12 10:07:40] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":16}
+[2025-07-12 10:07:40] Request completed
+[2025-07-12 10:07:40] Request started - Data: []
+[2025-07-12 10:07:40] Transaction started - Data: {"action":"toggle_student_status","student_id":15,"owner_id":"2","is_first_approval":true,"activate":true}
+[2025-07-12 10:07:40] Verifying owner - Data: {"owner_id":"2"}
+[2025-07-12 10:07:40] Student data - Data: {"id":15,"name":"Jay Jariwala","subdomain_identifier":"classa","is_active_by_owner":1,"is_approved_by_owner":0,"Progress_status":"demo"}
+[2025-07-12 10:07:40] Plan data before update - Data: {"plan_id":16,"owner_id":2,"plan_type":"full_year","price_per_student":"1200.00","initial_student_count":0,"current_total_students":2,"active_student_count":2,"inactive_approved_student_count":0,"start_date":null,"expiry_date":null,"total_amount":"2400.00","payment_done":"0.00","total_due_amount":"2400.00","payment_status":"pending_initialization","date_of_last_payment":null,"installment_count":3,"installment_interval_days":30,"next_installment_due_date":"2025-08-11","next_installment_amount":"800.00","payment_deadline_for_addition":null,"created_at":"2025-07-12 13:37:28","updated_at":"2025-07-12 13:37:40"}
+[2025-07-12 10:07:41] Calculating installments - Data: {"total_amount":"2400.00","installment_count":3,"payment_done":"0.00"}
+[2025-07-12 10:07:41] Installment calculation completed - Data: {"original_installment_size":800,"installments_completed":0,"original_remaining":3,"additional_due":1200,"next_installment_amount":1200}
+[2025-07-12 10:07:41] User status update - Data: {"student_id":15,"activate":true,"affected_rows":1,"set_progress_status":"subscribed"}
+[2025-07-12 10:07:41] Transaction committed successfully
+[2025-07-12 10:07:41] Sending success response - Data: {"status":"success","message":"Student approved and activated successfully","student_id":15}
+[2025-07-12 10:07:41] Request completed
