@@ -139,7 +139,12 @@ try {
         } else {
             // Update ONLY approval status but preserve activation status
             $id_list = implode(',', $user_ids);
-            $update_sql = "UPDATE users SET is_approved_by_owner = 0 WHERE id IN ($id_list)";
+            $update_sql = "UPDATE users SET 
+                is_approved_by_owner = 0, 
+                Progress_status = 'demo', 
+                trial_start_date = NOW(), 
+                trial_expiry_date = NOW() + INTERVAL 7 DAY 
+            WHERE id IN ($id_list)";
             $conn->query($update_sql);
             $affected_rows = $conn->affected_rows;
         }

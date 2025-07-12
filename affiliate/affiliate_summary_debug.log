@@ -46,3 +46,19 @@
 [10-Jul-2025 13:50:44 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
 [10-Jul-2025 13:50:44 Europe/Berlin] Database connection successful
 [10-Jul-2025 13:50:44 Europe/Berlin] Error in get_affiliate_summary.php: Table 'studysimplify_new.affiliate' doesn't exist for affiliate_email: j1@gmail.com
+[12-Jul-2025 07:50:39 Europe/Berlin] get_affiliate_summary.php: Request received for affiliate_email: jariwalaj065@gmail.com
+[12-Jul-2025 07:50:39 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[12-Jul-2025 07:50:39 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[12-Jul-2025 07:50:39 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[12-Jul-2025 07:50:39 Europe/Berlin] Database connection - REQUEST_URI: /affiliate/get_affiliate_summary.php
+[12-Jul-2025 07:50:39 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[12-Jul-2025 07:50:39 Europe/Berlin] Database connection successful
+[12-Jul-2025 07:50:39 Europe/Berlin] Error in get_affiliate_summary.php: Table 'studysimplify_new.affiliate' doesn't exist for affiliate_email: jariwalaj065@gmail.com
+[12-Jul-2025 08:31:02 Europe/Berlin] get_affiliate_summary.php: Request received for affiliate_email: jariwalaj065@gmail.com
+[12-Jul-2025 08:31:02 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[12-Jul-2025 08:31:02 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[12-Jul-2025 08:31:02 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[12-Jul-2025 08:31:02 Europe/Berlin] Database connection - REQUEST_URI: /affiliate/get_affiliate_summary.php
+[12-Jul-2025 08:31:02 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[12-Jul-2025 08:31:02 Europe/Berlin] Database connection successful
+[12-Jul-2025 08:31:02 Europe/Berlin] Error in get_affiliate_summary.php: Table 'studysimplify_new.affiliate' doesn't exist for affiliate_email: jariwalaj065@gmail.com
