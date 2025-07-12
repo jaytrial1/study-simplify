@@ -7,18 +7,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("*** DEBUG: Trial Status Checker loaded ***");
     
+    // Check if we're on the settings page - don't enforce trial expiry there
+    const isSettingsPage = window.location.pathname.includes('settings.html');
+    console.log("DEBUG: Is settings page?", isSettingsPage);
+    
     // Always check with server first when page loads
-    refreshTrialStatus();
+    refreshTrialStatus(isSettingsPage);
     
     // Then check periodically every 5 minutes
-    setInterval(checkLocalStatus, 5 * 60 * 1000);
+    setInterval(() => checkLocalStatus(isSettingsPage), 5 * 60 * 1000);
 });
 
 /**
  * Checks if the user's trial has expired based on local storage data
  * This is only used for periodic checks between server refreshes
  */
-function checkLocalStatus() {
+function checkLocalStatus(isSettingsPage = false) {
     console.log("Performing periodic trial status check...");
     
     // Get trial information from localStorage
@@ -27,7 +31,7 @@ function checkLocalStatus() {
     
     // If we don't have status info, make an API call to refresh it
     if (!progressStatus || !trialExpiryDate) {
-        refreshTrialStatus();
+        refreshTrialStatus(isSettingsPage);
         return;
     }
     
@@ -40,7 +44,7 @@ function checkLocalStatus() {
         
         if (today > expiry) {
             console.log("Trial has expired according to localStorage. Verifying with server...");
-            refreshTrialStatus(); // Double-check with server before logging out
+            refreshTrialStatus(isSettingsPage); // Double-check with server before logging out
         } else {
             // Trial is still valid, show notification if function exists
             if (typeof showTrialToast === 'function') {
@@ -70,9 +74,11 @@ function checkLocalStatus() {
                 }
             }
         }
-    } else if (progressStatus === 'expired') {
+    } else if (progressStatus === 'expired' && !isSettingsPage) {
         console.log("User status is expired. Logging out...");
         showExpiryMessage();
+    } else if (progressStatus === 'expired' && isSettingsPage) {
+        console.log("User status is expired but we're on the settings page. Not logging out.");
     }
 }
 
@@ -80,7 +86,7 @@ function checkLocalStatus() {
  * Makes an API call to refresh the trial status directly from the database
  * This is the primary function that actually checks current trial status
  */
-function refreshTrialStatus() {
+function refreshTrialStatus(isSettingsPage = false) {
     console.log("Checking trial status directly from database...");
     
     const userId = localStorage.getItem('user_id');
@@ -126,18 +132,25 @@ function refreshTrialStatus() {
             console.log("Status refreshed from database:", data.progressStatus);
             
             // Check if expired based on fresh data from database
-            if (data.progressStatus === 'expired') {
+            if (data.progressStatus === 'expired' && !isSettingsPage) {
                 console.log("Trial is expired according to database. Logging out...");
                 showExpiryMessage();
+            } else if (data.progressStatus === 'expired' && isSettingsPage) {
+                console.log("Trial is expired but we're on the settings page. Not logging out.");
+                // On settings page, we want to allow expired users to stay logged in
+                // so they can renew their subscription
             } else if (data.progressStatus === 'demo') {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const expiry = new Date(data.trialExpiryDate);
                 expiry.setHours(0, 0, 0, 0);
                 
-                if (today > expiry) {
+                if (today > expiry && !isSettingsPage) {
                     console.log("Trial expiry date has passed according to database. Logging out...");
                     showExpiryMessage();
+                } else if (today > expiry && isSettingsPage) {
+                    console.log("Trial expiry date has passed but we're on the settings page. Not logging out.");
+                    // On settings page, we want to allow expired users to stay logged in
                 } else {
                     // Still valid - update trial notification if it exists
                     if (typeof showTrialNotification === 'function') {
@@ -172,10 +185,12 @@ function refreshTrialStatus() {
                     }
                 }
             }
-        } else if (data.error && data.error.includes('expired')) {
+        } else if (data.error && data.error.includes('expired') && !isSettingsPage) {
             // If API explicitly says trial expired
             console.log("Trial expired according to API error message. Logging out...");
             showExpiryMessage();
+        } else if (data.error && data.error.includes('expired') && isSettingsPage) {
+            console.log("Trial expired according to API error message, but we're on the settings page. Not logging out.");
         }
     })
     .catch(error => {

@@ -22,10 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("DEBUG: Trial status check - progressStatus:", progressStatus);
     console.log("DEBUG: Trial status check - trialExpiryDate:", trialExpiryDate);
     
-    // Show notification if user is on trial
+    // Show notification based on user status
     if (progressStatus === 'demo' && trialExpiryDate) {
         console.log("DEBUG: User is on trial. Showing notification banner.");
         showTrialNotification(trialExpiryDate);
+    } else if (progressStatus === 'expired') {
+        console.log("DEBUG: User's trial has expired. Showing renewal notification.");
+        showExpiredTrialNotification();
     } else {
         console.log("DEBUG: User is NOT on trial or missing expiry date. No notification shown.");
     }
@@ -119,7 +122,110 @@ function showTrialNotification(expiryDate) {
     });
     
     // Add CSS
+    addNotificationStyles();
+}
+
+/**
+ * Shows a notification banner for users with expired trials
+ * This includes a button to redirect to the settings page for renewal
+ */
+function showExpiredTrialNotification() {
+    // Check if notification already exists
+    if (document.getElementById('trialNotificationBanner')) {
+        console.log("DEBUG: Trial notification banner already exists");
+        return;
+    }
+    
+    console.log("DEBUG: Creating expired trial notification banner");
+    
+    // Create the banner element
+    const banner = document.createElement('div');
+    banner.id = 'trialNotificationBanner';
+    banner.className = 'trial-notification-banner expired-trial';
+    
+    // Set banner content with renewal button
+    banner.innerHTML = `
+        <div class="trial-notification-content">
+            <div class="trial-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="trial-details">
+                <div class="trial-status status-expired">Trial Expired</div>
+                <div class="trial-message">
+                    Your 7-day trial period has ended. Please renew your subscription to continue using all features.
+                </div>
+            </div>
+            <button id="renewSubscriptionBtn" class="renew-button">
+                Renew Now
+            </button>
+        </div>
+    `;
+    
+    // Add banner to the body (at the top)
+    document.body.insertBefore(banner, document.body.firstChild);
+    console.log("DEBUG: Expired trial notification banner added to DOM");
+    
+    // Add event listener to renew button
+    document.getElementById('renewSubscriptionBtn').addEventListener('click', function() {
+        // Redirect to settings page
+        window.location.href = 'settings.html';
+        console.log("DEBUG: User redirected to settings page for renewal");
+    });
+    
+    // Add CSS
+    addNotificationStyles();
+    
+    // Add additional styles specific to expired notification
+    const expiredStyle = document.createElement('style');
+    expiredStyle.textContent = `
+        .expired-trial {
+            background-color: #6b1b19;
+            border-bottom: 1px solid rgba(255,100,100,0.3);
+        }
+        
+        .renew-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .renew-button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Make the expired notification more noticeable */
+        body {
+            padding-top: 70px !important;
+        }
+        
+        .expired-trial .trial-icon {
+            background-color: rgba(244, 67, 54, 0.2);
+        }
+        
+        .expired-trial .trial-icon i {
+            color: #f44336;
+        }
+    `;
+    document.head.appendChild(expiredStyle);
+}
+
+/**
+ * Adds the common notification styles to the document
+ */
+function addNotificationStyles() {
+    // Check if styles are already added
+    if (document.getElementById('trialNotificationStyles')) {
+        return;
+    }
+    
+    // Add CSS
     const style = document.createElement('style');
+    style.id = 'trialNotificationStyles';
     style.textContent = `
         .trial-notification-banner {
             position: fixed;
@@ -247,47 +353,8 @@ function showTrialNotification(expiryDate) {
                 height: 30px;
             }
         }
-        
-        @media (max-width: 480px) {
-            .trial-notification-content {
-                gap: 10px;
-            }
-            
-            .trial-message {
-                -webkit-line-clamp: 3;
-            }
-            
-            body {
-                padding-top: 100px;
-            }
-        }
-
-        /* Basic styles for the new toast close button */
-        #toastNotification .toast-close-btn {
-            background: transparent;
-            border: none;
-            color: inherit; /* Inherit color from parent toast */
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 5px;
-            margin-left: 10px;
-            line-height: 1;
-        }
-
-        #toastNotification .toast-close-btn:hover {
-            opacity: 0.7;
-        }
     `;
     document.head.appendChild(style);
-    
-    // Don't show if user has closed it in this session
-    if (sessionStorage.getItem('trialNotificationClosed') === 'true') {
-        banner.style.display = 'none';
-        // Remove body padding if banner is closed
-        document.body.style.paddingTop = '0';
-        console.log("DEBUG: Banner hidden because user previously closed it in this session");
-    }
 }
 
 /**

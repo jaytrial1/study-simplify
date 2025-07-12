@@ -140,7 +140,8 @@ else {
             break;
             
         case 'expired':
-            $error_message = 'Your trial period has ended. Please contact your tuition owner.';
+            // Allow expired users to log in, but they will see a renewal prompt
+            $access_granted = true;
             break;
             
         case 'subscribed':
