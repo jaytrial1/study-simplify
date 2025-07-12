@@ -683,6 +683,11 @@ async function loadStudents() {
             console.log('Debug - Students received:', data.students ? data.students.length : 0);
             allStudents = data.students || []; // Store the full list
             updateStudentCount(data.total_students, data.active_students, data.inactive_students);
+            
+            // Update payment type counts
+            document.getElementById('cashUserCount').textContent = data.cash_users || 0;
+            document.getElementById('onlineUserCount').textContent = data.online_users || 0;
+
             // Display initial list respecting filters (though pending filter is initially off)
             applyFiltersAndDisplay(); 
         } else {

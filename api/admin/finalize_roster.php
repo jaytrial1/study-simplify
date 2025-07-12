@@ -74,7 +74,7 @@ try {
                                    SUM(CASE WHEN is_active_by_owner = 1 THEN 1 ELSE 0 END) as active_count,
                                    SUM(CASE WHEN is_active_by_owner = 0 THEN 1 ELSE 0 END) as inactive_count
                                    FROM users 
-                                   WHERE subdomain_identifier = ? AND is_approved_by_owner = 1");
+                                   WHERE subdomain_identifier = ? AND payment_type = 'cash'");
     $student_stmt->bind_param("s", $subdomain);
     $student_stmt->execute();
     $student_result = $student_stmt->get_result();

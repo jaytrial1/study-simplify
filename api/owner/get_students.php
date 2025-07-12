@@ -120,14 +120,23 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
-// Count active and inactive students
+// Count active/inactive students and payment types
 $activeCount = 0;
 $inactiveCount = 0;
+$cashUserCount = 0;
+$onlineUserCount = 0;
+
 foreach ($students as $student) {
     if ($student['active']) {
         $activeCount++;
     } else {
         $inactiveCount++;
+    }
+
+    if ($student['payment_type'] === 'cash') {
+        $cashUserCount++;
+    } elseif ($student['payment_type'] === 'online') {
+        $onlineUserCount++;
     }
 }
 
@@ -137,6 +146,8 @@ echo json_encode([
     'total_students' => count($students),
     'active_students' => $activeCount,
     'inactive_students' => $inactiveCount,
+    'cash_users' => $cashUserCount,
+    'online_users' => $onlineUserCount,
     'students' => $students
 ]);
 

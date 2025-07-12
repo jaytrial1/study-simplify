@@ -557,9 +557,9 @@ function recalculateStudentCounts($conn, $owner_id, $subdomain) {
     $stmt = $conn->prepare("SELECT 
                           COUNT(*) as total_approved,
                           SUM(CASE WHEN is_active_by_owner = 1 THEN 1 ELSE 0 END) as active_count,
-                          SUM(CASE WHEN is_active_by_owner = 0 AND is_approved_by_owner = 1 THEN 1 ELSE 0 END) as inactive_approved
+                          SUM(CASE WHEN is_active_by_owner = 0 THEN 1 ELSE 0 END) as inactive_approved
                         FROM users 
-                        WHERE subdomain_identifier = ? AND is_approved_by_owner = 1");
+                        WHERE subdomain_identifier = ? AND payment_type = 'cash'");
     $stmt->bind_param("s", $subdomain);
     $stmt->execute();
     $result = $stmt->get_result();
