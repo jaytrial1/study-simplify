@@ -56,7 +56,8 @@ try {
     $tuitionClass = strtolower(trim($requestData['tuition_class']));
     
     // Query to check if user is approved and active in the tuition class, including admin restriction check
-    $stmt = $conn->prepare("SELECT id, is_approved_by_owner, is_active_by_owner, is_active_by_admin 
+    $stmt = $conn->prepare("SELECT id, is_approved_by_owner, is_active_by_owner, is_active_by_admin, 
+                                   Progress_status, trial_expiry_date
                            FROM users 
                            WHERE id = ? AND LOWER(subdomain_identifier) = ?");
     
@@ -118,6 +119,8 @@ try {
         'is_approved_by_owner' => $isApprovedByOwner,
         'is_active_by_owner' => $isActiveByOwner,
         'is_active_by_admin' => $isActiveByAdmin,
+        'progress_status' => $user['Progress_status'],
+        'trial_expiry_date' => $user['trial_expiry_date'],
         'user_id' => $user['id']
     ];
     

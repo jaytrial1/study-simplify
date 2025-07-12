@@ -89,14 +89,9 @@ if ($user['is_active_by_owner'] == 1) {
                 $blocked_plan_statuses = ['expired', 'suspended', 'terminated'];
                 
                 if (!in_array($owner_plan_status, $blocked_plan_statuses)) {
-                    // If approved and active, ensure the Progress_status is 'subscribed'
-                    if ($user['Progress_status'] !== 'subscribed') {
-                        $stmt_fix_status = $conn->prepare("UPDATE users SET Progress_status = 'subscribed' WHERE id = ?");
-                        $stmt_fix_status->bind_param("i", $user['id']);
-                        $stmt_fix_status->execute();
-                        $stmt_fix_status->close();
-                        $user['Progress_status'] = 'subscribed'; // Update in-memory data
-                    }
+                    // The user is approved and the owner's plan is active. Access is granted.
+                    // We no longer force the status to 'subscribed' here,
+                    // as a user can be approved but still in a trial/demo state.
                     $access_granted = true;
                 } else {
                     $error_message = 'Tuition portal is currently inactive. Please contact the administrator.';
@@ -126,14 +121,7 @@ if ($user['is_active_by_owner'] == 1) {
         $stmt_owner->close();
     } else {
         // Main domain subscribed user - assumed access is granted if is_active_by_owner = 1
-        if ($user['Progress_status'] !== 'subscribed') {
-            // Data consistency fix for main domain user
-            $stmt_fix_status = $conn->prepare("UPDATE users SET Progress_status = 'subscribed' WHERE id = ?");
-            $stmt_fix_status->bind_param("i", $user['id']);
-            $stmt_fix_status->execute();
-            $stmt_fix_status->close();
-            $user['Progress_status'] = 'subscribed';
-        }
+        // We no longer force the status to 'subscribed' here.
         $access_granted = true;
     }
 } 

@@ -1,0 +1,18 @@
+[2025-07-12 08:52:37] Renew Plan Debug: Starting student reset for owner_id: 2, subdomain: classa
+[2025-07-12 08:52:37] Renew Plan Debug: Found 2 students to update.
+[2025-07-12 08:52:37] Renew Plan Debug: Executing SQL: UPDATE users SET 
+                is_approved_by_owner = 0, 
+                Progress_status = 'demo', 
+                trial_start_date = NOW(), 
+                trial_expiry_date = NOW() + INTERVAL 7 DAY 
+            WHERE id IN (15,16)
+[2025-07-12 08:52:37] Renew Plan Debug: Successfully updated 0 students.
+[2025-07-12 08:55:14] Renew Plan Debug: Starting student reset for owner_id: 2, subdomain: classa
+[2025-07-12 08:55:14] Renew Plan Debug: Found 2 students to update.
+[2025-07-12 08:55:14] Renew Plan Debug: Executing SQL: UPDATE users SET 
+                is_approved_by_owner = 0, 
+                Progress_status = 'demo', 
+                trial_start_date = NOW(), 
+                trial_expiry_date = NOW() + INTERVAL 7 DAY 
+            WHERE id IN (15,16)
+[2025-07-12 08:55:14] Renew Plan Debug: Successfully updated 0 students.

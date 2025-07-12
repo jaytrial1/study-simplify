@@ -145,8 +145,13 @@ try {
                 trial_start_date = NOW(), 
                 trial_expiry_date = NOW() + INTERVAL 7 DAY 
             WHERE id IN ($id_list)";
+            
             $conn->query($update_sql);
             $affected_rows = $conn->affected_rows;
+
+            if ($conn->error) {
+                throw new Exception("Database error during student update: " . $conn->error);
+            }
         }
     } catch (Exception $e) {
         // Log the error for debugging

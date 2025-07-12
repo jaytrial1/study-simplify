@@ -338,8 +338,11 @@
                                 console.log("is_active_by_owner value:", data.is_active_by_owner, "type:", typeof data.is_active_by_owner);
                                 console.log("is_active_by_admin value:", data.is_active_by_admin, "type:", typeof data.is_active_by_admin);
                                 
+                                const isFullyApproved = data.is_approved_by_owner == 1 && data.is_active_by_owner == 1 && data.is_active_by_admin == 1;
+                                const isDemoUser = data.progress_status === 'demo';
+
                                 // Check if approved and active by both owner and admin (using integer '1' comparison)
-                                if (data.is_approved_by_owner == 1 && data.is_active_by_owner == 1 && data.is_active_by_admin == 1) {
+                                if (isFullyApproved || isDemoUser) {
                                     // Store approval status in localStorage for chatbot.html to check
                                     localStorage.setItem('is_approved_by_owner', data.is_approved_by_owner);
                                     localStorage.setItem('is_active_by_owner', data.is_active_by_owner);
