@@ -39,6 +39,18 @@ document.addEventListener('DOMContentLoaded', function() {
  * This function is defined in the global scope so it can be called from other scripts
  */
 function showTrialNotification(expiryDate) {
+    // --- START: Do not show banner on specific pages ---
+    const currentPage = window.location.pathname.split('/').pop();
+    const noBannerPages = ['chatbot.html', 'saved_answers.html', 'settings.html'];
+    
+    if (noBannerPages.includes(currentPage)) {
+        console.log(`DEBUG: On a page (${currentPage}) where the banner should not be shown.`);
+        // On these pages, we want the toast, which is handled by trial-status-checker.js
+        // We just need to prevent the banner from showing.
+        return; 
+    }
+    // --- END: Do not show banner on specific pages ---
+
     // Check if notification already exists
     if (document.getElementById('trialNotificationBanner')) {
         console.log("DEBUG: Trial notification banner already exists");

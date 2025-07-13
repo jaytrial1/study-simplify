@@ -1752,8 +1752,11 @@ select option:hover {
     }
     
     .toast-notification button {
+        background: #222639;
+        color: white;
+        border: none;
         padding: 4px 12px;
-        font-size: 0.9em;
+        font-size: 1.3em;
     }
 }
 
