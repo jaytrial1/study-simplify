@@ -1,7 +1,0 @@
-# Price Determination on the Basis of Objectives : 
-
-(A) Maximum Profit : This objective is aimed, when monopoly is in existence and when the product is produced after having incurred heavy research expenses.
-(B) To Acquire Dominant Position in the Market : In most cases to acquire dominant market share, prices are kept at a very low level to attract consumers.
-(C) To Sustain Competition : When competitors are more and when competition is high, the business firms are ready to fix prices lower than or at par with that of his competitors.
-(6) Economic Condition : Existing economic condition plays an important role in determining the price of the product. If the economic condition of the country is good, price can be fixed at a higher level and if there is a recession, product price is reduced.
-(7) Buying Behavior : Consumer behavior plays an important role in product price determination. Factors that determining consumers' behavior include, consumers' habits, social, cultural, individual, personal and economic condition. Due to these factors, the attitude towards the product may change and ultimately product do not get desired or expected response from the consumers. It is desirable to determine the price of the product after considering all these factors.

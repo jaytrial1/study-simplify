@@ -1,6 +1,0 @@
-# Franchises
-A special right is given by signing a contract with a company having a particular trade mark or brand to sell its product or service or to manufacture its product and sell it, it is called franchise.
-
-These types of shops sell the goods on large scale in retail. Their methods of doing business, quality of goods, decoration of the shop are similar to that of parent company. Generally parent company supplies the raw materials if the product is to be sold after manufacturing. For this the parent company provides improvement oriented guidance by doing continuous supervision. Parent company allows to use its trade mark or brand. In return of it, it receives royalty from the seller at the fixed rate.
-
-The parent company imparts training to the employees of business unit obtaining franchise. some refreshment houses, computer training centres provide goods or services under this system. The frenchised company has to incur less advertisement expense because of the advertisement published by the parent company.

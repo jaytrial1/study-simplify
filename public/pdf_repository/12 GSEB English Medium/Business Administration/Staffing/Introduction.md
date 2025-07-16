@@ -1,3 +1,0 @@
-# Introduction
-
-After Industrial Revolution, Industries started production on a large scale. Initially there was no proper system for production. System of earning more profit at less cost began. As a result, exploitation of employees began. At the end of 19th century, dynamic management leaders realized that in production, sensitive staff is more important than inanimate machines. They also realized that machines do not work automatically but employees operate them. As a result they realized the need for a scientific system for employee's recruitment, selection, appointment, promotion, transfer and training.

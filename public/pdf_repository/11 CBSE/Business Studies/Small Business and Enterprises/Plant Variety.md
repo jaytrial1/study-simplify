@@ -1,3 +1,0 @@
-# 6. Plant Variety
-
-Plant Variety is essentially grouping plants into categories based on their botanical characteristics. It is a type of variety which is bred and developed by farmers. This helps in conserving, improving and making available plant genetic resources. For example, hybrid versions of potatoes. Such protection promotes investment in R\&D, recognizes Indian farmers as cultivators and facilitates high quality seeds and planting material. This leads to the growth of the seed industry.

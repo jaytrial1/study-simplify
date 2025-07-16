@@ -1,1 +1,0 @@
-# Evolution and Fundamentals of Business

@@ -1,5 +1,0 @@
-# Social Responsibility of Business Towards the Suppliers
-Success of any business unit depends upon continuous supply of better quality of goods. This supply may be of physical materials or of services as well. The external factor which performs an important role in success of unit is a supplier and the responsibility of a unit towards supplier is:
-(1) Information in Advance About the Supply : Except emergency reasons suppliers should be informed in advance about requirement of good as per demands so that continuous supply become possible. As a result, the continuity of production may maintain and the business status may increase as well.
-(2) Clarity of Quality and Skills : The unit have to be clear in advance about their quality needs to the supplier of raw material and services. Thus the continuity of supply may maintain.
-(3) Timely Payments : The payments to the supplier of raw materials and the labours should be fulfill as per determind terms and conditions.

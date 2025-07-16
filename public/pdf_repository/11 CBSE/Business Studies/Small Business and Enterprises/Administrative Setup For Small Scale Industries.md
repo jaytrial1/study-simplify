@@ -1,9 +1,0 @@
-# 8.6 ADMINISTRATIVE SETUP FOR SMALL SCALE INDUSTRIES 
-
-The Government of India has created the following ministries to promote and develop small scale industries in India:
-
-1. Ministry of Micro, Small and Medium Enterprises: The Government of India created this ministry as the nodal ministry for formulation of policy and coordination of central assistance for promotion and development of small scale industries in India. The Small Industries Development Organisation (SIDO), also known as the Office of the Development Commissioner, which is attached to this ministry, is responsible for implementing and monitoring of various policies and programmes formulated.
-This ministry designs policies, programmes and schemes for promotion and growth of small scale industries. National Small Industries Corporation (NSIC), a public sector enterprise of the Ministry, has been providing marketing support to the medium and small enterprises under the Marketing Assistance Scheme.
-2. Ministry of Agro and Rural Industries: It is concerned with coordination and development of Village and Khadi industries, tiny and micro enterprises in both urban and rural areas. It also implements Prime Minister's Rojgar Yojana. The various policies or programmes are implemented through Khadi and Village Industries Commission (KVIC), Handicrafts Board, Coir Board, Silk Board, etc.
-The KVIC may include the micro or tiny enterprises or the village enterprises as part of small enterprises depending upon the criteria or standards in respect of employment or turnover of the enterprise.
-In addition to these two ministries, State Governments also execute different promotional and developmental projects and schemes to provide number of supporting incentives for development and promotion of SSIs in their respective states. These are executed through the State Directorate of Industries, who has District Industries Centres (DICs) under it to implement central / state level schemes.

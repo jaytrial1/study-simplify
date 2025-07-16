@@ -1,4 +1,0 @@
-# 1_Introduction
-The problem of the incidence of a tax is the problem of who pays it. Taxes are not always borne by the people who pay it in the first instance. Many a times they are shifted on to other persons. Incidence means the final resting place of a tax. The incidence is on the man who ultimately bears the money burden of a tax.
-
-Thus, the incidence of a tax is the direct money burden of a tax. It measures the amount of money taken out of the pockets of the tax payers and paid to the government. In this sense, incidence means the final resting place of a tax. The problem of incidence of a tax, therefore, is to find out who ultimately bears the direct money burden of a tax. It should be noted here that the concept of incidence deals only with the direct money burden of a tax; it is not concerned with indirect money burden, direct real burden and indirect real burden, which are the subject matter of the study of effects of taxation.

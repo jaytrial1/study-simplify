@@ -1,3 +1,0 @@
-# Introduction
-
-During industrial revolution, in the field of Science and Technology many invention took place. Mechanisation in the field of production resulted in the increase of size of business unit. For each function the needs arises for different specialists. For this reason, specialisation in the business unit became essential and this resulted in high proportions of products. This neccesitated high capital investments in the business unit. This became impossible for one group of people in investment of capital and take risk. As a result, company form of business organisation came in to existance. At the same time sources of business finance also came in to existance.

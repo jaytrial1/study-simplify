@@ -1,2 +1,0 @@
-# Internel Corporate Deposites
-Usually when a company gives deposit to other company which is in need of fund, then such deposit is called Inter corporate Deposit. Usually these types of transaction occur between a major company and a minor company, also happens between various companies managed by one group. Rate of interest and time limit is decided by an agreement. As compared with other sources this borrowing is easy.

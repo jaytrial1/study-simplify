@@ -1,2 +1,0 @@
-# INTRODUCTION
-There is a lot of dirferences between communication and effective communication. All people communication. But very few people know the art of Communicating effetively. Process of Communication plays important role in effective communication. There are many communication models to understand the process of communication. Business communication is the life and soul of the modern business.

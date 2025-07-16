@@ -1,2 +1,0 @@
-# Outsourcing
-When miscellaneous work or process is handed over to other group by business group as per contract for prescribed time, it is called outsourcing. Outsourcing is neccesary to concentrate on main activities of a company. Thus, companies outsource minor activites. Besides this, some business units make outsourcing of intellectual works even though it is their core activity. Outsourcing can be done within the company or out side the company.

@@ -1,8 +1,0 @@
-# 4_Limitations of the Concept of Incidence of Taxation
-The following are some of the main limitations of the concept of incidence of taxation :
-(i) The concept of incidence of taxation is a narrow one as it takes into account only the direct money burden of a tax. It ignores the effects of indirect money burden as also direct and indirect real burden of a tax. Thus, it does not analyse other burdens of taxation, namely, effects on production, employment, income distribution etc.
-(ii) It is very difficult to trace and locate the true incidence of a tax through price changes. This is because price change is a function of a variety of factors of which taxation is only one such factor.
-(iii) The concept assumes that incidence can be shifted by raising the price of the taxed product: But incidence can as well be transferred by deteriorating the quality of the product.
-(iv) According to Musgrave and other writers, it is not always easy to distinguish between the "incidence" and the "effects" of taxation. In such situations, the policy measures based on the analysis of incidence may not be fully realistic.
-(v) According to Canon, the mere fact that the incidence of a tax is on a particular person does not always indicate that he is bearing a heavier burden than others. Hence, incidence need not always be a guide to the fair and just distribution of taxation.
-(vi) The traditional theory of incidence concentrates only on taxation, but as Musgrave's analysis has shown, the consequences of public expenditure are equally important, that is to say, alongwith taxation, the beneficial effects of public expenditure too should be taken into consideration.
