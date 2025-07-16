@@ -165,6 +165,11 @@
             max-width: 100% !important;
             overflow-y: visible !important;
         }
+
+        mjx-container {
+            display: inline-block !important;
+            border: none !important; /* Also remove the red border */
+        }
     </style>
     <script>
         // Configure marked.js with proper settings
@@ -238,6 +243,22 @@
         });
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        packages: {'[+]': ['mhchem']}
+      },
+      chtml: {
+        display: false
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
     <script>
         // Authentication check
         document.addEventListener('DOMContentLoaded', function() {

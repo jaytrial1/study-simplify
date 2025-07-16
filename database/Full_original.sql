@@ -389,3 +389,5 @@ DELIMITER ;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-07-11 17:38:10
+ALTER TABLE `users`
+ADD COLUMN `trial_start_date` DATE NULL DEFAULT NULL COMMENT 'Stores the date when the student''s 7-day trial period begins.' AFTER `updated_at`; 

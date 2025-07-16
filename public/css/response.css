@@ -110,6 +110,17 @@
     font-weight: bold;
 }
 
+.formatted-content pre {
+    background-color: #1a1a1a;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.9em;
+}
+
 .formatted-content a {
     color: var(--color-accent);
     text-decoration: none;

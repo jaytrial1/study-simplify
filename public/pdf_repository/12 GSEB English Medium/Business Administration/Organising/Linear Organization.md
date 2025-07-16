@@ -4,7 +4,7 @@ Linear organization is the most simple and ancient type of organization. Since m
 In this type of organization, entire business unit is classified in different department. As per each section or area, a separate departmental head is appointed. This departmental head is answerable to the superior head of his or her own area. The area head is given all the necessary power needed as per his or her department. In this type of organization, division is not done according to the work but according to departments. Hence it is also known as departmental organization. The Linear organization structure can be best seen with the help of the following diagram :
 
 
-Image for this topic : /main/public/images/12gsebeng/BA/Organising/Linear_Organisation/linear_organisation.png
+Image for this topic : public/images/12gsebeng/BA/Organising/Linear_Organisation/linear_organisation.png
 
 This image depicts a hierarchical organizational chart labeled "Linear Organization" at the top. The structure begins with the "Board of Directors," which has a downward arrow leading to the "General Manager." Below the General Manager are three departments arranged horizontally: "Production Department," "Administrative Department," and "Sales Department," each connected by a downward arrow from the General Manager.
 

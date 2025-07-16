@@ -38,13 +38,6 @@ function preprocessMarkdown(markdown) {
     
     // Process LaTeX expressions before other Markdown processing
     try {
-        // Process chemical equations using \ce command
-        const chemicalEquationPattern = /\\ce\{([^}]+)\}/g;
-        processed = processed.replace(chemicalEquationPattern, function(match, equation) {
-            // Use the mhchem package syntax for chemical equations
-            return `$\\ce{${equation}}$`;
-        });
-
         // Process block math expressions
         // Look for $$...$$, but avoid replacing if it's already inside a code block
         const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;

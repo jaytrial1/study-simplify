@@ -686,13 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Process LaTeX expressions before other Markdown processing
         try {
-            // Process chemical equations using \ce command
-            const chemicalEquationPattern = /\\ce\{([^}]+)\}/g;
-            processed = processed.replace(chemicalEquationPattern, function(match, equation) {
-                // Use the mhchem package syntax for chemical equations
-                return `$\\ce{${equation}}$`;
-            });
-
             // Process block math expressions
             // Look for $$...$$, but avoid replacing if it's already inside a code block
             const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
@@ -2341,50 +2334,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Use the formatted-content container for MathJax rendering
                 if (formattedContent) {
                     // Use typesetPromise for better performance and to handle async properly
-                    MathJax.typesetPromise([formattedContent]).catch((err) => {
-                        console.error('MathJax typesetting error in message:', err);
-                    });
-                    
-                    // After MathJax has rendered, wrap equation blocks in scrollable container
                     MathJax.typesetPromise([formattedContent])
-                        .then(() => {
-                            // Find displayed math equations that are rendered by MathJax
-                            const displayMath = formattedContent.querySelectorAll('.MathJax');
-                            displayMath.forEach(mathElement => {
-                                // Skip if already wrapped
-                                if (mathElement.closest('.scrollable-wrapper')) {
-                                    return;
-                                }
-                                
-                                // Check if it's a display equation (block equation)
-                                const rect = mathElement.getBoundingClientRect();
-                                const isDisplayEquation = rect.width > 200 || mathElement.getAttribute('display') === 'block';
-                                
-                                if (isDisplayEquation || rect.width > formattedContent.clientWidth * 0.7) {
-                                    // Create scrollable wrapper
-                                    const wrapper = document.createElement('div');
-                                    wrapper.classList.add('scrollable-wrapper');
-                                    
-                                    // Set styles directly as properties (more reliable than shorthand)
-                                    wrapper.style.overflowY = 'visible'; 
-                                    wrapper.style.overflowX = 'auto';
-                                    wrapper.style.display = 'block';      // Ensure block display for proper sizing
-                                    wrapper.style.width = '100%';         // Set width to 100%
-                                    wrapper.style.maxWidth = '100%';      // Prevent overflow from width
-
-                                    // Replace equation with wrapper containing equation
-                                    mathElement.parentNode.insertBefore(wrapper, mathElement);
-                                    wrapper.appendChild(mathElement);
-                                    
-                                    // Set explicit styles on MathJax element to ensure horizontal scrolling
-                                    mathElement.style.display = 'inline-block';
-                                    mathElement.style.width = 'auto';
-                                    mathElement.style.maxWidth = 'none';
-                                }
-                            });
-                        })
                         .catch((err) => {
-                            console.error('Error wrapping MathJax elements:', err);
+                            console.error('MathJax typesetting error in message:', err);
                         });
                 }
             } catch (error) {

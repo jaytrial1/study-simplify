@@ -128,13 +128,6 @@ function preprocessMarkdown(markdown) {
     
     // Process LaTeX expressions before other Markdown processing
     try {
-        // Process chemical equations using \ce command
-        const chemicalEquationPattern = /\\ce\{([^}]+)\}/g;
-        processed = processed.replace(chemicalEquationPattern, function(match, equation) {
-            // Wrap the entire \ce command in $ delimiters for inline math rendering
-            return `$\\ce{${equation}}$`;
-        });
-
         // Process block math expressions
         // Look for $$...$$, but avoid replacing if it's already inside a code block
         const blockMathPattern = /(?<!`)((?<!`)\$\$([\s\S]*?)\$\$(?!`))/g;
@@ -926,13 +919,6 @@ class ChatHistoryManager {
                         await MathJax.typesetPromise(mathJaxElements);
                         console.log('MathJax typesetting finished.');
 
-                        // 4. Wrap MathJax elements *after* typesetting is complete
-                        console.log('Wrapping MathJax elements...');
-                        mathJaxElements.forEach(contentElement => {
-                            wrapMathJaxElements(contentElement);
-                        });
-                        console.log('MathJax wrapping finished.');
-
                     } catch (error) {
                         console.error('Error during MathJax processing or wrapping:', error);
                     }
@@ -1441,50 +1427,6 @@ function enhanceCodeBlocks(messageElement) {
         });
     });
 
-}
-
-// NEW Helper function to wrap MathJax elements after typesetting
-function wrapMathJaxElements(contentElement) {
-    if (!contentElement) return;
-    const displayMath = contentElement.querySelectorAll('.MathJax');
-    console.log(`Found ${displayMath.length} MathJax elements in:`, contentElement);
-
-    displayMath.forEach(mathElement => {
-        if (mathElement.closest('.scrollable-wrapper')) {
-            console.log('Skipping already wrapped MathJax element.');
-            return;
-        }
-
-        // Check if the element is wider than its container or is explicitly display math
-        const containerWidth = contentElement.clientWidth;
-        const mathWidth = mathElement.getBoundingClientRect().width;
-        // Heuristic: Wrap if wider than 80% of container or explicitly display block
-        const isWide = mathWidth > containerWidth * 0.8;
-        const isDisplay = mathElement.getAttribute('display') === 'block'; 
-
-        if (isDisplay || isWide) {
-            console.log('Wrapping MathJax element:', mathElement);
-            const wrapper = document.createElement('div');
-            wrapper.classList.add('scrollable-wrapper');
-
-            // Set styles directly as properties (more reliable than shorthand)
-            wrapper.style.overflowY = 'visible'; 
-            wrapper.style.overflowX = 'auto';
-            wrapper.style.display = 'block';      // Ensure block display for proper sizing
-            wrapper.style.width = '100%';         // Set width to 100%
-            wrapper.style.maxWidth = '100%';      // Prevent overflow from width
-
-            mathElement.parentNode.insertBefore(wrapper, mathElement);
-            wrapper.appendChild(mathElement);
-
-            // Ensure MathJax element allows scrolling within wrapper
-            mathElement.style.display = 'inline-block';
-            mathElement.style.maxWidth = 'none'; 
-            mathElement.style.width = 'auto';
-        } else {
-             console.log('Skipping wrapping for non-wide/inline MathJax element.');
-        }
-    });
 }
 
 // Existing window resize handler (ensure it targets correct charts)

@@ -4,8 +4,8 @@ define('AI_MODEL', 'gemini'); // Options: 'gemini' or 'deepseek'
 define('ENABLE_API_LOGGING', false); // Set to false to disable API key usage logging
 
 // Gemini API Configuration
-define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent');
-define('GEMINI_MODEL', 'gemini-2.5-flash-preview-04-17');
+define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent');
+define('GEMINI_MODEL', 'gemini-2.5-flash');
 define('GEMINI_KEYS', [
         // Free tier keys
         'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
