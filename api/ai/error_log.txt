@@ -325,3 +325,83 @@
 [16-Jul-2025 17:44:01 Europe/Berlin] Gemini API request successful with key index: 2
 [16-Jul-2025 17:44:02 Europe/Berlin] Added message to chat session 34
 [16-Jul-2025 17:44:02 Europe/Berlin] Added message to chat session 34
+[16-Jul-2025 17:53:32 Europe/Berlin] ====== query.php script execution started ======
+[16-Jul-2025 17:53:32 Europe/Berlin] Timestamp: 2025-07-16 17:53:32
+[16-Jul-2025 17:53:32 Europe/Berlin] Request Method: POST
+[16-Jul-2025 17:53:32 Europe/Berlin] Request URI: /api/ai/query.php
+[16-Jul-2025 17:53:32 Europe/Berlin] Auth Header (Server Var): Present
+[16-Jul-2025 17:53:32 Europe/Berlin] Auth Header (Redirect Var): Present
+[16-Jul-2025 17:53:32 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[16-Jul-2025 17:53:32 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[16-Jul-2025 17:53:32 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[16-Jul-2025 17:53:32 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[16-Jul-2025 17:53:32 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[16-Jul-2025 17:53:32 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[16-Jul-2025 17:53:32 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[16-Jul-2025 17:53:32 Europe/Berlin] Database connection successful
+[16-Jul-2025 17:53:32 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[16-Jul-2025 17:53:32 Europe/Berlin] Retrieved messages for session 35: [{"sender":"system","message":"Chat started","timestamp":"2025-07-16 17:53:32"}]
+[16-Jul-2025 17:53:32 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/10 CBSE/Science/Carbon and its Compounds/4. Versatile Nature of Carbon and Organic Compounds.md
+[16-Jul-2025 17:53:32 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[16-Jul-2025 17:53:32 Europe/Berlin] QUERY DEBUG - Grade: '10 CBSE', Subject: 'Science', Answer Type: 'long'
+[16-Jul-2025 17:53:32 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[16-Jul-2025 17:53:32 Europe/Berlin] PARAMS - Type: 'long', Grade: '10 CBSE', Subject: 'Science'
+[16-Jul-2025 17:53:32 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse
+[16-Jul-2025 17:53:32 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[16-Jul-2025 17:53:32 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Science'
+[16-Jul-2025 17:53:32 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Science'
+[16-Jul-2025 17:53:32 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[16-Jul-2025 17:53:32 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[16-Jul-2025 17:53:32 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[16-Jul-2025 17:53:32 Europe/Berlin] Added message to chat session 35
+[16-Jul-2025 17:53:32 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[16-Jul-2025 17:53:33 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.14 seconds
+[16-Jul-2025 17:53:33 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[16-Jul-2025 17:53:33 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[16-Jul-2025 17:53:34 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 0.98 seconds
+[16-Jul-2025 17:53:34 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[16-Jul-2025 17:53:34 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[16-Jul-2025 17:54:05 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 31.15 seconds
+[16-Jul-2025 17:54:05 Europe/Berlin] Gemini API request successful with key index: 2
+[16-Jul-2025 17:54:06 Europe/Berlin] Added message to chat session 35
+[16-Jul-2025 17:54:06 Europe/Berlin] Added message to chat session 35
+[16-Jul-2025 17:54:44 Europe/Berlin] ====== query.php script execution started ======
+[16-Jul-2025 17:54:44 Europe/Berlin] Timestamp: 2025-07-16 17:54:44
+[16-Jul-2025 17:54:44 Europe/Berlin] Request Method: POST
+[16-Jul-2025 17:54:44 Europe/Berlin] Request URI: /api/ai/query.php
+[16-Jul-2025 17:54:44 Europe/Berlin] Auth Header (Server Var): Present
+[16-Jul-2025 17:54:44 Europe/Berlin] Auth Header (Redirect Var): Present
+[16-Jul-2025 17:54:44 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[16-Jul-2025 17:54:44 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[16-Jul-2025 17:54:44 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[16-Jul-2025 17:54:44 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[16-Jul-2025 17:54:44 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[16-Jul-2025 17:54:44 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[16-Jul-2025 17:54:44 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[16-Jul-2025 17:54:44 Europe/Berlin] Database connection successful
+[16-Jul-2025 17:54:44 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[16-Jul-2025 17:54:44 Europe/Berlin] Retrieved messages for session 36: [{"sender":"system","message":"Chat started","timestamp":"2025-07-16 17:54:44"}]
+[16-Jul-2025 17:54:44 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/10 CBSE/Science/Carbon and its Compounds/4. Versatile Nature of Carbon and Organic Compounds.md
+[16-Jul-2025 17:54:44 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[16-Jul-2025 17:54:44 Europe/Berlin] QUERY DEBUG - Grade: '10 CBSE', Subject: 'Science', Answer Type: 'long'
+[16-Jul-2025 17:54:44 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[16-Jul-2025 17:54:44 Europe/Berlin] PARAMS - Type: 'long', Grade: '10 CBSE', Subject: 'Science'
+[16-Jul-2025 17:54:44 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse
+[16-Jul-2025 17:54:44 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[16-Jul-2025 17:54:44 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Science'
+[16-Jul-2025 17:54:44 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Science'
+[16-Jul-2025 17:54:44 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[16-Jul-2025 17:54:44 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[16-Jul-2025 17:54:44 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[16-Jul-2025 17:54:44 Europe/Berlin] Added message to chat session 36
+[16-Jul-2025 17:54:44 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[16-Jul-2025 17:54:45 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 0.98 seconds
+[16-Jul-2025 17:54:45 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[16-Jul-2025 17:54:45 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[16-Jul-2025 17:54:47 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.58 seconds
+[16-Jul-2025 17:54:47 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[16-Jul-2025 17:54:47 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[16-Jul-2025 17:55:10 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 23.13 seconds
+[16-Jul-2025 17:55:10 Europe/Berlin] Gemini API request successful with key index: 2
+[16-Jul-2025 17:55:10 Europe/Berlin] Added message to chat session 36
+[16-Jul-2025 17:55:10 Europe/Berlin] Added message to chat session 36
