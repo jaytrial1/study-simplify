@@ -1,2 +1,0 @@
-# Trade Credit
-Business units have needs of raw material, finished goods or other tools and things. In this situation a business unit purchases from other producers or traders on credit for some time period and create working capital. Thus the creditors do not provide capital directly. But by giving goods or services on credit they satisfy the capital requirement.

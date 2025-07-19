@@ -1775,23 +1775,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to adjust chat messages position when topic container is shown/hidden
     function adjustChatMessagesPosition() {
         const mobileHeader = document.querySelector('.mobile-header');
+        const chatHeader = document.querySelector('.chat-header');
         const topicContainer = document.querySelector('.topic-selection-container');
         const chatMessages = document.querySelector('.chat-messages');
+        const trialBanner = document.getElementById('trialNotificationBanner');
+        
+        // Check if trial notification banner is present and visible
+        let trialBannerHeight = 0;
+        if (trialBanner && window.getComputedStyle(trialBanner).display !== 'none') {
+            trialBannerHeight = trialBanner.offsetHeight;
+            console.log("Trial banner detected with height:", trialBannerHeight);
+        }
         
         if (topicContainer.classList.contains('active')) {
-            // Calculate the combined height of mobile header and topic container
+            // Calculate the combined height of headers and topic container
+            const chatHeaderHeight = chatHeader.offsetHeight;
             const mobileHeaderHeight = mobileHeader.offsetHeight;
-            const topicContainerHeight = Math.min(topicContainer.scrollHeight, window.innerHeight * 0.75);
-            const totalHeight = mobileHeaderHeight + topicContainerHeight;
+            const topicContainerHeight = Math.min(topicContainer.scrollHeight, window.innerHeight * 0.5); // Reduced from 0.75 to 0.5
+            
+            // Set a fixed top position for mobile header to prevent overlap with chat header
+            mobileHeader.style.top = `${chatHeaderHeight + trialBannerHeight}px`;
+            
+            // Calculate total height for chat messages positioning
+            const totalHeight = chatHeaderHeight + trialBannerHeight + mobileHeaderHeight + topicContainerHeight;
             
             // Update chat messages top position
             chatMessages.style.top = `${totalHeight}px`;
             
             // Ensure topic container doesn't exceed reasonable screen height
-            topicContainer.style.maxHeight = `${window.innerHeight * 0.75}px`;
+            topicContainer.style.maxHeight = `${window.innerHeight * 0.5}px`; // Reduced from 0.75 to 0.5
         } else {
-            // Reset to default
-            chatMessages.style.top = '130px';
+            // Reset to default positions
+            mobileHeader.style.top = `${chatHeader.offsetHeight + trialBannerHeight}px`;
+            chatMessages.style.top = `${chatHeader.offsetHeight + trialBannerHeight + mobileHeader.offsetHeight}px`;
+            
+            // Remove any inline max-height style
+            topicContainer.style.maxHeight = '';
         }
     }
 
@@ -2444,6 +2463,74 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Initialize mobile header position
+    const initializeMobileHeaderPosition = () => {
+        const chatHeader = document.querySelector('.chat-header');
+        const mobileHeader = document.querySelector('.mobile-header');
+        const trialBanner = document.getElementById('trialNotificationBanner');
+        
+        if (chatHeader && mobileHeader) {
+            // Get chat header height
+            const chatHeaderHeight = chatHeader.offsetHeight;
+            
+            // Check if trial notification banner is present and visible
+            let trialBannerHeight = 0;
+            if (trialBanner && window.getComputedStyle(trialBanner).display !== 'none') {
+                trialBannerHeight = trialBanner.offsetHeight;
+                console.log("Trial banner detected with height:", trialBannerHeight);
+            }
+            
+            // Set mobile header position accounting for both chat header and trial banner
+            const topPosition = chatHeaderHeight + trialBannerHeight;
+            mobileHeader.style.top = `${topPosition}px`;
+            
+            // Also initialize chat messages position
+            const chatMessages = document.querySelector('.chat-messages');
+            if (chatMessages) {
+                chatMessages.style.top = `${topPosition + mobileHeader.offsetHeight}px`;
+            }
+            
+            console.log(`Mobile header positioned at ${topPosition}px (chat header: ${chatHeaderHeight}px, trial banner: ${trialBannerHeight}px)`);
+        }
+    };
+    
+    // Call initialization function
+    initializeMobileHeaderPosition();
+    
+    // Also initialize positions when window is resized
+    window.addEventListener('resize', initializeMobileHeaderPosition);
+    
+    // Re-initialize positions when trial notification appears or is closed
+    const observeTrialBanner = () => {
+        // Create a MutationObserver to watch for trial banner changes
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && 
+                    (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
+                    // Check if the trial banner was added or removed
+                    const trialBanner = document.getElementById('trialNotificationBanner');
+                    if (trialBanner || mutation.removedNodes[0]?.id === 'trialNotificationBanner') {
+                        console.log("Trial banner changed, updating positions...");
+                        setTimeout(initializeMobileHeaderPosition, 100); // Small delay to ensure DOM is updated
+                    }
+                }
+            });
+        });
+        
+        // Start observing the body for changes to its children
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Also listen for the close button click on trial notification
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#closeTrialNotification')) {
+                console.log("Trial notification close button clicked");
+                setTimeout(initializeMobileHeaderPosition, 300); // Update after animation completes
+            }
+        });
+    };
+    
+    // Start observing for trial banner changes
+    observeTrialBanner();
 });
 
 function checkEmptyChatAndShowInstructions() {

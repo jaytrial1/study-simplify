@@ -1,1 +1,0 @@
-# Emerging Modes of Business

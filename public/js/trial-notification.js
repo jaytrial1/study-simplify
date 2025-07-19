@@ -246,7 +246,7 @@ function addNotificationStyles() {
             right: 0;
             background-color: #222639;
             color: #f8f9fa;
-            z-index: 1001; /* Ensure banner is above header */
+            z-index: 1030; /* Ensure banner is above header but below toast */
             padding: 12px 20px;
             text-align: left;
             font-size: 0.9rem;

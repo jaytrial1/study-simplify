@@ -1,4 +1,0 @@
-# Consumer Protection Act-1986
-
-Of the various measures adopted for consumer protection, Consumer Protection Act is the most important one. The main aim of this act is to protect the rights of consumers by guarding their interests. This Act protects consumers from defective products, services, irrelevant business policies and cheating. Through the legal system, a triple level layer has been set up to protect the interests of consumers in which at the district level, state level and national level facilities are set up for immediate registration of complaints and their quick redressal at less cost.
-11.2.1 Meaning of Consumer Protection : Consumer protection refers to the measures taken against the manufacturers and sellers who adopt various means to exploit consumers for earning high profits to fulfil their greed.

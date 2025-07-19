@@ -1,2 +1,0 @@
-# Packaging :
-Packaging performs the function of decorating the product. Packaging is in the form of plastic bags, cloth bags, cardboard box, plastic barrels, boxes etc. The success of many products lie in their packing. Packaging is a function to provide the protection to the product. Packaging is always necessary. Packing makes product attractive. It helps in transporting the product easily. Product can better be used when it is packed. It can be used for advertising too.

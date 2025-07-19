@@ -1,2 +1,0 @@
-# Super Market
-Super market is a retail shop selling on large scale. It sells the products to the customers at reasonable price by purchasing large quantity from the reputed companies or producers. This type of stores attract the small shopkeepers too. All types of products of daily requirement are sold in super market. The super markets are located in various big city or town in a country. They are big sized from the view point of construction.

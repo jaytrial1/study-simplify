@@ -8,7 +8,7 @@
     color: var(--color-secondary);
     border-radius: 4px;
     box-shadow: 0 2px 10px var(--color-gray-light);
-    z-index: 1000;
+    z-index: 1050; /* Increased to be above other elements */
     animation: slideInFromTop 0.3s, fadeOut 0.5s 2.5s;
     opacity: 1;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -59,8 +59,44 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 1050; /* Increased to be above other elements */
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+/* Toast notification for trial status */
+.toast-notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #222639;
+    color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1050; /* Increased to be above other elements */
+    transition: top 0.5s ease;
+    min-width: 300px;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+}
+
+.toast-notification.show {
+    top: 20px;
+}
+
+/* Add responsive positioning for mobile */
+@media (max-width: 768px) {
+    .toast-notification {
+        width: 90%;
+        max-width: 400px;
+    }
+    
+    /* Adjust position when trial banner is present */
+    .toast-notification.show {
+        top: 20px; /* Keep at top regardless of other elements */
+    }
 } 

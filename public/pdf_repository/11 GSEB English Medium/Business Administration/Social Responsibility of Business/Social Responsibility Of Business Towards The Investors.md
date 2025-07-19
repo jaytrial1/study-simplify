@@ -1,7 +1,0 @@
-# Social Responsibility of Business Towards the Investors
-As the size of the unit increase, simultaneously requirement of capital increases. Capital provided by the investors in different forms like loan, preference share or debenture. The social responsibilities of a unit towards investors are as under :
-(1) Timely Payments of Returns : The investors have invested their money with an expectation of high, regular and reasonable returns. It is the social responsibility of a unit to pay regular returns.
-(2) Providing Necessary Information : Providing information regarding current status and future plans of the unit to the investors.
-(3) Growth in Investment Value : The market value of the investment is determined as per the financial result of the unit. The financial decisions of a unit must be taken with the intention to increase the investment value of the investors.
-(4) Security of Money : Investors have invested their money entrusting efficiency of the management of the unit. It is the social responsibility to make proper use and to provide security of their money. So in future while the financial requirement arises unit can easily procure the money from them.
-(5) Suggestions are Welcomed : Generally the investors are aware with market trends, thus their suggestions should be welcomed.

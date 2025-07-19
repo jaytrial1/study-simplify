@@ -1,6 +1,0 @@
-# Social Responsibility of Business Towards the Government
-A business unit have to operate its economic activities as per law defined by the Government.
-(1) Abide by the Laws : It is the responsibility of the business to abide the laws laid by the Government.
-(2) Payment of Taxes Honestly : The business unit has to pay all the taxes honestly intime laid by the Government.
-(3) Participation in the Execution of Government Programmes : Various programmes have been arranged by the Government for the progress and development of the nation time to time. A unit time should have to be involved in such public-participation programmes which should reach the people. e.g. Clean India Campaign has been launched by the Government. After this some units have participated in cleanliness programmes.
-(4) To Participate in the Implementation of the Industrial Policy : The Government frames Industrial Policy by considering the needs of the nation. It is the social responsibility of a unit to participate in the implementation of this policy.

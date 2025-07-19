@@ -1,3 +1,0 @@
-1_Introduction
-
-Nations around the world have a combination of three producing sectors: agriculture, industry, and the service sector. The industrial sector is particularly important, giving it special significance in each economy. Except for petroleum-exporting countries like Saudi Arabia, all developed nations are industrial economies, for example, the USA, Britain, and Japan. Economies with agriculture as the main occupation can also be developed, e.g., Australia and New Zealand. However, developed agricultural economies are fewer in number compared to developed industrial nations. Therefore, the majority of world economies have started to believe that to attain faster economic development, the industrial sector has to develop.

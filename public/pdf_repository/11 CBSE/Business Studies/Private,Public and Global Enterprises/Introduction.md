@@ -1,3 +1,0 @@
-# 3.1 INTRODUCTION
-
-After independence, the emergence of public sector enterprises became a necessity for the all round development of the country. Moreover, India was committed to a socialistic pattern of economy. Therefore, it adopted a pattern of Mixed Economy, where both the public sector and the private sector are allotted their respective roles for the economic development of the country. In this chapter, we will study the different types of public enterprises, their role and that of the global enterprises.

@@ -1,1 +1,0 @@
-# Sources of Business Finance

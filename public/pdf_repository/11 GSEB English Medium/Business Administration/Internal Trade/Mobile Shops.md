@@ -1,5 +1,0 @@
-# Mobile Shops
-(A) Hawkers : Hawkers sell the goods to the customers by carring goods at different places such as home, railway station, bus station etc. Generally they sell news papers, vegetables, fruits and home utility items. Such hawkers sell the goods at the price lower than that of shop, because cost and other expenses are less for them.
-(B) Temporary Traders : The traders selling certain goods during certain occasions, festivals or seasons are called temporary traders, e.g. The traders selling goods in fairs, sellers of kite during uttrayan, sellers of crackers during Diwali.
-(C) Fixed day Traders : In some cities, towns or villages a market is arranged on a certain place on fixed day of the week or month. Many sellers bring the goods of various types for sell. Such market is for whole day. It is called Gujari or Hat.
-(D) Street Seller : Street seller means selling goods of daily requirements on footpath and the customers staying in the surrounding area purchase the goods e.g. vegetables, fruits etc.

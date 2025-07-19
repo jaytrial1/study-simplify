@@ -1,4 +1,0 @@
-# Management is a Science
-Science means systematic and specialised knowledge. Science is a subject, where rules and principles are derived and cause and effect relationship is established.
-
-Management too has the characteristics of Science, such as, systematised body of knowledge, universality, cause and effect relationship, based on collection of facts, analysis and experiments verifiability of the principles, etc. Like Science, management has its own specific principles. Through these principles, co-ordination of human resource, machine, capital, method etc. is done. Thus, management is a Science. According to Dr. George Terry, "Science teaches one to know."

@@ -649,11 +649,15 @@ body {
     }
 
     .mobile-header {
-        position: fixed;
-        top: 60px; /* Adjust based on header height */
+        position: absolute; /* Changed from fixed to absolute */
+        top: 60px; /* This will be dynamically set by JavaScript */
         left: 0;
         right: 0;
         z-index: 999;
+        background-color: var(--color-primary); /* Ensure background color is set */
+        padding: 0.8rem;
+        padding-bottom: 12px; /* Add padding to create space between this and content below */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow for separation */
     }
 
     .chat-messages {

@@ -1,3 +1,0 @@
-# Introduction
-
-Business is an economic activity, which has the motive of earning profit. Business enterprise has to collect complete informations of various activities to be performed well in advance and consider matters like, who will do, what type of work, how, when and to what extent. Thus planning is forecasting the future in present. Planning is a universal process. Whether it is a battle-field, a play ground, a business unit, a political institute, a religious institute or a social institute, planning is required in every field.

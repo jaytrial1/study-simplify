@@ -1,3 +1,0 @@
-# INTRODUCTION: HUMAN ACTIVITIES 
-
-Work is an essential part of human life. Work helps to satisfy human wants. With the expansion of science and knowledge, there has been a tremendous increase in the number of the human wants. An activity performed by a human being to meet his wants is known as 'Human Activity'. Some of the human activities are performed to earn money, while some are undertaken to achieve personal satisfaction.
