@@ -1,0 +1,3 @@
+# Introduction
+
+Consumer is the king of market in modern age. Every firm or an organization continuously strives towards fulfilling the needs of the consumers and satisfying them. Industrial revolution resulted in a speedy growth of production and the basic and primary needs of consumers are being fulfilled. Consequently producers have started placing new and differentiated products in the market resulting in competition among producers. Technological revolution has helped in placing differentiated products in the markst. In this way the firms are striving continuously through innovations to fulfill the requirements of goods and services.

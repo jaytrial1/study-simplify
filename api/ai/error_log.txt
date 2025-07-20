@@ -405,3 +405,403 @@
 [16-Jul-2025 17:55:10 Europe/Berlin] Gemini API request successful with key index: 2
 [16-Jul-2025 17:55:10 Europe/Berlin] Added message to chat session 36
 [16-Jul-2025 17:55:10 Europe/Berlin] Added message to chat session 36
+[20-Jul-2025 12:53:14 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 12:53:14 Europe/Berlin] Timestamp: 2025-07-20 12:53:14
+[20-Jul-2025 12:53:14 Europe/Berlin] Request Method: POST
+[20-Jul-2025 12:53:14 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 12:53:14 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 12:53:14 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 12:53:14 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 12:53:14 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 12:53:14 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 12:53:14 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 12:53:14 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 12:53:14 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 12:53:14 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 12:53:14 Europe/Berlin] Database connection successful
+[20-Jul-2025 12:53:14 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 12:53:14 Europe/Berlin] Retrieved messages for session 37: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 12:53:14"}]
+[20-Jul-2025 12:53:14 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 CBSE/Macro Economics/Commercial Bank and Central Bank/3. Secondary Functions of Commercial Banks.md
+[20-Jul-2025 12:53:14 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 12:53:14 Europe/Berlin] QUERY DEBUG - Grade: '12 CBSE', Subject: 'Macro Economics', Answer Type: 'long'
+[20-Jul-2025 12:53:14 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 12:53:14 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 CBSE', Subject: 'Macro Economics'
+[20-Jul-2025 12:53:14 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12cbse
+[20-Jul-2025 12:53:14 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 12:53:14 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Macro Economics'
+[20-Jul-2025 12:53:14 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Macro Economics'
+[20-Jul-2025 12:53:14 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12cbse/long.php
+[20-Jul-2025 12:53:14 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12cbse/long.php
+[20-Jul-2025 12:53:14 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 12:53:14 Europe/Berlin] Added message to chat session 37
+[20-Jul-2025 12:53:14 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 12:53:15 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.16 seconds
+[20-Jul-2025 12:53:15 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 12:53:15 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 12:53:16 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 0.95 seconds
+[20-Jul-2025 12:53:16 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 12:53:16 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 12:53:33 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 16.66 seconds
+[20-Jul-2025 12:53:33 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 12:53:33 Europe/Berlin] Added message to chat session 37
+[20-Jul-2025 12:53:33 Europe/Berlin] Added message to chat session 37
+[20-Jul-2025 12:58:59 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 12:58:59 Europe/Berlin] Timestamp: 2025-07-20 12:58:59
+[20-Jul-2025 12:58:59 Europe/Berlin] Request Method: POST
+[20-Jul-2025 12:58:59 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 12:58:59 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 12:58:59 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 12:58:59 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 12:58:59 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 12:58:59 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 12:58:59 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 12:58:59 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 12:58:59 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 12:58:59 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 12:58:59 Europe/Berlin] Database connection successful
+[20-Jul-2025 12:58:59 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 12:58:59 Europe/Berlin] Retrieved messages for session 38: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 12:58:59"}]
+[20-Jul-2025 12:58:59 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 12:58:59 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 12:58:59 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 12:58:59 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 12:58:59 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 12:58:59 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 12:58:59 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 12:58:59 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 12:58:59 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 12:58:59 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 12:58:59 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 12:58:59 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 12:58:59 Europe/Berlin] Added message to chat session 38
+[20-Jul-2025 12:58:59 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 12:59:00 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.33 seconds
+[20-Jul-2025 12:59:00 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 12:59:00 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 12:59:03 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 2.33 seconds
+[20-Jul-2025 12:59:03 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 12:59:03 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 12:59:28 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 25.28 seconds
+[20-Jul-2025 12:59:28 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 12:59:28 Europe/Berlin] Added message to chat session 38
+[20-Jul-2025 12:59:29 Europe/Berlin] Added message to chat session 38
+[20-Jul-2025 13:02:08 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:02:08 Europe/Berlin] Timestamp: 2025-07-20 13:02:08
+[20-Jul-2025 13:02:08 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:02:08 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:02:08 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:02:08 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:02:08 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:02:08 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:02:08 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:02:08 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:02:08 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:02:08 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:02:08 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:02:08 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:02:08 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:02:08 Europe/Berlin] Retrieved messages for session 39: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:02:08"}]
+[20-Jul-2025 13:02:08 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:02:08 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:02:08 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:02:08 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:02:08 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:02:08 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:02:08 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:02:08 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:02:08 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:02:08 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:02:08 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:02:08 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:02:08 Europe/Berlin] Added message to chat session 39
+[20-Jul-2025 13:02:09 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:02:10 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.14 seconds
+[20-Jul-2025 13:02:10 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:02:10 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:02:11 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.08 seconds
+[20-Jul-2025 13:02:11 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:02:11 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:02:36 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 25.39 seconds
+[20-Jul-2025 13:02:36 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:02:36 Europe/Berlin] Added message to chat session 39
+[20-Jul-2025 13:02:36 Europe/Berlin] Added message to chat session 39
+[20-Jul-2025 13:05:07 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:05:07 Europe/Berlin] Timestamp: 2025-07-20 13:05:07
+[20-Jul-2025 13:05:07 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:05:07 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:05:07 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:05:07 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:05:07 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:05:07 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:05:08 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:05:08 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:05:08 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:05:08 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:05:08 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:05:08 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:05:08 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:05:08 Europe/Berlin] Retrieved messages for session 40: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:05:07"}]
+[20-Jul-2025 13:05:08 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:05:08 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:05:08 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:05:08 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:05:08 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:05:08 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:05:08 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:05:08 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:05:08 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:05:08 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:05:08 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:05:08 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:05:08 Europe/Berlin] Added message to chat session 40
+[20-Jul-2025 13:05:08 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:05:10 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 2.42 seconds
+[20-Jul-2025 13:05:10 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:05:10 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:05:11 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.10 seconds
+[20-Jul-2025 13:05:11 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:05:11 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:05:31 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 20.29 seconds
+[20-Jul-2025 13:05:31 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:05:31 Europe/Berlin] Added message to chat session 40
+[20-Jul-2025 13:05:31 Europe/Berlin] Added message to chat session 40
+[20-Jul-2025 13:07:34 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:07:34 Europe/Berlin] Timestamp: 2025-07-20 13:07:34
+[20-Jul-2025 13:07:34 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:07:34 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:07:34 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:07:34 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:07:34 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:07:34 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:07:34 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:07:34 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:07:34 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:07:34 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:07:34 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:07:34 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:07:34 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:07:34 Europe/Berlin] Retrieved messages for session 41: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:07:34"}]
+[20-Jul-2025 13:07:34 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:07:34 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:07:34 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:07:34 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:07:34 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:07:34 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:07:34 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:07:34 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:07:34 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:07:34 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:07:34 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:07:34 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:07:34 Europe/Berlin] Added message to chat session 41
+[20-Jul-2025 13:07:34 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:07:37 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 2.43 seconds
+[20-Jul-2025 13:07:37 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:07:37 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:07:38 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.11 seconds
+[20-Jul-2025 13:07:38 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:07:38 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:08:03 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 24.99 seconds
+[20-Jul-2025 13:08:03 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:08:03 Europe/Berlin] Added message to chat session 41
+[20-Jul-2025 13:08:03 Europe/Berlin] Added message to chat session 41
+[20-Jul-2025 13:08:45 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:08:45 Europe/Berlin] Timestamp: 2025-07-20 13:08:45
+[20-Jul-2025 13:08:45 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:08:45 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:08:45 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:08:45 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:08:45 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:08:45 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:08:45 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:08:45 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:08:45 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:08:45 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:08:45 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:08:45 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:08:45 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:08:45 Europe/Berlin] Retrieved messages for session 42: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:08:45"}]
+[20-Jul-2025 13:08:45 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:08:45 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:08:45 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:08:45 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:08:45 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:08:45 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:08:45 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:08:45 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:08:45 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:08:45 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:08:45 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:08:45 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:08:45 Europe/Berlin] Added message to chat session 42
+[20-Jul-2025 13:08:45 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:08:46 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.06 seconds
+[20-Jul-2025 13:08:46 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:08:46 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:08:48 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.19 seconds
+[20-Jul-2025 13:08:48 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:08:48 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:09:10 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 22.29 seconds
+[20-Jul-2025 13:09:10 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:09:10 Europe/Berlin] Added message to chat session 42
+[20-Jul-2025 13:09:10 Europe/Berlin] Added message to chat session 42
+[20-Jul-2025 13:12:19 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:12:19 Europe/Berlin] Timestamp: 2025-07-20 13:12:19
+[20-Jul-2025 13:12:19 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:12:19 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:12:19 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:12:19 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:12:19 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:12:19 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:12:19 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:12:19 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:12:19 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:12:19 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:12:19 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:12:19 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:12:19 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:12:19 Europe/Berlin] Retrieved messages for session 43: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:12:19"}]
+[20-Jul-2025 13:12:19 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:12:19 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:12:19 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:12:19 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:12:19 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:12:19 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:12:19 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:12:19 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:12:19 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:12:19 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:12:19 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:12:19 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:12:19 Europe/Berlin] Added message to chat session 43
+[20-Jul-2025 13:12:19 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:12:21 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.19 seconds
+[20-Jul-2025 13:12:21 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:12:21 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:12:22 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.11 seconds
+[20-Jul-2025 13:12:22 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:12:22 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:12:51 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 29.29 seconds
+[20-Jul-2025 13:12:51 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:12:51 Europe/Berlin] Added message to chat session 43
+[20-Jul-2025 13:12:51 Europe/Berlin] Added message to chat session 43
+[20-Jul-2025 13:15:57 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:15:57 Europe/Berlin] Timestamp: 2025-07-20 13:15:57
+[20-Jul-2025 13:15:57 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:15:57 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:15:57 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:15:57 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:15:57 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:15:57 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:15:57 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:15:57 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:15:57 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:15:57 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:15:57 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:15:57 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:15:57 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:15:57 Europe/Berlin] Retrieved messages for session 44: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:15:56"}]
+[20-Jul-2025 13:15:57 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:15:57 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:15:57 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:15:57 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:15:57 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:15:57 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:15:57 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:15:57 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:15:57 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:15:57 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:15:57 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:15:57 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:15:57 Europe/Berlin] Added message to chat session 44
+[20-Jul-2025 13:15:57 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:15:58 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.22 seconds
+[20-Jul-2025 13:15:58 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:15:58 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:15:59 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 0.97 seconds
+[20-Jul-2025 13:15:59 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:15:59 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:16:28 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 28.56 seconds
+[20-Jul-2025 13:16:28 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:16:28 Europe/Berlin] Added message to chat session 44
+[20-Jul-2025 13:16:28 Europe/Berlin] Added message to chat session 44
+[20-Jul-2025 13:17:06 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:17:06 Europe/Berlin] Timestamp: 2025-07-20 13:17:06
+[20-Jul-2025 13:17:06 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:17:06 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:17:06 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:17:06 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:17:06 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:17:06 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:17:06 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:17:06 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:17:06 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:17:06 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:17:06 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:17:06 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:17:06 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:17:06 Europe/Berlin] Retrieved messages for session 45: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:17:06"}]
+[20-Jul-2025 13:17:06 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/12 GSEB English Medium/Economics/Banking and Monetary Policy/3_Meaning and Functions of Commercial Bank.md
+[20-Jul-2025 13:17:06 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:17:06 Europe/Berlin] QUERY DEBUG - Grade: '12 GSEB English Medium', Subject: 'Economics', Answer Type: 'long'
+[20-Jul-2025 13:17:06 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:17:06 Europe/Berlin] PARAMS - Type: 'long', Grade: '12 GSEB English Medium', Subject: 'Economics'
+[20-Jul-2025 13:17:06 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium
+[20-Jul-2025 13:17:06 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:17:06 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Economics'
+[20-Jul-2025 13:17:06 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Economics'
+[20-Jul-2025 13:17:06 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:17:06 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/12gsebenglishmedium/long.php
+[20-Jul-2025 13:17:06 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:17:07 Europe/Berlin] Added message to chat session 45
+[20-Jul-2025 13:17:07 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:17:08 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.02 seconds
+[20-Jul-2025 13:17:08 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:17:08 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:17:09 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.04 seconds
+[20-Jul-2025 13:17:09 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:17:09 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:17:31 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 22.24 seconds
+[20-Jul-2025 13:17:31 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:17:31 Europe/Berlin] Added message to chat session 45
+[20-Jul-2025 13:17:32 Europe/Berlin] Added message to chat session 45
+[20-Jul-2025 13:19:44 Europe/Berlin] ====== query.php script execution started ======
+[20-Jul-2025 13:19:44 Europe/Berlin] Timestamp: 2025-07-20 13:19:44
+[20-Jul-2025 13:19:44 Europe/Berlin] Request Method: POST
+[20-Jul-2025 13:19:44 Europe/Berlin] Request URI: /api/ai/query.php
+[20-Jul-2025 13:19:44 Europe/Berlin] Auth Header (Server Var): Present
+[20-Jul-2025 13:19:44 Europe/Berlin] Auth Header (Redirect Var): Present
+[20-Jul-2025 13:19:44 Europe/Berlin] Checking include: ../../lib/config.php - Exists: Yes
+[20-Jul-2025 13:19:44 Europe/Berlin] Checking include: ../../lib/ai_handler.php - Exists: Yes
+[20-Jul-2025 13:19:44 Europe/Berlin] Database connection - HTTP_HOST: classa.localhost
+[20-Jul-2025 13:19:44 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[20-Jul-2025 13:19:44 Europe/Berlin] Database connection - SERVER_NAME: classa.localhost
+[20-Jul-2025 13:19:44 Europe/Berlin] Database connection - REQUEST_URI: /api/ai/query.php
+[20-Jul-2025 13:19:44 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[20-Jul-2025 13:19:44 Europe/Berlin] Database connection successful
+[20-Jul-2025 13:19:44 Europe/Berlin] Retrieved messages with proper encoding, count: 1
+[20-Jul-2025 13:19:44 Europe/Berlin] Retrieved messages for session 46: [{"sender":"system","message":"Chat started","timestamp":"2025-07-20 13:19:44"}]
+[20-Jul-2025 13:19:44 Europe/Berlin] Reading MD file from: E:\jay\Xampp\htdocs\main/public/pdf_repository/10 CBSE/Science/Carbon and its Compounds/4. Versatile Nature of Carbon and Organic Compounds.md
+[20-Jul-2025 13:19:44 Europe/Berlin] QUERY DEBUG - About to call getPromptTemplate
+[20-Jul-2025 13:19:44 Europe/Berlin] QUERY DEBUG - Grade: '10 CBSE', Subject: 'Science', Answer Type: 'long'
+[20-Jul-2025 13:19:44 Europe/Berlin] =================== TEMPLATE SELECTION START ===================
+[20-Jul-2025 13:19:44 Europe/Berlin] PARAMS - Type: 'long', Grade: '10 CBSE', Subject: 'Science'
+[20-Jul-2025 13:19:44 Europe/Berlin] [DEBUG] Checking subject-level directory: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse
+[20-Jul-2025 13:19:44 Europe/Berlin] [DEBUG] Directory exists. Scanning for subject folder...
+[20-Jul-2025 13:19:44 Europe/Berlin] [DEBUG] Comparing folder: 'long.php' WITH subject: 'Science'
+[20-Jul-2025 13:19:44 Europe/Berlin] [DEBUG] Comparing folder: 'short.php' WITH subject: 'Science'
+[20-Jul-2025 13:19:44 Europe/Berlin] Checking for template at: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[20-Jul-2025 13:19:44 Europe/Berlin] FOUND AND USING template: E:\jay\Xampp\htdocs\main\lib/../api/ai/templates/10cbse/long.php
+[20-Jul-2025 13:19:44 Europe/Berlin] =================== TEMPLATE SELECTION END ===================
+[20-Jul-2025 13:19:44 Europe/Berlin] Added message to chat session 46
+[20-Jul-2025 13:19:44 Europe/Berlin] Trying Gemini API key index: 0 (FREE)
+[20-Jul-2025 13:19:45 Europe/Berlin] DEBUG: Key 0 (FREE) attempt took: 1.16 seconds
+[20-Jul-2025 13:19:45 Europe/Berlin] Error with key index 0: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:19:45 Europe/Berlin] Trying Gemini API key index: 1 (FREE)
+[20-Jul-2025 13:19:46 Europe/Berlin] DEBUG: Key 1 (FREE) attempt took: 1.02 seconds
+[20-Jul-2025 13:19:46 Europe/Berlin] Error with key index 1: API key not valid. Please pass a valid API key.
+[20-Jul-2025 13:19:46 Europe/Berlin] Trying Gemini API key index: 2 (FREE)
+[20-Jul-2025 13:20:11 Europe/Berlin] DEBUG: Key 2 (FREE) attempt took: 24.69 seconds
+[20-Jul-2025 13:20:11 Europe/Berlin] Gemini API request successful with key index: 2
+[20-Jul-2025 13:20:11 Europe/Berlin] Added message to chat session 46
+[20-Jul-2025 13:20:11 Europe/Berlin] Added message to chat session 46

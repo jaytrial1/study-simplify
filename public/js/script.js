@@ -2354,8 +2354,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (formattedContent) {
                     // Use typesetPromise for better performance and to handle async properly
                     MathJax.typesetPromise([formattedContent])
+                        .then(() => {
+                            // After typesetting, check for any error tags that MathJax rendered.
+                            // MathJax creates a <mjx-merror> tag for any rendering error.
+                            const errorElements = formattedContent.querySelectorAll('mjx-merror');
+                            
+                            if (errorElements.length > 0) {
+                                const firstError = errorElements[0];
+                                const errorMessage = firstError.getAttribute('title') || firstError.innerText || 'Unknown MathJax render error';
+                                console.warn(`Detected MathJax render error via <mjx-merror> tag. Title: ${errorMessage}`);
+
+                                // Log this render error to the database.
+                                const userId = localStorage.getItem('user_id');
+                                const sessionId = chatHistory.currentSessionId;
+                                const aiResponse = messageElement.dataset.originalMarkdown;
+                                
+                                if (userId && sessionId && aiResponse) {
+                                    logMathError(userId, sessionId, aiResponse, `Render Error: ${errorMessage}`);
+                                }
+                            }
+                        })
                         .catch((err) => {
-                            console.error('MathJax typesetting error in message:', err);
+                            console.error('MathJax typesetting processing error:', err);
+                            // Log the processing error to the database
+                            const userId = localStorage.getItem('user_id');
+                            const sessionId = chatHistory.currentSessionId;
+                            const aiResponse = messageElement.dataset.originalMarkdown;
+                            if (userId && sessionId && aiResponse) {
+                                // Pass a distinct message to know it's a processing error.
+                                logMathError(userId, sessionId, aiResponse, `Processing Error: ${err.message}`);
+                            }
                         });
                 }
             } catch (error) {
@@ -2532,6 +2560,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start observing for trial banner changes
     observeTrialBanner();
 });
+
+function logMathError(userId, sessionId, aiResponse, errorMessage) {
+    const apiUrl = `${window.apiBasePath}/api/ai/log_math_error.php`;
+    const data = {
+        user_id: userId,
+        session_id: sessionId,
+        ai_response: aiResponse,
+        error_message: errorMessage
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            console.log('Successfully logged MathJax error.');
+        } else {
+            console.error('Failed to log MathJax error:', result.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error sending MathJax error log:', error);
+    });
+}
 
 function checkEmptyChatAndShowInstructions() {
     const chatMessages = document.querySelector('.chat-messages');

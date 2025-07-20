@@ -1,0 +1,3 @@
+# Product :
+Product can be goods or services which can satisfy the want of a consumer. Product is the starting point of marketing which can satisfy the want of a consumer. Hence product is the base for marketing process.
+10.3.2.1 Concept : There are number of decisions involved in product mix. It includes features, packaging, branding, labeling and after sales service. All types of marketing activities which are required to satisfy the consumers are included. It also includes placing the product in the market, do changes in the product, give after sales service, complaint redressal regarding product. Apart from these, branding, packaging, labeling activities are included.

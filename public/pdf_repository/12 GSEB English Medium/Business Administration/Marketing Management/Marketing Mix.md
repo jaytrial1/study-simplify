@@ -1,0 +1,3 @@
+# Marketing Mix 
+
+10.3.1 Concept : To launch a product in the market successfully and to maintain its importance in the market, a number of policies that are adopted by a producer is known as marketing mix. Marketing mix is a group of constituent forces which are under the control of firms and which is used to promote consumers satisfaction. A business unit does not have any control on external environment but they have direct control on internal forces which directly influence the consumers. But these factors affect the consumers. Marketing mix helps in attaining the marketing objectives of a firm. The four constituents in the marketing mix are known as 4Ps (1) Product (2) Price (3) Place (4) Promotion.

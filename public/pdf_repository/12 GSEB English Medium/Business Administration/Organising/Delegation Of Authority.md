@@ -1,0 +1,19 @@
+# Delegation of Authority 
+
+4.5.1 Meaning : According to legal view, power means, authority to take legal action. But in business units, power is to give orders and also to see to it that the orders are followed.
+
+When the size of the organization becomes large, the upper level administrators assign some work to their helpers. They have to see, whether the orders are followed or not. In order to enable such helpers to perform their task well, some powers are vested upon them. This is called delegation of power. In this way, in ordinary words it can be said that to delegate power is to enable the other person to have power for doing the task well.
+
+## Definition :
+
+- According to Louis Allen, "Delegation of power is such kind of process in which the administrator gives a part of the powers to his helpers along with duties, and the helpers, with the help of others, for the purpose of work performance, accepts such powers consciously." In the delegation of power the understanding of the responsibilities is the main thing. The helpers are given powers and they are responsible to get the work done but the final completion of the work and its responsibility rests with the upper level administrator only and he cannot free himself from that.
+## Importance
+Delegation of power relieves upper level administration from more work. Hence they can focus upon policy matters. Due to which management is more efficient. Hence it can be said that power is the key to administration, but delegation of power is the key to organization.
+(1) Work Efficient Management : Due to delegation of power, the officers working on higher level, have less burden of work and the routine work are hence distributed resulting in the focus on important areas. At the same time they can meet the objectives, due to which the business unit gets work efficient management.
+(2) Development of Employees : Different employees working in the organization get an opportunity to work and take decisions due to decentralization of power. Due to which their confidence is improved. They can have a better decision making capacity and take logical decisions due to constant need of taking decisions.
+(3) Motivation : Due to delegation of power, the employees have the chance to develop their abilities. Due to which they also gain psychological benefits. When the higher administrator delegates the power and enables decentralization to the helpers, such helpers not only get the work accomplished but at the same time gets boost to self-confidence due to such work accomplishment. Due to this, the right kind of motivation is obtained.
+(4) Benefit of Specialization : In a single unit, it is possible that all the employees may not have abilities in all the fields and areas. It is obvious that such ability is not possessed by all but due to decentralization of power, different people are assigned different kind of work and hence the benefit of the specialized skills of such people is obtained in the matters of their abilities, skills and varieties of excellence.
+(5) Co-ordination : Due to delegation the relationship of helper and upper officers are developed. The middle and lower level employees get the chance to take their decisions independently. In this way,
+
+their opinions are respected and they are able to develop inter personal relations in the organization. This enables good co-ordination.
+(6) Scope for Expansion : Due to delegation of power, the upper level officers are free to focus on new ideas for the expansion of the business. This enables long life to the organization and ease in doing business.

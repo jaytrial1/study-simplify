@@ -1,0 +1,45 @@
+5_Measures to Reduce Unemployment
+
+After understanding the extent and reasons of unemployment in India, it is clear that the problem of unemployment is becoming serious day by day. From its reasons, it will be easier to find out its solution. The problem of unemployment is not only economic, it also gives rise to social, moral and psychological issues. From a political point of view also this problem is serious. That is why in India right from the first five-year plan, one major objective is to reduce unemployment. Specially from the fifth and the sixth five-year plan the prime objective is the reduction of unemployment. In the eighth five-year plan, it was thought to make Right to employment a fundamental right and changes could be made in the constitution but it could not be materialized. But it is clear that to provide appropriate employment opportunities is the prime responsibility of our country.
+
+To solve the problem of unemployment, the following steps can be taken:
+
+# Population Control
+
+The high population growth rate of India has increased the problem of unemployment and made it more serious. Because of the fast population growth in the country, on one hand, the number of laborers demanding jobs is increasing and on the other hand, due to slow economic growth, an appropriate number of employment opportunities cannot be created. As a result, unemployment is increasing. If in India, the problem of unemployment is to be solved, then effective steps for population control must be taken. With that, the rate of population growth will come down and the high rate labor supply will reduce. So, the number of job seekers will reduce and on the other hand, because of population control, resources will become surplus. As a result, the rate of capital investment and employment opportunities will increase. With population control, in the long term, the productive age group (15 to 64 years) can be placed appropriately.
+
+# Increase in the Rate of Economic Development
+
+One of the constructive solutions for reducing unemployment is by increasing the rate of economic development. In the initial years of planning, the rate of economic development used to be as low as 3 to 3.5%. If economic development is continuously increased at a higher rate, then employment opportunities can also develop at a higher rate and problems of unemployment can be solved. For that, coordinating various sectors of the economy, efforts should be made to increase capital investment between public, private and cooperative sectors. In the agricultural sector, irrigational facilities and other required facilities should increase and the agricultural growth rate should be kept high. Efforts should be made so that the advantage of the green revolution shall be reaped by every state and that way by achieving high economic development, employment opportunities should increase and the problem of unemployment could be solved.
+
+# Employment Oriented Planning
+
+It is seen that during planning, special emphasis is given to economic development. Like, from the 2nd five-year plan, special importance was given to the development of the public sector and as a key to basic industries, capital intensive industries were developed. For a strong foundation of industrialization, it was necessary. But in the present situation, employment-oriented planning is very important. For that, the state has encouraged consumer goods and labor-intensive industries, small and medium scale industries and business and trade, animal husbandry, and dairy development. Because of all these, industries require less capital and generate more employment. With the establishment and development of these employment-oriented industries, the production of consumer goods will increase, employment will increase and economic stability will also be achieved. In the construction sector, through employment-oriented planning, more employment can be increased. States also can coordinate between capital intensive and labor-intensive production techniques and more emphasis should be given to labor-intensive production techniques, so that the unemployment problem can be solved.
+
+# Employment Oriented Education
+
+The present education system is responsible for unemployment. The present education system only provides bookish knowledge and produces clerks. So, even after being graduated in commerce and management fields, an individual does not become capable enough for self-employment. So for a longer period of time, they have to remain unemployed. In order to change this situation, it is necessary to give vocational education in the field of trade, commerce, business, agriculture and other fields. For this, a major change is needed in the present education system. Though some changes have been introduced in the education system, they are not enough. This is a fact. It is necessary to start and increase the curriculum that comprises of providing training and business-oriented education in the field of trade, commerce, agriculture and industry. So that after getting such education, it is easy to get employment.
+
+In India, to solve the problem of unemployment and to increase the capabilities to gain employment, a revolutionary change in the educational field is necessary which can implement an educational system with perfect human resource planning.
+
+In the new education policy of 2015, for employment generation, collaboration with industries were developed as the objective to have vocational education. Similarly, in future years, which sector has employment opportunities has to be studied and accordingly curriculum needs to be prepared which should also include private sector association.
+
+# Development of Cottage and Small Scale Industries
+
+Cottage and small scale sectors have the capacity to create employment with a low investment. To provide employment to one person, low capital investment is required as compared to big industries. So with the development of these type of industries, the problem of unemployment can be solved. With similar capital investment small industries can create 7.5 times more employment than big industries. India is a capital scarce and labor-intense country. So, the development of cottage and small scale industries should be accepted as the best alternative and special initiative should be taken for its development. In the industrial policy also, these industries are given importance and various measures have been taken for their development. Like production of certain goods are reserved for small scale industries. For the development of these industries, state provide monetary, technical and managerial help.
+
+# Extension of Infrastructural Facilities
+
+Indian rural areas have less employment opportunities than urban areas and one reason responsible for this, is poor infrastructural facilities in rural areas. So if the Government extend the services like education, health, housing, electricity, roads, business training center and other infrastructural facilities, then with the help of local resources, employment can be made available to individuals, nearer to their residences. With the development of infrastructural facilities, new employment opportunities will increase. Employment will also generate in agriculture and allied sectors. So, the problem of unemployment will reduce.
+
+# Speed and Expansion of Green Revolution in the Agricultural Sector
+
+High population growth in India, high dependence of population on agriculture, creates disguised unemployment and at the same time uncertain monsoon and insufficient irrigational facilities creates seasonal unemployment. Solutions of high dependence of population on agriculture and the capability of shifting of these surplus people to another sector has not become feasible.
+
+Hence, to solve the problem of unemployment in rural areas, the green revolution should be sped up and effort should be made to extend it to more areas which can increase the opportunities of employment.
+
+If planned properly then agriculture has more space to provide employment than any other sector. This finds support in P. C. Mahalnobis's estimation of employment opportunities. According to him, in India by investing ₹ 1 crore in the agriculture sector 40,000 people can be employed and production can be increased by 5.7%. Whereas in big industries by investing ₹ 1 crore only 500 people can be employed and production can be increased by 1.4%.
+
+From the estimate it is clear, the agriculture sector can create more employment than industry. So for the green revolution in agriculture, the important complimentary activities such as minor and major irrigation, soil conservation, mix farming, forest development, planning for more harvest should be adopted. By enhancing the planning for more than one harvest in a year, modernization of land, stressing on agro based rural industries, employment opportunities can be increased.
+
+According to Dr. M. S. Swaminathan, if development is encouraged towards the agriculture sector than many times more employment can be created.

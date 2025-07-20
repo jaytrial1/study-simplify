@@ -1,0 +1,9 @@
+# Privatisation of Insurance
+Insurance was initiated by private sector in India. As India was a British Colony many foreign insurance companies started insurance business in India. As they were blamed for practising illegimate
+
+business practices, on $19^{\text {th }}$ January, 1956 through an ordinance, Life Insurance business was nationalised and the Life Insurance Corporation of India was set up. Thus, the monopoly of life insurance corporation was established.
+
+General insurance was introduced by the Britishers in India. Periodical controls were imposed on general insurance as well and it has continued after-independence. On $1^{\text {st }}$ January 1973, the general insurance business was nationalised on the basis of General Insurance Business (Nationalisation) Act of 1972.
+
+To analyse and appraise the working of insurance sector, a committee was appointed. It recommended the joint business by foreign insurance company with Indian Counterparts. Insurance Regulatory and Development Authority (IRDA) was set up in 1999 to support it.
+2.1.5 Insurance Regulatory and Development Authority (IRDA) : This is a supreme autonomous and legal institution which manages the regulatory and development activities in the field of Insurance. IRDA act of 1999 has opened the doors of insurance sector to the private insurance companies and to foreign insurance companies to the extent of $26 \%$, which was raised to $49 \%$ in 2015. So foreign insurance company can invest directly in the Indian Insurance companies up to $49 \%$. The main objectives of IRDA are (1) Policy holders gets more choice. (2) Promote healthy competition among the various insurance companies which can improve the services with the lower premium. (3) Mobilise more resource for the economy. (4) To bring self-discipline among the insurance companies. (5) To create a mechanism for complaint redressal etc.

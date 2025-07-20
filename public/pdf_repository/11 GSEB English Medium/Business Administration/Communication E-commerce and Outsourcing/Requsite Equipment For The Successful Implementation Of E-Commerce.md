@@ -1,0 +1,32 @@
+# Requsite Equipment for the Successful Implementation of E-Commerce
+Capital, human resource and machinery are needed at primary stage to start any business while in E-commerce more resources are needed. They are :
+(1) Website : For continuance of E-commerce, development, management, maintenance and upgradation of website is a must. In website, web means WWW (World Wide Web) while site means place. Website is address of a firm at World Wide Web. However, website is not any physical or geographical address but, it is an organized form of information provided by a firm which is made available online.
+(2) Computer with Internet Connectivity : The computers of the traders or customers must have internet connectivity for the purpose of purchase or sale or business activities in E-commerce.
+
+(3) Credit Card or Debit Card : The traders are not familiar with one another in E-commerce. So the question of financial transaction arises. The buyer feels insecurity in payment before purchase, and the seller feels insecurity in providing goods before he receives money. Credit/debit cards solve this problem. The payment through the card is done in such a way that we can stop the payment after the order of payment within seven days. These, cards are important tools in E-commerce.
+
+## Online Transactions
+
+(1) Pre Buying/Selling Stage : Advertisement and information receiving are included here.
+(2) Conditions of Buying/Selling : This includes price fixation and other related conditions.
+(3) Delivery of Goods/Payment : Information flow is associated with the above stages. While this stage includes exchange of products and money. The process becomes quick and less expensive if transaction is done online through internet. This entire process is explained from by the customer's point of view.
+(i) Registration : Registration by filling in the registration form is a must for a customer who wants to purchase online. Registration means to open an online account at seller's site. Registration means to sign in for online transaction. For this, a customer needs to provide personal details like name, address, phone number etc. A password is provided for online transaction. The account is protected by this password so that other person cannot login this account.
+(ii) Place an Order : We can select and put the product of our choice in shopping cart while shopping online. (Shopping cart is a list of product selected by the buyer while shopping online.) After preparing a list in shopping cart, an option of payment can be selected there after.
+(iii) Payment System : Payment can be made in different modes like cash on delivery, cheque, net banking transfer, credit card, debit card, digital cash etc. in online shopping.
+
+## Mode of Payment
+
+Mode of payment can be different in online shopping.
+(i) Cash on Delivery (COD) : In this way the customer has to make payment of money on receiving goods at his address mentioned for delivery.
+(ii) Cheque : Online seller can collect cheque from the customer. A person who buys goods issues a cheque to the seller. The seller dispatches goods only after the cheque is credited to his account
+(iii) Net Banking Transfer : Banks also provide the facilities of making payment or transferring money through internet to the customer in recent time. In this process the customer transfers necessary amount from his bank account to the account of the seller. Goods are dispatched only after the amount is transfered.
+(iv) Credit Card / Debit Card : These types of cards are known as Plastic money. These cards are used in large extent in online shopping. Credit card provider bank provides facility of shopping to the card holder on his credit. An amount to be paid by customer to the online seller is paid by respective bank. Then the card holder pays this amount to the bank within prescribed time. The card holder gets freedom of payment by installments or at his convenience within prescribed time.
+
+Debit card holder is provided facility of online shopping upto the existing credit balance of his account. As soon as online transaction is done through debit card, the same amount is debited from the bank account of the card holder.
+(v) Digital Cash : This is one type of currency which exists only in cyber space (internet world). There is no physical existence or form of this type of currency. But bank provides a facility to the customer to use his real currency in electronic form. The customer has to pay the same amount of real money as digital cash to the banks. Then banks maintaining forms of E-cash send a special software to the customer. Digital cash can be received through the account of the customer. This digital fund can be used for online shopping.
+
+## Safety and Security of Transactions
+There are many risks in online transaction in comparison to traditional money transactions. : (1) Risks of transaction (2) Risks of data (3) Risk of Intellectual property and secret data.
+(1) Security Against Risk of Transaction : For the dispute among the online seller and customer, at times the argument from the seller remains that the customer has not placed order properly. At times it may also happen that the customer has not placed order at all. The complaints like non-receipt of goods at the place mentioned or receipt of goods not complying with the required quality remain common in online transaction. To prevent this risk, verification of identity and address should be done during registration of account. Further, customer should prefer to purchase goods from reliable and well-established websites only.
+(2) Security Against Risk of Data Collection : There are many risks related to data. Important data can be changed or stolen for the purpose of enjoyment or with selfish motive. You may be familiar with the word 'virus' or 'hacking'. Virus is a computer programme. It creats clones or replicas, that damages the data in computer system. Virus interrupts on screen, prevents the computer to work, it may damage the data files or whole system. Anti-virus software is to be used to prevent these risks.
+(3) Security Against Intellectual Property and Privacy : Internet is an open plateform. Once the information is placed on internet means it becomes public. Information such as e-mail, address, phone number, bank account number, password provided during online transaction and many more business information are required to keep confidential while dealing online. There are possibilities of misusing information. Customer must change his password periodically.

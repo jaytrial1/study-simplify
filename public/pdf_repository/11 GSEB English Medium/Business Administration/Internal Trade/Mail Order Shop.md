@@ -1,0 +1,3 @@
+# Mail Order Shop
+Orders are received from the customers by sending catalogue through post. Goods are also delivered through post and payment of money is made through post at the time of delivery of goods. It is called mail order shops.
+Goods are delivered at the door steps of the customers residing at far away areas of the country. Such shops sell mostly the products that are light in weight, durable and costly. In short, these shops perform all the activities by post from receiving order to receipts of payment.

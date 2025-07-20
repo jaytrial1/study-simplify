@@ -1,0 +1,3 @@
+# 5. Design
+
+A design includes shape, pattern, and arrangement of lines or colour combination that is applied to any article. It is a protection given to aesthetic appearance or eye-catching features. The term of protection of a design is valid for 10 years. This initial period of registration may be extended by further period of 5 years on an application made in Form-3 accompanied by prescribed fees to the Controller before the expiry of the said initial period of 10 years. The proprietor of a design may make application for such extension even as soon as the design is registered. Once the validity period is over, the design is in public domain.

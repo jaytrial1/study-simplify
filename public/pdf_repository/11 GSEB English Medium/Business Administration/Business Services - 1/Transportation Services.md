@@ -1,0 +1,19 @@
+# Transportation Services
+
+## Meaning
+Transportation service facilitate transit of people, goods from one place to another. Transportation service is required to shift goods from one place to another. Initially animals and vehicles were used. Along with them water ways were used for the same purpose with the modern inventions, the use of aeroplane began.
+
+## Types
+
+(1) Human Operated : Even today human operated transportation exists, to manage transit of human beings and goods and it is environment-friendly too. In many places, pedal rickshaw is still prevalent, which transports people from one place to another. For instance, Kolkata has pedal rickshaw and in almost all parts of India goods are transported through human operated carriers.
+(2) Animal Operated : For short distance transit of goods animal operated transportation is used e.g. horse cart, bullock cart etc.
+(3) Airways : Airways are used for human and goods transit for long distance and speedy movement. For take off and landing, runway is necessary. For short distance and for less quantity of goods and few people, when runway is not available in hostile regions, helicopter service is more suitable.
+(4) Land Transport :
+(A) Railways : Human and goods transit takes place through railways. Usually diesel or electricity is used for railway engine. Many a times many coaches or all coaches have fuel engines which are known as multiple unit trains. Presently railways use cable, gravitational force, magnetic force etc.
+Recently, Compressed Natural Gas (CNG) is being used as fuel in India for railway engines. Railways which connect different towns and cities and also trains running within the city have proved to be the spinal cord of transportation.
+(B) Roadways : In roadways there is freedom to move from one road to another to change place, direction, speed and time according to the requirement; which is not possible or easy in other modes of transportation. It is possible to provide this service at the doorstep.
+Bus is an effective way of transportation for people. For transit of goods of lesser weight and distance, truck is very useful. Because of vehicular traffic, the problems of air pollution, noise pollution, traffic jam and parking arises. Due to this, in many cities, Bus Rapid Transit System (BRTS) has been started. For such buses, a dedicated road is reserved, so that such buses can reach from one place to another at a fast pace. The duration between one bus and the other is kept minimum which makes the service effective. In Gujarat, this service is prevalent in cities like Ahmedabad, Surat, Rajkot etc.
+(5) Waterways : Sea, river, lake, canal are some of the waterways on which boats, ferries, ships etc provide water transport. Nearby seashore places or where water and even land is there, hovercraft is used which uses a giant, highspeed fan. Big dams are constructed and water is made available to distant places through canals. Canals are also used as waterways. Foreign trade takes place mostly through waterways.
+Compared to other modes of transportation, waterways are slow even though now a days with the use of modern engines, huge quantity of goods can be transported effectively. Compared to airways, waterways is cheaper for transporting goods from one continent to other, but it takes more time. At the near by coastal areas, ferry service has proved very profitable.
+(6) Transit through Pipeline : Pipeline is used for liquid or gaseous products. This arrangement is useful for transportation of fluid waste, water, petroleum, natural gas etc.
+For instance, for transporting gas from Hajira (Gujarat) to Madhya Pradesh and Uttar Pradesh pipeline is laid. Oil, and petroleum products are transported through pipeline in states like Assam, Bihar, Gujarat, Uttar Pradesh and Haryana.

@@ -1,0 +1,9 @@
+# CRITICISM (LIMITATIONS) OF MCGREGOR'S THEORY
+McGregor's theory Y seems to be too much optimistic about the honesty and willingness of the people to work. On practical level, this theory is criticised on the following grounds.
+(a) According to his theory, an average man is by nature not lazy. He does not avoid responsibility. On the contrary, he seeks responsibility. This is not absolutely true. Employees are found to be indolent (lazy) even where management's attitude is favourable. They are many times not prepared to accept responsibility. However, his observations are based on an average employee. Most of the employees fall under this group and is therefore, applicable in general.
+
+(b) His second contention is that man becomes lazy and avoids work because of management's policy due to which their needs are not satisfied. This is also not true. It has been found that even when management gives free rein to employees and creates proper environment, the workers do not give their best efforts.
+(c) McGregor has said that employees avoid work if their social needs are not fulfilled. The implication is that social needs must be satisfied within the organisation. In fact, however, it is possible for the people to satisfy their social needs outside the organisation through social services etc.
+(d) The theory advocates decentralisation and delegation of authority to satisfy employee's need for freedom. But employee's behaviour may not be in keeping with achievement of business goal. Besides, this may have adverse reaction on their superiors.
+(e) In emergency the management has no other alternative but to adopt Theory X.
+(f) According to McGregor, management style can be developed either according to Theory X or Theory Y. However, in practice this cannot be done. Management style depends upon many factors like type of organisation, type of employees, functions of enterprise etc.

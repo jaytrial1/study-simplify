@@ -1,0 +1,2 @@
+# MCGREGOR'S THEORY X AND THEORY Y
+Professor Douglas McGregor of the U. S. A. has presented his views on above theories in the famous book " The Human Side of Enterprise" in 1960. He has given the name 'Theory X' to the old and traditional management belief and 'Theory Y' to the modern management belief. He has developed these two theories while observing employees at work. He found that the management of various enterprises were seen believing in either Theory $X$ or Theory $Y$.

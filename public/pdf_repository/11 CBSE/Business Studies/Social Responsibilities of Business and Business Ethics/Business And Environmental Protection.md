@@ -1,0 +1,5 @@
+# 6.5 BUSINESS AND ENVIRONMENTAL PROTECTION
+
+Environment is the sum total of external forces (natural and man-made), which surround us. The quality of environment is deteriorating at a very fast rate, especially due to industrial activities. As a result, its protection is of prime concern for the business managers and decision makers. The basic reason for deterioration of environment can be attributed to 'Pollution'.
+Pollution is the injection of harmful substances into the environment that changes the physical, chemical and biological characteristics of air, land and water. It causes damage to environment, human, natural and man-made resources. So, 'Environmental Protection' is possible through control of pollution.
+As some waste (or pollution) is unavoidable in the production process, the business enterprises face a great challenge in minimising the adverse impact of this waste through use of proper technologies. Protection of the environment is good for all of us.

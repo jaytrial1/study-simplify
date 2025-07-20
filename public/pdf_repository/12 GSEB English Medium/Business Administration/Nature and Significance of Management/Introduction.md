@@ -1,0 +1,8 @@
+# Introduction
+
+Management exits since ancient time. In the primitive era of stone age, human beings were getting their food by hunting, fishing etc. Planning, supervision, co-ordination, guidance were used by them for accomplishment of their work. This process means management.
+
+No sooner did human being realised his limitations, than management became essential to achieve his objectives with the help of others. Man tries to get maximum satisfaction using minimum resources. For this, he receives co-operation of others. (1) When more than one person join hands for completion of work in a systematic manner. (2) A need of planning and delegation of authority and responsibility arises. Whenever there is a requirement, someone should be there to provide direction. Even control becomes necessary to see whether people are working as per pre-decided standards. These functions are known as management.
+
+In business, sole proprietorship firms and partnership firms, were being managed by the owners themselves. Many changes took place in the nature of business with expansion of business activities and in due course of time finally, the 'Company' developed. In this format it becomes easy to arrange big amount of capital and the services of experts and other major benefits are also availed. But it gives rise to many problems as the size and activities of the business expand. These problems include the problem of capital,
+production, sales and employees. In such circumstances, there is a need of trained, experienced and expert people to take various decisions and their implimentations. Work done by this group of people is known as management.

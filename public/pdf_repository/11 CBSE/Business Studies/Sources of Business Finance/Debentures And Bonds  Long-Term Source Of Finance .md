@@ -1,0 +1,4 @@
+# Debentures and Bonds (Long-term Source of Finance)
+
+Debentures / bonds are an important instrument for raising long-term debt capital. According to Section 2(30) of the Companies Act, 2013, "Debenture includes debenture stock, bonds or any other instrument of a company evidencing a debt, whether constituting a charge on the assets of the company or not".
+A debenture is a document or certificate, which is issued under the common seal of the company, acknowledging its debt to the holder at given terms and conditions. The amount of the loan, rate of interest and the security offered (if any) are clearly mentioned by the company on that document.
