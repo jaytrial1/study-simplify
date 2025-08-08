@@ -111,6 +111,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Save features toggle
+    document.getElementById('saveFeaturesButton')?.addEventListener('click', async function() {
+        try {
+            const userId = localStorage.getItem('user_id');
+            const token = localStorage.getItem('token');
+            const enabled = document.getElementById('collapse-feature-toggle').checked ? 1 : 0;
+            const response = await fetch(`${window.apiBasePath}/api/user/profile.php?id=${encodeURIComponent(userId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ collapse_feature_enabled: enabled, name: document.getElementById('name').value.trim(), email: document.getElementById('email').value.trim(), grade: document.getElementById('grade-level').value })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Failed to save feature settings');
+            showError('Feature settings saved!', true);
+            localStorage.setItem('collapse_feature_enabled', String(enabled));
+        } catch (err) {
+            console.error('Error saving feature settings:', err);
+            showError(err.message || 'Failed to save feature settings');
+        }
+    });
+
     // Add input event listeners to hide error when typing
     inputs.forEach(input => {
         input.addEventListener('input', hideError);
@@ -268,6 +293,15 @@ async function loadUserData() {
         document.getElementById('name').value = data.name;
         document.getElementById('email').value = data.email;
         document.getElementById('grade-level').value = data.grade;
+
+        // Initialize feature toggle from server (default enabled)
+        const collapseToggle = document.getElementById('collapse-feature-toggle');
+        if (collapseToggle) {
+            const enabled = (typeof data.collapse_feature_enabled !== 'undefined') ? Number(data.collapse_feature_enabled) : 1;
+            collapseToggle.checked = enabled === 1;
+            // Keep a local copy for fast gating in the UI
+            localStorage.setItem('collapse_feature_enabled', String(enabled));
+        }
         
         // Explicitly call displayTrialStatus after user data is loaded
         console.log("DEBUG: Calling displayTrialStatus from loadUserData function");

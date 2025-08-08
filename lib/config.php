@@ -8,7 +8,7 @@ define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/model
 define('GEMINI_MODEL', 'gemini-2.5-flash');
 define('GEMINI_KEYS', [
         // Free tier keys
-        'AIzaSyBZcYiuwJ_7pzPMh2JNfTdhDWnupW7JVO8',
+        'AIzaSyCU4DtGal-p_x3aTG46Ro3qkncMPnMPo4Q',
         'AIzaSyC3ytLD5xZlCa70kYajN2RjW4ehdoX6IUjsdhvj',
         'AIzaSyCuqAj_Xdw192Is4tfH0uo6Rqbr3bJ4QWs',
         'AIzaSyBT3kJRHPts81wpwYHFQLuJ0NSeqt_kd4E',

@@ -189,6 +189,30 @@
                             </button>
                         </form>
                     </div>
+                    
+                    <!-- Feature Toggles -->
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <i class="fas fa-sliders-h"></i>
+                            <h1>Feature Toggles</h1>
+                            <p>Enable or disable optional features</p>
+                        </div>
+                        <form class="auth-form" id="featuresForm">
+                            <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                                <label style="margin:0; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-layer-group"></i>
+                                    Collapsible headings in answers
+                                </label>
+                                <label class="switch">
+                                    <input type="checkbox" id="collapse-feature-toggle" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <button type="button" id="saveFeaturesButton" class="auth-button">
+                                <i class="fas fa-save"></i> Save Feature Settings
+                            </button>
+                        </form>
+                    </div>
 
                     <!-- Password Change Box -->
                     <div class="auth-box">

@@ -391,6 +391,8 @@ DELIMITER ;
 -- Dump completed on 2025-07-11 17:38:10
 ALTER TABLE `users`
 ADD COLUMN `trial_start_date` DATE NULL DEFAULT NULL COMMENT 'Stores the date when the student''s 7-day trial period begins.' AFTER `updated_at`; 
+ALTER TABLE `users`
+ADD COLUMN `collapse_feature_enabled` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1 = collapsible headings enabled for this user' AFTER `payment_type`;
 
 
 CREATE TABLE `math_errors` (

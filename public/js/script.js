@@ -892,6 +892,163 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // Transform markdown headings into collapsible sections inside a single bot message
+    function applyHeadingCollapsibles(messageElement) {
+        try {
+            if (!messageElement) return;
+            const contentContainer = messageElement.querySelector('.formatted-content');
+            if (!contentContainer || contentContainer.classList.contains('collapsible-applied')) return;
+
+            // Collect top-level nodes
+            const childNodes = Array.from(contentContainer.childNodes);
+            const isHeadingNode = (node) => node && node.nodeType === 1 && /^H[1-6]$/.test(node.tagName);
+
+            // If there are no headings at all, do not transform
+            const hasAnyHeading = childNodes.some(isHeadingNode);
+            if (!hasAnyHeading) return;
+
+            // Build a nested tree of sections using a stack
+            const root = { heading: null, level: 0, nodes: [], children: [] };
+            const stack = [root];
+
+            for (const node of childNodes) {
+                if (isHeadingNode(node)) {
+                    const level = parseInt(node.tagName.substring(1), 10);
+                    // Find parent with level < current level
+                    while (stack.length && stack[stack.length - 1].level >= level) {
+                        stack.pop();
+                    }
+                    const parent = stack[stack.length - 1] || root;
+                    const section = { heading: node, level, nodes: [], children: [] };
+                    parent.children.push(section);
+                    stack.push(section);
+                } else {
+                    // Append content to current top section (or root if none yet)
+                    const top = stack[stack.length - 1] || root;
+                    top.nodes.push(node);
+                }
+            }
+
+            // Move root content (content before the first heading) into an 'Overview' section at the top
+            if (root.nodes.length > 0) {
+                const synth = document.createElement('h2');
+                synth.textContent = 'Overview';
+                const overview = { heading: synth, level: 2, nodes: root.nodes.slice(), children: [] };
+                root.children.unshift(overview);
+                root.nodes = [];
+            }
+
+            if (root.children.length === 0) return; // nothing to do
+
+            // Prevent re-applying and clear existing nodes
+            contentContainer.classList.add('collapsible-applied');
+            contentContainer.innerHTML = '';
+
+            // Controls toolbar (single right-aligned toggle)
+            const controls = document.createElement('div');
+            controls.className = 'section-controls';
+            controls.innerHTML = `
+                <button type=\"button\" class=\"toggle-all toggle-all-cycle\" title=\"Expand all\"><i class=\"fas fa-expand-alt\"></i></button>
+            `;
+            contentContainer.appendChild(controls);
+
+            const expandAll = () => {
+                contentContainer.querySelectorAll('.collapsible-section').forEach(sec => sec.classList.add('expanded'));
+            };
+            const collapseAll = () => {
+                contentContainer.querySelectorAll('.collapsible-section').forEach(sec => sec.classList.remove('expanded'));
+            };
+            const allSectionsExpanded = () => Array.from(contentContainer.querySelectorAll('.collapsible-section')).every(sec => sec.classList.contains('expanded'));
+            const updateCycleIcon = () => {
+                const btn = controls.querySelector('.toggle-all-cycle');
+                if (!btn) return;
+                if (allSectionsExpanded()) {
+                    btn.title = 'Collapse all';
+                    btn.innerHTML = '<i class=\"fas fa-compress-alt\"></i>';
+                } else {
+                    btn.title = 'Expand all';
+                    btn.innerHTML = '<i class=\"fas fa-expand-alt\"></i>';
+                }
+            };
+            updateCycleIcon();
+            controls.querySelector('.toggle-all-cycle')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (allSectionsExpanded()) {
+                    collapseAll();
+                } else {
+                    expandAll();
+                }
+                updateCycleIcon();
+            });
+
+            // Recursive renderer; children render as siblings (not inside parent's content)
+            const renderSection = (section, indexWithinParent, parentContainer) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = `collapsible-section level-${section.level}`;
+                if (section.level > 1) {
+                    wrapper.classList.add('nested');
+                }
+                // Indentation via CSS variable for better mobile control
+                const depth = Math.max(0, section.level - 1);
+                wrapper.style.setProperty('--depth', String(depth));
+                wrapper.style.position = 'relative';
+
+                const header = document.createElement('div');
+                header.className = 'collapsible-header';
+
+                const toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.className = 'collapsible-toggle';
+                toggleBtn.setAttribute('aria-label', 'Toggle section');
+                toggleBtn.innerHTML = '<i class=\"fas fa-chevron-down\"></i>';
+
+                // Subtopics toggle (expand/collapse descendants only)
+                // Removed local subtopics toggle button per request
+
+                const titleEl = section.heading;
+                titleEl.classList.add('collapsible-title');
+
+                header.appendChild(toggleBtn);
+                header.appendChild(titleEl);
+
+                const body = document.createElement('div');
+                body.className = 'collapsible-content';
+                section.nodes.forEach(n => body.appendChild(n));
+
+                wrapper.appendChild(header);
+                wrapper.appendChild(body);
+                parentContainer.appendChild(wrapper);
+
+                // Default expand rule: expand level 1 sections and the very first top-level section
+                const isTopLevel = section.level === 1 || (section.level === 2 && titleEl.textContent === 'Overview');
+                const shouldExpand = section.level === 1 || (isTopLevel && indexWithinParent === 0);
+                if (shouldExpand) {
+                    wrapper.classList.add('expanded');
+                }
+
+                const toggle = () => {
+                    wrapper.classList.toggle('expanded');
+                };
+                header.addEventListener('click', toggle);
+                toggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+
+                // Local subtopics toggle removed
+
+                // Render children after this wrapper (as siblings)
+                section.children.forEach((child, idx) => {
+                    renderSection(child, idx, parentContainer);
+                });
+            };
+
+            // Render all top-level children
+            root.children.forEach((section, idx) => {
+                renderSection(section, idx, contentContainer);
+            });
+        } catch (e) {
+            console.error('Failed to apply collapsible sections:', e);
+        }
+    }
+
     // Function to update an existing message
     function updateMessage(messageElement, newText) {
         // Handle the case where messageElement is in the new format (object with element property)
@@ -942,6 +1099,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Stored chart data:', processedMarkdown.chartData);
             }
             
+            // Apply heading-based collapsible sections (respect user toggle)
+            try {
+                const enabled = localStorage.getItem('collapse_feature_enabled');
+                if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+                    applyHeadingCollapsibles(messageElement);
+                }
+            } catch (e) {
+                console.warn('applyHeadingCollapsibles failed in updateMessage:', e);
+            }
+
             // Enhance code blocks and render charts
             enhanceCodeBlocks(messageElement);
         }
@@ -1030,6 +1197,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         messagesContainer.appendChild(messageDiv);
         
+        // Apply collapsible sections for immediately rendered bot messages
+        if (type === 'bot' && !isLoading) {
+            const enabled = localStorage.getItem('collapse_feature_enabled');
+            if (enabled === null || enabled === '1') {
+                applyHeadingCollapsibles(messageDiv);
+            }
+        }
+
         // Auto-scroll to bottom (with smooth animation)
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         

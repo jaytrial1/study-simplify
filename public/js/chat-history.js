@@ -901,12 +901,31 @@ class ChatHistoryManager {
                     }
                     
                     chatMessages.appendChild(messageDiv);
+                    // Apply collapsibles per message immediately for reliability
+                    if (sender === 'bot') {
+                        try {
+                            const enabled = localStorage.getItem('collapse_feature_enabled');
+                            if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+                                applyHeadingCollapsibles(messageDiv);
+                            }
+                        } catch (e) {
+                            console.warn('applyHeadingCollapsibles failed on per-message render:', e);
+                        }
+                    }
                 });
 
                 // 2. Enhance all bot messages (code blocks, charts, wrappers)
                 console.log('Enhancing code blocks and rendering charts...');
                 const botMessages = chatMessages.querySelectorAll('.bot-response');
                 botMessages.forEach(message => {
+                    // Apply heading-based collapsibles before enhancing code blocks
+                    try {
+                        if (typeof applyHeadingCollapsibles === 'function') {
+                            applyHeadingCollapsibles(message);
+                        }
+                    } catch (e) {
+                        console.warn('applyHeadingCollapsibles failed in chat history:', e);
+                    }
                     // enhanceCodeBlocks now primarily focuses on charts and structure
                     enhanceCodeBlocks(message);
                 });

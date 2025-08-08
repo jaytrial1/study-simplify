@@ -19,3 +19,10 @@
 [11-Jul-2025 06:21:04 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
 [11-Jul-2025 06:21:04 Europe/Berlin] Database connection successful
 [11-Jul-2025 06:21:04 Europe/Berlin] get_affiliate_data.php: Error - Table 'studysimplify_new.affiliate' doesn't exist
+[06-Aug-2025 14:42:47 Europe/Berlin] Database connection - HTTP_HOST: localhost
+[06-Aug-2025 14:42:47 Europe/Berlin] Database connection - SERVER_ADDR: ::1
+[06-Aug-2025 14:42:47 Europe/Berlin] Database connection - SERVER_NAME: localhost
+[06-Aug-2025 14:42:47 Europe/Berlin] Database connection - REQUEST_URI: /main/api/admin/affiliates/get_affiliate_data.php?_v=1.0.0
+[06-Aug-2025 14:42:47 Europe/Berlin] Using local database connection: localhost, root, studysimplify_new
+[06-Aug-2025 14:42:47 Europe/Berlin] Database connection successful
+[06-Aug-2025 14:42:47 Europe/Berlin] get_affiliate_data.php: Error - Table 'studysimplify_new.affiliate' doesn't exist

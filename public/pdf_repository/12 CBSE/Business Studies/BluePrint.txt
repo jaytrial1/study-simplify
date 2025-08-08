@@ -1,0 +1,166 @@
+This is a project folder's road map, and it includes the content of .MD files.
+Current Folder Location: E:\jay\Xampp\htdocs\main\public\pdf_repository\12 CBSE\Business Studies
+
+--- Roadmap of the Folder ---
+Folder PATH listing
+Volume serial number is 18FB-3B25
+E:.
+¦   BluePrint.txt
+¦   Run.bat
+¦   
++---Business Environment
+¦       1. Introduction to Business Environment.md
+¦       10. New Industrial Policy (New Economic Policy).md
+¦       11. Liberalisation.md
+¦       12. Privatisation.md
+¦       13. Globalisation.md
+¦       14. Demonetisation.md
+¦       15. Impact of Economic Reforms and Managerial Response.md
+¦       2. Features of Business Environment.md
+¦       3. Importance of Business Environment Analysis.md
+¦       4. Dimensions of Business Environment.md
+¦       5. Economic Environment.md
+¦       6. Social Environment.md
+¦       7. Technological Environment.md
+¦       8. Political Environment.md
+¦       9. Legal Environment.md
+¦       
++---Consumer Protection
+¦       1. Introduction to Consumer Protection.md
+¦       2. Importance of Consumer Protection.md
+¦       3. The Consumer Protection Act, 2019.md
+¦       4. Consumer Rights.md
+¦       5. Consumer Responsibilities.md
+¦       6. Meaning of Consumer and Who Can File a Complaint.md
+¦       7. Consumer Redressal Agencies.md
+¦       8. Reliefs Available to Consumers.md
+¦       9. Consumer Awareness and Role of NGOs.md
+¦       
++---Controlling
+¦       1. Introduction and Meaning of Controlling.md
+¦       10. Step 4_ Analysing Deviations.md
+¦       11. Step 5_ Taking Corrective Action.md
+¦       12. Feedback and Continuous Nature of Controlling.md
+¦       13. Understanding Deviation.md
+¦       2. Nature and Characteristics of Controlling.md
+¦       3. Controlling's Role in the Management Cycle.md
+¦       4. Importance of Controlling.md
+¦       5. Relationship Between Planning and Controlling.md
+¦       6. The Controlling Process_ Overview.md
+¦       7. Step 1_ Setting Performance Standards.md
+¦       8. Step 2_ Measurement of Actual Performance.md
+¦       9. Step 3_ Comparison with Standards.md
+¦       
++---Directing
+¦       1. Introduction to Directing.md
+¦       10. Communication_ Meaning, Process, and Features.md
+¦       11. Channels and Networks of Communication.md
+¦       12. Barriers to Communication.md
+¦       13. Measures to Improve Communication Effectiveness.md
+¦       2. Nature and Significance of Directing.md
+¦       3. Key Elements of Directing.md
+¦       4. Supervision.md
+¦       5. Motivation_ Concept, Process, and Nature.md
+¦       6. Maslow's Need Hierarchy Theory.md
+¦       7. Incentives_ Financial and Non-Financial.md
+¦       8. Leadership_ Meaning and Features.md
+¦       9. Leadership Styles.md
+¦       
++---Financial Management
+¦       1. Introduction to Business Finance.md
+¦       10. Profit Maximisation vs Wealth Maximisation.md
+¦       2. Understanding Financial Management.md
+¦       3. Types of Financial Decisions.md
+¦       4. The Financing Decision.md
+¦       5. The Dividend Decision.md
+¦       6. Financial Planning.md
+¦       7. Capital Structure and Financial Leverage.md
+¦       8. Fixed Capital.md
+¦       9. Working Capital.md
+¦       
++---Financial Market
+¦       1. Introduction to Financial Markets.md
+¦       10. The Secondary Market and Stock Exchange.md
+¦       11. Functions of Stock Exchange.md
+¦       12. Evolution of Stock Trading and Electronic Systems.md
+¦       13. Holding Securities_ Physical vs Electronic Form.md
+¦       14. Dematerialisation, Depository, and Trading Procedure.md
+¦       15. Securities and Exchange Board of India (SEBI).md
+¦       16. Functions of SEBI.md
+¦       2. Meaning and Functions of Financial Markets.md
+¦       3. Types of Financial Markets.md
+¦       4. The Money Market.md
+¦       5. Detailed Money Market Instruments.md
+¦       6. The Capital Market.md
+¦       7. Comparing Capital Market and Money Market.md
+¦       8. The Primary Market.md
+¦       9. Methods of Floating New Issues.md
+¦       
++---Management
+¦       1. Introduction to Management.md
+¦       2. Meaning, Effectiveness, and Efficiency.md
+¦       3. Characteristics of Management.md
+¦       4. Objectives of Management.md
+¦       5. Importance of Management.md
+¦       6. Nature_ Art, Science, and Profession.md
+¦       7. Levels of Management.md
+¦       8. Functions of Management.md
+¦       9. Coordination_ The Essence of Management.md
+¦       
++---Marketing Management
+¦       1. Introduction and Foundational Concepts.md
+¦       2. Marketing Management Philosophies.md
+¦       3. Functions of Marketing.md
+¦       4. The Marketing Mix - Overview.md
+¦       5. Product Decisions.md
+¦       6. Price Decisions.md
+¦       7. Place_Physical Distribution Decisions.md
+¦       8. Promotion Decisions.md
+¦       
++---Organizing
+¦       1. Introduction to Organising.md
+¦       2. Meaning and Definitions of Organising.md
+¦       3. Steps in the Process of Organising.md
+¦       4. Importance and Benefits of Organising.md
+¦       5. Organisation Structure_ Concept and Types.md
+¦       6. Formal and Informal Organisation.md
+¦       7. Delegation of Authority_ Concept, Elements, and Importance.md
+¦       8. Decentralisation_ Concept, Centralisation vs. Decentralisation, and Importance.md
+¦       9. Difference between Delegation and Decentralisation.md
+¦       
++---Planning
+¦       1. Introduction to Planning.md
+¦       2. Meaning and Definition of Planning.md
+¦       3. Features and Nature of Planning.md
+¦       4. Importance and Benefits of Planning.md
+¦       5. Limitations of Planning.md
+¦       6. Steps in the Planning Process.md
+¦       7. Types of Plans.md
+¦       
++---Principles of Management
+¦       1. Introduction to Management Principles.md
+¦       2. Meaning, Nature, and Derivation of Management Principles.md
+¦       3. Importance of Management Principles.md
+¦       4. F.W. Taylor and Scientific Management.md
+¦       5. Principles and Techniques of Scientific Management.md
+¦       6. Henri Fayol and His Principles.md
+¦       7. Comparison_ Taylor vs Fayol.md
+¦       
++---Staffing
+        1. Understanding Staffing in Management.md
+        10. The Staffing Process_ Selection - Final Stages.md
+        11. Staffing Process_ Post-Selection Activities.md
+        12. Core Aspects of Staffing.md
+        13. Training and Development Explained.md
+        14. Comparing Training, Development, and Education.md
+        15. Methods of Training.md
+        2. Significance of the Staffing Function.md
+        3. Staffing and Human Resource Management.md
+        4. The Staffing Process_ Estimating Needs.md
+        5. The Staffing Process_ Recruitment.md
+        6. Sources of Recruitment_ Internal Options.md
+        7. Sources of Recruitment_ External Options.md
+        8. Evaluating Recruitment Sources.md
+        9. The Staffing Process_ Selection - Initial Steps.md
+        
+

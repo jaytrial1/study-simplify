@@ -810,6 +810,14 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
                     ${formattedAnswer}
                 </div>
             `;
+            try {
+                const enabled = localStorage.getItem('collapse_feature_enabled');
+                if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+                    applyHeadingCollapsibles(answerTextElement);
+                }
+            } catch (e) {
+                console.warn('applyHeadingCollapsibles failed in saved_answers (pager):', e);
+            }
             
             // Render LaTeX expressions with MathJax if available
             if (typeof MathJax !== 'undefined') {
@@ -1167,6 +1175,14 @@ function updateModalContent() {
             ${formattedAnswer}
         </div>
     `;
+    try {
+        const enabled = localStorage.getItem('collapse_feature_enabled');
+        if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+            applyHeadingCollapsibles(answerTextElement);
+        }
+    } catch (e) {
+        console.warn('applyHeadingCollapsibles failed in saved_answers (modal open):', e);
+    }
 
     // Store chart data in the element's dataset if available
     if (chartData && chartData.length > 0) {
@@ -2190,6 +2206,14 @@ class SavedAnswersManager {
                         ${formattedAnswer}
                     </div>
                 `;
+                try {
+                    const enabled = localStorage.getItem('collapse_feature_enabled');
+                    if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+                        applyHeadingCollapsibles(answerTextElement);
+                    }
+                } catch (e) {
+                    console.warn('applyHeadingCollapsibles failed in saved_answers (restore complex):', e);
+                }
 
                 // Store chart data in the element's dataset if available
                 if (chartData && chartData.length > 0) {
@@ -2328,11 +2352,19 @@ class SavedAnswersManager {
             formattedAnswer = `<pre>${processedMarkdown.markdown}</pre>`;
         }
         
-        const answerTextElement = document.querySelector('.answer-text');
-        answerTextElement.innerHTML = `            <div class="formatted-content">
+    const answerTextElement = document.querySelector('.answer-text');
+    answerTextElement.innerHTML = `            <div class="formatted-content">
                 ${formattedAnswer}
             </div>
         `;
+    try {
+        const enabled = localStorage.getItem('collapse_feature_enabled');
+        if ((enabled === null || enabled === '1') && typeof applyHeadingCollapsibles === 'function') {
+            applyHeadingCollapsibles(answerTextElement);
+        }
+    } catch (e) {
+        console.warn('applyHeadingCollapsibles failed in saved_answers (processMarkdown block):', e);
+    }
         
         // Store chart data in the element's dataset if available
         if (processedMarkdown.chartData && processedMarkdown.chartData.length > 0) {

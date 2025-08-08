@@ -36,6 +36,7 @@
         const followUpJsPath = _isLocalServer ? "../js/follow-up-prompts.js" : "/public/js/follow-up-prompts.js?v=<?php echo time(); ?>";
         const topicListJsPath = _isLocalServer ? "../js/topic-list.js" : "/public/js/topic-list.js?v=<?php echo time(); ?>";
         const sessionManagerPath = _isLocalServer ? "../js/session-manager.js" : "/public/js/session-manager.js?v=<?php echo time(); ?>";
+        const collapsibleHeadingsPath = _isLocalServer ? "../js/collapsible-headings.js" : "/public/js/collapsible-headings.js?v=<?php echo time(); ?>";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
@@ -170,6 +171,165 @@
             display: inline-block !important;
             border: none !important; /* Also remove the red border */
         }
+
+        /* Collapsible sections for AI answers */
+        .section-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end; /* single button on right */
+            margin-bottom: 8px;
+        }
+        .section-controls .toggle-all {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: inherit;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .section-controls .toggle-headers {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: inherit;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .collapsible-section {
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.02);
+            --guide-color: rgba(255,255,255,0.12);
+            --depth: 0;              /* set from JS per section */
+            --indent-unit: 12px;     /* controls horizontal indentation */
+        }
+        .collapsible-section .collapsible-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px 10px calc(var(--indent-unit) * var(--depth) + 12px);
+            cursor: pointer;
+            background: rgba(255,255,255,0.03);
+        }
+        /* vertical guide for nested sections (removed per request) */
+        .collapsible-section.nested::before { display: none !important; content: none !important; }
+        .collapsible-section .collapsible-toggle {
+            background: transparent;
+            border: none;
+            color: inherit;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+        }
+        .collapsible-section .collapsible-branch-toggle {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.2);
+            color: inherit;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+        }
+        .collapsible-section .collapsible-title {
+            margin: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+        .collapsible-section .collapsible-content {
+            /* full-width content area for readability */
+            padding: 12px 12px 12px 16px;
+            display: none;
+        }
+        .collapsible-section.expanded .collapsible-content {
+            display: block;
+        }
+        /* Visual hierarchy by heading level */
+        :root { --accent: var(--color-accent, #4166f5); }
+        .collapsible-section.level-1 {
+            border-color: rgba(65,102,245,0.35);
+            border-left: 5px solid var(--accent);
+            border-width: 2px;
+        }
+        .collapsible-section.level-2 {
+            border-color: rgba(65,102,245,0.25);
+            border-left: 4px solid rgba(65,102,245,0.7);
+            border-width: 1.5px;
+        }
+        .collapsible-section.level-3 {
+            border-color: rgba(65,102,245,0.18);
+            border-left: 3px solid rgba(65,102,245,0.55);
+            border-width: 1px;
+        }
+        .collapsible-section.level-4 { border-color: rgba(65,102,245,0.12); }
+        .collapsible-section.level-5,
+        .collapsible-section.level-6 { border-color: rgba(65,102,245,0.10); }
+
+        /* Header emphasis by level */
+        .level-1 > .collapsible-header { background: rgba(65,102,245,0.10); }
+        .level-2 > .collapsible-header { background: rgba(65,102,245,0.07); }
+        .level-3 > .collapsible-header { background: rgba(65,102,245,0.05); }
+
+        /* Use default heading sizes; do not override font-size/weight here */
+
+        /* Small label before titles to identify level quickly */
+        .level-1 .collapsible-title::before,
+        .level-2 .collapsible-title::before,
+        .level-3 .collapsible-title::before {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.72em;
+            line-height: 1;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            background: rgba(255,255,255,0.08);
+        }
+        /* Remove label chips; use structural width + borders for hierarchy */
+        .collapsible-section .collapsible-title::before { content: none !important; display: none !important; }
+
+        /* Use color-mix when supported to derive darker borders per depth for quick visual cue */
+        @supports (color: color-mix(in srgb, white, black)) {
+            .collapsible-section.level-1 {
+                border-color: color-mix(in srgb, var(--accent) 80%, #ffffff 20%);
+                border-left-color: var(--accent);
+            }
+            .collapsible-section.level-2 {
+                border-color: color-mix(in srgb, var(--accent) 60%, #0b1020 40%);
+                border-left-color: color-mix(in srgb, var(--accent) 70%, #0b1020 30%);
+            }
+            .collapsible-section.level-3 {
+                border-color: color-mix(in srgb, var(--accent) 45%, #0b1020 55%);
+                border-left-color: color-mix(in srgb, var(--accent) 55%, #0b1020 45%);
+            }
+        }
+
+        /* Depth-based horizontal guides for better horizontal space usage */
+        .collapsible-section { --depth: 0; }
+        .collapsible-section::after { display: none !important; content: none !important; }
+
+        /* Mobile-friendly spacing */
+        @media (max-width: 600px) {
+            .collapsible-section { --indent-unit: 10px; }
+            .section-controls { gap: 6px; }
+            .section-controls .toggle-all { padding: 5px 8px; border-radius: 6px; }
+            .section-controls .toggle-headers { padding: 5px 8px; border-radius: 6px; }
+            .collapsible-section { margin: 6px 0 10px; }
+            .collapsible-section .collapsible-header { padding: 8px 10px 8px calc(var(--indent-unit) * var(--depth) + 10px); gap: 8px; }
+            .collapsible-section .collapsible-content { padding: 10px 12px; }
+            /* Keep default heading sizes on mobile too */
+        }
+
+        /* Chevron rotation for expanded sections */
+        .collapsible-section .collapsible-toggle i { transition: transform 0.15s ease; }
+        .collapsible-section.expanded .collapsible-toggle i { transform: rotate(180deg); }
     </style>
     <script>
         // Configure marked.js with proper settings
@@ -577,6 +737,8 @@
         document.write(`<script src="${scriptPath}"><\/script>`);
         document.write(`<script src="${historySearchPath}"><\/script>`);
         document.write(`<script src="${transitionsPath}"><\/script>`);
+        // Ensure shared collapsible helper is available on chatbot page as well
+        document.write(`<script src="${collapsibleHeadingsPath}"><\/script>`);
         document.write(`<script src="${chatHistoryPath}"><\/script>`);
         document.write(`<script src="${answerActionPath}"><\/script>`);
         document.write(`<script src="${followUpJsPath}"><\/script>`);

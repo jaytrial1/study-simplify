@@ -26,6 +26,7 @@
         const savedAnswersJsPath = _isLocalServer ? "../js/saved_answers.js" : "/public/js/saved_answers.js";
         const saveTypeHandlerPath = _isLocalServer ? "../js/save-type-handler.js" : "/public/js/save-type-handler.js";
         const historySearchPath = _isLocalServer ? "../js/history-search.js" : "/public/js/history-search.js";
+        const collapsibleHeadingsPath = _isLocalServer ? "../js/collapsible-headings.js" : "/public/js/collapsible-headings.js";
         
         // Create and append base URL script
         document.write(`<script src="${baseUrlJsPath}"><\/script>`);
@@ -172,6 +173,79 @@
     <style>
         mjx-container {
             display: inline-block !important;
+        }
+        /* Collapsible sections for AI answers (shared with chatbot) */
+        .section-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin: 8px 0;
+        }
+        .section-controls .toggle-all,
+        .section-controls .toggle-all-cycle {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: inherit;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .collapsible-section {
+            border: 1px solid rgba(65,102,245,0.14);
+            border-radius: 10px;
+            margin: 10px 0 14px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.02);
+            --depth: 0;
+            --indent-unit: 12px;
+        }
+        .collapsible-section .collapsible-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px 10px calc(var(--indent-unit) * var(--depth) + 12px);
+            cursor: pointer;
+            background: rgba(65,102,245,0.03);
+        }
+        .collapsible-section .collapsible-toggle {
+            background: transparent;
+            border: none;
+            color: inherit;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+        }
+        .collapsible-section .collapsible-branch-toggle {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.2);
+            color: inherit;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+        }
+        .collapsible-section .collapsible-title { margin: 0; white-space: normal; overflow-wrap: anywhere; }
+        .collapsible-section .collapsible-content { padding: 12px 12px 12px 16px; display: none; }
+        .collapsible-section.expanded .collapsible-content { display: block; }
+        :root { --accent: var(--color-accent, #4166f5); }
+        .collapsible-section.level-1 { border-left: 5px solid var(--accent); border-width: 2px; }
+        .collapsible-section.level-2 { border-left: 4px solid rgba(65,102,245,0.7); border-width: 1.5px; }
+        .collapsible-section.level-3 { border-left: 3px solid rgba(65,102,245,0.55); border-width: 1px; }
+        .level-1 > .collapsible-header { background: rgba(65,102,245,0.10); }
+        .level-2 > .collapsible-header { background: rgba(65,102,245,0.07); }
+        .level-3 > .collapsible-header { background: rgba(65,102,245,0.05); }
+        /* Chevron rotation */
+        .collapsible-section .collapsible-toggle i { transition: transform 0.15s ease; }
+        .collapsible-section.expanded .collapsible-toggle i { transform: rotate(180deg); }
+        @media (max-width: 768px) {
+            .collapsible-section { --indent-unit: 10px; }
+            .section-controls .toggle-all, .section-controls .toggle-all-cycle { padding: 5px 8px; border-radius: 6px; }
+            .collapsible-section .collapsible-header { padding: 8px 10px 8px calc(var(--indent-unit) * var(--depth) + 10px); gap: 8px; }
+            .collapsible-section .collapsible-content { padding: 10px 12px; }
         }
     </style>
 </head>
@@ -330,6 +404,7 @@
     <script>
         // Load JavaScript files using the determined paths
         document.write(`<script src="${userSessionPath}"><\/script>`);
+        document.write(`<script src="${collapsibleHeadingsPath}"><\/script>`);
         document.write(`<script src="${savedAnswersJsPath}"><\/script>`);
         document.write(`<script src="${saveTypeHandlerPath}"><\/script>`);
         document.write(`<script src="${historySearchPath}"><\/script>`);
